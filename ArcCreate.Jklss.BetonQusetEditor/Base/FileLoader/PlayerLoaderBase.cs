@@ -365,63 +365,71 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
             var nodes = new List<DefinitionNode>();
 
-            foreach (var item in windowModel.TreeItems)
+            await Task.Run(() =>
             {
-                var node = new DefinitionNode();
-
-                node.Name = item.Key;
-
-                int num = 0;
-
-                if (node.Children == null)
+                foreach (var item in windowModel.TreeItems)
                 {
-                    node.Children = new List<DefinitionNode>();
-                }
+                    var node = new DefinitionNode();
 
-                foreach (var i in item.Value)
-                {
-                    node.Children.Add(new DefinitionNode()
-                    {
-                        Name = i.Key
-                    });
+                    node.Name = item.Key;
 
-                    if (node.Children[num].Children == null)
+                    int num = 0;
+
+                    if (node.Children == null)
                     {
-                        node.Children[num].Children = new List<DefinitionNode>();
+                        node.Children = new List<DefinitionNode>();
                     }
 
-                    int now = 0;
-
-                    foreach (var j in i.Value)
+                    foreach (var i in item.Value)
                     {
-                        if (j.Value)
+                        node.Children.Add(new DefinitionNode()
                         {
-                            node.Children[num].Children.Add(new DefinitionNode()
-                            {
-                                Name = j.Key + " ------ 已保存"
-                            });
+                            Name = i.Key
+                        });
 
-                            node.Children[num].Children[now].FontColor = "#1f640a";
-                        }
-                        else
+                        if (node.Children[num].Children == null)
                         {
-                            node.Children[num].Children.Add(new DefinitionNode()
-                            {
-                                Name = j.Key + " ------ 未保存"
-                            });
-
-                            node.Children[num].Children[now].FontColor = "#f6003c";
+                            node.Children[num].Children = new List<DefinitionNode>();
                         }
 
-                        now++;
+                        int now = 0;
+
+                        foreach (var j in i.Value)
+                        {
+                            if (j.Value)
+                            {
+                                node.Children[num].Children.Add(new DefinitionNode()
+                                {
+                                    Name = j.Key + " ------ 已保存"
+                                });
+
+                                node.Children[num].Children[now].FontColor = "#1f640a";
+                            }
+                            else
+                            {
+                                node.Children[num].Children.Add(new DefinitionNode()
+                                {
+                                    Name = j.Key + " ------ 未保存"
+                                });
+
+                                node.Children[num].Children[now].FontColor = "#f6003c";
+                            }
+
+                            now++;
+                        }
+                        num++;
                     }
-                    num++;
+
+                    nodes.Add(node);
                 }
 
-                nodes.Add(node);
-            }
+                tiw.Dispatcher.Invoke(new Action(() =>
+                {
+                    tiw.ItemsSource = nodes;
 
-            tiw.ItemsSource = nodes;
+                    
+                }));
+            });
 
             result.SetSuccese();
             return result;

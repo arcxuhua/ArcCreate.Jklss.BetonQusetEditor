@@ -22,11 +22,12 @@
                             <TextBlock FontSize="15" Text="{Binding Name}" FontWeight="Bold" Foreground="{Binding FontColor}"/>
                         </HierarchicalDataTemplate>
                     </TreeView.ItemTemplate>
+                    
                     <TreeView.Resources>
                         <Style TargetType="TreeViewItem" BasedOn="{StaticResource MaterialDesignTreeViewItem}">
                             <Setter Property="IsExpanded" Value="True"></Setter>
                             <Setter Property="materialDesign:TreeViewAssist.ExpanderSize" Value="15" />
-                            <Setter Property="materialDesign:TreeViewAssist.ShowSelection" Value="True" />
+                            <Setter Property="materialDesign:TreeViewAssist.ShowSelection" Value="false" />
                         </Style>
                     </TreeView.Resources>
                 </TreeView>

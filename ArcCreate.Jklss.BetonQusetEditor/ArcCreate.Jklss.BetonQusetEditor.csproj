@@ -109,6 +109,7 @@
     <Compile Include="Base\FileLoader\ObjectiveLoaderBase.cs" />
     <Compile Include="Base\FileLoader\PlayerLoaderBase.cs" />
     <Compile Include="Base\GetThumbInfoBase.cs" />
+    <Compile Include="Base\SaveAndReadYamlBase.cs" />
     <Compile Include="Base\TreeViewBase.cs" />
     <Compile Include="Base\UserActivityBase.cs" />
     <Compile Include="ThumbInfoWindow.xaml.cs">

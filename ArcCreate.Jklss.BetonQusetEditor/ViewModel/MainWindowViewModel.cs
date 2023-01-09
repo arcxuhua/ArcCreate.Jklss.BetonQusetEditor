@@ -10,9 +10,7 @@ using ArcCreate.Jklss.Services;
 using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,7 +20,6 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using System.Xml.Linq;
 using static ArcCreate.Jklss.Model.MainWindow.MainWindowModels;
 using ComboBox = System.Windows.Controls.ComboBox;
 using TextBox = System.Windows.Controls.TextBox;
@@ -1656,12 +1653,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         thumbInfoWindow = window;
 
                         window.WindowStartupLocation = WindowStartupLocation.Manual;
-                        window.Left = mainWindow.ActualWidth+ mainWindow.Left-10;
+
+                        window.Left = mainWindow.ActualWidth + mainWindow.Left - 10;
+
                         window.Top = mainWindow.Top;
 
                         window.Show();
 
                         window.DataContext = new ThumbInfoWindowViewModel();
+
                     });
                 }
                 return _LoadedCommand;
