@@ -527,63 +527,11 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                             ShowMessage("main入口文件不存在请重新指定Main.yml文件");
                         }
 
-                        try
-                        {
-                            var getAllInfo = await SaveAllThumbs();
+                        var saveBase = new SaveAndReadYamlBase(MainFilePath,objectiveProp,eventProp,contisionProp,saveThumbs,mainWindowModels.SaveThumbInfo);
 
-                            if (!getAllInfo.Succese)
-                            {
-                                ShowMessage("读取错误!");
+                        var back = await saveBase.SaveToYaml();
 
-                                return;
-                            }
-
-                            var getBacks = getAllInfo.Backs as AllConfigModel;
-
-                            var createAllTalk = new List<string>();
-
-                            foreach (var item in getBacks.allTalk.Values)
-                            {
-                                createAllTalk.Add(FileService.SaveToYaml(item));
-                            }
-
-                            var createMain = FileService.SaveToYaml(getBacks.mainConfigModel);
-
-                            var disPath = FileService.GetFileDirectory(MainFilePath);
-
-                            FileService.ChangeFile(MainFilePath, createMain); //输出Main
-
-                            for (int i = 0; i < createAllTalk.Count; i++)
-                            {
-                                var s = 0;
-
-                                var getter = string.Empty;
-
-                                foreach (var item in getBacks.mainConfigModel.npcs)
-                                {
-                                    if (s == i)
-                                    {
-                                        getter = item.Value;
-                                    }
-                                    s++;
-                                }
-                                FileService.ChangeFile(disPath + @"\conversations\" + getter + ".yml", createAllTalk[i]); //输出对话
-                            }
-
-                            FileService.ChangeFile(disPath + @"\conditions.yml", getBacks.conditions); //输出条件
-
-                            FileService.ChangeFile(disPath + @"\events.yml", getBacks.events); //输出事件
-
-                            FileService.ChangeFile(disPath + @"\items.yml", getBacks.items); //输出物品
-
-                            FileService.ChangeFile(disPath + @"\journal.yml", getBacks.journal); //输出日记
-
-                            FileService.ChangeFile(disPath + @"\objectives.yml", getBacks.objcetives); //输出目标
-                        }
-                        catch (Exception ex)
-                        {
-                            ShowMessage("读取错误！\r\n" + ex.Message);
-                        }
+                        ShowMessage(back.Text);
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }
                 return _SaveYaml;

@@ -1,12 +1,16 @@
 ﻿using ArcCreate.Jklss.Model;
 using ArcCreate.Jklss.Model.MainWindow;
+using ArcCreate.Jklss.Model.ThumbModel;
 using ArcCreate.Jklss.Model.ThumbModel.CommandModel;
+using ArcCreate.Jklss.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Xml.Linq;
 using static ArcCreate.Jklss.Model.MainWindow.MainWindowModels;
 
 namespace ArcCreate.Jklss.BetonQusetEditor.Base
@@ -82,18 +86,303 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
             this.saveInfo = saveInfo;
         }
 
-        public async Task<ReturnModel> SaveToYaml(SaveChird saveChild)
+        /// <summary>
+        /// 存储并输出Yaml
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ReturnModel> SaveToYaml()
         {
             var result = new ReturnModel();
 
-            if(saveChild == null || saveChild.thumbClass != ThumbClass.Subject)
+            var configModel = new AllConfigModel();//全局存储
+
+            var mainModel = new MainConfigModel();//main文件存储
+
+            var createJson = new Dictionary<Thumb, ConversationsModel>();//所有对话主题存储
+
+            await Task.Run(() =>
             {
-                throw new ArgumentNullException("传输的thumb不是主对话");
+                foreach (var item in saveThumbs.Where(t => t.thumbClass == ThumbClass.Subject).ToList())
+                {
+                    var create = new ConversationsModel();
+                    GetControl<TextBox>("ShowNpcName_TBox", item.Saver).Dispatcher.Invoke(new Action(async () =>
+                    {
+                        create.quester = GetControl<TextBox>("ShowNpcName_TBox", item.Saver).Text;
+
+                        create.first = GetControl<TextBox>("ConditionsConfig_TBox", (await FindSaveThumbInfo(item.Children.FirstOrDefault())).Saver).Text;
+
+                        create.stop = false;
+
+                        createJson.Add(item.Saver, create);
+
+                        mainModel.npcs.Add(GetControl<TextBox>("NpcName_TBox", item.Saver).Text, GetControl<TextBox>("MainName_TBox", item.Saver).Text);//第一项是NPC名称，第二项是配置名称
+                    }));
+
+                }
+            });//构建所有对话主题及Main文件并存储
+
+            await Task.Run(async () =>
+            {
+                foreach (var item in saveThumbs.Where(t=>t.thumbClass==ThumbClass.NPC).ToList())
+                {
+                    var newTalk = new AllTalk();
+
+                    if (!saveInfo.ContainsKey(item.Saver))
+                    {
+                        result.SetError("错误！请将Npc内容填写完整");
+                        return;
+                    }
+
+                    var backs = await PlayerAndNpcStructure(saveInfo[item.Saver]);//构建语句
+
+                    if (!backs.Succese)
+                    {
+                        result.SetError(backs.Text);
+                        return;
+                    }
+
+                    var saves = backs.Backs as Dictionary<string, string>;
+
+                    var name = string.Empty;
+
+                    GetControl<TextBox>("ConditionsConfig_TBox", item.Saver).Dispatcher.Invoke(new Action(() => 
+                    {
+                        name = GetControl<TextBox>("ConditionsConfig_TBox", item.Saver).Text;
+                    }));
+
+                    newTalk.text = new List<string>(saves["text"].Split(','));
+
+                    if (saves.ContainsKey("conditions"))
+                    {
+                        newTalk.conditions = saves["conditions"];
+                    }
+
+                    if (saves.ContainsKey("events"))
+                    {
+                        newTalk.events = saves["events"];
+                    }
+
+                    if (saves.ContainsKey("pointer"))
+                    {
+                        newTalk.pointer = saves["pointer"];
+                    }
+
+                    createJson[item.Main].NPC_options.Add(name, newTalk);
+
+                    result.SetSuccese();
+                }
+            });//存储NPC
+
+            if (!result.Succese)
+            {
+                return result;
             }
 
+            await Task.Run(async () =>
+            {
+                foreach (var item in saveThumbs.Where(t => t.thumbClass == ThumbClass.Player).ToList())
+                {
+                    var newTalk = new AllTalk();
 
+                    if (!saveInfo.ContainsKey(item.Saver))
+                    {
+                        result.SetError("错误！请将Npc内容填写完整");
+                        return;
+                    }
 
-            result.SetSuccese("保存成功");
+                    var backs = await PlayerAndNpcStructure(saveInfo[item.Saver]);//构建语句
+
+                    if (!backs.Succese)
+                    {
+                        result.SetError(backs.Text);
+                        return;
+                    }
+
+                    var saves = backs.Backs as Dictionary<string, string>;
+
+                    var name = string.Empty;
+
+                    GetControl<TextBox>("ConditionsConfig_TBox", item.Saver).Dispatcher.Invoke(new Action(() =>
+                    {
+                        name = GetControl<TextBox>("ConditionsConfig_TBox", item.Saver).Text;
+                    }));
+
+                    newTalk.text = new List<string>(saves["text"].Split(','));
+
+                    if (saves.ContainsKey("conditions"))
+                    {
+                        newTalk.conditions = saves["conditions"];
+                    }
+
+                    if (saves.ContainsKey("events"))
+                    {
+                        newTalk.events = saves["events"];
+                    }
+
+                    if (saves.ContainsKey("pointer"))
+                    {
+                        newTalk.pointer = saves["pointer"];
+                    }
+
+                    createJson[item.Main].player_options.Add(name, newTalk);
+
+                    result.SetSuccese();
+                }
+            });//存储Player
+
+            if (!result.Succese)
+            {
+                return result;
+            }
+
+            await Task.Run(async () =>
+            {
+                var allconditions = string.Empty;
+
+                foreach (var item in saveThumbs.Where(t => t.thumbClass == ThumbClass.Conditions).ToList())
+                {
+                    if (!saveInfo.ContainsKey(item.Saver))
+                    {
+                        result.SetError("错误！请将其内容填写完整");
+                        return;
+                    }
+                    var name = string.Empty;
+
+                    GetControl<TextBox>("ConditionsConfig_TBox", item.Saver).Dispatcher.Invoke(new Action(() =>
+                    {
+                        name = GetControl<TextBox>("ConditionsConfig_TBox", item.Saver).Text;
+                    }));
+
+                    var backs = await ConditonStructure(saveInfo[item.Saver]);
+
+                    if (!backs.Succese)
+                    {
+                        result.SetError();
+                        return;
+                    }
+
+                    allconditions += name+ ": '" + backs.Backs.ToString()+ "'\r\n";
+                }
+
+                var allevents = string.Empty;
+
+                foreach (var item in saveThumbs.Where(t => t.thumbClass == ThumbClass.Events).ToList())
+                {
+                    if (!saveInfo.ContainsKey(item.Saver))
+                    {
+                        result.SetError("错误！请将其内容填写完整");
+                        return;
+                    }
+
+                    var name = string.Empty;
+
+                    GetControl<TextBox>("ConditionsConfig_TBox", item.Saver).Dispatcher.Invoke(new Action(() =>
+                    {
+                        name = GetControl<TextBox>("ConditionsConfig_TBox", item.Saver).Text;
+                    }));
+
+                    var backs = await EventStructure(saveInfo[item.Saver]);
+
+                    if (!backs.Succese)
+                    {
+                        result.SetError();
+                        return;
+                    }
+
+                    allevents += name + ": '" + backs.Backs.ToString() + "'\r\n";
+                }
+
+                var allobjectives = string.Empty;
+
+                foreach (var item in saveThumbs.Where(t => t.thumbClass == ThumbClass.Objectives).ToList())
+                {
+                    if (!saveInfo.ContainsKey(item.Saver))
+                    {
+                        result.SetError("错误！请将其内容填写完整");
+
+                        return;
+                    }
+
+                    var name = string.Empty;
+
+                    GetControl<TextBox>("ConditionsConfig_TBox", item.Saver).Dispatcher.Invoke(new Action(() =>
+                    {
+                        name = GetControl<TextBox>("ConditionsConfig_TBox", item.Saver).Text;
+                    }));
+
+                    var backs = await ObjectiveStructure(saveInfo[item.Saver]);
+
+                    if (!backs.Succese)
+                    {
+                        result.SetError();
+
+                        return;
+                    }
+
+                    allobjectives += name + ": '" + backs.Backs.ToString() + "'\r\n";
+                }
+
+                configModel.conditions = allconditions;
+                configModel.events = allevents;
+                configModel.objcetives = allobjectives;
+
+                result.SetSuccese();
+            });//存储CEO三大类
+
+            if (!result.Succese)
+            {
+                return result;
+            }
+
+            await Task.Run(() => 
+            {
+                var allJournal = string.Empty;
+
+                var allItems = string.Empty;
+                foreach (var item in saveThumbs.Where(t => t.thumbClass == ThumbClass.Journal).ToList())
+                {
+                    var getInfo = GetThumbInfoBase.GetThumbInfo(item);
+
+                    var fgTalk = getInfo.Text.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+                    var makeTalk = string.Empty;
+
+                    for (int i = 0; i < fgTalk.Length; i++)
+                    {
+                        makeTalk += "  " + fgTalk[i] + "\r\n";
+                    }
+
+                    allJournal += getInfo.Config + ": |\r\n"
+                        + makeTalk
+                        + "\r\n";
+                }
+
+                foreach (var item in saveThumbs.Where(t => t.thumbClass == ThumbClass.Items).ToList())
+                {
+                    var getInfo = GetThumbInfoBase.GetThumbInfo(item);
+
+                    allItems += getInfo.Config + ":"
+                        + getInfo.Text
+                        + "\r\n";
+                }
+
+                configModel.journal = allJournal;
+
+                configModel.items = allItems;
+
+                result.SetSuccese();
+            });//存储JI两类
+
+            if (!result.Succese)
+            {
+                return result;
+            }
+
+            configModel.mainConfigModel = mainModel;
+
+            configModel.allTalk = createJson;
+
+            result = await InputToYaml(configModel);
 
             return result;
         }
@@ -180,7 +469,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                         yuju += item.Key;
                                     }
                                 }
-                            }
+                            }//没有项时
                             else if (getNeedCmd[csNum].j == -1)
                             {
                                 var goujian = string.Empty;
@@ -191,21 +480,71 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                 {
                                     if (nowNum == i.Value.Count - 1)
                                     {
-                                        goujian += j.Value + getNeedCmd[csNum].i;
-                                    }
+                                        if (nowNum == 0)
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian = item.Key + " " + j.Value;//构建命令头 
+                                            }
+                                            else
+                                            {
+                                                if(nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian = item.Key + " " + j.Value;//构建命令头 
+                                                }
+                                                else
+                                                {
+                                                    goujian = item.Key + " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian += j.Value;
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian += j.Value;
+                                                }
+                                                else
+                                                {
+                                                    goujian += j.Value + getNeedCmd[csNum].i;
+                                                }
+                                            } 
+                                        }
+                                    }//最后一个时候
                                     else if (nowNum == 0)
                                     {
-                                        goujian = item.Key + " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian = item.Key + " " + j.Value;//构建命令头 
+                                        }
+                                        else
+                                        {
+                                            goujian = item.Key + " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                        }
+                                    }//第一个的时候
                                     else
                                     {
-                                        goujian += j.Value;
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian += j.Value ;
+                                        }
+                                        else
+                                        {
+                                            goujian += j.Value + getNeedCmd[csNum].i;
+                                        }
+
+                                    }//中间的时候
                                     nowNum++;
                                 }
 
                                 yuju += goujian;
-                            }
+                            }//无限项时
                             else
                             {
                                 if (i.Value.Count != getNeedCmd[csNum].j)
@@ -223,23 +562,73 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                 {
                                     if (nowNum == i.Value.Count - 1)
                                     {
-                                        goujian += j.Value + getNeedCmd[csNum].i;
-                                    }
+                                        if (nowNum == 0)
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian = item.Key + " " + j.Value;//构建命令头 
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian = item.Key + " " + j.Value;//构建命令头 
+                                                }
+                                                else
+                                                {
+                                                    goujian = item.Key + " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian += j.Value;
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian += j.Value;
+                                                }
+                                                else
+                                                {
+                                                    goujian += j.Value + getNeedCmd[csNum].i;
+                                                }
+                                            }
+                                        }
+                                    }//最后一个时候
                                     else if (nowNum == 0)
                                     {
-                                        goujian = item.Key + " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian = item.Key + " " + j.Value;//构建命令头 
+                                        }
+                                        else
+                                        {
+                                            goujian = item.Key + " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                        }
+                                    }//第一个的时候
                                     else
                                     {
-                                        goujian += j.Value;
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian += j.Value;
+                                        }
+                                        else
+                                        {
+                                            goujian += j.Value + getNeedCmd[csNum].i;
+                                        }
+
+                                    }//中间的时候
                                     nowNum++;
                                 }
 
                                 yuju += goujian;
-                            }
+                            }//有限项时
                         }
-                        else
+                        else//第n参数时
                         {
                             if (getNeedCmd[csNum].j == 0)
                             {
@@ -249,9 +638,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
                                     return result;
                                 }
-
-                                //理论情况不允许出现
-                            }
+                            }//没有项时，理论情况不允许出现
                             else if (getNeedCmd[csNum].j == -1)
                             {
                                 var goujian = string.Empty;
@@ -262,21 +649,71 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                 {
                                     if (nowNum == i.Value.Count - 1)
                                     {
-                                        goujian += j.Value + getNeedCmd[csNum].i;
-                                    }
+                                        if (nowNum == 0)
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian = " " + j.Value;//构建命令头 
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian = " " + j.Value;//构建命令头 
+                                                }
+                                                else
+                                                {
+                                                    goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian += j.Value;
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian += j.Value;
+                                                }
+                                                else
+                                                {
+                                                    goujian += j.Value + getNeedCmd[csNum].i;
+                                                }
+                                            }
+                                        }
+                                    }//最后一个时候
                                     else if (nowNum == 0)
                                     {
-                                        goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian = " " + j.Value;//构建命令头 
+                                        }
+                                        else
+                                        {
+                                            goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                        }
+                                    }//第一个的时候
                                     else
                                     {
-                                        goujian += j.Value;
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian += j.Value;
+                                        }
+                                        else
+                                        {
+                                            goujian += j.Value + getNeedCmd[csNum].i;
+                                        }
+
+                                    }//中间的时候
                                     nowNum++;
                                 }
 
                                 yuju += goujian;
-                            }
+                            }//无限项时
                             else
                             {
                                 if (i.Value.Count != getNeedCmd[csNum].j)
@@ -294,27 +731,76 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                 {
                                     if (nowNum == i.Value.Count - 1)
                                     {
-                                        goujian += j.Value + getNeedCmd[csNum].i;
-                                    }
+                                        if (nowNum == 0)
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian = " " + j.Value;//构建命令头 
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian = " " + j.Value;//构建命令头 
+                                                }
+                                                else
+                                                {
+                                                    goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian += j.Value;
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian += j.Value;
+                                                }
+                                                else
+                                                {
+                                                    goujian += j.Value + getNeedCmd[csNum].i;
+                                                }
+                                            }
+                                        }
+                                    }//最后一个时候
                                     else if (nowNum == 0)
                                     {
-                                        goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian = " " + j.Value;//构建命令头 
+                                        }
+                                        else
+                                        {
+                                            goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                        }
+                                    }//第一个的时候
                                     else
                                     {
-                                        goujian += j.Value;
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian += j.Value;
+                                        }
+                                        else
+                                        {
+                                            goujian += j.Value + getNeedCmd[csNum].i;
+                                        }
+
+                                    }//中间的时候
                                     nowNum++;
                                 }
 
                                 yuju += goujian;
-                            }
+                            }//有限项时
                         }
-
                         csNum++;
                     }
                 }
-                else
+                else//是子命令时
                 {
                     var csNum = 0;
 
@@ -327,7 +813,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                             return result;
                         }
 
-                        if (csNum == 0)
+                        if (csNum == 0)//子命令第一参数
                         {
                             if (getNeedCmd[csNum].j == 0)
                             {
@@ -344,10 +830,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
                                     if (kq == "开启")
                                     {
-                                        yuju += item.Key;
+                                        yuju += " "+item.Key;
                                     }
                                 }
-                            }
+                            }//没有项时
                             else if (getNeedCmd[csNum].j == -1)
                             {
                                 var goujian = string.Empty;
@@ -358,21 +844,71 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                 {
                                     if (nowNum == i.Value.Count - 1)
                                     {
-                                        goujian += j.Value + getNeedCmd[csNum].i;
-                                    }
+                                        if (nowNum == 0)
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian = " "+item.Key + ":" + j.Value;//构建命令头 
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian = " " + item.Key + ":" + j.Value;//构建命令头 
+                                                }
+                                                else
+                                                {
+                                                    goujian = " " + item.Key + ":" + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian += j.Value;
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian += j.Value;
+                                                }
+                                                else
+                                                {
+                                                    goujian += j.Value + getNeedCmd[csNum].i;
+                                                }
+                                            }
+                                        }
+                                    }//最后一个时候
                                     else if (nowNum == 0)
                                     {
-                                        goujian = " "+item.Key + ":" + j.Value + getNeedCmd[csNum].i;//构建命令头 
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian = " " + item.Key + ":" + j.Value;//构建命令头 
+                                        }
+                                        else
+                                        {
+                                            goujian = " " + item.Key + ":" + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                        }
+                                    }//第一个的时候
                                     else
                                     {
-                                        goujian += j.Value;
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian += j.Value;
+                                        }
+                                        else
+                                        {
+                                            goujian += j.Value + getNeedCmd[csNum].i;
+                                        }
+
+                                    }//中间的时候
                                     nowNum++;
                                 }
 
                                 yuju += goujian;
-                            }
+                            }//无限项时
                             else
                             {
                                 if (i.Value.Count != getNeedCmd[csNum].j)
@@ -390,21 +926,71 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                 {
                                     if (nowNum == i.Value.Count - 1)
                                     {
-                                        goujian += j.Value + getNeedCmd[csNum].i;
-                                    }
+                                        if (nowNum == 0)
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian = " " + item.Key + ":" + j.Value;//构建命令头 
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian = " " + item.Key + ":" + j.Value;//构建命令头 
+                                                }
+                                                else
+                                                {
+                                                    goujian = " " + item.Key + ":" + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian += j.Value;
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian += j.Value;
+                                                }
+                                                else
+                                                {
+                                                    goujian += j.Value + getNeedCmd[csNum].i;
+                                                }
+                                            }
+                                        }
+                                    }//最后一个时候
                                     else if (nowNum == 0)
                                     {
-                                        goujian = " " + item.Key + ":" + j.Value + getNeedCmd[csNum].i;//构建命令头 
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian = " " + item.Key + ":" + j.Value;//构建命令头 
+                                        }
+                                        else
+                                        {
+                                            goujian = " " + item.Key + ":" + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                        }
+                                    }//第一个的时候
                                     else
                                     {
-                                        goujian += j.Value;
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian += j.Value;
+                                        }
+                                        else
+                                        {
+                                            goujian += j.Value + getNeedCmd[csNum].i;
+                                        }
+
+                                    }//中间的时候
                                     nowNum++;
                                 }
 
                                 yuju += goujian;
-                            }
+                            }//有限项时
                         }//是第1参时
                         else
                         {
@@ -417,7 +1003,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
                                     return result;
                                 }
-                            }
+
+                                if (i.Value.Count == 1)
+                                {
+                                    var kq = i.Value.Values.First();
+
+                                    if (kq == "开启")
+                                    {
+                                        yuju += " " + item.Key;
+                                    }
+                                }
+                            }//没有项时
                             else if (getNeedCmd[csNum].j == -1)
                             {
                                 var goujian = string.Empty;
@@ -428,21 +1024,71 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                 {
                                     if (nowNum == i.Value.Count - 1)
                                     {
-                                        goujian += j.Value + getNeedCmd[csNum].i;
-                                    }
+                                        if (nowNum == 0)
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian = " " + j.Value;//构建命令头 
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian = " " + j.Value;//构建命令头 
+                                                }
+                                                else
+                                                {
+                                                    goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian += j.Value;
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian += j.Value;
+                                                }
+                                                else
+                                                {
+                                                    goujian += j.Value + getNeedCmd[csNum].i;
+                                                }
+                                            }
+                                        }
+                                    }//最后一个时候
                                     else if (nowNum == 0)
                                     {
-                                        goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian = " " + j.Value;//构建命令头 
+                                        }
+                                        else
+                                        {
+                                            goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                        }
+                                    }//第一个的时候
                                     else
                                     {
-                                        goujian += j.Value;
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian += j.Value;
+                                        }
+                                        else
+                                        {
+                                            goujian += j.Value + getNeedCmd[csNum].i;
+                                        }
+
+                                    }//中间的时候
                                     nowNum++;
                                 }
 
                                 yuju += goujian;
-                            }
+                            }//无限项时
                             else
                             {
                                 if (i.Value.Count != getNeedCmd[csNum].j)
@@ -460,29 +1106,75 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                 {
                                     if (nowNum == i.Value.Count - 1)
                                     {
-                                        goujian += j.Value + getNeedCmd[csNum].i;
-                                    }
+                                        if (nowNum == 0)
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian = " " + j.Value;//构建命令头 
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian = " " + j.Value;//构建命令头 
+                                                }
+                                                else
+                                                {
+                                                    goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian += j.Value;
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian += j.Value;
+                                                }
+                                                else
+                                                {
+                                                    goujian += j.Value + getNeedCmd[csNum].i;
+                                                }
+                                            }
+                                        }
+                                    }//最后一个时候
                                     else if (nowNum == 0)
                                     {
-                                        goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian = " " + j.Value;//构建命令头 
+                                        }
+                                        else
+                                        {
+                                            goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                        }
+                                    }//第一个的时候
                                     else
                                     {
-                                        goujian += j.Value;
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian += j.Value;
+                                        }
+                                        else
+                                        {
+                                            goujian += j.Value + getNeedCmd[csNum].i;
+                                        }
+
+                                    }//中间的时候
                                     nowNum++;
                                 }
-
                                 yuju += goujian;
-                            }
+                            }//有限项时
                         }//理论情况不允许出现子命令多参数
 
                         csNum++;
                     }
                 }
-
-                
-
                 itemNum++;
             }
 
@@ -534,7 +1226,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
             {
                 if (!needCmd.ContainsKey(item.Key))
                 {
-                    result.SetError("错误！语法构造器错误代码：E001 请向开发者报告此代码！");
+                    result.SetError("错误！语法构造器错误代码：C001 请向开发者报告此代码！");
 
                     return result;
                 }
@@ -548,7 +1240,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                     {
                         if (i.Value == null)
                         {
-                            result.SetError("错误！语法构造器错误代码：E002 请向开发者报告此代码！");
+                            result.SetError("错误！语法构造器错误代码：C002 请向开发者报告此代码！");
 
                             return result;
                         }
@@ -559,7 +1251,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                             {
                                 if (i.Value.Count != 1 || i.Value.Count != 0)
                                 {
-                                    result.SetError("错误！语法构造器错误代码：E003 请向开发者报告此代码！");
+                                    result.SetError("错误！语法构造器错误代码：C003 请向开发者报告此代码！");
 
                                     return result;
                                 }
@@ -573,7 +1265,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                         yuju += item.Key;
                                     }
                                 }
-                            }
+                            }//没有项时
                             else if (getNeedCmd[csNum].j == -1)
                             {
                                 var goujian = string.Empty;
@@ -584,26 +1276,76 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                 {
                                     if (nowNum == i.Value.Count - 1)
                                     {
-                                        goujian += j.Value + getNeedCmd[csNum].i;
-                                    }
+                                        if (nowNum == 0)
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian = item.Key + " " + j.Value;//构建命令头 
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian = item.Key + " " + j.Value;//构建命令头 
+                                                }
+                                                else
+                                                {
+                                                    goujian = item.Key + " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian += j.Value;
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian += j.Value;
+                                                }
+                                                else
+                                                {
+                                                    goujian += j.Value + getNeedCmd[csNum].i;
+                                                }
+                                            }
+                                        }
+                                    }//最后一个时候
                                     else if (nowNum == 0)
                                     {
-                                        goujian = item.Key + " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian = item.Key + " " + j.Value;//构建命令头 
+                                        }
+                                        else
+                                        {
+                                            goujian = item.Key + " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                        }
+                                    }//第一个的时候
                                     else
                                     {
-                                        goujian += j.Value;
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian += j.Value;
+                                        }
+                                        else
+                                        {
+                                            goujian += j.Value + getNeedCmd[csNum].i;
+                                        }
+
+                                    }//中间的时候
                                     nowNum++;
                                 }
 
                                 yuju += goujian;
-                            }
+                            }//无限项时
                             else
                             {
                                 if (i.Value.Count != getNeedCmd[csNum].j)
                                 {
-                                    result.SetError("错误！语法构造器错误代码：E004 请向开发者报告此代码！");
+                                    result.SetError("错误！语法构造器错误代码：C005 请向开发者报告此代码！");
 
                                     return result;
                                 }
@@ -614,44 +1356,92 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
                                 foreach (var j in i.Value)
                                 {
+                                    if (!getStructure.Tags.Contains(j.Value))
+                                    {
+                                        result.SetError("错误！语法构造器错误代码：E012 请向开发者报告此代码！");
+
+                                        return result;
+                                    }
+
                                     if (nowNum == i.Value.Count - 1)
                                     {
-                                        goujian += j.Value + getNeedCmd[csNum].i;
-                                    }
+                                        if (nowNum == 0)
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian = item.Key + " " + j.Value;//构建命令头 
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian = item.Key + " " + j.Value;//构建命令头 
+                                                }
+                                                else
+                                                {
+                                                    goujian = item.Key + " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian += j.Value;
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian += j.Value;
+                                                }
+                                                else
+                                                {
+                                                    goujian += j.Value + getNeedCmd[csNum].i;
+                                                }
+                                            }
+                                        }
+                                    }//最后一个时候
                                     else if (nowNum == 0)
                                     {
-                                        if (!getStructure.Tags.Contains(j.Value))
+                                        if (getNeedCmd[csNum].i == 'X')
                                         {
-                                            result.SetError("错误！语法构造器错误代码：E012 请向开发者报告此代码！");
-
-                                            return result;
+                                            goujian = item.Key + " " + j.Value;//构建命令头 
                                         }
-
-                                        goujian = item.Key + " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
-                                    }
+                                        else
+                                        {
+                                            goujian = item.Key + " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                        }
+                                    }//第一个的时候
                                     else
                                     {
-                                        goujian += j.Value;
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian += j.Value;
+                                        }
+                                        else
+                                        {
+                                            goujian += j.Value + getNeedCmd[csNum].i;
+                                        }
+
+                                    }//中间的时候
                                     nowNum++;
                                 }
 
                                 yuju += goujian;
-                            }
+                            }//有限项时
                         }
-                        else
+                        else//第n参数时
                         {
                             if (getNeedCmd[csNum].j == 0)
                             {
                                 if (i.Value.Count != 1 || i.Value.Count != 0)
                                 {
-                                    result.SetError("错误！语法构造器错误代码：E005 请向开发者报告此代码！");
+                                    result.SetError("错误！语法构造器错误代码：C003 请向开发者报告此代码！");
 
                                     return result;
                                 }
-
-                                //理论情况不允许出现
-                            }
+                            }//没有项时，理论情况不允许出现
                             else if (getNeedCmd[csNum].j == -1)
                             {
                                 var goujian = string.Empty;
@@ -662,26 +1452,76 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                 {
                                     if (nowNum == i.Value.Count - 1)
                                     {
-                                        goujian += j.Value + getNeedCmd[csNum].i;
-                                    }
+                                        if (nowNum == 0)
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian = " " + j.Value;//构建命令头 
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian = " " + j.Value;//构建命令头 
+                                                }
+                                                else
+                                                {
+                                                    goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian += j.Value;
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian += j.Value;
+                                                }
+                                                else
+                                                {
+                                                    goujian += j.Value + getNeedCmd[csNum].i;
+                                                }
+                                            }
+                                        }
+                                    }//最后一个时候
                                     else if (nowNum == 0)
                                     {
-                                        goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian = " " + j.Value;//构建命令头 
+                                        }
+                                        else
+                                        {
+                                            goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                        }
+                                    }//第一个的时候
                                     else
                                     {
-                                        goujian += j.Value;
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian += j.Value;
+                                        }
+                                        else
+                                        {
+                                            goujian += j.Value + getNeedCmd[csNum].i;
+                                        }
+
+                                    }//中间的时候
                                     nowNum++;
                                 }
 
                                 yuju += goujian;
-                            }
+                            }//无限项时
                             else
                             {
                                 if (i.Value.Count != getNeedCmd[csNum].j)
                                 {
-                                    result.SetError("错误！语法构造器错误代码：E006 请向开发者报告此代码！");
+                                    result.SetError("错误！语法构造器错误代码：C005 请向开发者报告此代码！");
 
                                     return result;
                                 }
@@ -694,27 +1534,76 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                 {
                                     if (nowNum == i.Value.Count - 1)
                                     {
-                                        goujian += j.Value + getNeedCmd[csNum].i;
-                                    }
+                                        if (nowNum == 0)
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian = " " + j.Value;//构建命令头 
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian = " " + j.Value;//构建命令头 
+                                                }
+                                                else
+                                                {
+                                                    goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian += j.Value;
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian += j.Value;
+                                                }
+                                                else
+                                                {
+                                                    goujian += j.Value + getNeedCmd[csNum].i;
+                                                }
+                                            }
+                                        }
+                                    }//最后一个时候
                                     else if (nowNum == 0)
                                     {
-                                        goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian = " " + j.Value;//构建命令头 
+                                        }
+                                        else
+                                        {
+                                            goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                        }
+                                    }//第一个的时候
                                     else
                                     {
-                                        goujian += j.Value;
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian += j.Value;
+                                        }
+                                        else
+                                        {
+                                            goujian += j.Value + getNeedCmd[csNum].i;
+                                        }
+
+                                    }//中间的时候
                                     nowNum++;
                                 }
 
                                 yuju += goujian;
-                            }
+                            }//有限项时
                         }
-
                         csNum++;
                     }
                 }
-                else
+                else//是子命令时
                 {
                     var csNum = 0;
 
@@ -722,18 +1611,18 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                     {
                         if (i.Value == null)
                         {
-                            result.SetError("错误！语法构造器错误代码：E007 请向开发者报告此代码！");
+                            result.SetError("错误！语法构造器错误代码：C002 请向开发者报告此代码！");
 
                             return result;
                         }
 
-                        if (csNum == 0)
+                        if (csNum == 0)//子命令第一参数
                         {
                             if (getNeedCmd[csNum].j == 0)
                             {
                                 if (i.Value.Count != 1 || i.Value.Count != 0)
                                 {
-                                    result.SetError("错误！语法构造器错误代码：E008 请向开发者报告此代码！");
+                                    result.SetError("错误！语法构造器错误代码：C003 请向开发者报告此代码！");
 
                                     return result;
                                 }
@@ -744,10 +1633,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
                                     if (kq == "开启")
                                     {
-                                        yuju += item.Key;
+                                        yuju += " " + item.Key;
                                     }
                                 }
-                            }
+                            }//没有项时
                             else if (getNeedCmd[csNum].j == -1)
                             {
                                 var goujian = string.Empty;
@@ -758,26 +1647,76 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                 {
                                     if (nowNum == i.Value.Count - 1)
                                     {
-                                        goujian += j.Value + getNeedCmd[csNum].i;
-                                    }
+                                        if (nowNum == 0)
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian = " " + item.Key + ":" + j.Value;//构建命令头 
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian = " " + item.Key + ":" + j.Value;//构建命令头 
+                                                }
+                                                else
+                                                {
+                                                    goujian = " " + item.Key + ":" + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian += j.Value;
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian += j.Value;
+                                                }
+                                                else
+                                                {
+                                                    goujian += j.Value + getNeedCmd[csNum].i;
+                                                }
+                                            }
+                                        }
+                                    }//最后一个时候
                                     else if (nowNum == 0)
                                     {
-                                        goujian = " " + item.Key + ":" + j.Value + getNeedCmd[csNum].i;//构建命令头 
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian = " " + item.Key + ":" + j.Value;//构建命令头 
+                                        }
+                                        else
+                                        {
+                                            goujian = " " + item.Key + ":" + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                        }
+                                    }//第一个的时候
                                     else
                                     {
-                                        goujian += j.Value;
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian += j.Value;
+                                        }
+                                        else
+                                        {
+                                            goujian += j.Value + getNeedCmd[csNum].i;
+                                        }
+
+                                    }//中间的时候
                                     nowNum++;
                                 }
 
                                 yuju += goujian;
-                            }
+                            }//无限项时
                             else
                             {
                                 if (i.Value.Count != getNeedCmd[csNum].j)
                                 {
-                                    result.SetError("错误！语法构造器错误代码：E009 请向开发者报告此代码！");
+                                    result.SetError("错误！语法构造器错误代码：C005 请向开发者报告此代码！");
 
                                     return result;
                                 }
@@ -790,21 +1729,71 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                 {
                                     if (nowNum == i.Value.Count - 1)
                                     {
-                                        goujian += j.Value + getNeedCmd[csNum].i;
-                                    }
+                                        if (nowNum == 0)
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian = " " + item.Key + ":" + j.Value;//构建命令头 
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian = " " + item.Key + ":" + j.Value;//构建命令头 
+                                                }
+                                                else
+                                                {
+                                                    goujian = " " + item.Key + ":" + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian += j.Value;
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian += j.Value;
+                                                }
+                                                else
+                                                {
+                                                    goujian += j.Value + getNeedCmd[csNum].i;
+                                                }
+                                            }
+                                        }
+                                    }//最后一个时候
                                     else if (nowNum == 0)
                                     {
-                                        goujian = " " + item.Key + ":" + j.Value + getNeedCmd[csNum].i;//构建命令头 
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian = " " + item.Key + ":" + j.Value;//构建命令头 
+                                        }
+                                        else
+                                        {
+                                            goujian = " " + item.Key + ":" + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                        }
+                                    }//第一个的时候
                                     else
                                     {
-                                        goujian += j.Value;
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian += j.Value;
+                                        }
+                                        else
+                                        {
+                                            goujian += j.Value + getNeedCmd[csNum].i;
+                                        }
+
+                                    }//中间的时候
                                     nowNum++;
                                 }
 
                                 yuju += goujian;
-                            }
+                            }//有限项时
                         }//是第1参时
                         else
                         {
@@ -813,11 +1802,21 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                             {
                                 if (i.Value.Count != 1 || i.Value.Count != 0)
                                 {
-                                    result.SetError("错误！语法构造器错误代码：E010 请向开发者报告此代码！");
+                                    result.SetError("错误！语法构造器错误代码：C003 请向开发者报告此代码！");
 
                                     return result;
                                 }
-                            }
+
+                                if (i.Value.Count == 1)
+                                {
+                                    var kq = i.Value.Values.First();
+
+                                    if (kq == "开启")
+                                    {
+                                        yuju += " " + item.Key;
+                                    }
+                                }
+                            }//没有项时
                             else if (getNeedCmd[csNum].j == -1)
                             {
                                 var goujian = string.Empty;
@@ -828,26 +1827,76 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                 {
                                     if (nowNum == i.Value.Count - 1)
                                     {
-                                        goujian += j.Value + getNeedCmd[csNum].i;
-                                    }
+                                        if (nowNum == 0)
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian = " " + j.Value;//构建命令头 
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian = " " + j.Value;//构建命令头 
+                                                }
+                                                else
+                                                {
+                                                    goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian += j.Value;
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian += j.Value;
+                                                }
+                                                else
+                                                {
+                                                    goujian += j.Value + getNeedCmd[csNum].i;
+                                                }
+                                            }
+                                        }
+                                    }//最后一个时候
                                     else if (nowNum == 0)
                                     {
-                                        goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian = " " + j.Value;//构建命令头 
+                                        }
+                                        else
+                                        {
+                                            goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                        }
+                                    }//第一个的时候
                                     else
                                     {
-                                        goujian += j.Value;
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian += j.Value;
+                                        }
+                                        else
+                                        {
+                                            goujian += j.Value + getNeedCmd[csNum].i;
+                                        }
+
+                                    }//中间的时候
                                     nowNum++;
                                 }
 
                                 yuju += goujian;
-                            }
+                            }//无限项时
                             else
                             {
                                 if (i.Value.Count != getNeedCmd[csNum].j)
                                 {
-                                    result.SetError("错误！语法构造器错误代码：E1011 请向开发者报告此代码！");
+                                    result.SetError("错误！语法构造器错误代码：C005 请向开发者报告此代码！");
 
                                     return result;
                                 }
@@ -860,29 +1909,75 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                 {
                                     if (nowNum == i.Value.Count - 1)
                                     {
-                                        goujian += j.Value + getNeedCmd[csNum].i;
-                                    }
+                                        if (nowNum == 0)
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian = " " + j.Value;//构建命令头 
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian = " " + j.Value;//构建命令头 
+                                                }
+                                                else
+                                                {
+                                                    goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian += j.Value;
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian += j.Value;
+                                                }
+                                                else
+                                                {
+                                                    goujian += j.Value + getNeedCmd[csNum].i;
+                                                }
+                                            }
+                                        }
+                                    }//最后一个时候
                                     else if (nowNum == 0)
                                     {
-                                        goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian = " " + j.Value;//构建命令头 
+                                        }
+                                        else
+                                        {
+                                            goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                        }
+                                    }//第一个的时候
                                     else
                                     {
-                                        goujian += j.Value;
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian += j.Value;
+                                        }
+                                        else
+                                        {
+                                            goujian += j.Value + getNeedCmd[csNum].i;
+                                        }
+
+                                    }//中间的时候
                                     nowNum++;
                                 }
-
                                 yuju += goujian;
-                            }
+                            }//有限项时
                         }//理论情况不允许出现子命令多参数
 
                         csNum++;
                     }
                 }
-
-
-
                 itemNum++;
             }
 
@@ -971,7 +2066,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
             {
                 if (!needCmd.ContainsKey(item.Key))
                 {
-                    result.SetError("错误！语法构造器错误代码：E001 请向开发者报告此代码！");
+                    result.SetError("错误！语法构造器错误代码：C001 请向开发者报告此代码！");
 
                     return result;
                 }
@@ -985,7 +2080,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                     {
                         if (i.Value == null)
                         {
-                            result.SetError("错误！语法构造器错误代码：E002 请向开发者报告此代码！");
+                            result.SetError("错误！语法构造器错误代码：C002 请向开发者报告此代码！");
 
                             return result;
                         }
@@ -996,7 +2091,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                             {
                                 if (i.Value.Count != 1 || i.Value.Count != 0)
                                 {
-                                    result.SetError("错误！语法构造器错误代码：E003 请向开发者报告此代码！");
+                                    result.SetError("错误！语法构造器错误代码：C003 请向开发者报告此代码！");
 
                                     return result;
                                 }
@@ -1010,7 +2105,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                         yuju += item.Key;
                                     }
                                 }
-                            }
+                            }//没有项时
                             else if (getNeedCmd[csNum].j == -1)
                             {
                                 var goujian = string.Empty;
@@ -1021,26 +2116,76 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                 {
                                     if (nowNum == i.Value.Count - 1)
                                     {
-                                        goujian += j.Value + getNeedCmd[csNum].i;
-                                    }
+                                        if (nowNum == 0)
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian = item.Key + " " + j.Value;//构建命令头 
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian = item.Key + " " + j.Value;//构建命令头 
+                                                }
+                                                else
+                                                {
+                                                    goujian = item.Key + " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian += j.Value;
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian += j.Value;
+                                                }
+                                                else
+                                                {
+                                                    goujian += j.Value + getNeedCmd[csNum].i;
+                                                }
+                                            }
+                                        }
+                                    }//最后一个时候
                                     else if (nowNum == 0)
                                     {
-                                        goujian = item.Key + " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian = item.Key + " " + j.Value;//构建命令头 
+                                        }
+                                        else
+                                        {
+                                            goujian = item.Key + " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                        }
+                                    }//第一个的时候
                                     else
                                     {
-                                        goujian += j.Value;
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian += j.Value;
+                                        }
+                                        else
+                                        {
+                                            goujian += j.Value + getNeedCmd[csNum].i;
+                                        }
+
+                                    }//中间的时候
                                     nowNum++;
                                 }
 
                                 yuju += goujian;
-                            }
+                            }//无限项时
                             else
                             {
                                 if (i.Value.Count != getNeedCmd[csNum].j)
                                 {
-                                    result.SetError("错误！语法构造器错误代码：E004 请向开发者报告此代码！");
+                                    result.SetError("错误！语法构造器错误代码：C005 请向开发者报告此代码！");
 
                                     return result;
                                 }
@@ -1051,44 +2196,92 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
                                 foreach (var j in i.Value)
                                 {
+                                    if (!getStructure.Tags.Contains(j.Value))
+                                    {
+                                        result.SetError("错误！语法构造器错误代码：E012 请向开发者报告此代码！");
+
+                                        return result;
+                                    }
+
                                     if (nowNum == i.Value.Count - 1)
                                     {
-                                        goujian += j.Value + getNeedCmd[csNum].i;
-                                    }
+                                        if (nowNum == 0)
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian = item.Key + " " + j.Value;//构建命令头 
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian = item.Key + " " + j.Value;//构建命令头 
+                                                }
+                                                else
+                                                {
+                                                    goujian = item.Key + " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian += j.Value;
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian += j.Value;
+                                                }
+                                                else
+                                                {
+                                                    goujian += j.Value + getNeedCmd[csNum].i;
+                                                }
+                                            }
+                                        }
+                                    }//最后一个时候
                                     else if (nowNum == 0)
                                     {
-                                        if (!getStructure.Tags.Contains(j.Value))
+                                        if (getNeedCmd[csNum].i == 'X')
                                         {
-                                            result.SetError("错误！语法构造器错误代码：E012 请向开发者报告此代码！");
-
-                                            return result;
+                                            goujian = item.Key + " " + j.Value;//构建命令头 
                                         }
-
-                                        goujian = item.Key + " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
-                                    }
+                                        else
+                                        {
+                                            goujian = item.Key + " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                        }
+                                    }//第一个的时候
                                     else
                                     {
-                                        goujian += j.Value;
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian += j.Value;
+                                        }
+                                        else
+                                        {
+                                            goujian += j.Value + getNeedCmd[csNum].i;
+                                        }
+
+                                    }//中间的时候
                                     nowNum++;
                                 }
 
                                 yuju += goujian;
-                            }
+                            }//有限项时
                         }
-                        else
+                        else//第n参数时
                         {
                             if (getNeedCmd[csNum].j == 0)
                             {
                                 if (i.Value.Count != 1 || i.Value.Count != 0)
                                 {
-                                    result.SetError("错误！语法构造器错误代码：E005 请向开发者报告此代码！");
+                                    result.SetError("错误！语法构造器错误代码：C003 请向开发者报告此代码！");
 
                                     return result;
                                 }
-
-                                //理论情况不允许出现
-                            }
+                            }//没有项时，理论情况不允许出现
                             else if (getNeedCmd[csNum].j == -1)
                             {
                                 var goujian = string.Empty;
@@ -1099,26 +2292,76 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                 {
                                     if (nowNum == i.Value.Count - 1)
                                     {
-                                        goujian += j.Value + getNeedCmd[csNum].i;
-                                    }
+                                        if (nowNum == 0)
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian = " " + j.Value;//构建命令头 
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian = " " + j.Value;//构建命令头 
+                                                }
+                                                else
+                                                {
+                                                    goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian += j.Value;
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian += j.Value;
+                                                }
+                                                else
+                                                {
+                                                    goujian += j.Value + getNeedCmd[csNum].i;
+                                                }
+                                            }
+                                        }
+                                    }//最后一个时候
                                     else if (nowNum == 0)
                                     {
-                                        goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian = " " + j.Value;//构建命令头 
+                                        }
+                                        else
+                                        {
+                                            goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                        }
+                                    }//第一个的时候
                                     else
                                     {
-                                        goujian += j.Value;
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian += j.Value;
+                                        }
+                                        else
+                                        {
+                                            goujian += j.Value + getNeedCmd[csNum].i;
+                                        }
+
+                                    }//中间的时候
                                     nowNum++;
                                 }
 
                                 yuju += goujian;
-                            }
+                            }//无限项时
                             else
                             {
                                 if (i.Value.Count != getNeedCmd[csNum].j)
                                 {
-                                    result.SetError("错误！语法构造器错误代码：E006 请向开发者报告此代码！");
+                                    result.SetError("错误！语法构造器错误代码：C005 请向开发者报告此代码！");
 
                                     return result;
                                 }
@@ -1131,27 +2374,76 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                 {
                                     if (nowNum == i.Value.Count - 1)
                                     {
-                                        goujian += j.Value + getNeedCmd[csNum].i;
-                                    }
+                                        if (nowNum == 0)
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian = " " + j.Value;//构建命令头 
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian = " " + j.Value;//构建命令头 
+                                                }
+                                                else
+                                                {
+                                                    goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian += j.Value;
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian += j.Value;
+                                                }
+                                                else
+                                                {
+                                                    goujian += j.Value + getNeedCmd[csNum].i;
+                                                }
+                                            }
+                                        }
+                                    }//最后一个时候
                                     else if (nowNum == 0)
                                     {
-                                        goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian = " " + j.Value;//构建命令头 
+                                        }
+                                        else
+                                        {
+                                            goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                        }
+                                    }//第一个的时候
                                     else
                                     {
-                                        goujian += j.Value;
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian += j.Value;
+                                        }
+                                        else
+                                        {
+                                            goujian += j.Value + getNeedCmd[csNum].i;
+                                        }
+
+                                    }//中间的时候
                                     nowNum++;
                                 }
 
                                 yuju += goujian;
-                            }
+                            }//有限项时
                         }
-
                         csNum++;
                     }
                 }
-                else
+                else//是子命令时
                 {
                     var csNum = 0;
 
@@ -1159,18 +2451,18 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                     {
                         if (i.Value == null)
                         {
-                            result.SetError("错误！语法构造器错误代码：E007 请向开发者报告此代码！");
+                            result.SetError("错误！语法构造器错误代码：C002 请向开发者报告此代码！");
 
                             return result;
                         }
 
-                        if (csNum == 0)
+                        if (csNum == 0)//子命令第一参数
                         {
                             if (getNeedCmd[csNum].j == 0)
                             {
                                 if (i.Value.Count != 1 || i.Value.Count != 0)
                                 {
-                                    result.SetError("错误！语法构造器错误代码：E008 请向开发者报告此代码！");
+                                    result.SetError("错误！语法构造器错误代码：C003 请向开发者报告此代码！");
 
                                     return result;
                                 }
@@ -1181,10 +2473,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
                                     if (kq == "开启")
                                     {
-                                        yuju += item.Key;
+                                        yuju += " " + item.Key;
                                     }
                                 }
-                            }
+                            }//没有项时
                             else if (getNeedCmd[csNum].j == -1)
                             {
                                 var goujian = string.Empty;
@@ -1195,26 +2487,76 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                 {
                                     if (nowNum == i.Value.Count - 1)
                                     {
-                                        goujian += j.Value + getNeedCmd[csNum].i;
-                                    }
+                                        if (nowNum == 0)
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian = " " + item.Key + ":" + j.Value;//构建命令头 
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian = " " + item.Key + ":" + j.Value;//构建命令头 
+                                                }
+                                                else
+                                                {
+                                                    goujian = " " + item.Key + ":" + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian += j.Value;
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian += j.Value;
+                                                }
+                                                else
+                                                {
+                                                    goujian += j.Value + getNeedCmd[csNum].i;
+                                                }
+                                            }
+                                        }
+                                    }//最后一个时候
                                     else if (nowNum == 0)
                                     {
-                                        goujian = " " + item.Key + ":" + j.Value + getNeedCmd[csNum].i;//构建命令头 
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian = " " + item.Key + ":" + j.Value;//构建命令头 
+                                        }
+                                        else
+                                        {
+                                            goujian = " " + item.Key + ":" + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                        }
+                                    }//第一个的时候
                                     else
                                     {
-                                        goujian += j.Value;
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian += j.Value;
+                                        }
+                                        else
+                                        {
+                                            goujian += j.Value + getNeedCmd[csNum].i;
+                                        }
+
+                                    }//中间的时候
                                     nowNum++;
                                 }
 
                                 yuju += goujian;
-                            }
+                            }//无限项时
                             else
                             {
                                 if (i.Value.Count != getNeedCmd[csNum].j)
                                 {
-                                    result.SetError("错误！语法构造器错误代码：E009 请向开发者报告此代码！");
+                                    result.SetError("错误！语法构造器错误代码：C005 请向开发者报告此代码！");
 
                                     return result;
                                 }
@@ -1227,21 +2569,71 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                 {
                                     if (nowNum == i.Value.Count - 1)
                                     {
-                                        goujian += j.Value + getNeedCmd[csNum].i;
-                                    }
+                                        if (nowNum == 0)
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian = " " + item.Key + ":" + j.Value;//构建命令头 
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian = " " + item.Key + ":" + j.Value;//构建命令头 
+                                                }
+                                                else
+                                                {
+                                                    goujian = " " + item.Key + ":" + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian += j.Value;
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian += j.Value;
+                                                }
+                                                else
+                                                {
+                                                    goujian += j.Value + getNeedCmd[csNum].i;
+                                                }
+                                            }
+                                        }
+                                    }//最后一个时候
                                     else if (nowNum == 0)
                                     {
-                                        goujian = " " + item.Key + ":" + j.Value + getNeedCmd[csNum].i;//构建命令头 
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian = " " + item.Key + ":" + j.Value;//构建命令头 
+                                        }
+                                        else
+                                        {
+                                            goujian = " " + item.Key + ":" + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                        }
+                                    }//第一个的时候
                                     else
                                     {
-                                        goujian += j.Value;
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian += j.Value;
+                                        }
+                                        else
+                                        {
+                                            goujian += j.Value + getNeedCmd[csNum].i;
+                                        }
+
+                                    }//中间的时候
                                     nowNum++;
                                 }
 
                                 yuju += goujian;
-                            }
+                            }//有限项时
                         }//是第1参时
                         else
                         {
@@ -1250,11 +2642,21 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                             {
                                 if (i.Value.Count != 1 || i.Value.Count != 0)
                                 {
-                                    result.SetError("错误！语法构造器错误代码：E010 请向开发者报告此代码！");
+                                    result.SetError("错误！语法构造器错误代码：C003 请向开发者报告此代码！");
 
                                     return result;
                                 }
-                            }
+
+                                if (i.Value.Count == 1)
+                                {
+                                    var kq = i.Value.Values.First();
+
+                                    if (kq == "开启")
+                                    {
+                                        yuju += " " + item.Key;
+                                    }
+                                }
+                            }//没有项时
                             else if (getNeedCmd[csNum].j == -1)
                             {
                                 var goujian = string.Empty;
@@ -1265,26 +2667,76 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                 {
                                     if (nowNum == i.Value.Count - 1)
                                     {
-                                        goujian += j.Value + getNeedCmd[csNum].i;
-                                    }
+                                        if (nowNum == 0)
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian = " " + j.Value;//构建命令头 
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian = " " + j.Value;//构建命令头 
+                                                }
+                                                else
+                                                {
+                                                    goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian += j.Value;
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian += j.Value;
+                                                }
+                                                else
+                                                {
+                                                    goujian += j.Value + getNeedCmd[csNum].i;
+                                                }
+                                            }
+                                        }
+                                    }//最后一个时候
                                     else if (nowNum == 0)
                                     {
-                                        goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian = " " + j.Value;//构建命令头 
+                                        }
+                                        else
+                                        {
+                                            goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                        }
+                                    }//第一个的时候
                                     else
                                     {
-                                        goujian += j.Value;
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian += j.Value;
+                                        }
+                                        else
+                                        {
+                                            goujian += j.Value + getNeedCmd[csNum].i;
+                                        }
+
+                                    }//中间的时候
                                     nowNum++;
                                 }
 
                                 yuju += goujian;
-                            }
+                            }//无限项时
                             else
                             {
                                 if (i.Value.Count != getNeedCmd[csNum].j)
                                 {
-                                    result.SetError("错误！语法构造器错误代码：E1011 请向开发者报告此代码！");
+                                    result.SetError("错误！语法构造器错误代码：C005 请向开发者报告此代码！");
 
                                     return result;
                                 }
@@ -1297,29 +2749,75 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                 {
                                     if (nowNum == i.Value.Count - 1)
                                     {
-                                        goujian += j.Value + getNeedCmd[csNum].i;
-                                    }
+                                        if (nowNum == 0)
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian = " " + j.Value;//构建命令头 
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian = " " + j.Value;//构建命令头 
+                                                }
+                                                else
+                                                {
+                                                    goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (getNeedCmd[csNum].i == 'X')
+                                            {
+                                                goujian += j.Value;
+                                            }
+                                            else
+                                            {
+                                                if (nowNum == i.Value.Count - 1)
+                                                {
+                                                    goujian += j.Value;
+                                                }
+                                                else
+                                                {
+                                                    goujian += j.Value + getNeedCmd[csNum].i;
+                                                }
+                                            }
+                                        }
+                                    }//最后一个时候
                                     else if (nowNum == 0)
                                     {
-                                        goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian = " " + j.Value;//构建命令头 
+                                        }
+                                        else
+                                        {
+                                            goujian = " " + j.Value + getNeedCmd[csNum].i;//构建命令头 
+                                        }
+                                    }//第一个的时候
                                     else
                                     {
-                                        goujian += j.Value;
-                                    }
+                                        if (getNeedCmd[csNum].i == 'X')
+                                        {
+                                            goujian += j.Value;
+                                        }
+                                        else
+                                        {
+                                            goujian += j.Value + getNeedCmd[csNum].i;
+                                        }
+
+                                    }//中间的时候
                                     nowNum++;
                                 }
-
                                 yuju += goujian;
-                            }
+                            }//有限项时
                         }//理论情况不允许出现子命令多参数
 
                         csNum++;
                     }
                 }
-
-
-
                 itemNum++;
             }
 
@@ -1339,29 +2837,32 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
             var savedic = new Dictionary<string, string>();
 
-            foreach (var item in info)
+            await Task.Run(() =>
             {
-                var realCmd = GetRealCmd(item.Key);
-
-                var num = 0;
-
-                var str = string.Empty;
-
-                foreach (var i in item.Value[realCmd]["第 1 条参数"])
+                foreach (var item in info)
                 {
-                    if(num == item.Value[realCmd]["第 1 条参数"].Count - 1)
-                    {
-                        str += i.Value;
-                    }
-                    else
-                    {
-                        str += i.Value + ",";
-                    }
-                    num++;
-                }
+                    var realCmd = GetRealCmd(item.Key);
 
-                savedic.Add(realCmd, str);
-            }
+                    var num = 0;
+
+                    var str = string.Empty;
+
+                    foreach (var i in item.Value[realCmd]["第 1 条参数"])
+                    {
+                        if (num == item.Value[realCmd]["第 1 条参数"].Count - 1)
+                        {
+                            str += i.Value;
+                        }
+                        else
+                        {
+                            str += i.Value + ",";
+                        }
+                        num++;
+                    }
+
+                    savedic.Add(realCmd, str);
+                }
+            });
 
             result.SetSuccese("Player或Npc构建成功", savedic);
 
@@ -1369,22 +2870,119 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
         }
 
         /// <summary>
+        /// 输出为Yaml
+        /// </summary>
+        /// <param name="getBacks"></param>
+        /// <returns></returns>
+        private async Task<ReturnModel> InputToYaml(AllConfigModel getBacks)
+        {
+            var result = new ReturnModel();
+
+            try
+            {
+                var createAllTalk = new List<string>();
+
+                await Task.Run(() =>
+                {
+                    foreach (var item in getBacks.allTalk.Values)
+                    {
+                        createAllTalk.Add(FileService.SaveToYaml(item));
+                    }
+
+                    var createMain = FileService.SaveToYaml(getBacks.mainConfigModel);
+
+                    var disPath = FileService.GetFileDirectory(filePath);
+
+                    FileService.ChangeFile(filePath, createMain); //输出Main
+
+                    for (int i = 0; i < createAllTalk.Count; i++)
+                    {
+                        var s = 0;
+
+                        var getter = string.Empty;
+
+                        foreach (var item in getBacks.mainConfigModel.npcs)
+                        {
+                            if (s == i)
+                            {
+                                getter = item.Value;
+                            }
+                            s++;
+                        }
+                        FileService.ChangeFile(disPath + @"\conversations\" + getter + ".yml", createAllTalk[i]); //输出对话
+                    }
+
+                    FileService.ChangeFile(disPath + @"\conditions.yml", getBacks.conditions); //输出条件
+
+                    FileService.ChangeFile(disPath + @"\events.yml", getBacks.events); //输出事件
+
+                    FileService.ChangeFile(disPath + @"\items.yml", getBacks.items); //输出物品
+
+                    FileService.ChangeFile(disPath + @"\journal.yml", getBacks.journal); //输出日记
+
+                    FileService.ChangeFile(disPath + @"\objectives.yml", getBacks.objcetives); //输出目标
+                });
+                result.SetSuccese("输出成功");
+            }
+            catch
+            {
+                result.SetError("输出错误");
+            }
+
+            return result;
+        }
+        /// <summary>
         /// 获取真实命令
         /// </summary>
         /// <param name="txt"></param>
         /// <returns></returns>
         protected static string GetRealCmd(string txt)
         {
-            var getSqlit = txt.Split(new string[] { "; " }, StringSplitOptions.RemoveEmptyEntries);
+            var getSqlit = txt.Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
 
             if(getSqlit.Length == 3|| getSqlit.Length == 2)
             {
-                return getSqlit[1];
+                return getSqlit[getSqlit.Length-1];
             }
             else
             {
                 return txt;
             }
+        }
+
+        /// <summary>
+        /// 从Thumb中获取控件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name"></param>
+        /// <param name="thumb"></param>
+        /// <returns></returns>
+        protected static T GetControl<T>(string name, Thumb thumb)
+        {
+            return (T)thumb.Template.FindName(name, thumb);
+        }
+
+        /// <summary>
+        /// 查询被存储在SaveChirld中的信息
+        /// </summary>
+        /// <returns></returns>
+        private async Task<SaveChird> FindSaveThumbInfo(Thumb thumb)
+        {
+            SaveChird save = null;
+
+            await Task.Run(() =>
+            {
+                foreach (var item in saveThumbs)
+                {
+                    if (item.Saver == thumb)
+                    {
+                        save = item;
+                        break;
+                    }
+                }
+            });
+
+            return save;
         }
     }
 }

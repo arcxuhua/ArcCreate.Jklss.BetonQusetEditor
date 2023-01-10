@@ -45,7 +45,7 @@
                                         <RowDefinition Height="30" />
                                         <RowDefinition Height="*" />
                                     </Grid.RowDefinitions>
-                                    <TextBlock Text="绑定NPC："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                    <TextBlock Text="绑定NPC：" Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                     <TextBox x:Name="NpcName_TBox" Width="130" Height="30" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                                     <TextBlock Text="显示名称："  Margin="220 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                     <TextBox x:Name="ShowNpcName_TBox" Width="110" Height="30" Margin="280 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left"/>

@@ -118,6 +118,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         {
                             IsNegate = false;
                         }
+
+                        if (string.IsNullOrEmpty(ClassificationsSeleted))
+                        {
+                            return;
+                        }
+
+                        if (string.IsNullOrEmpty(TermsSeleted))
+                        {
+                            return;
+                        }
+
                         MainWindowViewModel.saveResult = new MainWindowViewModel.SaveResult()
                         {
                             One = ClassificationsSeleted,
