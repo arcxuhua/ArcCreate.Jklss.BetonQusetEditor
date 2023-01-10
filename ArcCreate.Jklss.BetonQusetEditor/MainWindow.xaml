@@ -72,7 +72,7 @@
                         <Button Content="新建物品" Command="{Binding CreateItemsCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" HorizontalAlignment="Center" Margin="872,11,386,0" VerticalAlignment="Top" Width="90" Height="30" IsEnabled="{Binding isHaveSubjcet}"/>
                     </Grid>
                 </Border>
-                <Border x:Name="outsaid" ClipToBounds="True" BorderThickness="1" HorizontalAlignment="Left" Height="526" VerticalAlignment="Top" Width="1350" Background="White" CornerRadius="10" Margin="10,60,0,0" PreviewMouseWheel="outside_PreviewMouseWheel" PreviewMouseMove="Scrollviewer_MouseMove" PreviewMouseDown="Scrollviewer_MouseDown" PreviewMouseUp="Scrollviewer_MouseUp">
+                <Border x:Name="outsaid" ClipToBounds="True" BorderThickness="1" HorizontalAlignment="Left" Height="526" VerticalAlignment="Top" Width="1350" Background="White" CornerRadius="10" Margin="10,60,0,0" PreviewMouseWheel="outside_PreviewMouseWheel" PreviewMouseDown="Scrollviewer_MouseDown" PreviewMouseUp="Scrollviewer_MouseUp">
                     <Grid>
                         <Canvas x:Name="cvmenu" HorizontalAlignment="Left" Height="5098" VerticalAlignment="Top" Width="12774" Background="#FFB0AAAA">
                             

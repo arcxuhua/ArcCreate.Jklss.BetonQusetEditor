@@ -435,7 +435,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
+        public async void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
             Thumb myThumb = (Thumb)sender;
             double nTop = Canvas.GetTop(myThumb) + e.VerticalChange;
@@ -452,7 +452,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             Canvas.SetTop(myThumb, nTop);
             Canvas.SetLeft(myThumb, nLeft);
 
-            DrawAllThumpLine(myThumb);
+            await DrawAllThumpLine(myThumb);
         }
 
         /// <summary>
@@ -3302,14 +3302,6 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                 };
                                 return backInfo;
                             }
-                            else
-                            {
-                                backInfo = new BackThumb()
-                                {
-                                    IsThumb = false,
-                                    backs = null
-                                };
-                            }
                         }
                         catch
                         {
@@ -3376,46 +3368,58 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         /// 拖动Thumb时改变连接Thumb的线
         /// </summary>
         /// <param name="thumb"></param>
-        private void DrawAllThumpLine(Thumb thumb)
+        private async Task DrawAllThumpLine(Thumb thumb)
         {
-            for (int i = 0; i < saveLines.Count; i++)
+            await Task.Run(() =>
             {
-                if (saveLines[i].ChirldName == thumb)//移动的是子集
+                for (int i = 0; i < saveLines.Count; i++)
                 {
-                    saveLines[i].ChirldName = thumb;
+                    if (saveLines[i].ChirldName == thumb)//移动的是子集
+                    {
+                        saveLines[i].ChirldName = thumb;
 
-                    foreach (var item in mainWindow.cvmenu.Children)
-                    {
-                        var item_Line = item as Line;
-                        if (item_Line == saveLines[i].line)
+                        mainWindow.cvmenu.Dispatcher.Invoke(new Action(() =>
                         {
-                            item_Line.X2 = Canvas.GetLeft(thumb) + thumb.Width / 2 - (Canvas.GetLeft(saveLines[i].FatherName) + saveLines[i].FatherName.Width / 2);
-                            item_Line.Y2 = Canvas.GetTop(thumb) - (Canvas.GetTop(saveLines[i].FatherName) + saveLines[i].FatherName.Height);
-                            Canvas.SetLeft(item_Line, Canvas.GetLeft(saveLines[i].FatherName) + saveLines[i].FatherName.Width / 2);
-                            Canvas.SetTop(item_Line, Canvas.GetTop(saveLines[i].FatherName) + saveLines[i].FatherName.Height);
-                            System.Windows.Controls.Panel.SetZIndex(item_Line, 0);
-                            saveLines[i].line = item_Line;
-                        }
+                            foreach (var item in mainWindow.cvmenu.Children)
+                            {
+                                var item_Line = item as Line;
+                                if (item_Line == saveLines[i].line)
+                                {
+                                    item_Line.X2 = Canvas.GetLeft(thumb) + thumb.Width / 2 - (Canvas.GetLeft(saveLines[i].FatherName) + saveLines[i].FatherName.Width / 2);
+                                    item_Line.Y2 = Canvas.GetTop(thumb) - (Canvas.GetTop(saveLines[i].FatherName) + saveLines[i].FatherName.Height);
+                                    Canvas.SetLeft(item_Line, Canvas.GetLeft(saveLines[i].FatherName) + saveLines[i].FatherName.Width / 2);
+                                    Canvas.SetTop(item_Line, Canvas.GetTop(saveLines[i].FatherName) + saveLines[i].FatherName.Height);
+                                    System.Windows.Controls.Panel.SetZIndex(item_Line, 0);
+                                    saveLines[i].line = item_Line;
+                                }
+                            }
+                        }));
+
+                        
+                    }
+                    if (saveLines[i].FatherName == thumb)//移动的是父级
+                    {
+                        saveLines[i].FatherName = thumb;
+                        mainWindow.cvmenu.Dispatcher.Invoke(new Action(() =>
+                        {
+                            foreach (var item in mainWindow.cvmenu.Children)
+                            {
+                                var item_Line = item as Line;
+                                if (item_Line == saveLines[i].line)
+                                {
+                                    item_Line.X2 = Canvas.GetLeft(saveLines[i].ChirldName) + saveLines[i].ChirldName.Width / 2 - (Canvas.GetLeft(thumb) + thumb.Width / 2);
+                                    item_Line.Y2 = Canvas.GetTop(saveLines[i].ChirldName) - (Canvas.GetTop(thumb) + thumb.Height);
+                                    Canvas.SetLeft(item_Line, Canvas.GetLeft(thumb) + thumb.Width / 2);
+                                    Canvas.SetTop(item_Line, Canvas.GetTop(thumb) + thumb.Height);
+                                    System.Windows.Controls.Panel.SetZIndex(item_Line, 0);
+                                    saveLines[i].line = item_Line;
+                                }
+                            }
+                        }));
                     }
                 }
-                if (saveLines[i].FatherName == thumb)//移动的是父级
-                {
-                    saveLines[i].FatherName = thumb;
-                    foreach (var item in mainWindow.cvmenu.Children)
-                    {
-                        var item_Line = item as Line;
-                        if (item_Line == saveLines[i].line)
-                        {
-                            item_Line.X2 = Canvas.GetLeft(saveLines[i].ChirldName) + saveLines[i].ChirldName.Width / 2 - (Canvas.GetLeft(thumb) + thumb.Width / 2);
-                            item_Line.Y2 = Canvas.GetTop(saveLines[i].ChirldName) - (Canvas.GetTop(thumb) + thumb.Height);
-                            Canvas.SetLeft(item_Line, Canvas.GetLeft(thumb) + thumb.Width / 2);
-                            Canvas.SetTop(item_Line, Canvas.GetTop(thumb) + thumb.Height);
-                            System.Windows.Controls.Panel.SetZIndex(item_Line, 0);
-                            saveLines[i].line = item_Line;
-                        }
-                    }
-                }
-            }
+            });
+            
         }
 
         /// <summary>

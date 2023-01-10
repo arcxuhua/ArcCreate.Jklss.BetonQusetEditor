@@ -41,37 +41,46 @@ namespace ArcCreate.Jklss.BetonQusetEditor
             {
                 previousPoint = e.GetPosition(outsaid);
                 isTranslateStart = true;
+
+                outsaid.PreviewMouseMove += Scrollviewer_MouseMove;
             }
             
         }
 
         private void Scrollviewer_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (e.MiddleButton == MouseButtonState.Pressed && e.LeftButton == MouseButtonState.Released && e.RightButton == MouseButtonState.Released)
+            if (e.MiddleButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.RightButton == MouseButtonState.Released)
             {
                 if (isTranslateStart)
                 {
                     isTranslateStart = false;
                 }
+
+                outsaid.PreviewMouseMove -= Scrollviewer_MouseMove;
             }
             
         }
 
         private void Scrollviewer_MouseMove(object sender, MouseEventArgs e)
         {
-            if ( e.MiddleButton == MouseButtonState.Pressed && e.LeftButton == MouseButtonState.Released && e.RightButton == MouseButtonState.Released)
+            Task.Run(() =>
             {
-                if (isTranslateStart)
+                if (e.MiddleButton == MouseButtonState.Pressed && e.LeftButton == MouseButtonState.Released && e.RightButton == MouseButtonState.Released)
                 {
-                    Point currentPoint = e.GetPosition(outsaid); //不能用 inside，必须用outside
-                    Vector v = currentPoint - previousPoint;
-                    TransformGroup tg = cvmenu.RenderTransform as TransformGroup;
-                    tg.Children.Add(new TranslateTransform(v.X, v.Y)); //centerX和centerY用外部包装元素的坐标，不能用内部被变换的Canvas元素的坐标
-                    previousPoint = currentPoint;
-                }
+                    if (isTranslateStart)
+                    {
+                        cvmenu.Dispatcher.Invoke(new Action(() =>
+                        {
+                            Point currentPoint = e.GetPosition(outsaid); //不能用 inside，必须用outside
+                            Vector v = currentPoint - previousPoint;
+                            TransformGroup tg = cvmenu.RenderTransform as TransformGroup;
+                            tg.Children.Add(new TranslateTransform(v.X, v.Y)); //centerX和centerY用外部包装元素的坐标，不能用内部被变换的Canvas元素的坐标
+                            previousPoint = currentPoint;
+                        }));
+                    }
 
-            }
-            
+                }
+            });
         }
 
         private void outside_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -87,7 +96,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor
                 //centerX和centerY用外部包装元素的坐标，不能用内部被变换的Canvas元素的坐标
                 tg.Children.Add(new ScaleTransform(s, s, currentPoint.X, currentPoint.Y));
 
+                
+
                 e.Handled = true;
+                
             }
         }
     }
