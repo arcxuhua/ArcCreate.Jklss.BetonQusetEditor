@@ -103,6 +103,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Base\AnimationBase.cs" />
+    <Compile Include="Base\CreateThumbsBase.cs" />
     <Compile Include="Base\FileLoader\ContisionLoaderBase.cs" />
     <Compile Include="Base\FileLoader\EventLoaderBase.cs" />
     <Compile Include="Base\FileLoader\NpcLoaderBase.cs" />

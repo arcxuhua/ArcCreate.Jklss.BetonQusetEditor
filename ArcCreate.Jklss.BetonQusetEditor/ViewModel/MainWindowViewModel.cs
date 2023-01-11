@@ -24,6 +24,9 @@ using static ArcCreate.Jklss.Model.MainWindow.MainWindowModels;
 using ComboBox = System.Windows.Controls.ComboBox;
 using TextBox = System.Windows.Controls.TextBox;
 using TreeView = System.Windows.Controls.TreeView;
+using Thumb = System.Windows.Controls.Primitives.Thumb;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using Window = System.Windows.Window;
 
 namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 {
@@ -62,6 +65,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         public static PlayerLoaderBase playerLoader = new PlayerLoaderBase();
 
         public static NpcLoaderBase npcLoader = new NpcLoaderBase();
+
+        private static bool isCombox = false;
         //static MainWindowModel.saveThumbs存储在MainWindowModel中
 
         #endregion
@@ -233,21 +238,14 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             {
                 if (_ComBoxLoadedCommand == null)
                 {
-                    _ComBoxLoadedCommand = new RelayCommand<System.Windows.Controls.ComboBox>((cb) =>
+                    _ComBoxLoadedCommand = new RelayCommand<ComboBox>((cb) =>
                     {
                         cb.SelectionChanged += Cb_SelectionChanged;
-                        cb.DragEnter += Cb_DragEnter;
-
                     });
                 }
                 return _ComBoxLoadedCommand;
             }
             set { _ComBoxLoadedCommand = value; }
-        }
-
-        private void Cb_DragEnter(object sender, System.Windows.DragEventArgs e)
-        {
-
         }
 
         /// <summary>
@@ -257,6 +255,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         /// <param name="e"></param>
         private async void Cb_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            isCombox = true;
             var thumbClass = (await FindSaveThumbInfo(nowThumb)).thumbClass;
 
             if(thumbClass!=ThumbClass.Player&&thumbClass != ThumbClass.NPC)
@@ -403,6 +402,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         /// <param name="e"></param>
         public async void Thumb_DragCompleted(object sender, DragCompletedEventArgs e)
         {
+            if (isCombox)
+            {
+                return;
+            }
             var info = await ThumbClassification(sender as Thumb);
 
             if (info == null || info.IsThumb == false || info.backs == null)
@@ -437,6 +440,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         /// <param name="e"></param>
         public async void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
+            if (isCombox)
+            {
+                return;
+            }
             Thumb myThumb = (Thumb)sender;
             double nTop = Canvas.GetTop(myThumb) + e.VerticalChange;
             double nLeft = Canvas.GetLeft(myThumb) + e.HorizontalChange;
@@ -463,9 +470,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         public void Thumb_DragStarted(object sender, DragStartedEventArgs e)
         {
             nowThumb = (Thumb)sender;
-            Thumb myThumb = (Thumb)sender;
-            double nTop = Canvas.GetTop(myThumb);
-            double nLeft = Canvas.GetLeft(myThumb);
+
+            if (isCombox)
+            {
+                return;
+            }
+
+            double nTop = Canvas.GetTop(nowThumb);
+            double nLeft = Canvas.GetLeft(nowThumb);
+
             thumbcanvas.Clear();
             thumbcanvas.Add(nTop);
             thumbcanvas.Add(nLeft);
@@ -507,7 +520,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
         #endregion
 
-        #region 按钮命令
+        #region 按键命令
 
         /// <summary>
         /// 输出为YML文件
@@ -617,89 +630,52 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                 if (_CreateNewTalkCmd == null)
                 {
                     _CreateNewTalkCmd = new CommandBase();
-                    _CreateNewTalkCmd.DoExecute = new Action<object>(obj =>//回调函数
+                    _CreateNewTalkCmd.DoExecute = new Action<object>(async obj =>//回调函数
                     {
-                        if (!string.IsNullOrEmpty(MainFilePath))
+                        CreateThumbsBase createThumbsBase = new CreateThumbsBase();
+
+                        var back = await createThumbsBase.CreateThumb(ThumbClass.Subject, MainFilePath, obj as MainWindow);
+
+                        if (!back.Succese)
                         {
-                            var window = obj as MainWindow;
+                            ShowMessage(back.Text);
 
-                            var myResourceDictionary = new ResourceDictionary
-                            {
-                                Source = new Uri("pack://application:,,,/MainWindows/MainWindowDictionary.xaml", UriKind.RelativeOrAbsolute) // 指定样式文件的路径
-                            };
-
-                            var myButtonStyle = myResourceDictionary["Main"] as Style; // 通过key找到指定的样式
-
-                            Thumb thumb = new Thumb()
-                            {
-                                Height = 148,
-                                Width = 400,
-                                Style = myButtonStyle,
-                                Uid = Uid.ToString(),
-                            };
-                            Uid++;
-                            thumb.PreviewMouseLeftButtonDown += Thumb_MouseLeftButtonDown;
-                            thumb.DragCompleted += Thumb_DragCompleted;
-                            thumb.DragDelta += Thumb_DragDelta;
-                            thumb.DragStarted += Thumb_DragStarted;
-
-                            var model = new MainWindowModels.SaveChird()
-                            {
-                                Saver = thumb,
-                                Children = new List<Thumb>(),
-                                Fathers = new List<Thumb>(),
-                                CanFather = false,
-                                Main = thumb,
-                                thumbClass = ThumbClass.Subject
-                            };
-
-                            MainWindowModels.saveThumbs.Add(model);
-                            window.cvmenu.Children.Add(thumb);
-
-                            try
-                            {
-                                var getTransForm = window.cvmenu.RenderTransform as TransformGroup;
-
-                                var x = 0.00;
-                                var y = 0.00;
-
-                                foreach (var item in getTransForm.Children)
-                                {
-                                    var getScroller = item as TranslateTransform;
-                                    if (getScroller != null)
-                                    {
-                                        x += getScroller.X;
-                                        y += getScroller.Y;
-                                    }
-                                }
-
-                                Canvas.SetTop(thumb, 262 - thumb.Height / 2 - y);
-                                Canvas.SetLeft(thumb, 675.5 - thumb.Width / 2 - x);
-                            }
-                            catch
-                            {
-                                Canvas.SetTop(thumb, 262 - thumb.Height / 2);
-                                Canvas.SetLeft(thumb, 675.5 - thumb.Width / 2);
-                            }
-
-                            //saveScrollViewer = window.Scrollviewer_Tree;
-
-                            ThumbNums = MainWindowModels.saveThumbs.Count.ToString();
-
-                            if (mainWindow == null)
-                            {
-                                mainWindow = window;
-                            }
-                            ActBase.KeyDown -= ActBase_KeyDown;
-                            ActBase.KeyDown += ActBase_KeyDown;
-                            isHaveSubjcet = true;
+                            return;
                         }
+
+                        if (back.Backs == null)
+                        {
+                            ShowMessage("错误！返回值为空");
+
+                            return;
+                        }
+
+                        var thumb = back.Backs as Thumb;
+
+                        thumb.PreviewMouseLeftButtonDown += Thumb_MouseLeftButtonDown;
+                        thumb.DragCompleted += Thumb_DragCompleted;
+                        thumb.DragDelta += Thumb_DragDelta;
+                        thumb.DragStarted += Thumb_DragStarted;
+
+                        ThumbNums = MainWindowModels.saveThumbs.Count.ToString();
+
+                        if (mainWindow == null)
+                        {
+                            mainWindow = obj as MainWindow;
+                        }
+                        ActBase.KeyDown -= ActBase_KeyDown;
+                        ActBase.KeyDown += ActBase_KeyDown;
+                        isHaveSubjcet = true;
+
+                        
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }
                 return _CreateNewTalkCmd;
             }
         }
 
+
+        private static int playerNum = 0;
         /// <summary>
         /// 创建新的玩家对话
         /// </summary>
@@ -711,78 +687,45 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                 if (_CreatePlayerTalkCmd == null)
                 {
                     _CreatePlayerTalkCmd = new CommandBase();
-                    _CreatePlayerTalkCmd.DoExecute = new Action<object>(obj =>//回调函数
+                    _CreatePlayerTalkCmd.DoExecute = new Action<object>(async obj =>//回调函数
                     {
-                        if (!string.IsNullOrEmpty(MainFilePath))
+                        CreateThumbsBase createThumbsBase = new CreateThumbsBase();
+
+                        var back = await createThumbsBase.CreateThumb(ThumbClass.Player, MainFilePath, obj as MainWindow);
+
+                        if (!back.Succese)
                         {
-                            var window = obj as MainWindow;
+                            ShowMessage(back.Text);
 
-                            var myResourceDictionary = new ResourceDictionary
-                            {
-                                Source = new Uri("pack://application:,,,/MainWindows/MainWindowDictionary.xaml", UriKind.RelativeOrAbsolute) // 指定样式文件的路径
-                            };
+                            return;
+                        }
 
-                            var myButtonStyle = myResourceDictionary["Player"] as Style; // 通过key找到指定的样式
+                        if (back.Backs == null)
+                        {
+                            ShowMessage("错误！返回值为空");
 
-                            Thumb thumb = new Thumb()
-                            {
-                                Height = 148,
-                                Width = 400,
-                                Style = myButtonStyle,
-                                Uid = Uid.ToString(),
-                            };
-                            Uid++;
+                            return;
+                        }
 
-                            thumb.DragCompleted += Thumb_DragCompleted;
-                            thumb.DragDelta += Thumb_DragDelta;
-                            thumb.DragStarted += Thumb_DragStarted;
-                            thumb.PreviewMouseLeftButtonDown += Thumb_MouseLeftButtonDown;
+                        var thumb = back.Backs as Thumb;
 
-                            var model = new MainWindowModels.SaveChird()
-                            {
-                                Saver = thumb,
-                                Children = new List<Thumb>(),
-                                Fathers = new List<Thumb>(),
-                                CanFather = true,
-                                Main = null,
-                                thumbClass = ThumbClass.Player
-                            };
+                        thumb.PreviewMouseLeftButtonDown += Thumb_MouseLeftButtonDown;
+                        thumb.DragCompleted += Thumb_DragCompleted;
+                        thumb.DragDelta += Thumb_DragDelta;
+                        thumb.DragStarted += Thumb_DragStarted;
 
-                            MainWindowModels.saveThumbs.Add(model);
-                            window.cvmenu.Children.Add(thumb);
-                            try
-                            {
-                                var getTransForm = window.cvmenu.RenderTransform as TransformGroup;
+                        ThumbNums = MainWindowModels.saveThumbs.Count.ToString();
 
-                                var x = 0.00;
-                                var y = 0.00;
+                        if (mainWindow == null)
+                        {
+                            mainWindow = obj as MainWindow;
+                        }
 
-                                foreach (var item in getTransForm.Children)
-                                {
-                                    var getScroller = item as TranslateTransform;
-                                    if (getScroller != null)
-                                    {
-                                        x += getScroller.X;
-                                        y += getScroller.Y;
-                                    }
-                                }
+                        ThumbNums = MainWindowModels.saveThumbs.Count.ToString();
 
-                                Canvas.SetTop(thumb, 262 - thumb.Height / 2 - y);
-                                Canvas.SetLeft(thumb, 675.5 - thumb.Width / 2 - x);
-                            }
-                            catch
-                            {
-                                Canvas.SetTop(thumb, 262 - thumb.Height / 2);
-                                Canvas.SetLeft(thumb, 675.5 - thumb.Width / 2);
-                            }
-
-                            //saveScrollViewer = window.Scrollviewer_Tree;
-
-                            ThumbNums = MainWindowModels.saveThumbs.Count.ToString();
-
-                            var infoModel = new ThumbInfoWindowModel()
-                            {
-                                TreeItems = new Dictionary<string, Dictionary<string, Dictionary<string, bool>>>
+                        var infoModel = new ThumbInfoWindowModel()
+                        {
+                            TreeItems = new Dictionary<string, Dictionary<string, Dictionary<string, bool>>>
                                 {
                                     {"text",new Dictionary<string, Dictionary<string, bool>>()
                                     {
@@ -813,20 +756,30 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                         } }
                                     } },
                                 }
-                            };
+                        };
 
-
-                            playerLoader.saveThumbInfoWindowModel = new Dictionary<Thumb, ThumbInfoWindowModel>()
+                        playerLoader.saveThumbInfoWindowModel = new Dictionary<Thumb, ThumbInfoWindowModel>()
                             {
                                 {thumb,infoModel},
                             };
-                        }
+
+                        await Task.Run(() =>
+                        {
+                            mainWindow.cvmenu.Dispatcher.Invoke(new Action(() =>
+                            {
+                                (GetControl("ConditionsConfig_TBox", thumb) as TextBox).Text = "PlayerTemp_" + playerNum;
+
+                            }));
+                            playerNum++;
+                        });
+
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }
                 return _CreatePlayerTalkCmd;
             }
         }
 
+        private static int npcNum = 0;
         /// <summary>
         /// 创建新的NPC对话
         /// </summary>
@@ -838,78 +791,38 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                 if (_CreateNpcTalkCmd == null)
                 {
                     _CreateNpcTalkCmd = new CommandBase();
-                    _CreateNpcTalkCmd.DoExecute = new Action<object>(obj =>//回调函数
+                    _CreateNpcTalkCmd.DoExecute = new Action<object>(async obj =>//回调函数
                     {
-                        if (!string.IsNullOrEmpty(MainFilePath))
+                        CreateThumbsBase createThumbsBase = new CreateThumbsBase();
+
+                        var back = await createThumbsBase.CreateThumb(ThumbClass.NPC, MainFilePath, obj as MainWindow);
+
+                        if (!back.Succese)
                         {
-                            var window = obj as MainWindow;
+                            ShowMessage(back.Text);
 
-                            var myResourceDictionary = new ResourceDictionary
-                            {
-                                Source = new Uri("pack://application:,,,/MainWindows/MainWindowDictionary.xaml", UriKind.RelativeOrAbsolute) // 指定样式文件的路径
-                            };
+                            return;
+                        }
 
-                            var myButtonStyle = myResourceDictionary["NPC"] as Style; // 通过key找到指定的样式
+                        if (back.Backs == null)
+                        {
+                            ShowMessage("错误！返回值为空");
 
-                            Thumb thumb = new Thumb()
-                            {
-                                Height = 148,
-                                Width = 400,
-                                Style = myButtonStyle,
-                                Uid = Uid.ToString(),
-                            };
-                            Uid++;
+                            return;
+                        }
 
-                            thumb.DragCompleted += Thumb_DragCompleted;
-                            thumb.DragDelta += Thumb_DragDelta;
-                            thumb.DragStarted += Thumb_DragStarted;
-                            thumb.PreviewMouseLeftButtonDown += Thumb_MouseLeftButtonDown;
+                        var thumb = back.Backs as Thumb;
 
-                            var model = new MainWindowModels.SaveChird()
-                            {
-                                Saver = thumb,
-                                Children = new List<Thumb>(),
-                                Fathers = new List<Thumb>(),
-                                CanFather = true,
-                                Main = null,
-                                thumbClass = ThumbClass.NPC
-                            };
+                        thumb.PreviewMouseLeftButtonDown += Thumb_MouseLeftButtonDown;
+                        thumb.DragCompleted += Thumb_DragCompleted;
+                        thumb.DragDelta += Thumb_DragDelta;
+                        thumb.DragStarted += Thumb_DragStarted;
 
-                            MainWindowModels.saveThumbs.Add(model);
-                            window.cvmenu.Children.Add(thumb);
-                            try
-                            {
-                                var getTransForm = window.cvmenu.RenderTransform as TransformGroup;
+                        ThumbNums = MainWindowModels.saveThumbs.Count.ToString();
 
-                                var x = 0.00;
-                                var y = 0.00;
-
-                                foreach (var item in getTransForm.Children)
-                                {
-                                    var getScroller = item as TranslateTransform;
-                                    if (getScroller != null)
-                                    {
-                                        x += getScroller.X;
-                                        y += getScroller.Y;
-                                    }
-                                }
-
-                                Canvas.SetTop(thumb, 262 - thumb.Height / 2 - y);
-                                Canvas.SetLeft(thumb, 675.5 - thumb.Width / 2 - x);
-                            }
-                            catch
-                            {
-                                Canvas.SetTop(thumb, 262 - thumb.Height / 2);
-                                Canvas.SetLeft(thumb, 675.5 - thumb.Width / 2);
-                            }
-
-                            //saveScrollViewer = window.Scrollviewer_Tree;
-
-                            ThumbNums = MainWindowModels.saveThumbs.Count.ToString();
-
-                            var infoModel = new ThumbInfoWindowModel()
-                            {
-                                TreeItems = new Dictionary<string, Dictionary<string, Dictionary<string, bool>>>
+                        var infoModel = new ThumbInfoWindowModel()
+                        {
+                            TreeItems = new Dictionary<string, Dictionary<string, Dictionary<string, bool>>>
                                 {
                                     {"text",new Dictionary<string, Dictionary<string, bool>>()
                                     {
@@ -940,20 +853,29 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                         } }
                                     } },
                                 }
-                            };
+                        };
 
-
-                            npcLoader.saveThumbInfoWindowModel = new Dictionary<Thumb, ThumbInfoWindowModel>()
+                        npcLoader.saveThumbInfoWindowModel = new Dictionary<Thumb, ThumbInfoWindowModel>()
                             {
                                 {thumb,infoModel},
                             };
-                        }
+
+                        await Task.Run(() =>
+                        {
+                            mainWindow.cvmenu.Dispatcher.Invoke(new Action(() =>
+                            {
+                                (GetControl("ConditionsConfig_TBox", thumb) as TextBox).Text = "NpcTemp_" + npcNum;
+
+                            }));
+                            npcNum++;
+                        });
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }
                 return _CreateNpcTalkCmd;
             }
         }
 
+        private static int conditionsNum = 0;
         /// <summary>
         /// 创建新的条件
         /// </summary>
@@ -965,81 +887,50 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                 if (_CreateConditionsCmd == null)
                 {
                     _CreateConditionsCmd = new CommandBase();
-                    _CreateConditionsCmd.DoExecute = new Action<object>(obj =>//回调函数
+                    _CreateConditionsCmd.DoExecute = new Action<object>(async obj =>//回调函数
                     {
-                        if (!string.IsNullOrEmpty(MainFilePath))
+                        CreateThumbsBase createThumbsBase = new CreateThumbsBase();
+
+                        var back = await createThumbsBase.CreateThumb(ThumbClass.Conditions, MainFilePath, obj as MainWindow);
+
+                        if (!back.Succese)
                         {
-                            var window = obj as MainWindow;
+                            ShowMessage(back.Text);
 
-                            var myResourceDictionary = new ResourceDictionary
-                            {
-                                Source = new Uri("pack://application:,,,/MainWindows/MainWindowDictionary.xaml", UriKind.RelativeOrAbsolute) // 指定样式文件的路径
-                            };
-
-                            var myButtonStyle = myResourceDictionary["Conditions"] as Style; // 通过key找到指定的样式
-
-                            Thumb thumb = new Thumb()
-                            {
-                                Height = 148,
-                                Width = 400,
-                                Style = myButtonStyle,
-                                Uid = Uid.ToString(),
-                            };
-                            Uid++;
-
-                            thumb.DragCompleted += Thumb_DragCompleted;
-                            thumb.DragDelta += Thumb_DragDelta;
-                            thumb.DragStarted += Thumb_DragStarted;
-                            thumb.PreviewMouseLeftButtonDown += Thumb_MouseLeftButtonDown;
-
-                            var model = new MainWindowModels.SaveChird()
-                            {
-                                Saver = thumb,
-                                Children = new List<Thumb>(),
-                                Fathers = new List<Thumb>(),
-                                CanFather = true,
-                                Main = null,
-                                thumbClass = ThumbClass.Conditions
-                            };
-
-                            MainWindowModels.saveThumbs.Add(model);
-                            window.cvmenu.Children.Add(thumb);
-                            try
-                            {
-                                var getTransForm = window.cvmenu.RenderTransform as TransformGroup;
-
-                                var x = 0.00;
-                                var y = 0.00;
-
-                                foreach (var item in getTransForm.Children)
-                                {
-                                    var getScroller = item as TranslateTransform;
-                                    if (getScroller != null)
-                                    {
-                                        x += getScroller.X;
-                                        y += getScroller.Y;
-                                    }
-                                }
-
-                                Canvas.SetTop(thumb, 262 - thumb.Height / 2 - y);
-                                Canvas.SetLeft(thumb, 675.5 - thumb.Width / 2 - x);
-                            }
-                            catch
-                            {
-                                Canvas.SetTop(thumb, 262 - thumb.Height / 2);
-                                Canvas.SetLeft(thumb, 675.5 - thumb.Width / 2);
-                            }
-
-                            //saveScrollViewer = window.Scrollviewer_Tree;
-
-                            ThumbNums = MainWindowModels.saveThumbs.Count.ToString();
+                            return;
                         }
+
+                        if (back.Backs == null)
+                        {
+                            ShowMessage("错误！返回值为空");
+
+                            return;
+                        }
+
+                        var thumb = back.Backs as Thumb;
+
+                        thumb.PreviewMouseLeftButtonDown += Thumb_MouseLeftButtonDown;
+                        thumb.DragCompleted += Thumb_DragCompleted;
+                        thumb.DragDelta += Thumb_DragDelta;
+                        thumb.DragStarted += Thumb_DragStarted;
+
+                        ThumbNums = MainWindowModels.saveThumbs.Count.ToString();
+                        await Task.Run(() =>
+                        {
+                            mainWindow.cvmenu.Dispatcher.Invoke(new Action(() =>
+                            {
+                                (GetControl("ConditionsConfig_TBox", thumb) as TextBox).Text = "ConditionTemp_" + conditionsNum;
+
+                            }));
+                            conditionsNum++;
+                        });
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }
                 return _CreateConditionsCmd;
             }
         }
 
+        private static int eventsNum = 0;
         /// <summary>
         /// 创建新的条件
         /// </summary>
@@ -1051,81 +942,50 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                 if (_CreateEventsCmd == null)
                 {
                     _CreateEventsCmd = new CommandBase();
-                    _CreateEventsCmd.DoExecute = new Action<object>(obj =>//回调函数
+                    _CreateEventsCmd.DoExecute = new Action<object>(async obj =>//回调函数
                     {
-                        if (!string.IsNullOrEmpty(MainFilePath))
+                        CreateThumbsBase createThumbsBase = new CreateThumbsBase();
+
+                        var back = await createThumbsBase.CreateThumb(ThumbClass.Events, MainFilePath, obj as MainWindow);
+
+                        if (!back.Succese)
                         {
-                            var window = obj as MainWindow;
+                            ShowMessage(back.Text);
 
-                            var myResourceDictionary = new ResourceDictionary
-                            {
-                                Source = new Uri("pack://application:,,,/MainWindows/MainWindowDictionary.xaml", UriKind.RelativeOrAbsolute) // 指定样式文件的路径
-                            };
-
-                            var myButtonStyle = myResourceDictionary["Events"] as Style; // 通过key找到指定的样式
-
-                            Thumb thumb = new Thumb()
-                            {
-                                Height = 148,
-                                Width = 400,
-                                Style = myButtonStyle,
-                                Uid = Uid.ToString(),
-                            };
-                            Uid++;
-
-                            thumb.DragCompleted += Thumb_DragCompleted;
-                            thumb.DragDelta += Thumb_DragDelta;
-                            thumb.DragStarted += Thumb_DragStarted;
-                            thumb.PreviewMouseLeftButtonDown += Thumb_MouseLeftButtonDown;
-
-                            var model = new MainWindowModels.SaveChird()
-                            {
-                                Saver = thumb,
-                                Children = new List<Thumb>(),
-                                Fathers = new List<Thumb>(),
-                                CanFather = true,
-                                Main = null,
-                                thumbClass = ThumbClass.Events
-                            };
-
-                            MainWindowModels.saveThumbs.Add(model);
-                            window.cvmenu.Children.Add(thumb);
-                            try
-                            {
-                                var getTransForm = window.cvmenu.RenderTransform as TransformGroup;
-
-                                var x = 0.00;
-                                var y = 0.00;
-
-                                foreach (var item in getTransForm.Children)
-                                {
-                                    var getScroller = item as TranslateTransform;
-                                    if (getScroller != null)
-                                    {
-                                        x += getScroller.X;
-                                        y += getScroller.Y;
-                                    }
-                                }
-
-                                Canvas.SetTop(thumb, 262 - thumb.Height / 2 - y);
-                                Canvas.SetLeft(thumb, 675.5 - thumb.Width / 2 - x);
-                            }
-                            catch
-                            {
-                                Canvas.SetTop(thumb, 262 - thumb.Height / 2);
-                                Canvas.SetLeft(thumb, 675.5 - thumb.Width / 2);
-                            }
-
-                            //saveScrollViewer = window.Scrollviewer_Tree;
-
-                            ThumbNums = MainWindowModels.saveThumbs.Count.ToString();
+                            return;
                         }
+
+                        if (back.Backs == null)
+                        {
+                            ShowMessage("错误！返回值为空");
+
+                            return;
+                        }
+
+                        var thumb = back.Backs as Thumb;
+
+                        thumb.PreviewMouseLeftButtonDown += Thumb_MouseLeftButtonDown;
+                        thumb.DragCompleted += Thumb_DragCompleted;
+                        thumb.DragDelta += Thumb_DragDelta;
+                        thumb.DragStarted += Thumb_DragStarted;
+
+                        ThumbNums = MainWindowModels.saveThumbs.Count.ToString();
+                        await Task.Run(() =>
+                        {
+                            mainWindow.cvmenu.Dispatcher.Invoke(new Action(() =>
+                            {
+                                (GetControl("ConditionsConfig_TBox", thumb) as TextBox).Text = "EventTemp_" + eventsNum;
+                            }));
+                            eventsNum++;
+                        });
+                        
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }
                 return _CreateEventsCmd;
             }
         }
 
+        private static int objectivesNum = 0;
         /// <summary>
         /// 创建新的条件
         /// </summary>
@@ -1137,81 +997,51 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                 if (_CreateObjectivesCmd == null)
                 {
                     _CreateObjectivesCmd = new CommandBase();
-                    _CreateObjectivesCmd.DoExecute = new Action<object>(obj =>//回调函数
+                    _CreateObjectivesCmd.DoExecute = new Action<object>(async obj =>//回调函数
                     {
-                        if (!string.IsNullOrEmpty(MainFilePath))
+                        CreateThumbsBase createThumbsBase = new CreateThumbsBase();
+
+                        var back = await createThumbsBase.CreateThumb(ThumbClass.Objectives, MainFilePath, obj as MainWindow);
+
+                        if (!back.Succese)
                         {
-                            var window = obj as MainWindow;
+                            ShowMessage(back.Text);
 
-                            var myResourceDictionary = new ResourceDictionary
-                            {
-                                Source = new Uri("pack://application:,,,/MainWindows/MainWindowDictionary.xaml", UriKind.RelativeOrAbsolute) // 指定样式文件的路径
-                            };
-
-                            var myButtonStyle = myResourceDictionary["Objectives"] as Style; // 通过key找到指定的样式
-
-                            Thumb thumb = new Thumb()
-                            {
-                                Height = 148,
-                                Width = 400,
-                                Style = myButtonStyle,
-                                Uid = Uid.ToString(),
-                            };
-                            Uid++;
-
-                            thumb.DragCompleted += Thumb_DragCompleted;
-                            thumb.DragDelta += Thumb_DragDelta;
-                            thumb.DragStarted += Thumb_DragStarted;
-                            thumb.PreviewMouseLeftButtonDown += Thumb_MouseLeftButtonDown;
-
-                            var model = new MainWindowModels.SaveChird()
-                            {
-                                Saver = thumb,
-                                Children = new List<Thumb>(),
-                                Fathers = new List<Thumb>(),
-                                CanFather = true,
-                                Main = null,
-                                thumbClass = ThumbClass.Objectives
-                            };
-
-                            MainWindowModels.saveThumbs.Add(model);
-                            window.cvmenu.Children.Add(thumb);
-                            try
-                            {
-                                var getTransForm = window.cvmenu.RenderTransform as TransformGroup;
-
-                                var x = 0.00;
-                                var y = 0.00;
-
-                                foreach (var item in getTransForm.Children)
-                                {
-                                    var getScroller = item as TranslateTransform;
-                                    if (getScroller != null)
-                                    {
-                                        x += getScroller.X;
-                                        y += getScroller.Y;
-                                    }
-                                }
-
-                                Canvas.SetTop(thumb, 262 - thumb.Height / 2 - y);
-                                Canvas.SetLeft(thumb, 675.5 - thumb.Width / 2 - x);
-                            }
-                            catch
-                            {
-                                Canvas.SetTop(thumb, 262 - thumb.Height / 2);
-                                Canvas.SetLeft(thumb, 675.5 - thumb.Width / 2);
-                            }
-
-                            //saveScrollViewer = window.Scrollviewer_Tree;
-
-                            ThumbNums = MainWindowModels.saveThumbs.Count.ToString();
+                            return;
                         }
+
+                        if (back.Backs == null)
+                        {
+                            ShowMessage("错误！返回值为空");
+
+                            return;
+                        }
+
+                        var thumb = back.Backs as Thumb;
+
+                        thumb.PreviewMouseLeftButtonDown += Thumb_MouseLeftButtonDown;
+                        thumb.DragCompleted += Thumb_DragCompleted;
+                        thumb.DragDelta += Thumb_DragDelta;
+                        thumb.DragStarted += Thumb_DragStarted;
+
+                        ThumbNums = MainWindowModels.saveThumbs.Count.ToString();
+
+                        await Task.Run(() =>
+                        {
+                            mainWindow.cvmenu.Dispatcher.Invoke(new Action(() =>
+                            {
+                                (GetControl("ConditionsConfig_TBox", thumb) as TextBox).Text = "ObjectiveTemp_" + objectivesNum;
+                            }));
+                            objectivesNum++;
+                        });
+
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }
                 return _CreateObjectivesCmd;
             }
         }
 
+        private static int journalsNum = 0;
         /// <summary>
         /// 创建新的条件
         /// </summary>
@@ -1223,81 +1053,50 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                 if (_CreateJournalCmd == null)
                 {
                     _CreateJournalCmd = new CommandBase();
-                    _CreateJournalCmd.DoExecute = new Action<object>(obj =>//回调函数
+                    _CreateJournalCmd.DoExecute = new Action<object>(async obj =>//回调函数
                     {
-                        if (!string.IsNullOrEmpty(MainFilePath))
+                        CreateThumbsBase createThumbsBase = new CreateThumbsBase();
+
+                        var back = await createThumbsBase.CreateThumb(ThumbClass.Journal, MainFilePath, obj as MainWindow);
+
+                        if (!back.Succese)
                         {
-                            var window = obj as MainWindow;
+                            ShowMessage(back.Text);
 
-                            var myResourceDictionary = new ResourceDictionary
-                            {
-                                Source = new Uri("pack://application:,,,/MainWindows/MainWindowDictionary.xaml", UriKind.RelativeOrAbsolute) // 指定样式文件的路径
-                            };
-
-                            var myButtonStyle = myResourceDictionary["Journal"] as Style; // 通过key找到指定的样式
-
-                            Thumb thumb = new Thumb()
-                            {
-                                Height = 148,
-                                Width = 400,
-                                Style = myButtonStyle,
-                                Uid = Uid.ToString(),
-                            };
-                            Uid++;
-
-                            thumb.DragCompleted += Thumb_DragCompleted;
-                            thumb.DragDelta += Thumb_DragDelta;
-                            thumb.DragStarted += Thumb_DragStarted;
-                            thumb.PreviewMouseLeftButtonDown += Thumb_MouseLeftButtonDown;
-
-                            var model = new MainWindowModels.SaveChird()
-                            {
-                                Saver = thumb,
-                                Children = new List<Thumb>(),
-                                Fathers = new List<Thumb>(),
-                                CanFather = true,
-                                Main = null,
-                                thumbClass = ThumbClass.Journal
-                            };
-
-                            MainWindowModels.saveThumbs.Add(model);
-                            window.cvmenu.Children.Add(thumb);
-                            try
-                            {
-                                var getTransForm = window.cvmenu.RenderTransform as TransformGroup;
-
-                                var x = 0.00;
-                                var y = 0.00;
-
-                                foreach (var item in getTransForm.Children)
-                                {
-                                    var getScroller = item as TranslateTransform;
-                                    if (getScroller != null)
-                                    {
-                                        x += getScroller.X;
-                                        y += getScroller.Y;
-                                    }
-                                }
-
-                                Canvas.SetTop(thumb, 262 - thumb.Height / 2 - y);
-                                Canvas.SetLeft(thumb, 675.5 - thumb.Width / 2 - x);
-                            }
-                            catch
-                            {
-                                Canvas.SetTop(thumb, 262 - thumb.Height / 2);
-                                Canvas.SetLeft(thumb, 675.5 - thumb.Width / 2);
-                            }
-
-                            //saveScrollViewer = window.Scrollviewer_Tree;
-
-                            ThumbNums = MainWindowModels.saveThumbs.Count.ToString();
+                            return;
                         }
+
+                        if (back.Backs == null)
+                        {
+                            ShowMessage("错误！返回值为空");
+
+                            return;
+                        }
+
+                        var thumb = back.Backs as Thumb;
+
+                        thumb.PreviewMouseLeftButtonDown += Thumb_MouseLeftButtonDown;
+                        thumb.DragCompleted += Thumb_DragCompleted;
+                        thumb.DragDelta += Thumb_DragDelta;
+                        thumb.DragStarted += Thumb_DragStarted;
+
+                        ThumbNums = MainWindowModels.saveThumbs.Count.ToString();
+
+                        await Task.Run(() =>
+                        {
+                            mainWindow.cvmenu.Dispatcher.Invoke(new Action(() =>
+                            {
+                                (GetControl("JournalConfig_TBox", thumb) as TextBox).Text = "JournalTemp_" + journalsNum;
+                            }));
+                            journalsNum++;
+                        });
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }
                 return _CreateJournalCmd;
             }
         }
 
+        private static int itemsNum = 0;
         /// <summary>
         /// 创建新的条件
         /// </summary>
@@ -1309,75 +1108,43 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                 if (_CreateItemsCmd == null)
                 {
                     _CreateItemsCmd = new CommandBase();
-                    _CreateItemsCmd.DoExecute = new Action<object>(obj =>//回调函数
+                    _CreateItemsCmd.DoExecute = new Action<object>(async obj =>//回调函数
                     {
-                        if (!string.IsNullOrEmpty(MainFilePath))
+                        CreateThumbsBase createThumbsBase = new CreateThumbsBase();
+
+                        var back = await createThumbsBase.CreateThumb(ThumbClass.Items, MainFilePath, obj as MainWindow);
+
+                        if (!back.Succese)
                         {
-                            var window = obj as MainWindow;
+                            ShowMessage(back.Text);
 
-                            var myResourceDictionary = new ResourceDictionary
-                            {
-                                Source = new Uri("pack://application:,,,/MainWindows/MainWindowDictionary.xaml", UriKind.RelativeOrAbsolute) // 指定样式文件的路径
-                            };
-
-                            var myButtonStyle = myResourceDictionary["Items"] as Style; // 通过key找到指定的样式
-
-                            Thumb thumb = new Thumb()
-                            {
-                                Height = 148,
-                                Width = 400,
-                                Style = myButtonStyle,
-                                Uid = Uid.ToString(),
-                            };
-                            Uid++;
-
-                            thumb.DragCompleted += Thumb_DragCompleted;
-                            thumb.DragDelta += Thumb_DragDelta;
-                            thumb.DragStarted += Thumb_DragStarted;
-                            thumb.PreviewMouseLeftButtonDown += Thumb_MouseLeftButtonDown;
-
-                            var model = new MainWindowModels.SaveChird()
-                            {
-                                Saver = thumb,
-                                Children = new List<Thumb>(),
-                                Fathers = new List<Thumb>(),
-                                CanFather = true,
-                                Main = null,
-                                thumbClass = ThumbClass.Items
-                            };
-
-                            MainWindowModels.saveThumbs.Add(model);
-                            window.cvmenu.Children.Add(thumb);
-                            try
-                            {
-                                var getTransForm = window.cvmenu.RenderTransform as TransformGroup;
-
-                                var x = 0.00;
-                                var y = 0.00;
-
-                                foreach (var item in getTransForm.Children)
-                                {
-                                    var getScroller = item as TranslateTransform;
-                                    if (getScroller != null)
-                                    {
-                                        x += getScroller.X;
-                                        y += getScroller.Y;
-                                    }
-                                }
-
-                                Canvas.SetTop(thumb, 262 - thumb.Height / 2 - y);
-                                Canvas.SetLeft(thumb, 675.5 - thumb.Width / 2 - x);
-                            }
-                            catch
-                            {
-                                Canvas.SetTop(thumb, 262 - thumb.Height / 2);
-                                Canvas.SetLeft(thumb, 675.5 - thumb.Width / 2);
-                            }
-
-                            //saveScrollViewer = window.Scrollviewer_Tree;
-
-                            ThumbNums = MainWindowModels.saveThumbs.Count.ToString();
+                            return;
                         }
+
+                        if (back.Backs == null)
+                        {
+                            ShowMessage("错误！返回值为空");
+
+                            return;
+                        }
+
+                        var thumb = back.Backs as Thumb;
+
+                        thumb.PreviewMouseLeftButtonDown += Thumb_MouseLeftButtonDown;
+                        thumb.DragCompleted += Thumb_DragCompleted;
+                        thumb.DragDelta += Thumb_DragDelta;
+                        thumb.DragStarted += Thumb_DragStarted;
+
+                        ThumbNums = MainWindowModels.saveThumbs.Count.ToString();
+
+                        await Task.Run(() =>
+                        {
+                            mainWindow.cvmenu.Dispatcher.Invoke(new Action(() =>
+                            {
+                                (GetControl("ItemsConfig_TBox", thumb) as TextBox).Text = "ItemsTemp_" + itemsNum;
+                            }));
+                            itemsNum++;
+                        });
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }
                 return _CreateItemsCmd;

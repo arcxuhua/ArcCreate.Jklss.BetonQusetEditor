@@ -105,7 +105,7 @@
                                         <RowDefinition Height="30" />
                                     </Grid.RowDefinitions>
                                     <TextBlock Text="配置名称："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                    <TextBox x:Name="ConditionsConfig_TBox" Width="100" Height="30" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                                    <TextBox x:Name="ConditionsConfig_TBox" Width="100" Height="30" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False"/>
 
                                     <TextBlock Grid.Row="0" Text="编辑类型："  Margin="210 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                     <ComboBox x:Name="Conditions_CBox"  Width="110" Height="30" Grid.Row="0" materialDesign:HintAssist.Hint="请选择" HorizontalAlignment="Left" Margin="270,0,0,0">
@@ -194,7 +194,7 @@
                                         <RowDefinition Height="30" />
                                     </Grid.RowDefinitions>
                                     <TextBlock Text="配置名称："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                    <TextBox x:Name="ConditionsConfig_TBox" Width="100" Height="30" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                                    <TextBox x:Name="ConditionsConfig_TBox" Width="100" Height="30" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False"/>
 
                                     <TextBlock Grid.Row="0" Text="编辑类型："  Margin="210 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                     <ComboBox x:Name="Conditions_CBox"  Width="110" Height="30" Grid.Row="0" materialDesign:HintAssist.Hint="请选择" HorizontalAlignment="Left" Margin="270,0,0,0">
@@ -283,7 +283,7 @@
                                         <RowDefinition Height="30" />
                                     </Grid.RowDefinitions>
                                     <TextBlock Text="配置名称："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                    <TextBox x:Name="ConditionsConfig_TBox" Width="100" Height="30" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                                    <TextBox x:Name="ConditionsConfig_TBox" Width="100" Height="30" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False"/>
 
                                     <TextBlock Grid.Row="0" Text="条件类型："  Margin="210 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                     <ComboBox x:Name="Conditions_CBox"  Width="110" Height="30" Grid.Row="0" materialDesign:HintAssist.Hint="请选择" HorizontalAlignment="Left" Margin="270,0,0,0">
@@ -405,7 +405,7 @@
                                         <RowDefinition Height="30" />
                                     </Grid.RowDefinitions>
                                     <TextBlock Text="配置名称："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                    <TextBox x:Name="ConditionsConfig_TBox" Width="100" Height="30" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                                    <TextBox x:Name="ConditionsConfig_TBox" Width="100" Height="30" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False"/>
 
                                     <TextBlock Grid.Row="0" Text="事件类型："  Margin="210 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                     <ComboBox x:Name="Conditions_CBox"  Width="110" Height="30" Grid.Row="0" materialDesign:HintAssist.Hint="请选择" HorizontalAlignment="Left" Margin="270,0,0,0">
@@ -528,7 +528,7 @@
                                         <RowDefinition Height="30" />
                                     </Grid.RowDefinitions>
                                     <TextBlock Text="配置名称："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                    <TextBox x:Name="ConditionsConfig_TBox" Width="100" Height="30" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                                    <TextBox x:Name="ConditionsConfig_TBox" Width="100" Height="30" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False"/>
 
                                     <TextBlock Grid.Row="0" Text="任务类型："  Margin="210 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                     <ComboBox x:Name="Conditions_CBox"  Width="110" Height="30" Grid.Row="0" materialDesign:HintAssist.Hint="请选择" HorizontalAlignment="Left" Margin="270,0,0,0">
@@ -635,7 +635,7 @@
                                         <RowDefinition Height="*" />
                                     </Grid.RowDefinitions>
                                     <TextBlock Text="配置名称："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                    <TextBox x:Name="JournalConfig_TBox" Width="320" Height="30" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                                    <TextBox x:Name="JournalConfig_TBox" Width="320" Height="30" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False"/>
 
                                     <TextBlock Grid.Row="1" Text="文案内容："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                     <TextBox x:Name="Journal_TBox" Grid.Row="1" Width="320" Height="30" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left"/>
@@ -691,7 +691,7 @@
                                         <RowDefinition Height="*" />
                                     </Grid.RowDefinitions>
                                     <TextBlock Text="配置名称："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                    <TextBox x:Name="ItemsConfig_TBox" Width="320" Height="30" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                                    <TextBox x:Name="ItemsConfig_TBox" Width="320" Height="30" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False"/>
 
                                     <TextBlock Grid.Row="1" Text="物品内容："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                     <TextBox x:Name="Items_TBox" Grid.Row="1" Width="320" Height="30" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left"/>

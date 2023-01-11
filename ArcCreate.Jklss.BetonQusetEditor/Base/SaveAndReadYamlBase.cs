@@ -143,6 +143,12 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
                     var saves = backs.Backs as Dictionary<string, string>;
 
+                    if (!saves.ContainsKey("text"))
+                    {
+                        result.SetError("请至少保存一条对话");
+                        return;
+                    }
+
                     var name = string.Empty;
 
                     GetControl<TextBox>("ConditionsConfig_TBox", item.Saver).Dispatcher.Invoke(new Action(() => 
@@ -199,6 +205,12 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                     }
 
                     var saves = backs.Backs as Dictionary<string, string>;
+
+                    if (!saves.ContainsKey("text"))
+                    {
+                        result.SetError("请至少保存一条对话");
+                        return;
+                    }
 
                     var name = string.Empty;
 
