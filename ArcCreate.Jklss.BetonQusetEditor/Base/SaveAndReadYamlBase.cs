@@ -1196,6 +1196,245 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
         }
 
         /// <summary>
+        /// Condition语法解析器
+        /// </summary>
+        /// <param name="txt"></param>
+        /// <returns></returns>
+        public async Task<ReturnModel> ConditionAnalysis(string txt)
+        {
+            var result = new ReturnModel();
+
+            if (string.IsNullOrEmpty(txt))
+            {
+                result.SetError("未识别到正确的文本");
+
+                return result;
+            }
+
+            var getCmd = GetRealCmd(txt).TrimStart('\'').TrimEnd('\'').Split(' ');
+
+            var getcmdModel = contisionProp.Where(t=>t.MainClass==getCmd[0]).First();//获取相关模型
+
+            var saveInfo = new Dictionary<string, Dictionary<string, Dictionary<string, string>>> 
+            {
+                {getCmd[0],new Dictionary<string, Dictionary<string, string>>() }
+            };
+
+            var nums = new List<int>();//记录命令的位置 其中0到1的位置必为主命令参数
+
+            nums.Add(1);
+
+            if (getcmdModel.TextSplitChar != '^')
+            {
+                for (int i = 2; i < getCmd.Length; i++)
+                {
+                    var split = getCmd[i].Split(':');
+
+                    if (split.Length == 2)
+                    {
+                        saveInfo.Add(split[0], new Dictionary<string, Dictionary<string, string>>());
+                        getCmd[i] = split[1];
+                        nums.Add(i);
+                    }
+                }
+            }
+
+            nums.Add(getCmd.Length-1);
+
+            var nowNum = 0;//当前处理的位置
+
+            await Task.Run(() =>
+            {
+                #region 主命令第1参数的处理
+
+                if (getcmdModel.TextSplitChar == ' ')
+                {
+                    if (getcmdModel.TextNum >= 1)
+                    {
+                        if (!saveInfo[getCmd[0]].ContainsKey("第 1 条参数"))
+                        {
+                            saveInfo[getCmd[0]].Add("第 1 条参数", new Dictionary<string, string>());
+                        }
+                        for (int i = 0; i < getcmdModel.TextNum; i++)
+                        {
+                            saveInfo[getCmd[0]]["第 1 条参数"].Add($"第 {i + 1} 项", getCmd[i + nums[0]]);
+
+                        }
+                        nowNum = getcmdModel.TextNum;
+                    }
+                    else if (getcmdModel.TextNum == -1)
+                    {
+                        if (!saveInfo[getCmd[0]].ContainsKey("第 1 条参数"))
+                        {
+                            saveInfo[getCmd[0]].Add("第 1 条参数", new Dictionary<string, string>());
+                        }
+
+                        for (int i = nums[0]; i < nums[1]; i++)
+                        {
+                            saveInfo[getCmd[0]]["第 1 条参数"].Add($"第 {i + 1} 项", getCmd[i].TrimEnd(' ').TrimStart('^'));
+                        }
+
+                        nowNum = nums[1] - 1;
+                    }
+                    else if (getcmdModel.TextNum == 0)
+                    {
+                        saveInfo[getCmd[0]]["第 1 条参数"].Add($"第 1 项", "开启");
+                        nowNum++;
+                    }
+
+                }
+                else
+                {
+                    if (!saveInfo[getCmd[0]].ContainsKey("第 1 条参数"))
+                    {
+                        saveInfo[getCmd[0]].Add("第 1 条参数", new Dictionary<string, string>());
+                    }
+
+                    if (getcmdModel.TextSplitChar == 'X')
+                    {
+                        saveInfo[getCmd[0]]["第 1 条参数"].Add($"第 1 项", getCmd[nums[0]]);
+
+                    }
+                    else
+                    {
+                        var fg = getCmd[nums[0]].Split(new string[] { getcmdModel.TextSplitChar.ToString() }, StringSplitOptions.RemoveEmptyEntries);
+                        for (int i = 0; i < fg.Length; i++)
+                        {
+                            saveInfo[getCmd[0]]["第 1 条参数"].Add($"第 {i + 1} 项", fg[i]);
+                        }
+                    }
+                    nowNum++;
+
+                }
+
+                #endregion
+
+                #region 主命令其他参数的处理
+
+                //nowNum到num[1]
+
+                for (int i = 0; i < getcmdModel.TextSplitWords.Count; i++)
+                {
+                    if (getcmdModel.TextSplitWords[i].i == ' ')
+                    {
+                        if (getcmdModel.TextSplitWords[i].j >= 1)
+                        {
+                            if (!saveInfo[getCmd[0]].ContainsKey($"第 {2 + i} 条参数"))
+                            {
+                                saveInfo[getCmd[0]].Add($"第 {2 + i} 条参数", new Dictionary<string, string>());
+                            }
+                            for (int j = 0; j < getcmdModel.TextSplitWords[i].j; j++)
+                            {
+                                saveInfo[getCmd[0]][$"第 {2 + i} 条参数"].Add($"第 {j + 1} 项", getCmd[j + nowNum]);
+                            }
+                            nowNum += getcmdModel.TextSplitWords[i].j;
+                        }
+                        else if (getcmdModel.TextNum == -1)
+                        {
+                            if (!saveInfo[getCmd[0]].ContainsKey($"第 {2 + i} 条参数"))
+                            {
+                                saveInfo[getCmd[0]].Add($"第 {2 + i} 条参数", new Dictionary<string, string>());
+                            }
+
+                            for (int j = nums[0]; j < nums[1]; j++)
+                            {
+                                saveInfo[getCmd[0]][$"第 {2 + i} 条参数"].Add($"第 {j + 1} 项", getCmd[j + nowNum]);
+                            }
+
+                            nowNum = nums[1] - 1;
+                        }
+                        else if (getcmdModel.TextNum == 0)
+                        {
+                            saveInfo[getCmd[0]][$"第 {2 + i} 条参数"].Add($"第 1 项", "开启");
+                            nowNum++;
+                        }
+                    }
+                    else
+                    {
+                        if (!saveInfo[getCmd[0]].ContainsKey($"第 {2 + i} 条参数"))
+                        {
+                            saveInfo[getCmd[0]].Add($"第 {2 + i} 条参数", new Dictionary<string, string>());
+                        }
+
+                        if (getcmdModel.TextSplitWords[i].i == 'X')
+                        {
+                            saveInfo[getCmd[0]][$"第 {2 + i} 条参数"].Add($"第 1 项", getCmd[nowNum + 1]);
+
+                        }
+                        else
+                        {
+                            var fg = getCmd[nowNum + 1].Split(new string[] { getcmdModel.TextSplitWords[i].i.ToString() }, StringSplitOptions.RemoveEmptyEntries);
+
+                            for (int j = 0; j < fg.Length; j++)
+                            {
+                                saveInfo[getCmd[0]][$"第 {2 + i} 条参数"].Add($"第 {j + 1} 项", fg[j]);
+                            }
+                        }
+                        nowNum++;
+                    }
+                }
+
+                #endregion
+
+                #region 子命令第1参数的处理
+                var childNowNum = 1;
+                foreach (var item in getcmdModel.ChildClasses)
+                {
+                    if (item.ChildTextNum >= 1 || item.ChildTextNum == -1)
+                    {
+                        if (!saveInfo[item.ChildClass].ContainsKey("第 1 条参数"))
+                        {
+                            saveInfo[item.ChildClass].Add("第 1 条参数", new Dictionary<string, string>());
+                        }
+
+                        if (item.ChildTextSplitChar == 'X')
+                        {
+                            saveInfo[item.ChildClass]["第 1 条参数"].Add($"第 1 项", getCmd[nums[childNowNum]]);
+                        }
+                        else
+                        {
+                            var fg = getCmd[nums[childNowNum]].Split(new string[] { item.ChildTextSplitChar.ToString() }, StringSplitOptions.RemoveEmptyEntries);
+
+                            if (item.ChildTextNum != -1)
+                            {
+                                for (int i = 0; i < item.ChildTextNum; i++)
+                                {
+                                    saveInfo[item.ChildClass]["第 1 条参数"].Add($"第 {i + 1} 项", fg[i]);
+                                }
+                            }
+                            else
+                            {
+                                for (int i = 0; i < fg.Length; i++)
+                                {
+                                    saveInfo[item.ChildClass]["第 1 条参数"].Add($"第 {i + 1} 项", fg[i]);
+                                }
+                            }
+                            
+                        }
+                    }
+                    else if (item.ChildTextNum == 0)
+                    {
+                        saveInfo[item.ChildClass]["第 1 条参数"].Add($"第 1 项", "开启");
+                    }
+                    childNowNum++;
+                }
+
+                #endregion
+            });
+
+            //子命令客观讲不会出现其他参数
+
+            var toInfo = new Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>()
+            {
+                {getCmd[0],saveInfo }
+            };
+
+            result.SetSuccese("",toInfo);
+
+            return result;
+        }
+
+        /// <summary>
         /// Event语法构造器
         /// </summary>
         /// <param name="info">存储数据</param>
@@ -1994,6 +2233,261 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
             }
 
             result.SetSuccese("Event语句构建成功", yuju);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Event语法解析器
+        /// </summary>
+        /// <param name="txt"></param>
+        /// <returns></returns>
+        public async Task<ReturnModel> EventAnalysis(string txt)
+        {
+            var result = new ReturnModel();
+
+            if (string.IsNullOrEmpty(txt))
+            {
+                result.SetError("未识别到正确的文本");
+
+                return result;
+            }
+
+            var getCmd = GetRealCmd(txt).TrimEnd('\'').Split(' ');
+
+            var getcmdModel = eventProp.Where(t => t.MainClass == getCmd[0]).First();//获取相关模型
+
+            var saveInfo = new Dictionary<string, Dictionary<string, Dictionary<string, string>>>
+            {
+                {getCmd[0],new Dictionary<string, Dictionary<string, string>>() }
+            };
+
+            var nums = new List<int>();//记录命令的位置 其中0到1的位置必为主命令参数
+
+            nums.Add(1);
+
+            if (getcmdModel.TextSplitChar != '^')
+            {
+                for (int i = 2; i < getCmd.Length; i++)
+                {
+                    var split = getCmd[i].Split(':');
+
+                    if (split.Length == 2)
+                    {
+                        saveInfo.Add(split[0], new Dictionary<string, Dictionary<string, string>>());
+                        getCmd[i] = split[1];
+                        nums.Add(i);
+                    }
+                }
+            }
+
+            nums.Add(getCmd.Length - 1);
+
+            var nowNum = 0;//当前处理的位置
+
+            await Task.Run(() =>
+            {
+                #region 主命令第1参数的处理
+
+                if (getcmdModel.TextSplitChar == ' ')
+                {
+                    if (getcmdModel.TextNum >= 1)
+                    {
+                        if (!saveInfo[getCmd[0]].ContainsKey("第 1 条参数"))
+                        {
+                            saveInfo[getCmd[0]].Add("第 1 条参数", new Dictionary<string, string>());
+                        }
+                        for (int i = 0; i < getcmdModel.TextNum; i++)
+                        {
+                            if (getcmdModel.TextNum == 1)
+                            {
+                                if (getcmdModel.Tags.Count > 0)
+                                {
+                                    if (getcmdModel.Tags.Contains(getCmd[i + nums[0]]))
+                                    {
+                                        saveInfo[getCmd[0]]["第 1 条参数"].Add($"第 {i + 1} 项", getCmd[i + nums[0]]);
+                                    }
+                                }
+                                else
+                                {
+                                    saveInfo[getCmd[0]]["第 1 条参数"].Add($"第 {i + 1} 项", getCmd[i + nums[0]]);
+                                }
+                            }
+                            else
+                            {
+                                saveInfo[getCmd[0]]["第 1 条参数"].Add($"第 {i + 1} 项", getCmd[i + nums[0]]);
+                            }
+                        }
+                        nowNum = getcmdModel.TextNum;
+                    }
+                    else if (getcmdModel.TextNum == -1)
+                    {
+                        if (!saveInfo[getCmd[0]].ContainsKey("第 1 条参数"))
+                        {
+                            saveInfo[getCmd[0]].Add("第 1 条参数", new Dictionary<string, string>());
+                        }
+
+                        for (int i = nums[0]; i < nums[1]; i++)
+                        {
+                            saveInfo[getCmd[0]]["第 1 条参数"].Add($"第 {i + 1} 项", getCmd[i].TrimEnd(' ').TrimStart('^'));
+                        }
+
+                        nowNum = nums[1] - 1;
+                    }
+                    else if (getcmdModel.TextNum == 0)
+                    {
+                        saveInfo[getCmd[0]]["第 1 条参数"].Add($"第 1 项", "开启");
+                        nowNum++;
+                    }
+
+                }
+                else
+                {
+                    if (!saveInfo[getCmd[0]].ContainsKey("第 1 条参数"))
+                    {
+                        saveInfo[getCmd[0]].Add("第 1 条参数", new Dictionary<string, string>());
+                    }
+
+                    if (getcmdModel.TextSplitChar == 'X')
+                    {
+                        saveInfo[getCmd[0]]["第 1 条参数"].Add($"第 1 项", getCmd[nums[0]]);
+
+                    }
+                    else
+                    {
+                        var fg = getCmd[nums[0]].Split(new string[] { getcmdModel.TextSplitChar.ToString() }, StringSplitOptions.RemoveEmptyEntries);
+                        for (int i = 0; i < fg.Length; i++)
+                        {
+                            saveInfo[getCmd[0]]["第 1 条参数"].Add($"第 {i + 1} 项", fg[i]);
+                        }
+                    }
+                    nowNum++;
+
+                }
+
+                #endregion
+
+                #region 主命令其他参数的处理
+
+                //nowNum到num[1]
+
+                for (int i = 0; i < getcmdModel.TextSplitWords.Count; i++)
+                {
+                    if (getcmdModel.TextSplitWords[i].i == ' ')
+                    {
+                        if (getcmdModel.TextSplitWords[i].j >= 1)
+                        {
+                            if (!saveInfo[getCmd[0]].ContainsKey($"第 {2 + i} 条参数"))
+                            {
+                                saveInfo[getCmd[0]].Add($"第 {2 + i} 条参数", new Dictionary<string, string>());
+                            }
+                            for (int j = 0; j < getcmdModel.TextSplitWords[i].j; j++)
+                            {
+                                saveInfo[getCmd[0]][$"第 {2 + i} 条参数"].Add($"第 {j + 1} 项", getCmd[j + nowNum]);
+                            }
+                            nowNum += getcmdModel.TextSplitWords[i].j;
+                        }
+                        else if (getcmdModel.TextNum == -1)
+                        {
+                            if (!saveInfo[getCmd[0]].ContainsKey($"第 {2 + i} 条参数"))
+                            {
+                                saveInfo[getCmd[0]].Add($"第 {2 + i} 条参数", new Dictionary<string, string>());
+                            }
+
+                            for (int j = nums[0]; j < nums[1]; j++)
+                            {
+                                saveInfo[getCmd[0]][$"第 {2 + i} 条参数"].Add($"第 {j + 1} 项", getCmd[j + nowNum]);
+                            }
+
+                            nowNum = nums[1] - 1;
+                        }
+                        else if (getcmdModel.TextNum == 0)
+                        {
+                            saveInfo[getCmd[0]][$"第 {2 + i} 条参数"].Add($"第 1 项", "开启");
+                            nowNum++;
+                        }
+                    }
+                    else
+                    {
+                        if (!saveInfo[getCmd[0]].ContainsKey($"第 {2 + i} 条参数"))
+                        {
+                            saveInfo[getCmd[0]].Add($"第 {2 + i} 条参数", new Dictionary<string, string>());
+                        }
+
+                        if (getcmdModel.TextSplitWords[i].i == 'X')
+                        {
+                            saveInfo[getCmd[0]][$"第 {2 + i} 条参数"].Add($"第 1 项", getCmd[nowNum + 1]);
+
+                        }
+                        else
+                        {
+                            var fg = getCmd[nowNum + 1].Split(new string[] { getcmdModel.TextSplitWords[i].i.ToString() }, StringSplitOptions.RemoveEmptyEntries);
+
+                            for (int j = 0; j < fg.Length; j++)
+                            {
+                                saveInfo[getCmd[0]][$"第 {2 + i} 条参数"].Add($"第 {j + 1} 项", fg[j]);
+                            }
+                        }
+                        nowNum++;
+                    }
+                }
+
+                #endregion
+
+                #region 子命令第1参数的处理
+                var childNowNum = 1;
+                foreach (var item in getcmdModel.ChildClasses)
+                {
+                    if (item.ChildTextNum >= 1 || item.ChildTextNum == -1)
+                    {
+                        if (!saveInfo[item.ChildClass].ContainsKey("第 1 条参数"))
+                        {
+                            saveInfo[item.ChildClass].Add("第 1 条参数", new Dictionary<string, string>());
+                        }
+
+                        if (item.ChildTextSplitChar == 'X')
+                        {
+                            saveInfo[item.ChildClass]["第 1 条参数"].Add($"第 1 项", getCmd[nums[childNowNum]]);
+                        }
+                        else
+                        {
+                            var fg = getCmd[nums[childNowNum]].Split(new string[] { item.ChildTextSplitChar.ToString() }, StringSplitOptions.RemoveEmptyEntries);
+
+                            if (item.ChildTextNum != -1)
+                            {
+                                for (int i = 0; i < item.ChildTextNum; i++)
+                                {
+                                    saveInfo[item.ChildClass]["第 1 条参数"].Add($"第 {i + 1} 项", fg[i]);
+                                }
+                            }
+                            else
+                            {
+                                for (int i = 0; i < fg.Length; i++)
+                                {
+                                    saveInfo[item.ChildClass]["第 1 条参数"].Add($"第 {i + 1} 项", fg[i]);
+                                }
+                            }
+
+                        }
+                    }
+                    else if (item.ChildTextNum == 0)
+                    {
+                        saveInfo[item.ChildClass]["第 1 条参数"].Add($"第 1 项", "开启");
+                    }
+                    childNowNum++;
+                }
+
+                #endregion
+            });
+
+            //子命令客观讲不会出现其他参数
+
+            var toInfo = new Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>()
+            {
+                {getCmd[0],saveInfo }
+            };
+
+            result.SetSuccese("", toInfo);
 
             return result;
         }
@@ -2839,6 +3333,314 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
         }
 
         /// <summary>
+        /// Objective语法解析器
+        /// </summary>
+        /// <param name="txt"></param>
+        /// <returns></returns>
+        public async Task<ReturnModel> ObjectiveAnalysis(string txt)
+        {
+            var result = new ReturnModel();
+
+            if (string.IsNullOrEmpty(txt))
+            {
+                result.SetError("未识别到正确的文本");
+
+                return result;
+            }
+
+            var getCmd = GetRealCmd(txt).TrimEnd('\'').Split(' ');
+
+            var getcmdModel = objectiveProp.Where(t => t.MainClass == getCmd[0]).First();//获取相关模型
+
+            foreach (var item in getcmdModel.ChildTags)
+            {
+                switch (item)
+                {
+                    case "condition":
+                        getcmdModel.ChildClasses.Add(new ChildClasses()
+                        {
+                            ChildClass = "condition",
+                            ChildTextSplitChar = ',',
+                            ChildTextNum = -1,
+                            ChildTextSplitWords = new List<(char i, int j)>()
+                        });
+                        break;
+                    case "events":
+                        getcmdModel.ChildClasses.Add(new ChildClasses()
+                        {
+                            ChildClass = "events",
+                            ChildTextSplitChar = ',',
+                            ChildTextNum = -1,
+                            ChildTextSplitWords = new List<(char i, int j)>()
+                        });
+                        break;
+                    case "notify":
+                        getcmdModel.ChildClasses.Add(new ChildClasses()
+                        {
+                            ChildClass = "notify",
+                            ChildTextSplitChar = 'X',
+                            ChildTextNum = 0,
+                            ChildTextSplitWords = new List<(char i, int j)>()
+                        });
+                        break;
+                    case "ignoreCase":
+                        getcmdModel.ChildClasses.Add(new ChildClasses()
+                        {
+                            ChildClass = "ignoreCase",
+                            ChildTextSplitChar = 'X',
+                            ChildTextNum = 0,
+                            ChildTextSplitWords = new List<(char i, int j)>()
+                        });
+                        break;
+                    case "cancel":
+                        getcmdModel.ChildClasses.Add(new ChildClasses()
+                        {
+                            ChildClass = "cancel",
+                            ChildTextSplitChar = 'X',
+                            ChildTextNum = 0,
+                            ChildTextSplitWords = new List<(char i, int j)>()
+                        });
+                        break;
+                }
+                
+            }
+
+            var saveInfo = new Dictionary<string, Dictionary<string, Dictionary<string, string>>>
+            {
+                {getCmd[0],new Dictionary<string, Dictionary<string, string>>() }
+            };
+
+            var nums = new List<int>();//记录命令的位置 其中0到1的位置必为主命令参数
+
+            nums.Add(1);
+
+            if (getcmdModel.TextSplitChar != '^')
+            {
+                for (int i = 2; i < getCmd.Length; i++)
+                {
+                    var split = getCmd[i].Split(':');
+
+                    if (split.Length == 2)
+                    {
+                        saveInfo.Add(split[0], new Dictionary<string, Dictionary<string, string>>());
+                        getCmd[i] = split[1];
+                        nums.Add(i);
+                    }
+                }
+            }
+
+            nums.Add(getCmd.Length - 1);
+
+            var nowNum = 0;//当前处理的位置
+
+            await Task.Run(() =>
+            {
+                #region 主命令第1参数的处理
+
+                if (getcmdModel.TextSplitChar == ' ')
+                {
+                    if (getcmdModel.TextNum >= 1)
+                    {
+                        if (!saveInfo[getCmd[0]].ContainsKey("第 1 条参数"))
+                        {
+                            saveInfo[getCmd[0]].Add("第 1 条参数", new Dictionary<string, string>());
+                        }
+                        for (int i = 0; i < getcmdModel.TextNum; i++)
+                        {
+                            if (getcmdModel.TextNum == 1)
+                            {
+                                if (getcmdModel.Tags.Count > 0)
+                                {
+                                    if (getcmdModel.Tags.Contains(getCmd[i + nums[0]]))
+                                    {
+                                        saveInfo[getCmd[0]]["第 1 条参数"].Add($"第 {i + 1} 项", getCmd[i + nums[0]]);
+                                    }
+                                }
+                                else
+                                {
+                                    saveInfo[getCmd[0]]["第 1 条参数"].Add($"第 {i + 1} 项", getCmd[i + nums[0]]);
+                                }
+                            }
+                            else
+                            {
+                                saveInfo[getCmd[0]]["第 1 条参数"].Add($"第 {i + 1} 项", getCmd[i + nums[0]]);
+                            }
+                        }
+                        nowNum = getcmdModel.TextNum;
+                    }
+                    else if (getcmdModel.TextNum == -1)
+                    {
+                        if (!saveInfo[getCmd[0]].ContainsKey("第 1 条参数"))
+                        {
+                            saveInfo[getCmd[0]].Add("第 1 条参数", new Dictionary<string, string>());
+                        }
+
+                        for (int i = nums[0]; i < nums[1]; i++)
+                        {
+                            saveInfo[getCmd[0]]["第 1 条参数"].Add($"第 {i + 1} 项", getCmd[i].TrimEnd(' ').TrimStart('^'));
+                        }
+
+                        nowNum = nums[1] - 1;
+                    }
+                    else if (getcmdModel.TextNum == 0)
+                    {
+                        saveInfo[getCmd[0]]["第 1 条参数"].Add($"第 1 项", "开启");
+                        nowNum++;
+                    }
+
+                }
+                else
+                {
+                    if (!saveInfo[getCmd[0]].ContainsKey("第 1 条参数"))
+                    {
+                        saveInfo[getCmd[0]].Add("第 1 条参数", new Dictionary<string, string>());
+                    }
+
+                    if (getcmdModel.TextSplitChar == 'X')
+                    {
+                        saveInfo[getCmd[0]]["第 1 条参数"].Add($"第 1 项", getCmd[nums[0]]);
+
+                    }
+                    else
+                    {
+                        var fg = getCmd[nums[0]].Split(new string[] { getcmdModel.TextSplitChar.ToString() }, StringSplitOptions.RemoveEmptyEntries);
+                        for (int i = 0; i < fg.Length; i++)
+                        {
+                            saveInfo[getCmd[0]]["第 1 条参数"].Add($"第 {i + 1} 项", fg[i]);
+                        }
+                    }
+                    nowNum++;
+
+                }
+
+                #endregion
+
+                #region 主命令其他参数的处理
+
+                //nowNum到num[1]
+
+                for (int i = 0; i < getcmdModel.TextSplitWords.Count; i++)
+                {
+                    if (getcmdModel.TextSplitWords[i].i == ' ')
+                    {
+                        if (getcmdModel.TextSplitWords[i].j >= 1)
+                        {
+                            if (!saveInfo[getCmd[0]].ContainsKey($"第 {2 + i} 条参数"))
+                            {
+                                saveInfo[getCmd[0]].Add($"第 {2 + i} 条参数", new Dictionary<string, string>());
+                            }
+                            for (int j = 0; j < getcmdModel.TextSplitWords[i].j; j++)
+                            {
+                                saveInfo[getCmd[0]][$"第 {2 + i} 条参数"].Add($"第 {j + 1} 项", getCmd[j + nowNum]);
+                            }
+                            nowNum += getcmdModel.TextSplitWords[i].j;
+                        }
+                        else if (getcmdModel.TextNum == -1)
+                        {
+                            if (!saveInfo[getCmd[0]].ContainsKey($"第 {2 + i} 条参数"))
+                            {
+                                saveInfo[getCmd[0]].Add($"第 {2 + i} 条参数", new Dictionary<string, string>());
+                            }
+
+                            for (int j = nums[0]; j < nums[1]; j++)
+                            {
+                                saveInfo[getCmd[0]][$"第 {2 + i} 条参数"].Add($"第 {j + 1} 项", getCmd[j + nowNum]);
+                            }
+
+                            nowNum = nums[1] - 1;
+                        }
+                        else if (getcmdModel.TextNum == 0)
+                        {
+                            saveInfo[getCmd[0]][$"第 {2 + i} 条参数"].Add($"第 1 项", "开启");
+                            nowNum++;
+                        }
+                    }
+                    else
+                    {
+                        if (!saveInfo[getCmd[0]].ContainsKey($"第 {1 + i} 条参数"))
+                        {
+                            saveInfo[getCmd[0]].Add($"第 {2 + i} 条参数", new Dictionary<string, string>());
+                        }
+
+                        if (getcmdModel.TextSplitWords[i].i == 'X')
+                        {
+                            saveInfo[getCmd[0]][$"第 {2 + i} 条参数"].Add($"第 1 项", getCmd[nowNum + 1]);
+
+                        }
+                        else
+                        {
+                            var fg = getCmd[nowNum + 1].Split(new string[] { getcmdModel.TextSplitWords[i].i.ToString() }, StringSplitOptions.RemoveEmptyEntries);
+
+                            for (int j = 0; j < fg.Length; j++)
+                            {
+                                saveInfo[getCmd[0]][$"第 {2 + i} 条参数"].Add($"第 {j + 1} 项", fg[j]);
+                            }
+                        }
+                        nowNum++;
+                    }
+                }
+
+                #endregion
+
+                #region 子命令第1参数的处理
+                var childNowNum = 1;
+                foreach (var item in getcmdModel.ChildClasses)
+                {
+                    if (item.ChildTextNum >= 1 || item.ChildTextNum == -1)
+                    {
+                        if (!saveInfo[item.ChildClass].ContainsKey("第 1 条参数"))
+                        {
+                            saveInfo[item.ChildClass].Add("第 1 条参数", new Dictionary<string, string>());
+                        }
+
+                        if (item.ChildTextSplitChar == 'X')
+                        {
+                            saveInfo[item.ChildClass]["第 1 条参数"].Add($"第 1 项", getCmd[nums[childNowNum]]);
+                        }
+                        else
+                        {
+                            var fg = getCmd[nums[childNowNum]].Split(new string[] { item.ChildTextSplitChar.ToString() }, StringSplitOptions.RemoveEmptyEntries);
+
+                            if (item.ChildTextNum != -1)
+                            {
+                                for (int i = 0; i < item.ChildTextNum; i++)
+                                {
+                                    saveInfo[item.ChildClass]["第 1 条参数"].Add($"第 {i + 1} 项", fg[i]);
+                                }
+                            }
+                            else
+                            {
+                                for (int i = 0; i < fg.Length; i++)
+                                {
+                                    saveInfo[item.ChildClass]["第 1 条参数"].Add($"第 {i + 1} 项", fg[i]);
+                                }
+                            }
+
+                        }
+                    }
+                    else if (item.ChildTextNum == 0)
+                    {
+                        saveInfo[item.ChildClass]["第 1 条参数"].Add($"第 1 项", "开启");
+                    }
+                    childNowNum++;
+                }
+
+                #endregion
+            });
+
+            //子命令客观讲不会出现其他参数
+
+            var toInfo = new Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>()
+            {
+                {getCmd[0],saveInfo }
+            };
+
+            result.SetSuccese("", toInfo);
+
+            return result;
+        }
+
+        /// <summary>
         /// Player与Npc语法构造器
         /// </summary>
         /// <param name="info">存储数据</param>
@@ -2877,6 +3679,42 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
             });
 
             result.SetSuccese("Player或Npc构建成功", savedic);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Player与Npc语法解析器
+        /// </summary>
+        /// <param name="txt"></param>
+        /// <returns></returns>
+        public async Task<ReturnModel> PlayerAndNpcAnalysis(string txt)
+        {
+            var result = new ReturnModel();
+
+            if (string.IsNullOrEmpty(txt))
+            {
+                result.SetError("未识别到正确的文本");
+
+                return result;
+            }
+
+            var fg = txt.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+
+            var toInfo = new Dictionary<string, Dictionary<string, string>>()
+            {
+                {"第 1 条参数",new Dictionary<string, string>() }
+            };
+
+            await Task.Run(() =>
+            {
+                for (int i = 0; i < fg.Length; i++)
+                {
+                    toInfo["第 1 条参数"].Add($"第 {1 + i} 项", fg[i]);
+                }
+            });
+
+            result.SetSuccese("", toInfo);
 
             return result;
         }
@@ -2948,9 +3786,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
         /// </summary>
         /// <param name="txt"></param>
         /// <returns></returns>
-        protected static string GetRealCmd(string txt)
+        protected static string GetRealCmd(string txt,string fg=": ")
         {
-            var getSqlit = txt.Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
+            var getSqlit = txt.Split(new string[] { fg }, StringSplitOptions.RemoveEmptyEntries);
 
             if(getSqlit.Length == 3|| getSqlit.Length == 2)
             {

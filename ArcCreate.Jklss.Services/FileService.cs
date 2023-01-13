@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.IO;
+using System.Xml;
 using YamlDotNet.Serialization;
 
 namespace ArcCreate.Jklss.Services
@@ -24,6 +26,38 @@ namespace ArcCreate.Jklss.Services
         }
 
         /// <summary>
+        /// 获取文件地址中的文件名
+        /// </summary>
+        /// <returns></returns>
+        public static string GetFilePathToFileName(string path)
+        {
+            var folder = new FileInfo(path);
+
+            var fg = folder.Name.Split(new string[] { "." }, System.StringSplitOptions.RemoveEmptyEntries);
+
+            return fg[0];
+        }
+
+        /// <summary>
+        /// 获取文件夹下所有文件
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static List<string> GetDisAllFile(string path)
+        {
+            var list = new List<string>();
+
+            var folder = new DirectoryInfo(path);
+
+            foreach (var item in folder.GetFiles("*.yml"))
+            {
+                list.Add(item.FullName);
+            }
+
+            return list;
+        }
+
+        /// <summary>
         /// 将实体类转为Yml的string文本
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -36,6 +70,25 @@ namespace ArcCreate.Jklss.Services
             var yaml = serializer.Serialize(allConfig);
 
             return yaml;
+        }
+
+        public static T YamlToProp<T>(string yaml_path)
+        {
+            FileInfo fi = new FileInfo(yaml_path);
+
+            if (!Directory.Exists(fi.DirectoryName))
+            {
+                Directory.CreateDirectory(fi.DirectoryName);
+            }
+
+            StreamReader yamlReader = File.OpenText(yaml_path);
+            Deserializer yamlDeserializer = new Deserializer();
+
+            //读取持久化对象  
+            T info = yamlDeserializer.Deserialize<T>(yamlReader);
+            yamlReader.Close();
+
+            return info;
         }
 
         /// <summary>

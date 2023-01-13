@@ -22,7 +22,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
     {
         private static int Uid = 0;
 
-        public async Task<ReturnModel> CreateThumb(ThumbClass thumbClass,string MainFilePath,MainWindow window)
+        public async Task<ReturnModel> CreateThumb(ThumbClass thumbClass,string MainFilePath,MainWindow window,double px=0,double py= 0)
         {
             var result = new ReturnModel();
 
@@ -113,13 +113,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                             }
                         }
 
-                        Canvas.SetTop(thumb, 262 - thumb.Height / 2 - y);
-                        Canvas.SetLeft(thumb, 675.5 - thumb.Width / 2 - x);
+                        Canvas.SetZIndex(thumb, 1);
+                        Canvas.SetTop(thumb, 262 - thumb.Height / 2 - y + py);
+                        Canvas.SetLeft(thumb, 675.5 - thumb.Width / 2 - x + px);
                     }
                     catch
                     {
-                        Canvas.SetTop(thumb, 262 - thumb.Height / 2);
-                        Canvas.SetLeft(thumb, 675.5 - thumb.Width / 2);
+                        Canvas.SetZIndex(thumb, 1);
+                        Canvas.SetTop(thumb, 262 - thumb.Height / 2 + py);
+                        Canvas.SetLeft(thumb, 675.5 - thumb.Width / 2 + px);
                     }
                 }));
 

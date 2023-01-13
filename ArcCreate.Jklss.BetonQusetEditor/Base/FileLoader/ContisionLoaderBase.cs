@@ -1319,6 +1319,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                 {
                     saveThumbInfoWindowModel[getThumb] = await CreateThunbInfowModel(getModelInfo);
                 }
+                CheckData();
+
                 windowModel = saveThumbInfoWindowModel[getThumb];
 
                 var nodes = new List<DefinitionNode>();
@@ -1732,6 +1734,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                 if (getMain_One == getMain_Two)
                 {
+
+
                     return true;
                 }
                 else
@@ -1773,6 +1777,51 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                 }
 
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// 保证数据的统一性
+        /// </summary>
+        protected async void CheckData()
+        {
+            if (!MainWindowViewModel.mainWindowModels.SaveThumbInfo.ContainsKey(getThumb))
+            {
+                return;
+            }
+
+            if (!saveThumbInfoWindowModel.ContainsKey(getThumb))
+            {
+                return;
+            }
+
+            try
+            {
+                var dataOne = MainWindowViewModel.mainWindowModels.SaveThumbInfo[getThumb][MainWindowViewModel.mainWindowModels.SaveThumbInfo[getThumb].Keys.First()];
+
+                var dataTwo = saveThumbInfoWindowModel[getThumb];
+
+                if (dataOne.Keys.First() != dataTwo.TreeItems.Keys.First())
+                {
+                    return;
+                }
+
+                var treeViewBase = new TreeViewBase();
+
+                foreach (var item in dataOne)
+                {
+                    foreach (var i in item.Value)
+                    {
+                        foreach (var j in i.Value)
+                        {
+                            await treeViewBase.AddItemToSaves(getThumb, item.Key, i.Key, j.Key, "", "", true, saveThumbInfoWindowModel, MainWindowViewModel.mainWindowModels.SaveThumbInfo, false);
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                return;
             }
         }
     }

@@ -231,9 +231,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
         /// <param name="saveThumbInfoWindowModel"></param>
         /// <param name="saveThumbInfo"></param>
         /// <returns></returns>
-        public async Task<ReturnModel> AddItemToSaves(Thumb thumb,string one, string two, string three,string cmd,string txt,bool isSave,
+        public async Task<ReturnModel> AddItemToSaves(Thumb thumb, string one, string two, string three, string cmd, string txt, bool isSave,
             Dictionary<Thumb, ThumbInfoWindowModel> saveThumbInfoWindowModel,
-            Dictionary<Thumb, Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>> saveThumbInfo)
+            Dictionary<Thumb, Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>> saveThumbInfo, bool isOpen = true)
         {
             var result = new ReturnModel();
 
@@ -283,39 +283,43 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                 });
             }
 
-            //对于数据存储的添加
+            if (isOpen)
             {
-                await Task.Run(() =>
+                //对于数据存储的添加
                 {
-                    var getSaves = saveThumbInfo[thumb];
-
-                    if (!getSaves.ContainsKey(cmd))
+                    await Task.Run(() =>
                     {
-                        getSaves.Add(cmd, new Dictionary<string, Dictionary<string, Dictionary<string, string>>>());
-                    }
+                        var getSaves = saveThumbInfo[thumb];
 
-                    if (!getSaves[cmd].ContainsKey(one))
-                    {
-                        getSaves[cmd].Add(one, new Dictionary<string, Dictionary<string, string>>());
-                    }
+                        if (!getSaves.ContainsKey(cmd))
+                        {
+                            getSaves.Add(cmd, new Dictionary<string, Dictionary<string, Dictionary<string, string>>>());
+                        }
 
-                    if (!getSaves[cmd][one].ContainsKey(two))
-                    {
-                        getSaves[cmd][one].Add(two, new Dictionary<string, string>());
-                    }
+                        if (!getSaves[cmd].ContainsKey(one))
+                        {
+                            getSaves[cmd].Add(one, new Dictionary<string, Dictionary<string, string>>());
+                        }
 
-                    if (!getSaves[cmd][one][two].ContainsKey(three))
-                    {
-                        getSaves[cmd][one][two].Add(three, txt);
-                    }
-                    else
-                    {
-                        getSaves[cmd][one][two][three] = txt;
-                    }
+                        if (!getSaves[cmd][one].ContainsKey(two))
+                        {
+                            getSaves[cmd][one].Add(two, new Dictionary<string, string>());
+                        }
 
-                    saveThumbInfo[thumb] = getSaves;
-                });
+                        if (!getSaves[cmd][one][two].ContainsKey(three))
+                        {
+                            getSaves[cmd][one][two].Add(three, txt);
+                        }
+                        else
+                        {
+                            getSaves[cmd][one][two][three] = txt;
+                        }
+
+                        saveThumbInfo[thumb] = getSaves;
+                    });
+                }
             }
+            
             result.SetSuccese();
 
             return result;
