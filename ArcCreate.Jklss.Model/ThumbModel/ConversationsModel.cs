@@ -120,8 +120,5 @@ namespace ArcCreate.Jklss.Model.ThumbModel
         public string items { get; set; }
     }
 
-    public class JournalModel
-    {
-        public Dictionary<string,List<string>> journal { get; set; }
-    }
+
 }

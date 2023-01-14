@@ -461,7 +461,13 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
                 if(father.thumbClass == ThumbClass.Player && chirld.thumbClass == ThumbClass.NPC)//玩家对话不允许有多个Npc对话
                 {
-                    if (father.Children.Count >= 1)
+                    var list = new List<SaveChird>();
+                    foreach (var item in father.Children)
+                    {
+                        list.Add(await FindSaveThumbInfo(item));
+                    }
+                    
+                    if (list.Where(t => t.thumbClass == ThumbClass.NPC).Any())
                     {
                         back.SetError("");
                         return back;
@@ -718,6 +724,29 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
             var newList = new List<string>(getSqlit);
 
             return newList;
+        }
+
+        /// <summary>
+        /// 查询被存储在SaveChirld中的信息
+        /// </summary>
+        /// <returns></returns>
+        private async Task<SaveChird> FindSaveThumbInfo(Thumb thumb)
+        {
+            SaveChird save = null;
+
+            await Task.Run(() =>
+            {
+                foreach (var item in MainWindowModels.saveThumbs)
+                {
+                    if (item.Saver == thumb)
+                    {
+                        save = item;
+                        break;
+                    }
+                }
+            });
+
+            return save;
         }
 
         public class ReadersProp

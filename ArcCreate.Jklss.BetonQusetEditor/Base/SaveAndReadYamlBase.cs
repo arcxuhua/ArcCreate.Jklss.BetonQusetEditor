@@ -269,7 +269,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
                     if (!backs.Succese)
                     {
-                        result.SetError();
+                        result.SetError("Conditions语法构建失败");
                         return;
                     }
 
@@ -297,7 +297,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
                     if (!backs.Succese)
                     {
-                        result.SetError();
+                        result.SetError("Event语法构建失败 "+backs.Text);
                         return;
                     }
 
@@ -326,7 +326,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
                     if (!backs.Succese)
                     {
-                        result.SetError();
+                        result.SetError("Objevtive语法构建失败");
 
                         return;
                     }
@@ -2355,11 +2355,55 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                     }
                     else
                     {
-                        var fg = getCmd[nums[0]].Split(new string[] { getcmdModel.TextSplitChar.ToString() }, StringSplitOptions.RemoveEmptyEntries);
-                        for (int i = 0; i < fg.Length; i++)
+                        if (!getcmdModel.IsNotSplitChar)
                         {
-                            saveInfo[getCmd[0]]["第 1 条参数"].Add($"第 {i + 1} 项", fg[i]);
+                            var fg = getCmd[nums[0]].Split(new string[] { getcmdModel.TextSplitChar.ToString() }, StringSplitOptions.RemoveEmptyEntries);
+                            for (int i = 0; i < fg.Length; i++)
+                            {
+                                saveInfo[getCmd[0]]["第 1 条参数"].Add($"第 {i + 1} 项", fg[i]);
+                            }
                         }
+                        else
+                        {
+                            var cs = string.Empty;
+                            if (nums[1] == getCmd.Length - 1)
+                            {
+                                for (int i = nums[0]; i <= nums[1]; i++)
+                                {
+                                    if (i == nums[1])
+                                    {
+                                        cs += getCmd[i];
+                                    }
+                                    else
+                                    {
+                                        cs += getCmd[i] + " ";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                for (int i = nums[0]; i < nums[1]; i++)
+                                {
+                                    if (i == nums[1] - 1)
+                                    {
+                                        cs += getCmd[i];
+                                    }
+                                    else
+                                    {
+                                        cs += getCmd[i] + " ";
+                                    }
+                                }
+                            }
+
+                            var fg = cs.Split(new string[] { getcmdModel.TextSplitChar.ToString() }, StringSplitOptions.RemoveEmptyEntries);
+                            for (int i = 0; i < fg.Length; i++)
+                            {
+                                saveInfo[getCmd[0]]["第 1 条参数"].Add($"第 {i + 1} 项", fg[i]);
+                            }
+
+                            nowNum = nums[1] - 2;
+                        }
+                        
                     }
                     nowNum++;
 
@@ -3350,7 +3394,18 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
             var getCmd = GetRealCmd(txt).TrimEnd('\'').Split(' ');
 
-            var getcmdModel = objectiveProp.Where(t => t.MainClass == getCmd[0]).First();//获取相关模型
+            ObjectiveCmdModel getcmdModel = null;//获取相关模型
+
+            if(objectiveProp.Where(t => t.MainClass == getCmd[0]).Any())
+            {
+                getcmdModel = objectiveProp.Where(t => t.MainClass == getCmd[0]).First();//获取相关模型
+            }
+            else
+            {
+                result.SetError("未录入此模型");
+
+                return result;
+            }
 
             foreach (var item in getcmdModel.ChildTags)
             {

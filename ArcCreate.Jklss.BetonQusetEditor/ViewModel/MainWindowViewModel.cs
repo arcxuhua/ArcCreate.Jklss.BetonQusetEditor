@@ -28,6 +28,7 @@ using Thumb = System.Windows.Controls.Primitives.Thumb;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using Window = System.Windows.Window;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
+using System.Windows.Media.Effects;
 
 namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 {
@@ -256,7 +257,13 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         private async void Cb_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             checkde = true;
-            var thumbClass = (await FindSaveThumbInfo(nowThumb)).thumbClass;
+            Thumb nowThumbs = null;
+            lock (nowThumb)
+            {
+                nowThumbs = nowThumb;
+            }
+
+            var thumbClass = (await FindSaveThumbInfo(nowThumbs)).thumbClass;
 
             if(thumbClass!=ThumbClass.Player&&thumbClass != ThumbClass.NPC)
             {
@@ -264,7 +271,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                 for (int i = 0; i < saveLines.Count; i++)
                 {
-                    if (saveLines[i].FatherName == nowThumb)
+                    if (saveLines[i].FatherName == nowThumbs)
                     {
                         getSaver.Add(saveLines[i]);
                     }
@@ -307,7 +314,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             switch (thumbClass)
             {
                 case ThumbClass.Player:
-                    var loaderBacks = await playerLoader.ChangeThumb(control.SelectedItem.ToString(), nowThumb, thumbInfoWindow.TreeView_Tv);
+                    var loaderBacks = await playerLoader.ChangeThumb(control.SelectedItem.ToString(), nowThumbs, thumbInfoWindow.TreeView_Tv);
 
                     if (loaderBacks != null && !loaderBacks.Succese)
                     {
@@ -316,7 +323,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                     break;
                 case ThumbClass.NPC:
-                    loaderBacks = await npcLoader.ChangeThumb(control.SelectedItem.ToString(), nowThumb, thumbInfoWindow.TreeView_Tv);
+                    loaderBacks = await npcLoader.ChangeThumb(control.SelectedItem.ToString(), nowThumbs, thumbInfoWindow.TreeView_Tv);
 
                     if (loaderBacks != null && !loaderBacks.Succese)
                     {
@@ -325,7 +332,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     break;
                 case ThumbClass.Conditions:
 
-                    var loaderBack = await contisionLoader.ChangeThumb(contisionProp, control.SelectedItem.ToString(), nowThumb);
+                    var loaderBack = await contisionLoader.ChangeThumb(contisionProp, control.SelectedItem.ToString(), nowThumbs);
 
                     if (loaderBack != null && !loaderBack.Succese)
                     {
@@ -338,15 +345,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     {
                         ShowMessage(back.Text);
                     }
-                    if (mainWindowModels.SaveThumbInfo.ContainsKey(nowThumb)&&mainWindow.IsEnabled)
+                    if (mainWindowModels.SaveThumbInfo.ContainsKey(nowThumbs)&&mainWindow.IsEnabled)
                     {
-                        mainWindowModels.SaveThumbInfo[nowThumb].Clear();
+                        mainWindowModels.SaveThumbInfo[nowThumbs].Clear();
                     }
                     break;
 
                 case ThumbClass.Events:
 
-                    loaderBack = await eventLoader.ChangeThumb(eventProp, control.SelectedItem.ToString(), nowThumb);
+                    loaderBack = await eventLoader.ChangeThumb(eventProp, control.SelectedItem.ToString(), nowThumbs);
 
                     if (loaderBack != null && !loaderBack.Succese)
                     {
@@ -359,15 +366,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     {
                         ShowMessage(back.Text);
                     }
-                    if (mainWindowModels.SaveThumbInfo.ContainsKey(nowThumb) && mainWindow.IsEnabled)
+                    if (mainWindowModels.SaveThumbInfo.ContainsKey(nowThumbs) && mainWindow.IsEnabled)
                     {
-                        mainWindowModels.SaveThumbInfo[nowThumb].Clear();
+                        mainWindowModels.SaveThumbInfo[nowThumbs].Clear();
                     }
                     break;
 
                 case ThumbClass.Objectives:
 
-                    loaderBack = await objectiveLoader.ChangeThumb(objectiveProp, control.SelectedItem.ToString(), nowThumb);
+                    loaderBack = await objectiveLoader.ChangeThumb(objectiveProp, control.SelectedItem.ToString(), nowThumbs);
 
                     if (loaderBack != null && !loaderBack.Succese)
                     {
@@ -380,9 +387,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     {
                         ShowMessage(back.Text);
                     }
-                    if (mainWindowModels.SaveThumbInfo.ContainsKey(nowThumb) && mainWindow.IsEnabled)
+                    if (mainWindowModels.SaveThumbInfo.ContainsKey(nowThumbs) && mainWindow.IsEnabled)
                     {
-                        mainWindowModels.SaveThumbInfo[nowThumb].Clear();
+                        mainWindowModels.SaveThumbInfo[nowThumbs].Clear();
                     }
                     break;
             }
@@ -441,12 +448,12 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             double nLeft = Canvas.GetLeft(myThumb) + e.HorizontalChange;
             if (nTop <= 0)
                 nTop = 0;
-            if (nTop >= (5044 - myThumb.Height))
-                nTop = 5044 - myThumb.Height;
+            if (nTop >= (504400 - myThumb.Height))
+                nTop = 504400 - myThumb.Height;
             if (nLeft <= 0)
                 nLeft = 0;
-            if (nLeft >= (12678 - myThumb.Width))
-                nLeft = 12678 - myThumb.Width;
+            if (nLeft >= (1267800 - myThumb.Width))
+                nLeft = 1267800 - myThumb.Width;
 
             Canvas.SetTop(myThumb, nTop);
             Canvas.SetLeft(myThumb, nLeft);
@@ -478,12 +485,31 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             if (nowThumb != (Thumb)sender)
             {
                 first = true;
-            }
 
-            if (nowThumb != null)
-            {
-                Canvas.SetZIndex(nowThumb, 1);
-                nowThumb.BorderBrush = null;
+                if (nowThumb != null)
+                {
+                    Canvas.SetZIndex(nowThumb, 1);
+
+                    (GetControl("ColorModel", nowThumb) as DropShadowEffect).Color = Brushes.Black.Color;
+
+                    var find = await FindSaveThumbInfo((Thumb)sender);
+
+                    foreach (var item in find.Children)
+                    {
+                        (GetControl("ColorModel", item) as DropShadowEffect).Color = Brushes.Black.Color;
+                    }
+
+                    if(find.Children==null|| find.Children.Count == 0)
+                    {
+                        foreach (var item in MainWindowModels.saveThumbs)
+                        {
+                            if (item.Saver != nowThumb)
+                            {
+                                (GetControl("ColorModel", item.Saver) as DropShadowEffect).Color = Brushes.Black.Color;
+                            }
+                        }
+                    }
+                }
             }
 
             if (first)
@@ -502,7 +528,14 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                 Canvas.SetZIndex((Thumb)sender, 2);
 
-                ((Thumb)sender).BorderBrush = Brushes.Honeydew;
+                (GetControl("ColorModel", (Thumb)sender) as DropShadowEffect).Color = Brushes.Red.Color;
+
+                var find = await FindSaveThumbInfo((Thumb)sender);
+
+                foreach (var item in find.Children)
+                {
+                    (GetControl("ColorModel", item) as DropShadowEffect).Color = Brushes.Yellow.Color;
+                }
 
                 var back = await ChangeTheTreeView();
 
@@ -589,9 +622,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     _ReadFilePathCmd = new CommandBase();
                     _ReadFilePathCmd.DoExecute = new Action<object>(async obj =>//回调函数
                     {
+                        if (string.IsNullOrEmpty(MainFilePath))
+                        {
+                            ShowMessage("文件地址不能为空");
+                            return;
+                        }
                         if (!FileService.IsHaveFile(MainFilePath))
                         {
                             ShowMessage("main入口文件不存在请重新指定Main.yml文件");
+                            return;
                         }
 
                         mainWindow.IsEnabled = false;
@@ -609,13 +648,13 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         var getItems = new List<string>(FileService.GetFileText(disPath + @"\items.yml")
                             .Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries));//决定生成多少个物品
 
-                        var getJournaltoProp = FileService.YamlToProp<JournalModel>(disPath + @"\journal.yml");//决定生成多少个日记
+                        var getJournaltoProp = FileService.YamlToProp<Dictionary<string,string>>(disPath + @"\journal.yml");//决定生成多少个日记
 
-                        var getJournal = new Dictionary<string, List<string>>();
+                        var getJournal = new Dictionary<string, string>();
 
                         if (getJournaltoProp != null)
                         {
-                            getJournal = getJournaltoProp.journal;
+                            getJournal = getJournaltoProp;
                         }
 
                         var getObjectives = new List<string>(FileService.GetFileText(disPath + @"\objectives.yml")
@@ -639,6 +678,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         var playernum = 0;
 
                         var treeViewBase = new TreeViewBase();
+
+                        #region 控件的生成与数据的绑定
 
                         for (int i = 0; i < allConversations.Count; i++)
                         {
@@ -993,7 +1034,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                 for (int j = 0; j < getText.Count; j++)
                                 {
                                     await treeViewBase.AddItemToSaves(thumbs, "text", "第 1 条参数", $"第 {j + 1} 项", "文案: text",
-                                        getText[j], true, npcLoader.saveThumbInfoWindowModel, mainWindowModels.SaveThumbInfo);
+                                        getText[j], true, playerLoader.saveThumbInfoWindowModel, mainWindowModels.SaveThumbInfo);
                                 }
 
                                 if (!string.IsNullOrEmpty(item.Value.conditions))
@@ -1010,7 +1051,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                     foreach (var j in conditionsProp["第 1 条参数"])
                                     {
                                         await treeViewBase.AddItemToSaves(thumbs, "conditions", "第 1 条参数", j.Key, "触发条件: conditions",
-                                            j.Value, true, npcLoader.saveThumbInfoWindowModel, mainWindowModels.SaveThumbInfo);
+                                            j.Value, true, playerLoader.saveThumbInfoWindowModel, mainWindowModels.SaveThumbInfo);
                                     }
                                 }
 
@@ -1028,7 +1069,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                     foreach (var j in EventProp["第 1 条参数"])
                                     {
                                         await treeViewBase.AddItemToSaves(thumbs, "events", "第 1 条参数", j.Key, "触发事件: events",
-                                            j.Value, true, npcLoader.saveThumbInfoWindowModel, mainWindowModels.SaveThumbInfo);
+                                            j.Value, true, playerLoader.saveThumbInfoWindowModel, mainWindowModels.SaveThumbInfo);
                                     }
                                 }
 
@@ -1046,7 +1087,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                     foreach (var j in PointerProp["第 1 条参数"])
                                     {
                                         await treeViewBase.AddItemToSaves(thumbs, "pointer", "第 1 条参数", j.Key, "存储对话: pointer",
-                                            j.Value, true, npcLoader.saveThumbInfoWindowModel, mainWindowModels.SaveThumbInfo);
+                                            j.Value, true, playerLoader.saveThumbInfoWindowModel, mainWindowModels.SaveThumbInfo);
                                     }
                                 }
                                 #endregion
@@ -1107,10 +1148,19 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                             {
                                 Thread.Sleep(100);
 
-                                mainWindow.cvmenu.Dispatcher.Invoke(new Action(() =>
+                                mainWindow.cvmenu.Dispatcher.Invoke(new Action(async() =>
                                 {
                                     var cmd = string.Empty;
+                                    while (checkde)
+                                    {
+                                        await Task.Run(() => { Thread.Sleep(100); });
+                                    }
                                     nowThumb = thumb;
+                                    while ((GetControl("ConditionsConfig_TBox", thumb) as TextBox) == null)
+                                    {
+                                        await Task.Run(() => { Thread.Sleep(100); });
+                                    }
+
                                     (GetControl("ConditionsConfig_TBox", thumb) as TextBox).Text = getConditions[i].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[0];
                                     foreach (var item in (GetControl("Conditions_CBox", thumb) as ComboBox).Items)
                                     {
@@ -1132,6 +1182,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                         for (int i = 0; i < getEvents.Count; i++)
                         {
+                            
                             var back = await createThumbs.CreateThumb(ThumbClass.Events, MainFilePath, mainWindow,i*500,800);
 
                             if (!back.Succese)
@@ -1181,11 +1232,22 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                             await Task.Run(() =>
                             {
                                 Thread.Sleep(100);
-                                mainWindow.cvmenu.Dispatcher.Invoke(new Action(() =>
+
+                                var num = i;
+
+                                mainWindow.cvmenu.Dispatcher.Invoke(new Action(async () =>
                                 {
                                     var cmd = string.Empty;
+                                    while (checkde)
+                                    {
+                                        await Task.Run(() => { Thread.Sleep(100); });
+                                    }
                                     nowThumb = thumb;
-                                    (GetControl("ConditionsConfig_TBox", thumb) as TextBox).Text = getEvents[i].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[0];
+                                    while((GetControl("ConditionsConfig_TBox", thumb) as TextBox) == null)
+                                    {
+                                        await Task.Run(() =>{ Thread.Sleep(100); });
+                                    }
+                                    (GetControl("ConditionsConfig_TBox", thumb) as TextBox).Text = getEvents[num].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[0];
                                     foreach (var item in (GetControl("Conditions_CBox", thumb) as ComboBox).Items)
                                     {
                                         var fgf = item.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
@@ -1254,10 +1316,18 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                             await Task.Run(() =>
                             {
                                 Thread.Sleep(100);
-                                mainWindow.cvmenu.Dispatcher.Invoke(new Action(() =>
+                                mainWindow.cvmenu.Dispatcher.Invoke(new Action(async() =>
                                 {
                                     var cmd = string.Empty;
+                                    while (checkde)
+                                    {
+                                        await Task.Run(() => { Thread.Sleep(100); });
+                                    }
                                     nowThumb = thumb;
+                                    while ((GetControl("ConditionsConfig_TBox", thumb) as TextBox) == null)
+                                    {
+                                        await Task.Run(() => { Thread.Sleep(100); });
+                                    }
                                     (GetControl("ConditionsConfig_TBox", thumb) as TextBox).Text = getObjectives[i].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[0];
                                     foreach (var item in (GetControl("Conditions_CBox", thumb) as ComboBox).Items)
                                     {
@@ -1277,6 +1347,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         }
 
                         var jnum = 0;
+
                         foreach (var item in getJournal)
                         {
                             var back = await createThumbs.CreateThumb(ThumbClass.Journal, MainFilePath, obj as MainWindow,jnum*500,1200);
@@ -1304,25 +1375,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                             ThumbNums = MainWindowModels.saveThumbs.Count.ToString();
 
-                            var str = string.Empty;
-
-                            for (int i = 0; i < item.Value.Count; i++)
-                            {
-                                if (i == item.Value.Count)
-                                {
-                                    str += item.Value[i];
-                                }
-                                else
-                                {
-                                    str += item.Value[i]+"\r\n";
-                                }
-                            }
+                            var str = item.Value;
 
                             await Task.Run(() =>
                             {
                                 Thread.Sleep(100);
-                                mainWindow.cvmenu.Dispatcher.Invoke(new Action(() =>
+                                mainWindow.cvmenu.Dispatcher.Invoke(new Action(async () =>
                                 {
+                                    while ((GetControl("JournalConfig_TBox", thumb) as TextBox) == null)
+                                    {
+                                        await Task.Run(() => { Thread.Sleep(100); });
+                                    }
                                     (GetControl("JournalConfig_TBox", thumb) as TextBox).Text = item.Key;
 
                                     (GetControl("Journal_TBox", thumb) as TextBox).Text = str;
@@ -1363,8 +1426,12 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                             await Task.Run(() =>
                             {
                                 Thread.Sleep(100);
-                                mainWindow.cvmenu.Dispatcher.Invoke(new Action(() =>
+                                mainWindow.cvmenu.Dispatcher.Invoke(new Action(async () =>
                                 {
+                                    while ((GetControl("ItemsConfig_TBox", thumb) as TextBox) == null)
+                                    {
+                                        await Task.Run(() => { Thread.Sleep(100); });
+                                    }
                                     var fg = getItems[i].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
                                     (GetControl("ItemsConfig_TBox", thumb) as TextBox).Text = fg[0];
 
@@ -1373,6 +1440,297 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                 itemsNum++;
                             });
                         }
+
+                        #endregion
+
+                        #region 关系建立
+                        for (int i = 0; i < allConversations.Count; i++)
+                        {
+                            var reback = await createThumbs.UseNameGetThumb(ThumbClass.NPC, allConversations[i].first);
+                            var mainBack = await createThumbs.UseNameGetThumb(ThumbClass.Subject, allConversations[i].quester);
+                            if (reback.Succese && mainBack.Succese)
+                            {
+                                var info = reback.Backs as SaveChird;
+                                var mainInfo = mainBack.Backs as SaveChird;
+
+                                var classoverBack = await ThumbClassOver(mainInfo.Saver, info.Saver,false);
+
+                                if (classoverBack.Succese)
+                                {
+                                    DrawThumbLine(mainInfo.Saver, info.Saver);
+                                }
+                            }
+                        }
+
+                        foreach (var item in mainWindowModels.SaveThumbInfo)
+                        {
+                            var info = await FindSaveThumbInfo(item.Key);
+
+                            if (info.thumbClass == ThumbClass.NPC || info.thumbClass == ThumbClass.Player)
+                            {
+                                foreach (var i in mainWindowModels.SaveThumbInfo[item.Key])
+                                {
+                                    switch (GetRealCmd(i.Key))
+                                    {
+                                        case "conditions":
+                                            foreach (var j in i.Value["conditions"]["第 1 条参数"])
+                                            {
+                                                var value = j.Value.TrimStart('!');
+                                                var reback = await createThumbs.UseNameGetThumb(ThumbClass.Conditions, value);
+
+                                                if (reback.Succese)
+                                                {
+                                                    var getinfo = reback.Backs as SaveChird;
+
+                                                    var classoverBack = await ThumbClassOver(item.Key, getinfo.Saver, false);
+
+                                                    if (classoverBack.Succese)
+                                                    {
+                                                        DrawThumbLine(item.Key, getinfo.Saver);
+                                                    }
+                                                }
+                                            }
+                                            break;
+                                        case "events":
+                                            foreach (var j in i.Value["events"]["第 1 条参数"])
+                                            {
+                                                var reback = await createThumbs.UseNameGetThumb(ThumbClass.Events, j.Value);
+
+                                                if (reback.Succese)
+                                                {
+                                                    var getinfo = reback.Backs as SaveChird;
+
+                                                    var classoverBack = await ThumbClassOver(item.Key, getinfo.Saver, false);
+
+                                                    if (classoverBack.Succese)
+                                                    {
+                                                        DrawThumbLine(item.Key, getinfo.Saver);
+                                                    }
+                                                }
+                                            }
+                                            break;
+                                        case "pointer":
+                                            if (info.thumbClass == ThumbClass.NPC)
+                                            {
+                                                foreach (var j in i.Value["pointer"]["第 1 条参数"])
+                                                {
+                                                    var reback = await createThumbs.UseNameGetThumb(ThumbClass.Player, j.Value);
+
+                                                    if (reback.Succese)
+                                                    {
+                                                        var getinfo = reback.Backs as SaveChird;
+
+                                                        var classoverBack = await ThumbClassOver(item.Key, getinfo.Saver, false);
+
+                                                        if (classoverBack.Succese)
+                                                        {
+                                                            DrawThumbLine(item.Key, getinfo.Saver);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                foreach (var j in i.Value["pointer"]["第 1 条参数"])
+                                                {
+                                                    var reback = await createThumbs.UseNameGetThumb(ThumbClass.NPC, j.Value);
+
+                                                    if (reback.Succese)
+                                                    {
+                                                        var getinfo = reback.Backs as SaveChird;
+
+                                                        var classoverBack = await ThumbClassOver(item.Key, getinfo.Saver, false);
+
+                                                        if (classoverBack.Succese)
+                                                        {
+                                                            DrawThumbLine(item.Key, getinfo.Saver);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                switch (info.thumbClass)
+                                {
+                                    case ThumbClass.Conditions:
+                                        foreach (var i in mainWindowModels.SaveThumbInfo[item.Key])
+                                        {
+                                            var getRealCmd = GetRealCmd(i.Key);
+
+                                            var findModel = contisionProp.Where(t => t.MainClass == getRealCmd).First();
+
+                                            if (findModel.NeedTpye != null&&findModel.NeedTpye.Count > 0)
+                                            {
+                                                foreach (var j in i.Value)
+                                                {//j.key是命令
+                                                    var num = 0;
+                                                    foreach (var n in j.Value)
+                                                    {//n.key是参数
+                                                        foreach (var m in n.Value)
+                                                        {
+                                                            if (!findModel.NeedTpye.Where(t => t.Key == j.Key).Any())//找到是否存在命令
+                                                            {
+                                                                break;
+                                                            }
+
+                                                            var model = findModel.NeedTpye.Where(t => t.Key == j.Key).First().Value;
+
+                                                            if (!model.ContainsKey(num))//找到是否存在参数
+                                                            {
+                                                                break;
+                                                            }
+
+                                                            var getNeedClass = model[num];
+
+                                                            var changeinfo = m.Value;
+
+                                                            if (findModel.isContisionCmd)
+                                                            {
+                                                                changeinfo = changeinfo.TrimStart('!');
+                                                            }
+
+                                                            var reback = await createThumbs.UseNameGetThumb(getNeedClass, changeinfo);
+
+                                                            if (reback.Succese)
+                                                            {
+                                                                var getinfo = reback.Backs as SaveChird;
+
+                                                                var classoverBack = await ThumbClassOver(item.Key, getinfo.Saver, false);
+
+                                                                if (classoverBack.Succese)
+                                                                {
+                                                                    DrawThumbLine(item.Key, getinfo.Saver);
+                                                                }
+                                                            }
+                                                        }
+                                                        num++;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        break;
+                                    case ThumbClass.Events:
+                                        foreach (var i in mainWindowModels.SaveThumbInfo[item.Key])
+                                        {
+                                            var getRealCmd = GetRealCmd(i.Key);
+
+                                            var findModel = eventProp.Where(t => t.MainClass == getRealCmd).First();
+
+                                            if (findModel.NeedTpye != null && findModel.NeedTpye.Count > 0)
+                                            {
+                                                foreach (var j in i.Value)
+                                                {//j.key是命令
+                                                    var num = 0;
+                                                    foreach (var n in j.Value)
+                                                    {//n.key是参数
+                                                        foreach (var m in n.Value)
+                                                        {
+                                                            if (!findModel.NeedTpye.Where(t => t.Key == j.Key).Any())//找到是否存在命令
+                                                            {
+                                                                break;
+                                                            }
+
+                                                            var model = findModel.NeedTpye.Where(t => t.Key == j.Key).First().Value;
+
+                                                            if (!model.ContainsKey(num))//找到是否存在参数
+                                                            {
+                                                                break;
+                                                            }
+
+                                                            var getNeedClass = model[num];
+
+                                                            var changeinfo = m.Value;
+
+                                                            if (getNeedClass==ThumbClass.Conditions)
+                                                            {
+                                                                changeinfo = changeinfo.TrimStart('!');
+                                                            }
+
+                                                            var reback = await createThumbs.UseNameGetThumb(getNeedClass, changeinfo);
+
+                                                            if (reback.Succese)
+                                                            {
+                                                                var getinfo = reback.Backs as SaveChird;
+
+                                                                var classoverBack = await ThumbClassOver(item.Key, getinfo.Saver, false);
+
+                                                                if (classoverBack.Succese)
+                                                                {
+                                                                    DrawThumbLine(item.Key, getinfo.Saver);
+                                                                }
+                                                            }
+                                                        }
+                                                        num++;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        break;
+                                    case ThumbClass.Objectives:
+                                        foreach (var i in mainWindowModels.SaveThumbInfo[item.Key])
+                                        {
+                                            var getRealCmd = GetRealCmd(i.Key);
+
+                                            var findModel = objectiveProp.Where(t => t.MainClass == getRealCmd).First();
+
+                                            if (findModel.NeedTpye != null && findModel.NeedTpye.Count > 0)
+                                            {
+                                                foreach (var j in i.Value)
+                                                {//j.key是命令
+                                                    var num = 0;
+                                                    foreach (var n in j.Value)
+                                                    {//n.key是参数
+                                                        foreach (var m in n.Value)
+                                                        {
+                                                            if (!findModel.NeedTpye.Where(t => t.Key == j.Key).Any())//找到是否存在命令
+                                                            {
+                                                                break;
+                                                            }
+
+                                                            var model = findModel.NeedTpye.Where(t => t.Key == j.Key).First().Value;
+
+                                                            if (!model.ContainsKey(num))//找到是否存在参数
+                                                            {
+                                                                break;
+                                                            }
+
+                                                            var getNeedClass = model[num];
+
+                                                            var changeinfo = m.Value;
+
+                                                            if (getNeedClass == ThumbClass.Conditions)
+                                                            {
+                                                                changeinfo = changeinfo.TrimStart('!');
+                                                            }
+
+                                                            var reback = await createThumbs.UseNameGetThumb(getNeedClass, changeinfo);
+
+                                                            if (reback.Succese)
+                                                            {
+                                                                var getinfo = reback.Backs as SaveChird;
+
+                                                                var classoverBack = await ThumbClassOver(item.Key, getinfo.Saver, false);
+
+                                                                if (classoverBack.Succese)
+                                                                {
+                                                                    DrawThumbLine(item.Key, getinfo.Saver);
+                                                                }
+                                                            }
+                                                        }
+                                                        num++;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        break;
+                                }
+                            }
+                        }
+                        #endregion
 
                         await Task.Run(() =>
                         {
@@ -1670,6 +2028,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                         await Task.Run(() =>
                         {
+                            Thread.Sleep(100);
                             mainWindow.cvmenu.Dispatcher.Invoke(new Action(() =>
                             {
                                 (GetControl("ConditionsConfig_TBox", thumb) as TextBox).Text = "NpcTemp_" + npcNum;
@@ -2233,6 +2592,25 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         #endregion
 
         #region 具体方法
+
+        /// <summary>
+        /// 获取真实命令
+        /// </summary>
+        /// <param name="txt"></param>
+        /// <returns></returns>
+        protected static string GetRealCmd(string txt, string fg = ": ")
+        {
+            var getSqlit = txt.Split(new string[] { fg }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (getSqlit.Length == 3 || getSqlit.Length == 2)
+            {
+                return getSqlit[getSqlit.Length - 1];
+            }
+            else
+            {
+                return txt;
+            }
+        }
 
         /// <summary>
         /// 更改TreeItem内容(已丢用)
@@ -2820,7 +3198,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         /// <param name="thumbFt">父级</param>
         /// <param name="thumbCl">子级</param>
         /// <returns></returns>
-        private async Task<ReturnModel> ThumbClassOver(Thumb thumbFt,Thumb thumbCl)
+        private async Task<ReturnModel> ThumbClassOver(Thumb thumbFt,Thumb thumbCl,bool useAdd = true)
         {
             var back = new ReturnModel();
 
@@ -2854,12 +3232,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
             #endregion
 
-            var result = await AddTextToThumb(get_ThumbFt, get_ThumbCl);
-
-            if (!result.Succese)
+            if (useAdd)
             {
-                back.SetError(result.Text);
-                return back;
+                var result = await AddTextToThumb(get_ThumbFt, get_ThumbCl);
+
+                if (!result.Succese)
+                {
+                    back.SetError(result.Text);
+                    return back;
+                }
             }
 
             //将父级添加进子级中的父级集合

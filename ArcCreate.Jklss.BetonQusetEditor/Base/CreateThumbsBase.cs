@@ -15,6 +15,8 @@ using System.Windows.Input;
 using System.Windows.Forms;
 using TextBox = System.Windows.Controls.TextBox;
 using ArcCreate.Jklss.Model.ThumbModel;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
+using Thumb = System.Windows.Controls.Primitives.Thumb;
 
 namespace ArcCreate.Jklss.BetonQusetEditor.Base
 {
@@ -134,6 +136,153 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
         }
 
         /// <summary>
+        /// 通过名称找到thumb
+        /// </summary>
+        /// <param name="txt"></param>
+        /// <returns></returns>
+        public async Task<ReturnModel> UseNameGetThumb(ThumbClass thumbClass,string txt)
+        {
+            var result = new ReturnModel();
+
+            if (string.IsNullOrEmpty(txt))
+            {
+                result.SetError();
+
+                return result;
+            }
+
+            if (thumbClass != ThumbClass.Journal && thumbClass != ThumbClass.Items && thumbClass != ThumbClass.Subject)
+            {
+                var back =await Task.Run(() =>
+                {
+                    var getinfo = MainWindowModels.saveThumbs.Where(t => t.thumbClass == thumbClass).ToList();
+
+                    foreach (var item in getinfo)
+                    {
+                        var getName = string.Empty;
+
+                        GetControl<TextBox>("ConditionsConfig_TBox", item.Saver).Dispatcher.Invoke(new Action(() =>
+                        {
+                            getName = GetControl<TextBox>("ConditionsConfig_TBox", item.Saver).Text;
+                        }));
+
+                        if (thumbClass == item.thumbClass && getName == txt)
+                        {
+                            result.SetSuccese("", item);
+
+                            return result;
+                        }
+                    }
+
+                    result.SetError();
+
+                    return result;
+                });
+
+                return back;
+            }
+            else
+            {
+                if(thumbClass == ThumbClass.Journal)
+                {
+                    var back = await Task.Run(() =>
+                    {
+                        var getinfo = MainWindowModels.saveThumbs.Where(t=>t.thumbClass==thumbClass).ToList();
+
+                        foreach (var item in getinfo)
+                        {
+                            var getName = string.Empty;
+
+                            GetControl<TextBox>("JournalConfig_TBox", item.Saver).Dispatcher.Invoke(new Action(() =>
+                            {
+                                getName = GetControl<TextBox>("JournalConfig_TBox", item.Saver).Text;
+                            }));
+
+                            if (thumbClass == item.thumbClass && getName == txt)
+                            {
+                                result.SetSuccese("", item);
+
+                                return result;
+                            }
+                        }
+
+                        result.SetError();
+
+                        return result;
+                    });
+
+                    return back;
+                }
+
+                if(thumbClass == ThumbClass.Items)
+                {
+                    var back = await Task.Run(() =>
+                    {
+                        var getinfo = MainWindowModels.saveThumbs.Where(t => t.thumbClass == thumbClass).ToList();
+
+                        foreach (var item in getinfo)
+                        {
+                            var getName = string.Empty;
+
+                            GetControl<TextBox>("ItemsConfig_TBox", item.Saver).Dispatcher.Invoke(new Action(() =>
+                            {
+                                getName = GetControl<TextBox>("ItemsConfig_TBox", item.Saver).Text;
+                            }));
+
+                            if (thumbClass == item.thumbClass && getName == txt)
+                            {
+                                result.SetSuccese("", item);
+
+                                return result;
+                            }
+                        }
+
+                        result.SetError();
+
+                        return result;
+                    });
+
+                    return back;
+                }
+
+                if(thumbClass == ThumbClass.Subject)
+                {
+                    var back = await Task.Run(() =>
+                    {
+                        var getinfo = MainWindowModels.saveThumbs.Where(t => t.thumbClass == thumbClass).ToList();
+
+                        foreach (var item in getinfo)
+                        {
+                            var getName = string.Empty;
+
+                            GetControl<TextBox>("ShowNpcName_TBox", item.Saver).Dispatcher.Invoke(new Action(() =>
+                            {
+                                getName = GetControl<TextBox>("ShowNpcName_TBox", item.Saver).Text;
+                            }));
+
+                            if (thumbClass == item.thumbClass && getName == txt)
+                            {
+                                result.SetSuccese("", item);
+
+                                return result;
+                            }
+                        }
+
+                        result.SetError();
+
+                        return result;
+                    });
+
+                    return back;
+                }
+            }
+
+            result.SetError();
+
+            return result;
+        }
+
+        /// <summary>
         /// 从Thumb中获取控件
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -143,6 +292,18 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
         protected static object GetControl(string name, Thumb thumb)
         {
             return thumb.Template.FindName(name, thumb);
+        }
+
+        /// <summary>
+        /// 从Thumb中获取控件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name"></param>
+        /// <param name="thumb"></param>
+        /// <returns></returns>
+        protected static T GetControl<T>(string name, Thumb thumb)
+        {
+            return (T)thumb.Template.FindName(name, thumb);
         }
     }
 }

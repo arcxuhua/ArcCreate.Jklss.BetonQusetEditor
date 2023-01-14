@@ -9,7 +9,7 @@
                 <ControlTemplate TargetType="Thumb">
                     <materialDesign:Flipper materialDesign:ShadowAssist.ShadowDepth="Depth0" Width="400" Height="148" Canvas.Left="249" Canvas.Top="102">
                         <materialDesign:Flipper.Effect>
-                            <DropShadowEffect Color="#19000000" Direction="-50" ShadowDepth="4" Opacity="100"/>
+                            <DropShadowEffect x:Name="ColorModel" Color="Black" ShadowDepth="0" Direction="0" BlurRadius="25"/>
                         </materialDesign:Flipper.Effect>
                         <materialDesign:Flipper.FrontContent>
                             <Grid Height="148" Width="400" Background="AliceBlue">
@@ -67,7 +67,7 @@
                 <ControlTemplate TargetType="Thumb">
                     <materialDesign:Flipper materialDesign:ShadowAssist.ShadowDepth="Depth0" Width="400" Height="148" Canvas.Left="249" Canvas.Top="102">
                         <materialDesign:Flipper.Effect>
-                            <DropShadowEffect Color="#19000000" Direction="-50" ShadowDepth="4" Opacity="100"/>
+                            <DropShadowEffect x:Name="ColorModel" Color="Black" ShadowDepth="0" Direction="0" BlurRadius="25"/>
                         </materialDesign:Flipper.Effect>
                         <materialDesign:Flipper.FrontContent>
                             <Grid Height="148" Width="400" Background="AliceBlue">
@@ -156,7 +156,7 @@
                 <ControlTemplate TargetType="Thumb">
                     <materialDesign:Flipper materialDesign:ShadowAssist.ShadowDepth="Depth0" Width="400" Height="148" Canvas.Left="249" Canvas.Top="102">
                         <materialDesign:Flipper.Effect>
-                            <DropShadowEffect Color="#19000000" Direction="-50" ShadowDepth="4" Opacity="100"/>
+                            <DropShadowEffect x:Name="ColorModel" Color="Black" ShadowDepth="0" Direction="0" BlurRadius="25"/>
                         </materialDesign:Flipper.Effect>
                         <materialDesign:Flipper.FrontContent>
                             <Grid Height="148" Width="400" Background="AliceBlue">
@@ -245,7 +245,7 @@
                 <ControlTemplate TargetType="Thumb">
                     <materialDesign:Flipper materialDesign:ShadowAssist.ShadowDepth="Depth0" Width="400" Height="148" Canvas.Left="249" Canvas.Top="102">
                         <materialDesign:Flipper.Effect>
-                            <DropShadowEffect Color="#19000000" Direction="-50" ShadowDepth="4" Opacity="100"/>
+                            <DropShadowEffect x:Name="ColorModel" Color="Black" ShadowDepth="0" Direction="0" BlurRadius="25"/>
                         </materialDesign:Flipper.Effect>
                         <materialDesign:Flipper.FrontContent>
                             <Grid Height="148" Width="400" Background="AliceBlue">
@@ -367,7 +367,7 @@
                 <ControlTemplate TargetType="Thumb">
                     <materialDesign:Flipper materialDesign:ShadowAssist.ShadowDepth="Depth0">
                         <materialDesign:Flipper.Effect>
-                            <DropShadowEffect Color="#19000000" Direction="-50" ShadowDepth="4" Opacity="100"/>
+                            <DropShadowEffect x:Name="ColorModel" Color="Black" ShadowDepth="0" Direction="0" BlurRadius="25"/>
                         </materialDesign:Flipper.Effect>
                         <materialDesign:Flipper.FrontContent>
                             <Grid Height="148" Width="400" Background="AliceBlue">
@@ -490,7 +490,7 @@
                 <ControlTemplate TargetType="Thumb">
                     <materialDesign:Flipper materialDesign:ShadowAssist.ShadowDepth="Depth0">
                         <materialDesign:Flipper.Effect>
-                            <DropShadowEffect Color="#19000000" Direction="-50" ShadowDepth="4" Opacity="100"/>
+                            <DropShadowEffect x:Name="ColorModel" Color="Black" ShadowDepth="0" Direction="0" BlurRadius="25"/>
                         </materialDesign:Flipper.Effect>
                         <materialDesign:Flipper.FrontContent>
                             <Grid Height="148" Width="400" Background="AliceBlue">
@@ -598,7 +598,7 @@
                 <ControlTemplate TargetType="Thumb">
                     <materialDesign:Flipper materialDesign:ShadowAssist.ShadowDepth="Depth0" Width="400" Height="148" Canvas.Left="249" Canvas.Top="102">
                         <materialDesign:Flipper.Effect>
-                            <DropShadowEffect Color="#19000000" Direction="-50" ShadowDepth="4" Opacity="100"/>
+                            <DropShadowEffect x:Name="ColorModel" Color="Black" ShadowDepth="0" Direction="0" BlurRadius="25"/>
                         </materialDesign:Flipper.Effect>
                         <materialDesign:Flipper.FrontContent>
                             <Grid Height="148" Width="400" Background="AliceBlue">
@@ -654,7 +654,7 @@
                 <ControlTemplate TargetType="Thumb">
                     <materialDesign:Flipper materialDesign:ShadowAssist.ShadowDepth="Depth0" Width="400" Height="148" Canvas.Left="249" Canvas.Top="102">
                         <materialDesign:Flipper.Effect>
-                            <DropShadowEffect Color="#19000000" Direction="-50" ShadowDepth="4" Opacity="100"/>
+                            <DropShadowEffect x:Name="ColorModel" Color="Black" ShadowDepth="0" Direction="0" BlurRadius="25"/>
                         </materialDesign:Flipper.Effect>
                         <materialDesign:Flipper.FrontContent>
                             <Grid Height="148" Width="400" Background="AliceBlue">

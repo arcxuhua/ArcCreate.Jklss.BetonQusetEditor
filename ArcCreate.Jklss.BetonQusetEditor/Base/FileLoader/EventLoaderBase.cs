@@ -1617,7 +1617,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
             }
             catch
             {
-                result.SetError("出大事了兄弟");
+                result.SetError("事件树结构生成失败");
                 return result;
             }
         }
