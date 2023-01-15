@@ -37,7 +37,7 @@
                 <Button Content="读取文件" Command="{Binding ReadFilePathCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" HorizontalAlignment="Left" Margin="1170,38,0,0" VerticalAlignment="Top" Width="90" BorderBrush="#FF3AB78A" Background="#FF3AB78A"/>
                 <Button Content="创建任务？" Command="{Binding CreateFilePathCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" HorizontalAlignment="Left" Margin="1069,38,0,0" VerticalAlignment="Top" Width="96" Background="#FFB73A79" BorderBrush="#FFB73A79"/>
                 <TextBlock HorizontalAlignment="Left" Margin="161,43,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="16" Width="903" FontWeight="Bold" FontStyle="Italic" TextDecorations="Underline" Foreground="#FF673AB7"><Run Text="请创建一个任务后"/><Run Text="，"/><Run Text="点击选择文件"/><Run Text="，然后选择所创建的任务中的Main文件地址"/><Run Language="zh-cn" Text="或保存的数据文件地址"/><Run Text="！"/></TextBlock>
-                <Button Content="保存配置" HorizontalAlignment="Left" Margin="1170,4,0,0" VerticalAlignment="Top" Width="90" Background="#FF3AB78A" BorderBrush="#FF3AB78A" IsEnabled="{Binding isHaveSubjcet}"/>
+                <Button Content="保存配置" Command="{Binding SaveJson}" CommandParameter="{Binding ., RelativeSource={RelativeSource AncestorType={x:Type Window}}}" HorizontalAlignment="Left" Margin="1170,4,0,0" VerticalAlignment="Top" Width="90" Background="#FF3AB78A" BorderBrush="#FF3AB78A" IsEnabled="{Binding isHaveSubjcet}" Cursor="Hand"/>
                 <Button Content="导出YML" Command="{Binding SaveYaml}" CommandParameter="{Binding ., RelativeSource={RelativeSource AncestorType={x:Type Window}}}" HorizontalAlignment="Left" Margin="1265,4,0,0" VerticalAlignment="Top" Width="88" Background="#FFB73A3A" BorderBrush="#FFB73A3A" IsEnabled="{Binding isHaveSubjcet}"/>
             </Grid>
         </Border>
@@ -74,7 +74,6 @@
                 </Border>
             </Grid>
         </Border>
-        <TextBlock HorizontalAlignment="Left" Margin="-228,458,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
         <Border x:Name="MessageBar" BorderThickness="1" HorizontalAlignment="Left" Height="43" Margin="278,685,0,0" VerticalAlignment="Top" Width="848" Background="#FF673AB7" CornerRadius="10">
             <Grid>
                 <TextBlock Text="{Binding Message}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" Height="25" Foreground="White" FontWeight="Bold" TextDecorations="Underline"/>

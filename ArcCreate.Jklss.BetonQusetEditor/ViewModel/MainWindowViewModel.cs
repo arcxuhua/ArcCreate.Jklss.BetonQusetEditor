@@ -416,6 +416,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                 return;
             }
 
+            Canvas.SetTop(sender as Thumb, thumbcanvas[0]);
+            Canvas.SetLeft(sender as Thumb, thumbcanvas[1]);
+
             if (System.Windows.MessageBox.Show("你确定将其归类为子元素？", "请选择", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 var backs = await ThumbClassOver(info.backs, sender as Thumb);
@@ -432,8 +435,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                 }
             }
 
-            Canvas.SetTop(sender as Thumb, thumbcanvas[0]);
-            Canvas.SetLeft(sender as Thumb, thumbcanvas[1]);
+            
         }
 
         /// <summary>
@@ -578,6 +580,31 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }
                 return _SaveYaml;
+            }
+        }
+
+        /// <summary>
+        /// 输出为Json文件
+        /// </summary>
+        public CommandBase _SaveJson;
+        public CommandBase SaveJson
+        {
+            get
+            {
+                if (_SaveJson == null)
+                {
+                    _SaveJson = new CommandBase();
+                    _SaveJson.DoExecute = new Action<object>(async obj =>//回调函数
+                    {
+                        if (!FileService.IsHaveFile(MainFilePath))
+                        {
+                            ShowMessage("main入口文件不存在请重新指定Main.yml文件");
+                        }
+
+                        
+                    });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
+                }
+                return _SaveJson;
             }
         }
 
@@ -4396,7 +4423,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                 }, new Point()
                 {
                     X = Canvas.GetLeft(thumb_1) + thumb_1.Width / 2,
-                    Y = Canvas.GetTop(thumb_1)-thumb_2.Height / 2,
+                    Y = Canvas.GetTop(thumb_1)+thumb_2.Height / 2,
                 },
                 new SaveLine()
                 {
