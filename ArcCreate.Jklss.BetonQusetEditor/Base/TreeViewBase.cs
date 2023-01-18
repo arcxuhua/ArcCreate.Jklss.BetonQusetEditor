@@ -237,12 +237,16 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
         {
             var result = new ReturnModel();
 
-            if (!saveThumbInfoWindowModel.ContainsKey(thumb))
+            if (isOpen)
             {
-                result.SetError();
+                if (!saveThumbInfoWindowModel.ContainsKey(thumb))
+                {
+                    result.SetError();
 
-                return result;
+                    return result;
+                }
             }
+            
 
             if (!saveThumbInfo.ContainsKey(thumb))
             {

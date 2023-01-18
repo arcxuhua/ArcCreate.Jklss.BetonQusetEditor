@@ -496,88 +496,109 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
             switch (getthumbInfo.thumbClass)
             {
                 case ThumbClass.Subject:
-                    var main_ConfigBox = getthumbInfo.Saver.Template.FindName("MainName_TBox", getthumbInfo.Saver) as TextBox;
-                    var main_NpcBox = getthumbInfo.Saver.Template.FindName("NpcName_TBox", getthumbInfo.Saver) as TextBox;
-                    var main_NpcNameBox = getthumbInfo.Saver.Template.FindName("ShowNpcName_TBox", getthumbInfo.Saver) as TextBox;
+                    getthumbInfo.Saver.Dispatcher.Invoke(new Action(() =>
+                    {
+                        var main_ConfigBox = getthumbInfo.Saver.Template.FindName("MainName_TBox", getthumbInfo.Saver) as TextBox;
+                        var main_NpcBox = getthumbInfo.Saver.Template.FindName("NpcName_TBox", getthumbInfo.Saver) as TextBox;
+                        var main_NpcNameBox = getthumbInfo.Saver.Template.FindName("ShowNpcName_TBox", getthumbInfo.Saver) as TextBox;
 
-                    needModel = new ThumbsModels(main_ConfigBox.Text, main_NpcBox.Text, main_NpcNameBox.Text);
-
+                        needModel = new ThumbsModels(main_ConfigBox.Text, main_NpcBox.Text, main_NpcNameBox.Text);
+                    }));
                     break;
                 case ThumbClass.NPC:
-                    var npc_ConfigBox = getthumbInfo.Saver.Template.FindName("ConditionsConfig_TBox", getthumbInfo.Saver) as TextBox;
-                    var npc_TextBox = getthumbInfo.Saver.Template.FindName("Conditions_TBox", getthumbInfo.Saver) as TextBox;
+                    getthumbInfo.Saver.Dispatcher.Invoke(new Action(() =>
+                    {
+                        var npc_ConfigBox = getthumbInfo.Saver.Template.FindName("ConditionsConfig_TBox", getthumbInfo.Saver) as TextBox;
+                        var npc_TextBox = getthumbInfo.Saver.Template.FindName("Conditions_TBox", getthumbInfo.Saver) as TextBox;
 
-                    needModel = new ThumbsModels(npc_ConfigBox.Text, "", npc_TextBox.Text);
+                        needModel = new ThumbsModels(npc_ConfigBox.Text, "", npc_TextBox.Text);
+                    }));
+                    
 
                     break;
                 case ThumbClass.Player:
-                    var player_ConfigBox = getthumbInfo.Saver.Template.FindName("ConditionsConfig_TBox", getthumbInfo.Saver) as TextBox;
-                    var palyer_TextBox = getthumbInfo.Saver.Template.FindName("Conditions_TBox", getthumbInfo.Saver) as TextBox;
+                    getthumbInfo.Saver.Dispatcher.Invoke(new Action(() =>
+                    {
+                        var player_ConfigBox = getthumbInfo.Saver.Template.FindName("ConditionsConfig_TBox", getthumbInfo.Saver) as TextBox;
+                        var palyer_TextBox = getthumbInfo.Saver.Template.FindName("Conditions_TBox", getthumbInfo.Saver) as TextBox;
 
-                    needModel = new ThumbsModels(player_ConfigBox.Text, "", palyer_TextBox.Text);
+                        needModel = new ThumbsModels(player_ConfigBox.Text, "", palyer_TextBox.Text);
+                    }));
+                    
 
                     break;
                 case ThumbClass.Conditions:
-                    var conditions_ConfigBox = getthumbInfo.Saver.Template.FindName("ConditionsConfig_TBox", getthumbInfo.Saver) as TextBox;
-                    var conditions_TBox = getthumbInfo.Saver.Template.FindName("Conditions_TBox", getthumbInfo.Saver) as TextBox;
-                    var conditions_CBox = getthumbInfo.Saver.Template.FindName("Conditions_CBox", getthumbInfo.Saver) as ComboBox;
+                    getthumbInfo.Saver.Dispatcher.Invoke(new Action(() =>
+                    {
+                        var conditions_ConfigBox = getthumbInfo.Saver.Template.FindName("ConditionsConfig_TBox", getthumbInfo.Saver) as TextBox;
+                        var conditions_TBox = getthumbInfo.Saver.Template.FindName("Conditions_TBox", getthumbInfo.Saver) as TextBox;
+                        var conditions_CBox = getthumbInfo.Saver.Template.FindName("Conditions_CBox", getthumbInfo.Saver) as ComboBox;
 
-                    try
-                    {
-                        var fg = conditions_CBox.SelectedItem.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[2];
-                        needModel = new ThumbsModels(conditions_ConfigBox.Text, fg, conditions_TBox.Text);
-                    }
-                    catch
-                    {
-                        needModel = new ThumbsModels(conditions_ConfigBox.Text, conditions_CBox.Text, conditions_TBox.Text);
-                    }
-                   
-                    
+                        try
+                        {
+                            var fg = conditions_CBox.SelectedItem.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[2];
+                            needModel = new ThumbsModels(conditions_ConfigBox.Text, fg, conditions_TBox.Text);
+                        }
+                        catch
+                        {
+                            needModel = new ThumbsModels(conditions_ConfigBox.Text, conditions_CBox.Text, conditions_TBox.Text);
+                        }
+                    }));
                     break;
                 case ThumbClass.Events:
-                    var event_ConfigBox = getthumbInfo.Saver.Template.FindName("ConditionsConfig_TBox", getthumbInfo.Saver) as TextBox;
-                    var event_TBox = getthumbInfo.Saver.Template.FindName("Conditions_TBox", getthumbInfo.Saver) as TextBox;
-                    var event_CBox = getthumbInfo.Saver.Template.FindName("Conditions_CBox", getthumbInfo.Saver) as ComboBox;
-
-                    try
+                    getthumbInfo.Saver.Dispatcher.Invoke(new Action(() =>
                     {
-                        var event_fg = event_CBox.SelectedItem.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[2];
-                        needModel = new ThumbsModels(event_ConfigBox.Text, event_fg, event_TBox.Text);
-                    }
-                    catch
-                    {
-                        needModel = new ThumbsModels(event_ConfigBox.Text, event_CBox.Text, event_TBox.Text);
-                    }
+                        var event_ConfigBox = getthumbInfo.Saver.Template.FindName("ConditionsConfig_TBox", getthumbInfo.Saver) as TextBox;
+                        var event_TBox = getthumbInfo.Saver.Template.FindName("Conditions_TBox", getthumbInfo.Saver) as TextBox;
+                        var event_CBox = getthumbInfo.Saver.Template.FindName("Conditions_CBox", getthumbInfo.Saver) as ComboBox;
 
+                        try
+                        {
+                            var event_fg = event_CBox.SelectedItem.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[2];
+                            needModel = new ThumbsModels(event_ConfigBox.Text, event_fg, event_TBox.Text);
+                        }
+                        catch
+                        {
+                            needModel = new ThumbsModels(event_ConfigBox.Text, event_CBox.Text, event_TBox.Text);
+                        }
+                    }));
                     break;
                 case ThumbClass.Objectives:
-                    var objectives_ConfigBox = getthumbInfo.Saver.Template.FindName("ConditionsConfig_TBox", getthumbInfo.Saver) as TextBox;
-                    var objectives_TBox = getthumbInfo.Saver.Template.FindName("Conditions_TBox", getthumbInfo.Saver) as TextBox;
-                    var objectives_CBox = getthumbInfo.Saver.Template.FindName("Conditions_CBox", getthumbInfo.Saver) as ComboBox;
-
-                    try
+                    getthumbInfo.Saver.Dispatcher.Invoke(new Action(() =>
                     {
-                        var objectives_fg = objectives_CBox.SelectedItem.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[2];
+                        var objectives_ConfigBox = getthumbInfo.Saver.Template.FindName("ConditionsConfig_TBox", getthumbInfo.Saver) as TextBox;
+                        var objectives_TBox = getthumbInfo.Saver.Template.FindName("Conditions_TBox", getthumbInfo.Saver) as TextBox;
+                        var objectives_CBox = getthumbInfo.Saver.Template.FindName("Conditions_CBox", getthumbInfo.Saver) as ComboBox;
 
-                        needModel = new ThumbsModels(objectives_ConfigBox.Text, objectives_fg, objectives_TBox.Text);
-                    }
-                    catch
-                    {
-                        needModel = new ThumbsModels(objectives_ConfigBox.Text, objectives_CBox.Text, objectives_TBox.Text);
-                    }
-                                        
+                        try
+                        {
+                            var objectives_fg = objectives_CBox.SelectedItem.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[2];
+
+                            needModel = new ThumbsModels(objectives_ConfigBox.Text, objectives_fg, objectives_TBox.Text);
+                        }
+                        catch
+                        {
+                            needModel = new ThumbsModels(objectives_ConfigBox.Text, objectives_CBox.Text, objectives_TBox.Text);
+                        }
+                    }));              
                     break;
                 case ThumbClass.Journal:
-                    var journal_ConfigBox = getthumbInfo.Saver.Template.FindName("JournalConfig_TBox", getthumbInfo.Saver) as TextBox;
-                    var journal_TextBox = getthumbInfo.Saver.Template.FindName("Journal_TBox", getthumbInfo.Saver) as TextBox;
+                    getthumbInfo.Saver.Dispatcher.Invoke(new Action(() =>
+                    {
+                        var journal_ConfigBox = getthumbInfo.Saver.Template.FindName("JournalConfig_TBox", getthumbInfo.Saver) as TextBox;
+                        var journal_TextBox = getthumbInfo.Saver.Template.FindName("Journal_TBox", getthumbInfo.Saver) as TextBox;
 
-                    needModel = new ThumbsModels(journal_ConfigBox.Text, "", journal_TextBox.Text);
+                        needModel = new ThumbsModels(journal_ConfigBox.Text, "", journal_TextBox.Text);
+                    }));
                     break;
                 case ThumbClass.Items:
-                    var items_ConfigBox = getthumbInfo.Saver.Template.FindName("ItemsConfig_TBox", getthumbInfo.Saver) as TextBox;
-                    var items_TextBox = getthumbInfo.Saver.Template.FindName("Items_TBox", getthumbInfo.Saver) as TextBox;
+                    getthumbInfo.Saver.Dispatcher.Invoke(new Action(() =>
+                    {
+                        var items_ConfigBox = getthumbInfo.Saver.Template.FindName("ItemsConfig_TBox", getthumbInfo.Saver) as TextBox;
+                        var items_TextBox = getthumbInfo.Saver.Template.FindName("Items_TBox", getthumbInfo.Saver) as TextBox;
 
-                    needModel = new ThumbsModels(items_ConfigBox.Text, "", items_TextBox.Text);
+                        needModel = new ThumbsModels(items_ConfigBox.Text, "", items_TextBox.Text);
+                    }));
                     break;
                 default: break;
             }

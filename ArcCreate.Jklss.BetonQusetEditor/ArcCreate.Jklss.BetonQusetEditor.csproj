@@ -117,6 +117,7 @@
       <DependentUpon>ThumbInfoWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
+    <Compile Include="ViewModel\SocketViewModel.cs" />
     <Compile Include="ViewModel\ThumbInfoWindowViewModel.cs" />
     <Compile Include="ViewModel\ThumbSetWindowViewModel.cs" />
     <Compile Include="Windows\ThumbSetWindow.xaml.cs">

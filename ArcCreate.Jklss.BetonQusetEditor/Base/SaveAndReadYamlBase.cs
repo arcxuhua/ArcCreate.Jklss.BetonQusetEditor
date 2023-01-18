@@ -407,156 +407,247 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
             var saveAllChildInfo = new List<SaveChilds>();
 
-            if(MainWindowModels.saveThumbs.Where(t => t.thumbClass == ThumbClass.Subject).Any())
+            try
             {
-                var getMainThumb = MainWindowModels.saveThumbs.Where(t => t.thumbClass == ThumbClass.Subject).ToList();
-
-                await Task.Run(() =>
+                if (MainWindowModels.saveThumbs.Where(t => t.thumbClass == ThumbClass.Subject).Any())
                 {
-                    foreach (var item in getMainThumb)
+                    var getMainThumb = MainWindowModels.saveThumbs.Where(t => t.thumbClass == ThumbClass.Subject).ToList();
+
+                    await Task.Run(() =>
                     {
-                        var getInfo = GetThumbInfoBase.GetThumbInfo(item);
-
-                        saveMainInfo.Add(getInfo);
-
-                        var childInfo = new SaveChilds();
-
-                        GetControl<TextBox>("MainName_TBox", item.Saver).Dispatcher.Invoke(new Action(() =>
+                        foreach (var item in getMainThumb)
                         {
-                            childInfo.Saver = GetControl<TextBox>("MainName_TBox", item.Saver).Text;
-                            childInfo.Main = childInfo.Saver;
-                        }));
+                            var getInfo = GetThumbInfoBase.GetThumbInfo(item);
 
-                        childInfo.CanFather = item.CanFather;
-                        childInfo.thumbClass = item.thumbClass;
+                            saveMainInfo.Add(getInfo);
 
-                        foreach (var i in item.Children)
-                        {
-                            GetControl<TextBox>("ConditionsConfig_TBox", i).Dispatcher.Invoke(new Action(() =>
+                            var childInfo = new SaveChilds();
+
+                            GetControl<TextBox>("ShowNpcName_TBox", item.Saver).Dispatcher.Invoke(new Action(() =>
                             {
-                                childInfo.Children.Add(GetControl<TextBox>("ConditionsConfig_TBox", item.Saver).Text);
+                                childInfo.Saver = GetControl<TextBox>("ShowNpcName_TBox", item.Saver).Text;
+                                childInfo.Main = childInfo.Saver;
                             }));
-                        }
 
-                        foreach (var i in item.Fathers)
-                        {
-                            GetControl<TextBox>("ConditionsConfig_TBox", i).Dispatcher.Invoke(new Action(() =>
+                            childInfo.CanFather = item.CanFather;
+                            childInfo.thumbClass = item.thumbClass;
+
+                            foreach (var i in item.Children)
                             {
-                                childInfo.Fathers.Add(GetControl<TextBox>("ConditionsConfig_TBox", item.Saver).Text);
-                            }));
+                                i.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    childInfo.Children.Add(GetControl<TextBox>("ConditionsConfig_TBox", i).Text);
+                                }));
+                            }
+
+                            foreach (var i in item.Fathers)
+                            {
+                                i.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    childInfo.Fathers.Add(GetControl<TextBox>("ConditionsConfig_TBox", i).Text);
+                                }));
+                            }
+                            saveAllChildInfo.Add(childInfo);
                         }
-                    }
-                });
+                    });
+                }
             }
+            catch
+            {
+                result.SetError("构造器错误，错误码:JS001");
 
+                return result;
+            }
+            
             var mainJson = FileService.SaveToJson(saveMainInfo);//转换为Json
 
             var allChildInfo = FileService.SaveToJson(saveAllChildInfo);//转换为Json
 
-            var saveNPCEOInfo = new Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>>();
+            var saveNPCEOInfo = new List<ThumbInfoModel>();
 
-            await Task.Run(() =>
+            try
             {
-                foreach (var item in saveInfo)
+                await Task.Run(async () =>
                 {
-                    var name = string.Empty;
-
-                    item.Key.Dispatcher.Invoke(new Action(() =>
-                    {
-                        name = GetControl<TextBox>("ConditionsConfig_TBox", item.Key).Text;
-                    }));
-
-                    saveNPCEOInfo.Add(name, item.Value);
-                }
-
-                var getThumb = MainWindowModels.saveThumbs.Where(t => t.thumbClass != ThumbClass.Subject&&t.thumbClass!=ThumbClass.Journal&&t.thumbClass!=ThumbClass.Items).ToList();
-
-                foreach (var item in getThumb)
-                {
-                    if (!saveInfo.ContainsKey(item.Saver))
+                    foreach (var item in saveInfo)
                     {
                         var name = string.Empty;
 
-                        item.Saver.Dispatcher.Invoke(new Action(() =>
+                        item.Key.Dispatcher.Invoke(new Action(() =>
                         {
-                            name = GetControl<TextBox>("ConditionsConfig_TBox", item.Saver).Text;
+                            name = GetControl<TextBox>("ConditionsConfig_TBox", item.Key).Text;
                         }));
 
-                        saveNPCEOInfo.Add(name, new Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>());
-                    }
-                }
-            });
+                        var saver = await FindSaveThumbInfo(item.Key);
 
+                        saveNPCEOInfo.Add(new ThumbInfoModel() { Name = name,thumbClass = saver.thumbClass ,data = item.Value });
+                    }
+
+                    var getThumb = MainWindowModels.saveThumbs.Where(t => t.thumbClass != ThumbClass.Subject && t.thumbClass != ThumbClass.Journal && t.thumbClass != ThumbClass.Items).ToList();
+
+                    foreach (var item in getThumb)
+                    {
+                        if (!saveInfo.ContainsKey(item.Saver))
+                        {
+                            var name = string.Empty;
+
+                            item.Saver.Dispatcher.Invoke(new Action(() =>
+                            {
+                                name = GetControl<TextBox>("ConditionsConfig_TBox", item.Saver).Text;
+                            }));
+
+                            saveNPCEOInfo.Add(new ThumbInfoModel() { Name = name, thumbClass = item.thumbClass });
+                        }
+                    }
+                });
+            }
+            catch
+            {
+                result.SetError("构造器错误，错误码:JS002");
+
+                return result;
+            }
+            
             var npceoJson = FileService.SaveToJson(saveNPCEOInfo);//转换为Json
 
             var saveJournalInfo = new List<ThumbsModels>();
 
-            if (MainWindowModels.saveThumbs.Where(t => t.thumbClass == ThumbClass.Journal).Any())
+            try
             {
-                var getMainThumb = MainWindowModels.saveThumbs.Where(t => t.thumbClass == ThumbClass.Journal).ToList();
-
-                await Task.Run(() =>
+                if (MainWindowModels.saveThumbs.Where(t => t.thumbClass == ThumbClass.Journal).Any())
                 {
-                    foreach (var item in getMainThumb)
-                    {
-                        var getInfo = GetThumbInfoBase.GetThumbInfo(item);
+                    var getMainThumb = MainWindowModels.saveThumbs.Where(t => t.thumbClass == ThumbClass.Journal).ToList();
 
-                        saveJournalInfo.Add(getInfo);
-                    }
-                });
+                    await Task.Run(() =>
+                    {
+                        foreach (var item in getMainThumb)
+                        {
+                            var getInfo = GetThumbInfoBase.GetThumbInfo(item);
+
+                            saveJournalInfo.Add(getInfo);
+                        }
+                    });
+                }
+            }
+            catch
+            {
+                result.SetError("构造器错误，错误码:JS003");
+
+                return result;
             }
 
             var journalJson = FileService.SaveToJson(saveJournalInfo);//转换为Json
 
             var saveItemsInfo = new List<ThumbsModels>();
 
-            if (MainWindowModels.saveThumbs.Where(t => t.thumbClass == ThumbClass.Items).Any())
+            try
             {
-                var getMainThumb = MainWindowModels.saveThumbs.Where(t => t.thumbClass == ThumbClass.Items).ToList();
-
-                await Task.Run(() =>
+                if (MainWindowModels.saveThumbs.Where(t => t.thumbClass == ThumbClass.Items).Any())
                 {
-                    foreach (var item in getMainThumb)
-                    {
-                        var getInfo = GetThumbInfoBase.GetThumbInfo(item);
+                    var getMainThumb = MainWindowModels.saveThumbs.Where(t => t.thumbClass == ThumbClass.Items).ToList();
 
-                        saveItemsInfo.Add(getInfo);
-                    }
-                });
+                    await Task.Run(() =>
+                    {
+                        foreach (var item in getMainThumb)
+                        {
+                            var getInfo = GetThumbInfoBase.GetThumbInfo(item);
+
+                            saveItemsInfo.Add(getInfo);
+                        }
+                    });
+                }
+            }
+            catch
+            {
+                result.SetError("构造器错误，错误码:JS004");
+
+                return result;
             }
 
             var itemsJson = FileService.SaveToJson(saveItemsInfo);//转换为Json
 
-            var dic = new Dictionary<string, (double x, double y)>();
+            var dic = new List<ThumbCoordinateModel>();
 
-            foreach (var item in MainWindowModels.saveThumbs)
+            try
             {
-                var getX = Canvas.GetLeft(item.Saver);
-
-                var getY = Canvas.GetTop(item.Saver);
-
-                switch (item.thumbClass)
+                foreach (var item in MainWindowModels.saveThumbs)
                 {
-                    case ThumbClass.Subject:
-                        dic.Add(GetControl<TextBox>("MainName_TBox", item.Saver).Text, (getX, getY));
-                        break;
-                    case ThumbClass.Journal:
-                        dic.Add(GetControl<TextBox>("JournalConfig_TBox", item.Saver).Text, (getX, getY));
-                        break;
-                    case ThumbClass.Items:
-                        dic.Add(GetControl<TextBox>("ItemsConfig_TBox", item.Saver).Text, (getX, getY));
-                        break;
-                    default:
-                        dic.Add(GetControl<TextBox>("ConditionsConfig_TBox", item.Saver).Text, (getX, getY));
-                        break;
+                    var getX = Canvas.GetLeft(item.Saver);
+
+                    var getY = Canvas.GetTop(item.Saver);
+
+                    switch (item.thumbClass)
+                    {
+                        case ThumbClass.Subject:
+                            dic.Add(new ThumbCoordinateModel() { Name = GetControl<TextBox>("ShowNpcName_TBox", item.Saver).Text, thumbClass = item.thumbClass ,X = getX,Y= getY});
+                            break;
+                        case ThumbClass.Journal:
+                            dic.Add(new ThumbCoordinateModel() { Name = GetControl<TextBox>("JournalConfig_TBox", item.Saver).Text ,thumbClass = item.thumbClass, X = getX, Y = getY });
+                            break;
+                        case ThumbClass.Items:
+                            dic.Add(new ThumbCoordinateModel() { Name = GetControl<TextBox>("ItemsConfig_TBox", item.Saver).Text ,thumbClass = item.thumbClass, X = getX, Y = getY });
+                            break;
+                        default:
+                            dic.Add(new ThumbCoordinateModel() { Name = GetControl<TextBox>("ConditionsConfig_TBox", item.Saver).Text ,thumbClass = item.thumbClass, X = getX, Y = getY });
+                            break;
+                    }
                 }
             }
+            catch
+            {
+                result.SetError("构造器错误，错误码:JS005");
 
-            var zbJson = FileService.SaveToJson(dic);//转换为Json
+                return result;
+            }
 
-            result.SetSuccese();
+            var coordinateJson = FileService.SaveToJson(dic);//转换为Json
 
-            return result;
+            var disPath = FileService.GetFileDirectory(filePath);
+
+            try
+            {
+                FileService.ChangeFile(disPath + @"\data\main.json", mainJson);
+
+                FileService.ChangeFile(disPath + @"\data\mainInfo.json", allChildInfo);
+
+                FileService.ChangeFile(disPath + @"\data\data.json", npceoJson);
+
+                FileService.ChangeFile(disPath + @"\data\journalData.json", journalJson);
+
+                FileService.ChangeFile(disPath + @"\data\itemsData.json", itemsJson);
+
+                FileService.ChangeFile(disPath + @"\data\coordinate.json", coordinateJson);
+
+                result.SetSuccese("配置保存成功！");
+
+                return result;
+            }
+            catch
+            {
+                result.SetError("构造器错误，错误码:JS006");
+
+                return result;
+            }
+        }
+
+        public class ThumbInfoModel
+        {
+            public string Name { get; set; }
+
+            public ThumbClass thumbClass { get; set; }
+
+            public Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>> data { get; set; }
+        }
+
+        public class ThumbCoordinateModel
+        {
+            public string Name { get; set; }
+
+            public ThumbClass thumbClass { get; set; }
+
+            public double X { get; set; }
+
+            public double Y { get; set; }
         }
 
         public class SaveChilds

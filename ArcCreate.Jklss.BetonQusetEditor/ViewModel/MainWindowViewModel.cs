@@ -25,10 +25,10 @@ using ComboBox = System.Windows.Controls.ComboBox;
 using TextBox = System.Windows.Controls.TextBox;
 using TreeView = System.Windows.Controls.TreeView;
 using Thumb = System.Windows.Controls.Primitives.Thumb;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using Window = System.Windows.Window;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 using System.Windows.Media.Effects;
+using static ArcCreate.Jklss.BetonQusetEditor.Base.SaveAndReadYamlBase;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 {
@@ -71,6 +71,18 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         #endregion
 
         #region 属性字段
+        public bool IsFindFile
+        {
+            get
+            {
+                return mainWindowModels.IsFindFile;
+            }
+            set
+            {
+                mainWindowModels.IsFindFile = value;
+                this.NotifyChanged();
+            }
+        }
 
         public bool isHaveSubjcet
         {
@@ -263,139 +275,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                 nowThumbs = nowThumb;
             }
 
-            var thumbClass = (await FindSaveThumbInfo(nowThumbs)).thumbClass;
-
-            if(thumbClass!=ThumbClass.Player&&thumbClass != ThumbClass.NPC)
-            {
-                var getSaver = new List<SaveLine>();
-
-                for (int i = 0; i < saveLines.Count; i++)
-                {
-                    if (saveLines[i].FatherName == nowThumbs)
-                    {
-                        getSaver.Add(saveLines[i]);
-                    }
-                }
-
-                var bidui = new GetThumbInfoBase();
-
-                for (int i = 0; i < getSaver.Count; i++)
-                {
-                    var fatherInfo = await FindSaveThumbInfo(getSaver[i].FatherName);
-
-                    var chirldInfo = await FindSaveThumbInfo(getSaver[i].ChirldName);
-
-                    if (!(await bidui.GetThisCanFather(fatherInfo, chirldInfo)).Succese)//获取改变选项后能否实现归类
-                    {
-                        //如果不能 则 删除 saveLines 中关系链接及 MainWindowModel.saveThumbs中父级元素和相对应子集元素
-
-                        try
-                        {
-                            fatherInfo.Children.Remove(getSaver[i].ChirldName);
-
-                            chirldInfo.Fathers.Remove(getSaver[i].FatherName);
-
-                            mainWindow.cvmenu.Children.Remove(getSaver[i].line);
-
-                            saveLines.Remove(getSaver[i]);
-                            ThumbChecks = saveLines.Count.ToString();
-                        }
-                        catch (Exception ex)
-                        {
-                            ShowMessage("删除时错误具体信息：\n" + ex);
-                        }
-                    }
-                }
-            }
-
-            #region 控件的改变
-            
-            var control = sender as ComboBox;
-            switch (thumbClass)
-            {
-                case ThumbClass.Player:
-                    var loaderBacks = await playerLoader.ChangeThumb(control.SelectedItem.ToString(), nowThumbs, thumbInfoWindow.TreeView_Tv);
-
-                    if (loaderBacks != null && !loaderBacks.Succese)
-                    {
-                        ShowMessage(loaderBacks.Text);
-                    }
-
-                    break;
-                case ThumbClass.NPC:
-                    loaderBacks = await npcLoader.ChangeThumb(control.SelectedItem.ToString(), nowThumbs, thumbInfoWindow.TreeView_Tv);
-
-                    if (loaderBacks != null && !loaderBacks.Succese)
-                    {
-                        ShowMessage(loaderBacks.Text);
-                    }
-                    break;
-                case ThumbClass.Conditions:
-
-                    var loaderBack = await contisionLoader.ChangeThumb(contisionProp, control.SelectedItem.ToString(), nowThumbs);
-
-                    if (loaderBack != null && !loaderBack.Succese)
-                    {
-                        ShowMessage(loaderBack.Text);
-                    }
-
-                    var back = await ChangeTheTreeView();
-
-                    if (back != null && !back.Succese)
-                    {
-                        ShowMessage(back.Text);
-                    }
-                    if (mainWindowModels.SaveThumbInfo.ContainsKey(nowThumbs)&&mainWindow.IsEnabled)
-                    {
-                        mainWindowModels.SaveThumbInfo[nowThumbs].Clear();
-                    }
-                    break;
-
-                case ThumbClass.Events:
-
-                    loaderBack = await eventLoader.ChangeThumb(eventProp, control.SelectedItem.ToString(), nowThumbs);
-
-                    if (loaderBack != null && !loaderBack.Succese)
-                    {
-                        ShowMessage(loaderBack.Text);
-                    }
-
-                    back = await ChangeTheTreeView();
-
-                    if (back != null && !back.Succese)
-                    {
-                        ShowMessage(back.Text);
-                    }
-                    if (mainWindowModels.SaveThumbInfo.ContainsKey(nowThumbs) && mainWindow.IsEnabled)
-                    {
-                        mainWindowModels.SaveThumbInfo[nowThumbs].Clear();
-                    }
-                    break;
-
-                case ThumbClass.Objectives:
-
-                    loaderBack = await objectiveLoader.ChangeThumb(objectiveProp, control.SelectedItem.ToString(), nowThumbs);
-
-                    if (loaderBack != null && !loaderBack.Succese)
-                    {
-                        ShowMessage(loaderBack.Text);
-                    }
-
-                    back = await ChangeTheTreeView();
-
-                    if (back != null && !back.Succese)
-                    {
-                        ShowMessage(back.Text);
-                    }
-                    if (mainWindowModels.SaveThumbInfo.ContainsKey(nowThumbs) && mainWindow.IsEnabled)
-                    {
-                        mainWindowModels.SaveThumbInfo[nowThumbs].Clear();
-                    }
-                    break;
-            }
-
-            checkde = false;
-            #endregion
+            await ComboBoxChangeSeleted(nowThumbs, sender as ComboBox);
         }
 
         #endregion
@@ -601,7 +481,11 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                             ShowMessage("main入口文件不存在请重新指定Main.yml文件");
                         }
 
-                        
+                        var saveBase = new SaveAndReadYamlBase(MainFilePath, objectiveProp, eventProp, contisionProp, saveThumbs, mainWindowModels.SaveThumbInfo);
+
+                        var back = await saveBase.SaveToJson();
+
+                        ShowMessage(back.Text);
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }
                 return _SaveJson;
@@ -623,12 +507,13 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     {
                         System.Windows.Forms.OpenFileDialog dialog = new System.Windows.Forms.OpenFileDialog();
                         dialog.Multiselect = false;//该值确定是否可以选择多个文件
-                        dialog.Title = "请选择Main.yml或*.json文件";
-                        dialog.Filter = "入口文件|main.yml|数据文件|*.json";
+                        dialog.Title = "请选择Main.yml";
+                        dialog.Filter = "入口文件|main.yml";
                         if (dialog.ShowDialog() == DialogResult.OK)
                         {
                             string file = dialog.FileName;
                             MainFilePath = file;
+                            IsFindFile = true;
                         }
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }
@@ -637,7 +522,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         }
 
         /// <summary>
-        /// 读取文件
+        /// 读取YAML文件
         /// </summary>
         public CommandBase _ReadFilePathCmd;
         public CommandBase ReadFilePathCmd
@@ -757,7 +642,6 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                     }
                                     
                                 }));
-                                conditionsNum++;
                             });
                             
                             foreach (var item in allConversations[i].NPC_options)
@@ -766,7 +650,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                                 if (!npcback.Succese)
                                 {
-                                    ShowMessage(back.Text);
+                                    ShowMessage(npcback.Text);
 
                                     return;
                                 }
@@ -1174,7 +1058,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                             await Task.Run(() =>
                             {
                                 Thread.Sleep(100);
-
+                                var num = i;
                                 mainWindow.cvmenu.Dispatcher.Invoke(new Action(async() =>
                                 {
                                     var cmd = string.Empty;
@@ -1188,7 +1072,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                         await Task.Run(() => { Thread.Sleep(100); });
                                     }
 
-                                    (GetControl("ConditionsConfig_TBox", thumb) as TextBox).Text = getConditions[i].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[0];
+                                    (GetControl("ConditionsConfig_TBox", thumb) as TextBox).Text = getConditions[num].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[0];
                                     foreach (var item in (GetControl("Conditions_CBox", thumb) as ComboBox).Items)
                                     {
                                         var fgf = item.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
@@ -1343,6 +1227,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                             await Task.Run(() =>
                             {
                                 Thread.Sleep(100);
+                                var num = i;
                                 mainWindow.cvmenu.Dispatcher.Invoke(new Action(async() =>
                                 {
                                     var cmd = string.Empty;
@@ -1355,7 +1240,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                     {
                                         await Task.Run(() => { Thread.Sleep(100); });
                                     }
-                                    (GetControl("ConditionsConfig_TBox", thumb) as TextBox).Text = getObjectives[i].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[0];
+                                    (GetControl("ConditionsConfig_TBox", thumb) as TextBox).Text = getObjectives[num].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[0];
                                     foreach (var item in (GetControl("Conditions_CBox", thumb) as ComboBox).Items)
                                     {
                                         var fgf = item.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
@@ -1775,6 +1660,837 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }
                 return _ReadFilePathCmd;
+            }
+        }
+
+        /// <summary>
+        /// 选择Json文件
+        /// </summary>
+        public CommandBase _ReadJsonCmd;
+        public CommandBase ReadJsonCmd
+        {
+            get
+            {
+                if (_ReadJsonCmd == null)
+                {
+                    _ReadJsonCmd = new CommandBase();
+                    _ReadJsonCmd.DoExecute = new Action<object>(async obj =>//回调函数
+                    {
+                        if (string.IsNullOrEmpty(MainFilePath))
+                        {
+                            ShowMessage("文件地址不能为空");
+                            return;
+                        }
+                        if (!FileService.IsHaveFile(MainFilePath))
+                        {
+                            ShowMessage("main入口文件不存在请重新指定Main.yml文件");
+                            return;
+                        }
+                        mainWindow.IsEnabled = false;
+
+                        var saveMainInfo = new List<ThumbsModels>();
+
+                        var saveAllChildInfo = new List<SaveChilds>();
+
+                        var saveNPCEOInfo = new List<ThumbInfoModel>();
+
+                        var saveJournalInfo = new List<ThumbsModels>();
+
+                        var saveItemsInfo = new List<ThumbsModels>();
+
+                        var dic = new List<ThumbCoordinateModel>();
+
+                        var disPath = FileService.GetFileDirectory(MainFilePath);
+
+                        try
+                        {
+                            saveMainInfo = FileService.JsonToProp<List<ThumbsModels>>(FileService.GetFileText(disPath + @"\data\main.json"));
+
+                            saveAllChildInfo= FileService.JsonToProp<List<SaveChilds>>(FileService.GetFileText(disPath + @"\data\mainInfo.json"));
+
+                            saveNPCEOInfo = FileService.JsonToProp<List<ThumbInfoModel>>(FileService.GetFileText(disPath + @"\data\data.json"));
+
+                            saveJournalInfo = FileService.JsonToProp<List<ThumbsModels>>(FileService.GetFileText(disPath + @"\data\journalData.json"));
+
+                            saveItemsInfo = FileService.JsonToProp<List<ThumbsModels>>(FileService.GetFileText(disPath + @"\data\itemsData.json"));
+
+                            dic = FileService.JsonToProp<List<ThumbCoordinateModel>>(FileService.GetFileText(disPath + @"\data\coordinate.json"));
+                        }
+                        catch
+                        {
+                            ShowMessage("数据文件损坏！请不要擅自修改数据文件！如果您没有备份数据文件那么您将失去数据！");
+                            mainWindow.IsEnabled = true;
+                            return;
+                        }
+
+                        var createThumbBase = new CreateThumbsBase();
+
+                        if (saveMainInfo == null|| saveAllChildInfo==null|| dic==null)
+                        {
+                            ShowMessage("未找到配置文件");
+                            mainWindow.IsEnabled = true;
+                            return;
+                        }
+
+                        #region Thumb创建
+
+                        foreach (var item in saveMainInfo)
+                        {
+                            var back = await createThumbBase.CreateThumb(ThumbClass.Subject, MainFilePath, mainWindow);
+
+                            if (!back.Succese)
+                            {
+                                ShowMessage("对话主体生成失败,请尝试重新生成!");
+                                return;
+                            }
+
+                            var thumb = back.Backs as Thumb;
+                            nowThumb = thumb;
+                            thumb.PreviewMouseLeftButtonDown += Thumb_MouseLeftButtonDown;
+                            thumb.DragCompleted += Thumb_DragCompleted;
+                            thumb.DragDelta += Thumb_DragDelta;
+                            thumb.DragStarted += Thumb_DragStarted;
+
+                            ThumbNums = MainWindowModels.saveThumbs.Count.ToString();
+
+                            if (mainWindow == null)
+                            {
+                                mainWindow = obj as MainWindow;
+                            }
+
+                            ActBase.KeyDown -= ActBase_KeyDown;
+                            ActBase.KeyDown += ActBase_KeyDown;
+                            isHaveSubjcet = true;
+
+                            await Task.Run(() =>
+                            {
+                                Thread.Sleep(100);
+                                thumb.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    try
+                                    {
+                                        (GetControl("NpcName_TBox", thumb) as TextBox).Text = item.Type;
+                                        (GetControl("ShowNpcName_TBox", thumb) as TextBox).Text = item.Text;
+                                        (GetControl("MainName_TBox", thumb) as TextBox).Text = item.Config;
+                                    }
+                                    catch
+                                    {
+
+                                    }
+
+                                }));
+                            });
+                        }
+
+                        foreach (var item in saveNPCEOInfo)
+                        {
+                            if (item.thumbClass == ThumbClass.Player || item.thumbClass == ThumbClass.NPC)
+                            {
+                                var npcback = await createThumbBase.CreateThumb(item.thumbClass, MainFilePath, mainWindow);
+
+                                if (!npcback.Succese)
+                                {
+                                    ShowMessage(npcback.Text);
+
+                                    return;
+                                }
+
+                                if (npcback.Backs == null)
+                                {
+                                    ShowMessage("错误！返回值为空");
+
+                                    return;
+                                }
+
+                                var thumbs = npcback.Backs as Thumb;
+                                
+                                thumbs.PreviewMouseLeftButtonDown += Thumb_MouseLeftButtonDown;
+                                thumbs.DragCompleted += Thumb_DragCompleted;
+                                thumbs.DragDelta += Thumb_DragDelta;
+                                thumbs.DragStarted += Thumb_DragStarted;
+
+                                ThumbNums = MainWindowModels.saveThumbs.Count.ToString();
+
+                                var infoModel = new ThumbInfoWindowModel()
+                                {
+                                    TreeItems = new Dictionary<string, Dictionary<string, Dictionary<string, bool>>>
+                                {
+                                    {"text",new Dictionary<string, Dictionary<string, bool>>()
+                                    {
+                                        {"第 1 条参数",new Dictionary<string, bool>
+                                        {
+                                            {"第 1 项",false }
+                                        } }
+                                    } },
+                                    {"conditions",new Dictionary<string, Dictionary<string, bool>>()
+                                    {
+                                        {"第 1 条参数",new Dictionary<string, bool>
+                                        {
+                                            {"第 1 项",false }
+                                        } }
+                                    } },
+                                    {"events",new Dictionary<string, Dictionary<string, bool>>()
+                                    {
+                                        {"第 1 条参数",new Dictionary<string, bool>
+                                        {
+                                            {"第 1 项",false }
+                                        } }
+                                    } },
+                                    {"pointer",new Dictionary<string, Dictionary<string, bool>>()
+                                    {
+                                        {"第 1 条参数",new Dictionary<string, bool>
+                                        {
+                                            {"第 1 项",false }
+                                        } }
+                                    } },
+                                }
+                                };
+
+                                if(item.thumbClass == ThumbClass.NPC)
+                                {
+                                    if (npcLoader.saveThumbInfoWindowModel == null)
+                                    {
+                                        npcLoader.saveThumbInfoWindowModel = new Dictionary<Thumb, ThumbInfoWindowModel>()
+                                    {
+                                        {thumbs,infoModel},
+                                    };
+                                    }
+                                    else
+                                    {
+                                        npcLoader.saveThumbInfoWindowModel.Add(thumbs, infoModel);
+                                    }
+                                }
+                                else
+                                {
+                                    if (playerLoader.saveThumbInfoWindowModel == null)
+                                    {
+                                        playerLoader.saveThumbInfoWindowModel = new Dictionary<Thumb, ThumbInfoWindowModel>()
+                                    {
+                                        {thumbs,infoModel},
+                                    };
+                                    }
+                                    else
+                                    {
+                                        playerLoader.saveThumbInfoWindowModel.Add(thumbs, infoModel);
+                                    }
+                                }
+                                
+
+                                await Task.Run(() =>
+                                {
+                                    Thread.Sleep(100);
+                                    thumbs.Dispatcher.Invoke(new Action(() =>
+                                    {
+                                        (GetControl("ConditionsConfig_TBox", thumbs) as TextBox).Text = item.Name;
+                                    }));
+                                    if(item.thumbClass == ThumbClass.Player)
+                                    {
+                                        playerNum++;
+                                    }
+                                    else
+                                    {
+                                        npcNum++;
+                                    }
+                                    
+                                });
+
+                            }
+                            else
+                            {
+                                var back = await createThumbBase.CreateThumb(item.thumbClass, MainFilePath, obj as MainWindow);
+
+                                if (!back.Succese)
+                                {
+                                    ShowMessage(back.Text);
+
+                                    return;
+                                }
+
+                                if (back.Backs == null)
+                                {
+                                    ShowMessage("错误！返回值为空");
+
+                                    return;
+                                }
+
+                                var thumb = back.Backs as Thumb;
+
+                                thumb.PreviewMouseLeftButtonDown += Thumb_MouseLeftButtonDown;
+                                thumb.DragCompleted += Thumb_DragCompleted;
+                                thumb.DragDelta += Thumb_DragDelta;
+                                thumb.DragStarted += Thumb_DragStarted;
+
+                                ThumbNums = MainWindowModels.saveThumbs.Count.ToString();
+                                await Task.Run(() =>
+                                {
+                                    Thread.Sleep(100);
+                                    mainWindow.cvmenu.Dispatcher.Invoke(new Action( async() =>
+                                    {
+                                        while((GetControl("ConditionsConfig_TBox", thumb) as TextBox) == null)
+                                        {
+                                            await Task.Run(() => { Thread.Sleep(100); });
+                                        }
+
+                                        (GetControl("ConditionsConfig_TBox", thumb) as TextBox).Text = item.Name;
+
+                                        var getRealCmd = GetRealCmd(item.data.Keys.First());
+                                        foreach (var i in (GetControl("Conditions_CBox", thumb) as ComboBox).Items)
+                                        {
+                                            var fgf = i.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
+
+                                            if (fgf[2] == getRealCmd)
+                                            {
+                                                while (checkde)
+                                                {
+                                                    await Task.Run(() => { Thread.Sleep(100); });
+                                                }
+                                                nowThumb = thumb;
+                                                (GetControl("Conditions_CBox", thumb) as ComboBox).SelectedItem = i;
+                                                break;
+                                            }
+                                        }
+
+
+                                    }));
+                                    if(item.thumbClass == ThumbClass.Conditions)
+                                    {
+                                        conditionsNum++;
+                                    }
+                                    else if(item.thumbClass == ThumbClass.Events)
+                                    {
+                                        eventsNum++;
+                                    }
+                                    else if(item.thumbClass == ThumbClass.Objectives)
+                                    {
+                                        objectivesNum++;
+                                    }
+                                    
+                                });
+                            }
+                        }
+
+                        foreach (var item in saveJournalInfo)
+                        {
+                            var back = await createThumbBase.CreateThumb(ThumbClass.Journal, MainFilePath, obj as MainWindow);
+
+                            if (!back.Succese)
+                            {
+                                ShowMessage(back.Text);
+
+                                return;
+                            }
+
+                            if (back.Backs == null)
+                            {
+                                ShowMessage("错误！返回值为空");
+
+                                return;
+                            }
+
+                            var thumb = back.Backs as Thumb;
+                            nowThumb = thumb;
+                            thumb.PreviewMouseLeftButtonDown += Thumb_MouseLeftButtonDown;
+                            thumb.DragCompleted += Thumb_DragCompleted;
+                            thumb.DragDelta += Thumb_DragDelta;
+                            thumb.DragStarted += Thumb_DragStarted;
+
+                            ThumbNums = MainWindowModels.saveThumbs.Count.ToString();
+
+                            await Task.Run(() =>
+                            {
+                                mainWindow.cvmenu.Dispatcher.Invoke(new Action(async() =>
+                                {
+                                    while ((GetControl("JournalConfig_TBox", thumb) as TextBox) == null)
+                                    {
+                                        await Task.Run(() => { Thread.Sleep(100); });
+                                    }
+                                    (GetControl("JournalConfig_TBox", thumb) as TextBox).Text = item.Config;
+                                    (GetControl("Journal_TBox", thumb) as TextBox).Text = item.Text;
+                                }));
+                                journalsNum++;
+                            });
+                        }
+
+                        foreach (var item in saveItemsInfo)
+                        {
+                            var back = await createThumbBase.CreateThumb(ThumbClass.Items, MainFilePath, obj as MainWindow);
+
+                            if (!back.Succese)
+                            {
+                                ShowMessage(back.Text);
+
+                                return;
+                            }
+
+                            if (back.Backs == null)
+                            {
+                                ShowMessage("错误！返回值为空");
+
+                                return;
+                            }
+
+                            var thumb = back.Backs as Thumb;
+                            nowThumb = thumb;
+                            thumb.PreviewMouseLeftButtonDown += Thumb_MouseLeftButtonDown;
+                            thumb.DragCompleted += Thumb_DragCompleted;
+                            thumb.DragDelta += Thumb_DragDelta;
+                            thumb.DragStarted += Thumb_DragStarted;
+
+                            ThumbNums = MainWindowModels.saveThumbs.Count.ToString();
+
+                            await Task.Run(() =>
+                            {
+                                mainWindow.cvmenu.Dispatcher.Invoke(new Action(async() =>
+                                {
+                                    while ((GetControl("ItemsConfig_TBox", thumb) as TextBox) == null)
+                                    {
+                                        await Task.Run(() => { Thread.Sleep(100); });
+                                    }
+                                    (GetControl("ItemsConfig_TBox", thumb) as TextBox).Text = item.Config;
+                                    (GetControl("Items_TBox", thumb) as TextBox).Text = item.Text;
+                                }));
+                                itemsNum++;
+                            });
+                        }
+                        #endregion
+
+                        #region 数据录入
+
+                        var treeView = new TreeViewBase();
+
+                        foreach (var item in saveNPCEOInfo)
+                        {
+                            var getThumb = await createThumbBase.UseNameGetThumb(item.thumbClass, item.Name);
+
+                            if (!getThumb.Succese)
+                            {
+                                ShowMessage("未找到相关控件，请尝试重新读取！");
+                                return;
+                            }
+
+                            var thumb = getThumb.Backs as SaveChird;
+
+                            if (mainWindowModels.SaveThumbInfo.ContainsKey(thumb.Saver))
+                            {
+                                foreach (var i in item.data)
+                                {
+                                    mainWindowModels.SaveThumbInfo[thumb.Saver].Add(i.Key, i.Value);
+                                }
+                            }
+                            else
+                            {
+                                mainWindowModels.SaveThumbInfo.Add(thumb.Saver,item.data);
+                            }
+                            
+                            foreach (var i in item.data)
+                            {//i.key = CMD
+                                foreach (var j in i.Value)
+                                {//j.key = 命令
+                                    foreach (var n in j.Value)
+                                    {//n.key = 参数
+                                        foreach (var m in n.Value)
+                                        {//项
+                                            if(thumb.thumbClass == ThumbClass.Player)
+                                            {
+                                                await treeView.AddItemToSaves(thumb.Saver, j.Key, n.Key, m.Key, "", "", true, playerLoader.saveThumbInfoWindowModel, mainWindowModels.SaveThumbInfo,false);
+                                            }
+                                            else if(thumb.thumbClass == ThumbClass.NPC)
+                                            {
+                                                await treeView.AddItemToSaves(thumb.Saver, j.Key, n.Key, m.Key, "", "", true, npcLoader.saveThumbInfoWindowModel, mainWindowModels.SaveThumbInfo, false);
+                                            }
+                                            //else if(thumb.thumbClass == ThumbClass.Conditions)
+                                            //{
+                                            //    await treeView.AddItemToSaves(thumb.Saver, j.Key, n.Key, m.Value, "", "", true, contisionLoader.saveThumbInfoWindowModel, mainWindowModels.SaveThumbInfo, false);
+                                            //}
+                                            //else if (thumb.thumbClass == ThumbClass.Events)
+                                            //{
+                                            //    await treeView.AddItemToSaves(thumb.Saver, j.Key, n.Key, m.Value, "", "", true, eventLoader.saveThumbInfoWindowModel, mainWindowModels.SaveThumbInfo, false);
+                                            //}
+                                            //else if(thumb.thumbClass == ThumbClass.Objectives)
+                                            //{
+                                            //    await treeView.AddItemToSaves(thumb.Saver, j.Key, n.Key, m.Value, "", "", true, objectiveLoader.saveThumbInfoWindowModel, mainWindowModels.SaveThumbInfo, false);
+                                            //}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        foreach (var item in saveAllChildInfo)
+                        {
+                            var getThumb = await createThumbBase.UseNameGetThumb(item.thumbClass, item.Saver);
+
+                            if (!getThumb.Succese)
+                            {
+                                ShowMessage("未找到相关控件，请尝试重新读取！");
+                                return;
+                            }
+
+                            var thumb = getThumb.Backs as SaveChird;
+
+                            foreach (var i in item.Children)
+                            {
+                                var getchild = await createThumbBase.UseNameGetThumb(ThumbClass.NPC, i);
+
+                                if (!getchild.Succese)
+                                {
+                                    ShowMessage("未找到相关控件，请尝试重新读取！");
+                                    return;
+                                }
+
+                                var getThumbInfo = getchild.Backs as SaveChird;
+
+                                var classoverBack = await ThumbClassOver(thumb.Saver, getThumbInfo.Saver, false);
+                            }
+
+                            foreach (var i in item.Fathers)
+                            {
+                                var getchild = await createThumbBase.UseNameGetThumb(ThumbClass.Events, i);
+
+                                if (!getchild.Succese)
+                                {
+                                    ShowMessage("未找到相关控件，请尝试重新读取！");
+                                    return;
+                                }
+
+                                var getThumbInfo = getchild.Backs as SaveChird;
+
+                                var classoverBack = await ThumbClassOver(getThumbInfo.Saver, thumb.Saver, false);
+                            }
+                        }
+
+                        #endregion
+
+                        #region 位置迁移
+                        foreach (var item in dic)
+                        {
+                            var getThumb = await createThumbBase.UseNameGetThumb(item.thumbClass, item.Name);
+
+                            if (!getThumb.Succese)
+                            {
+                                ShowMessage("未找到相关控件，请尝试重新读取！");
+                                return;
+                            }
+
+                            var thumb = getThumb.Backs as SaveChird;
+
+                            Canvas.SetLeft(thumb.Saver, item.X);
+
+                            Canvas.SetTop(thumb.Saver, item.Y);
+                        }
+                        #endregion
+
+                        #region 关系建立
+
+                        try
+                        {
+                            var getMainThumb = MainWindowModels.saveThumbs.Where(t => t.thumbClass == ThumbClass.Subject).ToList();
+
+                            foreach (var item in getMainThumb)
+                            {
+                                foreach (var i in item.Children)
+                                {
+                                    DrawThumbLine(item.Saver, i);
+                                }
+
+                                foreach(var i in item.Fathers)
+                                {
+                                    DrawThumbLine(i, item.Saver);
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            ShowMessage("未找到相关控件，请尝试重新读取！");
+                            return;
+                        }
+
+                        foreach (var item in mainWindowModels.SaveThumbInfo)
+                        {
+                            var info = await FindSaveThumbInfo(item.Key);
+
+                            if (info.thumbClass == ThumbClass.NPC || info.thumbClass == ThumbClass.Player)
+                            {
+                                foreach (var i in mainWindowModels.SaveThumbInfo[item.Key])
+                                {
+                                    switch (GetRealCmd(i.Key))
+                                    {
+                                        case "conditions":
+                                            foreach (var j in i.Value["conditions"]["第 1 条参数"])
+                                            {
+                                                var value = j.Value.TrimStart('!');
+                                                var reback = await createThumbBase.UseNameGetThumb(ThumbClass.Conditions, value);
+
+                                                if (reback.Succese)
+                                                {
+                                                    var getinfo = reback.Backs as SaveChird;
+
+                                                    var classoverBack = await ThumbClassOver(item.Key, getinfo.Saver, false);
+
+                                                    if (classoverBack.Succese)
+                                                    {
+                                                        DrawThumbLine(item.Key, getinfo.Saver);
+                                                    }
+                                                }
+                                            }
+                                            break;
+                                        case "events":
+                                            foreach (var j in i.Value["events"]["第 1 条参数"])
+                                            {
+                                                var reback = await createThumbBase.UseNameGetThumb(ThumbClass.Events, j.Value);
+
+                                                if (reback.Succese)
+                                                {
+                                                    var getinfo = reback.Backs as SaveChird;
+
+                                                    var classoverBack = await ThumbClassOver(item.Key, getinfo.Saver, false);
+
+                                                    if (classoverBack.Succese)
+                                                    {
+                                                        DrawThumbLine(item.Key, getinfo.Saver);
+                                                    }
+                                                }
+                                            }
+                                            break;
+                                        case "pointer":
+                                            if (info.thumbClass == ThumbClass.NPC)
+                                            {
+                                                foreach (var j in i.Value["pointer"]["第 1 条参数"])
+                                                {
+                                                    var reback = await createThumbBase.UseNameGetThumb(ThumbClass.Player, j.Value);
+
+                                                    if (reback.Succese)
+                                                    {
+                                                        var getinfo = reback.Backs as SaveChird;
+
+                                                        var classoverBack = await ThumbClassOver(item.Key, getinfo.Saver, false);
+
+                                                        if (classoverBack.Succese)
+                                                        {
+                                                            DrawThumbLine(item.Key, getinfo.Saver);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                foreach (var j in i.Value["pointer"]["第 1 条参数"])
+                                                {
+                                                    var reback = await createThumbBase.UseNameGetThumb(ThumbClass.NPC, j.Value);
+
+                                                    if (reback.Succese)
+                                                    {
+                                                        var getinfo = reback.Backs as SaveChird;
+
+                                                        var classoverBack = await ThumbClassOver(item.Key, getinfo.Saver, false);
+
+                                                        if (classoverBack.Succese)
+                                                        {
+                                                            DrawThumbLine(item.Key, getinfo.Saver);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                switch (info.thumbClass)
+                                {
+                                    case ThumbClass.Conditions:
+                                        foreach (var i in mainWindowModels.SaveThumbInfo[item.Key])
+                                        {
+                                            var getRealCmd = GetRealCmd(i.Key);
+
+                                            var findModel = contisionProp.Where(t => t.MainClass == getRealCmd).First();
+
+                                            if (findModel.NeedTpye != null && findModel.NeedTpye.Count > 0)
+                                            {
+                                                foreach (var j in i.Value)
+                                                {//j.key是命令
+                                                    var num = 0;
+                                                    foreach (var n in j.Value)
+                                                    {//n.key是参数
+                                                        foreach (var m in n.Value)
+                                                        {
+                                                            if (!findModel.NeedTpye.Where(t => t.Key == j.Key).Any())//找到是否存在命令
+                                                            {
+                                                                break;
+                                                            }
+
+                                                            var model = findModel.NeedTpye.Where(t => t.Key == j.Key).First().Value;
+
+                                                            if (!model.ContainsKey(num))//找到是否存在参数
+                                                            {
+                                                                break;
+                                                            }
+
+                                                            var getNeedClass = model[num];
+
+                                                            var changeinfo = m.Value;
+
+                                                            if (findModel.isContisionCmd)
+                                                            {
+                                                                changeinfo = changeinfo.TrimStart('!');
+                                                            }
+
+                                                            var reback = await createThumbBase.UseNameGetThumb(getNeedClass, changeinfo);
+
+                                                            if (reback.Succese)
+                                                            {
+                                                                var getinfo = reback.Backs as SaveChird;
+
+                                                                var classoverBack = await ThumbClassOver(item.Key, getinfo.Saver, false);
+
+                                                                if (classoverBack.Succese)
+                                                                {
+                                                                    DrawThumbLine(item.Key, getinfo.Saver);
+                                                                }
+                                                            }
+                                                        }
+                                                        num++;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        break;
+                                    case ThumbClass.Events:
+                                        foreach (var i in mainWindowModels.SaveThumbInfo[item.Key])
+                                        {
+                                            var getRealCmd = GetRealCmd(i.Key);
+
+                                            var findModel = eventProp.Where(t => t.MainClass == getRealCmd).First();
+
+                                            if (findModel.NeedTpye != null && findModel.NeedTpye.Count > 0)
+                                            {
+                                                foreach (var j in i.Value)
+                                                {//j.key是命令
+                                                    var num = 0;
+                                                    foreach (var n in j.Value)
+                                                    {//n.key是参数
+                                                        foreach (var m in n.Value)
+                                                        {
+                                                            if (!findModel.NeedTpye.Where(t => t.Key == j.Key).Any())//找到是否存在命令
+                                                            {
+                                                                break;
+                                                            }
+
+                                                            var model = findModel.NeedTpye.Where(t => t.Key == j.Key).First().Value;
+
+                                                            if (!model.ContainsKey(num))//找到是否存在参数
+                                                            {
+                                                                break;
+                                                            }
+
+                                                            var getNeedClass = model[num];
+
+                                                            var changeinfo = m.Value;
+
+                                                            if (getNeedClass == ThumbClass.Conditions)
+                                                            {
+                                                                changeinfo = changeinfo.TrimStart('!');
+                                                            }
+
+                                                            var reback = await createThumbBase.UseNameGetThumb(getNeedClass, changeinfo);
+
+                                                            if (reback.Succese)
+                                                            {
+                                                                var getinfo = reback.Backs as SaveChird;
+
+                                                                var classoverBack = await ThumbClassOver(item.Key, getinfo.Saver, false);
+
+                                                                if (classoverBack.Succese)
+                                                                {
+                                                                    DrawThumbLine(item.Key, getinfo.Saver);
+                                                                }
+                                                            }
+                                                        }
+                                                        num++;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        break;
+                                    case ThumbClass.Objectives:
+                                        foreach (var i in mainWindowModels.SaveThumbInfo[item.Key])
+                                        {
+                                            var getRealCmd = GetRealCmd(i.Key);
+
+                                            var findModel = objectiveProp.Where(t => t.MainClass == getRealCmd).First();
+
+                                            if (findModel.NeedTpye != null && findModel.NeedTpye.Count > 0)
+                                            {
+                                                foreach (var j in i.Value)
+                                                {//j.key是命令
+                                                    var num = 0;
+                                                    foreach (var n in j.Value)
+                                                    {//n.key是参数
+                                                        foreach (var m in n.Value)
+                                                        {
+                                                            if (!findModel.NeedTpye.Where(t => t.Key == j.Key).Any())//找到是否存在命令
+                                                            {
+                                                                break;
+                                                            }
+
+                                                            var model = findModel.NeedTpye.Where(t => t.Key == j.Key).First().Value;
+
+                                                            if (!model.ContainsKey(num))//找到是否存在参数
+                                                            {
+                                                                break;
+                                                            }
+
+                                                            var getNeedClass = model[num];
+
+                                                            var changeinfo = m.Value;
+
+                                                            if (getNeedClass == ThumbClass.Conditions)
+                                                            {
+                                                                changeinfo = changeinfo.TrimStart('!');
+                                                            }
+
+                                                            var reback = await createThumbBase.UseNameGetThumb(getNeedClass, changeinfo);
+
+                                                            if (reback.Succese)
+                                                            {
+                                                                var getinfo = reback.Backs as SaveChird;
+
+                                                                var classoverBack = await ThumbClassOver(item.Key, getinfo.Saver, false);
+
+                                                                if (classoverBack.Succese)
+                                                                {
+                                                                    DrawThumbLine(item.Key, getinfo.Saver);
+                                                                }
+                                                            }
+                                                        }
+                                                        num++;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        break;
+                                }
+                            }
+                        }
+                        #endregion
+
+                        await Task.Run(() =>
+                        {
+                            while (checkde)
+                            {
+                                Thread.Sleep(100);
+                            }
+
+                            mainWindow.Dispatcher.Invoke(new Action(() =>
+                            {
+                                mainWindow.IsEnabled = true;
+                            }));
+                        });
+
+                    });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
+                }
+                return _ReadJsonCmd;
             }
         }
 
@@ -2571,6 +3287,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         window.Show();
 
                         window.DataContext = new ThumbInfoWindowViewModel();
+
+                        var socketViewModel = new SocketViewModel();
+
+                        await socketViewModel.StarSocketTCP();
                     });
                 }
                 return _LoadedCommand;
@@ -2619,6 +3339,148 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         #endregion
 
         #region 具体方法
+
+        private async Task<ReturnModel> ComboBoxChangeSeleted(Thumb nowThumbs, ComboBox control)
+        {
+            var result = new ReturnModel();
+
+            var thumbClass = (await FindSaveThumbInfo(nowThumbs)).thumbClass;
+
+            if (thumbClass != ThumbClass.Player && thumbClass != ThumbClass.NPC)
+            {
+                var getSaver = new List<SaveLine>();
+
+                for (int i = 0; i < saveLines.Count; i++)
+                {
+                    if (saveLines[i].FatherName == nowThumbs)
+                    {
+                        getSaver.Add(saveLines[i]);
+                    }
+                }
+
+                var bidui = new GetThumbInfoBase();
+
+                for (int i = 0; i < getSaver.Count; i++)
+                {
+                    var fatherInfo = await FindSaveThumbInfo(getSaver[i].FatherName);
+
+                    var chirldInfo = await FindSaveThumbInfo(getSaver[i].ChirldName);
+
+                    if (!(await bidui.GetThisCanFather(fatherInfo, chirldInfo)).Succese)//获取改变选项后能否实现归类
+                    {
+                        //如果不能 则 删除 saveLines 中关系链接及 MainWindowModel.saveThumbs中父级元素和相对应子集元素
+
+                        try
+                        {
+                            fatherInfo.Children.Remove(getSaver[i].ChirldName);
+
+                            chirldInfo.Fathers.Remove(getSaver[i].FatherName);
+
+                            mainWindow.cvmenu.Children.Remove(getSaver[i].line);
+
+                            saveLines.Remove(getSaver[i]);
+                            ThumbChecks = saveLines.Count.ToString();
+                        }
+                        catch (Exception ex)
+                        {
+                            ShowMessage("删除时错误具体信息：\n" + ex);
+                        }
+                    }
+                }
+            }
+
+            #region 控件的改变
+
+            switch (thumbClass)
+            {
+                case ThumbClass.Player:
+                    var loaderBacks = await playerLoader.ChangeThumb(control.SelectedItem.ToString(), nowThumbs, thumbInfoWindow.TreeView_Tv);
+
+                    if (loaderBacks != null && !loaderBacks.Succese)
+                    {
+                        ShowMessage(loaderBacks.Text);
+                    }
+
+                    break;
+                case ThumbClass.NPC:
+                    loaderBacks = await npcLoader.ChangeThumb(control.SelectedItem.ToString(), nowThumbs, thumbInfoWindow.TreeView_Tv);
+
+                    if (loaderBacks != null && !loaderBacks.Succese)
+                    {
+                        ShowMessage(loaderBacks.Text);
+                    }
+                    break;
+                case ThumbClass.Conditions:
+
+                    var loaderBack = await contisionLoader.ChangeThumb(contisionProp, control.SelectedItem.ToString(), nowThumbs);
+
+                    if (loaderBack != null && !loaderBack.Succese)
+                    {
+                        ShowMessage(loaderBack.Text);
+                    }
+
+                    var back = await ChangeTheTreeView();
+
+                    if (back != null && !back.Succese)
+                    {
+                        ShowMessage(back.Text);
+                    }
+                    if (mainWindowModels.SaveThumbInfo.ContainsKey(nowThumbs) && mainWindow.IsEnabled)
+                    {
+                        mainWindowModels.SaveThumbInfo[nowThumbs].Clear();
+                    }
+                    break;
+
+                case ThumbClass.Events:
+
+                    loaderBack = await eventLoader.ChangeThumb(eventProp, control.SelectedItem.ToString(), nowThumbs);
+
+                    if (loaderBack != null && !loaderBack.Succese)
+                    {
+                        ShowMessage(loaderBack.Text);
+                    }
+
+                    back = await ChangeTheTreeView();
+
+                    if (back != null && !back.Succese)
+                    {
+                        ShowMessage(back.Text);
+                    }
+                    if (mainWindowModels.SaveThumbInfo.ContainsKey(nowThumbs) && mainWindow.IsEnabled)
+                    {
+                        mainWindowModels.SaveThumbInfo[nowThumbs].Clear();
+                    }
+                    break;
+
+                case ThumbClass.Objectives:
+
+                    loaderBack = await objectiveLoader.ChangeThumb(objectiveProp, control.SelectedItem.ToString(), nowThumbs);
+
+                    if (loaderBack != null && !loaderBack.Succese)
+                    {
+                        ShowMessage(loaderBack.Text);
+                    }
+
+                    back = await ChangeTheTreeView();
+
+                    if (back != null && !back.Succese)
+                    {
+                        ShowMessage(back.Text);
+                    }
+                    if (mainWindowModels.SaveThumbInfo.ContainsKey(nowThumbs) && mainWindow.IsEnabled)
+                    {
+                        mainWindowModels.SaveThumbInfo[nowThumbs].Clear();
+                    }
+                    break;
+            }
+
+            checkde = false;
+            #endregion
+
+            result.SetSuccese("");
+
+            return result;
+        }
 
         /// <summary>
         /// 获取真实命令

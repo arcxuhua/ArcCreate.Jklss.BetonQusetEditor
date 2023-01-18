@@ -9,6 +9,7 @@ namespace ArcCreate.Jklss.Model.MainWindow
 {
     public class MainWindowModels
     {
+        public bool IsFindFile { get; set; } = false;
         public bool isHaveSubjcet { get; set; } = false;
         public string Message { get; set; }
         public string MainFilePath { get; set; }
