@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using static ArcCreate.Jklss.Model.SocketModel.SocketModel;
 using System.Threading;
 using static ArcCreate.Jklss.Services.ScoketService;
+using ArcCreate.Jklss.Model.SocketModel;
 
 namespace ArcCreate.Jklss.Services
 {
@@ -82,54 +83,68 @@ namespace ArcCreate.Jklss.Services
                 socket.BeginReceive(data, 0, data.Length, SocketFlags.None,
                 asyncResult =>
                 {
-                    int length = socket.EndReceive(asyncResult);
+                    if (!socket.Connected)
+                    {
+                        return;
+                    }
+
+                    var length = socket.EndReceive(asyncResult);
 
                     var str = Encoding.UTF8.GetString(data, 0, length);
 
-                    if (!ClientKeys.ContainsKey(socket.RemoteEndPoint.ToString()))
+                    lock (str)
                     {
-                        MessageMode sendMessage;
-                        try
+                        if (!ClientKeys.ContainsKey(socket.RemoteEndPoint.ToString()))
                         {
-                            sendMessage = FileService.JsonToProp<MessageMode>(str);
-                        }
-                        catch
-                        {
-                            AsynRecive(socket);
-                            return;
-                        }
-                        GetMessage(sendMessage);
-                    }
-                    else
-                    {
-                        var keyModel = ClientKeys[socket.RemoteEndPoint.ToString()];
-
-                        if (keyModel.ServerSendKey == null)
-                        {
-                            AsynRecive(socket);
-                            return;
-                        }
-
-                        try
-                        {
-                            var getMessageModel = FileService.JsonToProp<MessageMode>(str);
-
-                            GetMessage(getMessageModel);
-                        }
-                        catch
-                        {
+                            MessageMode sendMessage;
                             try
                             {
-                                var jm = FileService.PrivateKeyDecrypt(keyModel.ServerSendKey.PrivetKey, str);
-
-                                var getMessageModel = FileService.JsonToProp<MessageMode>(jm);
-
-                                GetMessage(getMessageModel);
+                                sendMessage = FileService.JsonToProp<MessageMode>(str);
                             }
                             catch
                             {
                                 AsynRecive(socket);
                                 return;
+                            }
+                            GetMessage(sendMessage);
+                        }
+                        else
+                        {
+                            var keyModel = ClientKeys[socket.RemoteEndPoint.ToString()];
+
+                            if (keyModel.ClientSendKey == null)
+                            {
+                                AsynRecive(socket);
+                                return;
+                            }
+
+                            try
+                            {
+                                var getMessageModel = FileService.JsonToProp<MessageMode>(str);
+
+                                if (getMessageModel.Class != MessageClass.SendKey && getMessageModel.Class != MessageClass.Heart)
+                                {
+                                    AsynRecive(socket);
+                                    return;
+                                }
+
+                                GetMessage(getMessageModel);
+                            }
+                            catch
+                            {
+                                try
+                                {
+                                    var jm = FileService.PrivateKeyDecrypt(keyModel.ClientSendKey.PrivetKey, str);
+
+                                    var getMessageModel = FileService.JsonToProp<MessageMode>(jm);
+
+                                    GetMessage(getMessageModel);
+                                }
+                                catch
+                                {
+                                    AsynRecive(socket);
+                                    return;
+                                }
                             }
                         }
                     }

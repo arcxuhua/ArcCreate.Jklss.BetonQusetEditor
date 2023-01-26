@@ -116,10 +116,22 @@
     <Compile Include="ThumbInfoWindow.xaml.cs">
       <DependentUpon>ThumbInfoWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModel\ClientWindow\LoginWindowViewModel.cs" />
+    <Compile Include="ViewModel\ClientWindow\PayWindowViewModel.cs" />
+    <Compile Include="ViewModel\ClientWindow\RegisterWindowViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\SocketViewModel.cs" />
     <Compile Include="ViewModel\ThumbInfoWindowViewModel.cs" />
     <Compile Include="ViewModel\ThumbSetWindowViewModel.cs" />
+    <Compile Include="Windows\LoginWindow.xaml.cs">
+      <DependentUpon>LoginWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\PayWindow.xaml.cs">
+      <DependentUpon>PayWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\RegisterWindow.xaml.cs">
+      <DependentUpon>RegisterWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\ThumbSetWindow.xaml.cs">
       <DependentUpon>ThumbSetWindow.xaml</DependentUpon>
     </Compile>
@@ -142,6 +154,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ThumbInfoWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\LoginWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\PayWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\RegisterWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -189,6 +213,14 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="arccreate.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ArcCreate.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="img\pay\199.jpg" />
+    <Resource Include="img\pay\299.jpg" />
+    <Resource Include="img\pay\99.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets')" />

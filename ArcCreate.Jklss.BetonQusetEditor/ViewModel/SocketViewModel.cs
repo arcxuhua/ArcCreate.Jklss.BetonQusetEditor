@@ -1,21 +1,19 @@
 ﻿using ArcCreate.Jklss.Model.SocketModel;
 using ArcCreate.Jklss.Model;
 using ArcCreate.Jklss.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static ArcCreate.Jklss.Model.SocketModel.SocketModel;
 using System.Net.Sockets;
+using System.Windows;
 
 namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 {
     public class SocketViewModel
     {
-        private static Socket socket;
+        public static Socket socket;
 
-        private static ScoketService socketService = new ScoketService();
+        public static ScoketService socketService = new ScoketService();
 
         /// <summary>
         /// 开启Socket通讯
@@ -46,7 +44,36 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
             if (message.Class == MessageClass.Json)
             {
+                var getMessage = Encoding.UTF8.GetString(message.Message);
 
+                MessageModel model = null;
+
+                try
+                {
+                    model = FileService.JsonToProp<MessageModel>(getMessage);
+                }
+                catch
+                {
+                    return;
+                }
+
+                if (model == null)
+                {
+                    return;
+                }
+
+                if (!model.IsLogin)
+                {
+                    MessageBox.Show(model.Message);
+
+                    return;
+                }
+                else
+                {
+                    MainWindow window = new MainWindow();
+                    window.Show();
+                }
+                
             }
             else if (message.Class == MessageClass.File)
             {

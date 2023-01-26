@@ -39,5 +39,14 @@ namespace ArcCreate.Jklss.Model.SocketModel
             public uint Length { get; set; }
             public uint NowLength { get; set; }
         }
+
+        public class MessageModel
+        {
+            public bool IsLogin { get; set; }
+
+            public string UserName { get; set; }
+
+            public string Message { get; set; }
+        }
     }
 }
