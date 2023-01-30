@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using static ArcCreate.Jklss.Model.SocketModel.SocketModel;
 using System.Net.Sockets;
 using System.Windows;
+using ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow;
+using Newtonsoft.Json.Linq;
 
 namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 {
@@ -64,16 +66,24 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                 if (!model.IsLogin)
                 {
-                    MessageBox.Show(model.Message);
+                    LoginWindowViewModel.ShowWorryMessage(model.Message);
 
                     return;
                 }
-                else
+
+                var getRealMessage = JObject.Parse(model.Message);
+
+                if (getRealMessage.Count <= 0)
                 {
                     MainWindow window = new MainWindow();
+
                     window.Show();
+
+                    return;
                 }
+
                 
+
             }
             else if (message.Class == MessageClass.File)
             {
