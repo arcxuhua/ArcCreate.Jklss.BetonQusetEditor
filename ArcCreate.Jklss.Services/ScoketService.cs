@@ -32,16 +32,33 @@ namespace ArcCreate.Jklss.Services
             //创建套接字  
             Socket client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             //开始连接到服务器  
-            client.BeginConnect(ipe, asyncResult =>
-            {
-                client.EndConnect(asyncResult);
-                //接受消息  
-                AsynRecive(client);
 
-                socket = client;
-                saveSocketClient.Add(client.RemoteEndPoint.ToString(), client);//存储对话
-                HeartSend();
-            }, null);
+            try
+            {
+                client.BeginConnect(ipe, asyncResult =>
+                {
+                    try
+                    {
+                        client.EndConnect(asyncResult);
+                        //接受消息  
+                        AsynRecive(client);
+
+                        socket = client;
+                        saveSocketClient.Add(client.RemoteEndPoint.ToString(), client);//存储对话
+                        HeartSend();
+                    }
+                    catch
+                    {
+                        
+                    }
+                    
+                }, null);
+            }
+            catch
+            {
+
+            }
+            
             
             return client;
         }

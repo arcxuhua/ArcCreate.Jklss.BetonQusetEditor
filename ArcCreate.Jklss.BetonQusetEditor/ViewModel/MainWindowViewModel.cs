@@ -3288,9 +3288,6 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                         window.DataContext = new ThumbInfoWindowViewModel();
 
-                        var socketViewModel = new SocketViewModel();
-
-                        await socketViewModel.StarSocketTCP();
                     });
                 }
                 return _LoadedCommand;
@@ -3574,50 +3571,63 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
         private async Task<ReturnModel> ChangeTheTreeView()
         {
-            var thumbinfo = await FindSaveThumbInfo(nowThumb);
-
-            if (thumbinfo != null && thumbinfo.thumbClass == ThumbClass.Conditions)
+            try
             {
-                var control = nowThumb.Template.FindName("Conditions_CBox", nowThumb) as ComboBox;
+                var thumbinfo = await FindSaveThumbInfo(nowThumb);
 
-                if (control.Items.Count > 0 && control.SelectedItem != null && thumbInfoWindow != null)
+                if (thumbinfo != null && thumbinfo.thumbClass == ThumbClass.Conditions)
                 {
-                   return await contisionLoader.ChangeTheTree(thumbInfoWindow.FindName("TreeView_Tv") as TreeView, contisionProp, control.SelectedItem.ToString());
+                    var control = nowThumb.Template.FindName("Conditions_CBox", nowThumb) as ComboBox;
+
+                    if (control.Items.Count > 0 && control.SelectedItem != null && thumbInfoWindow != null)
+                    {
+                        return await contisionLoader.ChangeTheTree(thumbInfoWindow.FindName("TreeView_Tv") as TreeView, contisionProp, control.SelectedItem.ToString());
+                    }
+
                 }
 
-            }
-
-            if (thumbinfo != null && thumbinfo.thumbClass == ThumbClass.Events)
-            {
-                var control = nowThumb.Template.FindName("Conditions_CBox", nowThumb) as ComboBox;
-
-                if (control.Items.Count > 0 && control.SelectedItem != null && thumbInfoWindow != null)
+                if (thumbinfo != null && thumbinfo.thumbClass == ThumbClass.Events)
                 {
-                    return await eventLoader.ChangeTheTree(thumbInfoWindow.FindName("TreeView_Tv") as TreeView, eventProp, control.SelectedItem.ToString());
+                    var control = nowThumb.Template.FindName("Conditions_CBox", nowThumb) as ComboBox;
+
+
+
+                    if (control.Items.Count > 0 && control.SelectedItem != null && thumbInfoWindow != null)
+                    {
+                        return await eventLoader.ChangeTheTree(thumbInfoWindow.FindName("TreeView_Tv") as TreeView, eventProp, control.SelectedItem.ToString());
+                    }
+
                 }
 
-            }
-
-            if (thumbinfo != null && thumbinfo.thumbClass == ThumbClass.Objectives)
-            {
-                var control = nowThumb.Template.FindName("Conditions_CBox", nowThumb) as ComboBox;
-
-                if (control.Items.Count > 0 && control.SelectedItem != null && thumbInfoWindow != null)
+                if (thumbinfo != null && thumbinfo.thumbClass == ThumbClass.Objectives)
                 {
-                    return await objectiveLoader.ChangeTheTree(thumbInfoWindow.FindName("TreeView_Tv") as TreeView, objectiveProp, control.SelectedItem.ToString());
+                    var control = nowThumb.Template.FindName("Conditions_CBox", nowThumb) as ComboBox;
+
+                    if (control.Items.Count > 0 && control.SelectedItem != null && thumbInfoWindow != null)
+                    {
+                        return await objectiveLoader.ChangeTheTree(thumbInfoWindow.FindName("TreeView_Tv") as TreeView, objectiveProp, control.SelectedItem.ToString());
+                    }
+
                 }
 
-            }
+                if (thumbinfo != null && thumbinfo.thumbClass == ThumbClass.Player)
+                {
+                    return await playerLoader.ChangeTheTree(thumbInfoWindow.FindName("TreeView_Tv") as TreeView);
+                }
 
-            if (thumbinfo != null && thumbinfo.thumbClass == ThumbClass.Player)
-            {
-                return await playerLoader.ChangeTheTree(thumbInfoWindow.FindName("TreeView_Tv") as TreeView);
+                if (thumbinfo != null && thumbinfo.thumbClass == ThumbClass.NPC)
+                {
+                    return await npcLoader.ChangeTheTree(thumbInfoWindow.FindName("TreeView_Tv") as TreeView);
+                }
             }
+            catch
+            {
+                var back = new ReturnModel();
+                back.SetError();
 
-            if (thumbinfo != null && thumbinfo.thumbClass == ThumbClass.NPC)
-            {
-                return await npcLoader.ChangeTheTree(thumbInfoWindow.FindName("TreeView_Tv") as TreeView);
+                return back;
             }
+            
 
             return null;
         }

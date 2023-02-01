@@ -64,26 +64,27 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     return;
                 }
 
-                if (!model.IsLogin)
+                if(model.JsonInfo == JsonInfo.Login)
                 {
-                    LoginWindowViewModel.ShowWorryMessage(model.Message);
+                    if (!model.IsLogin)
+                    {
+                        LoginWindowViewModel.ShowWorryMessage(model.Message);
 
-                    return;
+                        return;
+                    }
+                    LoginWindowViewModel.window.Dispatcher.Invoke(new System.Action(() =>
+                    {
+                        MainWindow window = new MainWindow();
+                        window.Show();
+                        LoginWindowViewModel.window.Close();
+                    }));
+                    
                 }
 
-                var getRealMessage = JObject.Parse(model.Message);
-
-                if (getRealMessage.Count <= 0)
+                if(model.JsonInfo == JsonInfo.Register)
                 {
-                    MainWindow window = new MainWindow();
-
-                    window.Show();
-
-                    return;
+                    MessageBox.Show(model.Message);
                 }
-
-                
-
             }
             else if (message.Class == MessageClass.File)
             {

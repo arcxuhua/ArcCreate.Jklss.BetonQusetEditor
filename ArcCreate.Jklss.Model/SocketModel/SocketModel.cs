@@ -40,9 +40,18 @@ namespace ArcCreate.Jklss.Model.SocketModel
             public uint NowLength { get; set; }
         }
 
+        public enum JsonInfo
+        {
+            Login,
+            Register,
+            Message
+        }
+
         public class MessageModel
         {
             public bool IsLogin { get; set; }
+
+            public JsonInfo JsonInfo { get; set; }
 
             public string UserName { get; set; }
 

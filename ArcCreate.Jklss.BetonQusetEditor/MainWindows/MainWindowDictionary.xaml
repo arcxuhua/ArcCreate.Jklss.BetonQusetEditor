@@ -128,10 +128,10 @@
                                     <TextBlock Grid.Row="1" Text="项："  Margin="230 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                     <ComboBox x:Name="ConditionsCmdProjectEdit_CBox" Grid.Row="1" Width="70" Height="30" Margin="250 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left"/>
 
-                                    <Button x:Name="ConditionsAdd_Btn" Grid.Row="1" Width="20" Height="20" Margin="280 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="MaterialDesignFloatingActionMiniDarkButton" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                    <Button x:Name="ConditionsAdd_Btn" Grid.Row="1" Width="20" Height="20" Margin="280 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
                                         <materialDesign:PackIcon Kind="Plus" />
                                     </Button>
-                                    <Button x:Name="ConditionsRemove_Btn" Grid.Row="1" Width="20" Height="20" Margin="330 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="MaterialDesignFloatingActionMiniDarkButton" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                    <Button x:Name="ConditionsRemove_Btn" Grid.Row="1" Width="20" Height="20" Margin="330 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
                                         <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
                                     </Button>
 
@@ -217,10 +217,10 @@
                                     <TextBlock Grid.Row="1" Text="项："  Margin="230 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                     <ComboBox x:Name="ConditionsCmdProjectEdit_CBox" Grid.Row="1" Width="70" Height="30" Margin="250 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left"/>
 
-                                    <Button x:Name="ConditionsAdd_Btn" Grid.Row="1" Width="20" Height="20" Margin="280 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="MaterialDesignFloatingActionMiniDarkButton" BorderBrush="#FF3AB78A" Background="#FF3AB78A" IsEnabled="False">
+                                    <Button x:Name="ConditionsAdd_Btn" Grid.Row="1" Width="20" Height="20" Margin="280 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A" IsEnabled="False">
                                         <materialDesign:PackIcon Kind="Plus" />
                                     </Button>
-                                    <Button x:Name="ConditionsRemove_Btn" Grid.Row="1" Width="20" Height="20" Margin="330 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="MaterialDesignFloatingActionMiniDarkButton" Background="#FFB73A3A" BorderBrush="#FFB73A3A" IsEnabled="False">
+                                    <Button x:Name="ConditionsRemove_Btn" Grid.Row="1" Width="20" Height="20" Margin="330 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A" IsEnabled="False">
                                         <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
                                     </Button>
 
@@ -339,10 +339,10 @@
                                     <TextBlock Grid.Row="1" Text="项："  Margin="230 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                     <ComboBox x:Name="ConditionsCmdProjectEdit_CBox" Grid.Row="1" Width="70" Height="30" Margin="250 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left"/>
 
-                                    <Button x:Name="ConditionsAdd_Btn" Grid.Row="1" IsEnabled="False" Width="20" Height="20" Margin="280 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="MaterialDesignFloatingActionMiniDarkButton" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                    <Button x:Name="ConditionsAdd_Btn" Grid.Row="1" IsEnabled="False" Width="20" Height="20" Margin="280 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
                                         <materialDesign:PackIcon Kind="Plus" />
                                     </Button>
-                                    <Button x:Name="ConditionsRemove_Btn" Grid.Row="1" IsEnabled="False" Width="20" Height="20" Margin="330 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="MaterialDesignFloatingActionMiniDarkButton" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                    <Button x:Name="ConditionsRemove_Btn" Grid.Row="1" IsEnabled="False" Width="20" Height="20" Margin="330 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
                                         <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
                                     </Button>
 
@@ -462,10 +462,10 @@
                                     <TextBlock Grid.Row="1" Text="项："  Margin="230 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                     <ComboBox x:Name="ConditionsCmdProjectEdit_CBox" Grid.Row="1" Width="70" Height="30" Margin="250 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left"/>
 
-                                    <Button x:Name="ConditionsAdd_Btn" Grid.Row="1" IsEnabled="False" Width="20" Height="20" Margin="280 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="MaterialDesignFloatingActionMiniDarkButton" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                    <Button x:Name="ConditionsAdd_Btn" Grid.Row="1" IsEnabled="False" Width="20" Height="20" Margin="280 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
                                         <materialDesign:PackIcon Kind="Plus" />
                                     </Button>
-                                    <Button x:Name="ConditionsRemove_Btn" Grid.Row="1" IsEnabled="False" Width="20" Height="20" Margin="330 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="MaterialDesignFloatingActionMiniDarkButton" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                    <Button x:Name="ConditionsRemove_Btn" Grid.Row="1" IsEnabled="False" Width="20" Height="20" Margin="330 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
                                         <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
                                     </Button>
 
@@ -570,10 +570,10 @@
                                     <TextBlock Grid.Row="1" Text="项："  Margin="230 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                     <ComboBox x:Name="ConditionsCmdProjectEdit_CBox" Grid.Row="1" Width="70" Height="30" Margin="250 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left"/>
 
-                                    <Button x:Name="ConditionsAdd_Btn" Grid.Row="1" IsEnabled="False" Width="20" Height="20" Margin="280 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="MaterialDesignFloatingActionMiniDarkButton" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                    <Button x:Name="ConditionsAdd_Btn" Grid.Row="1" IsEnabled="False" Width="20" Height="20" Margin="280 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
                                         <materialDesign:PackIcon Kind="Plus" />
                                     </Button>
-                                    <Button x:Name="ConditionsRemove_Btn" Grid.Row="1" IsEnabled="False" Width="20" Height="20" Margin="330 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="MaterialDesignFloatingActionMiniDarkButton" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                    <Button x:Name="ConditionsRemove_Btn" Grid.Row="1" IsEnabled="False" Width="20" Height="20" Margin="330 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
                                         <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
                                     </Button>
 

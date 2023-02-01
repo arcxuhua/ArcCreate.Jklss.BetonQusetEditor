@@ -28,4 +28,10 @@ namespace ArcCreate.Jklss.Model
             Backs = null;
         }
     }
+    public class MachineModel
+    {
+        public string Name { get; set; }
+
+        public List<string> IDs { get; set; } = new List<string>();
+    }
 }

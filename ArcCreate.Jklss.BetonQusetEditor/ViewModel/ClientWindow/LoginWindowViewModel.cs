@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using static ArcCreate.Jklss.Model.SocketModel.SocketModel;
 
 namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
@@ -22,9 +23,43 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
     {
         private static LoginModel model = new LoginModel();
 
+        public static string computerInfo = MachineNumberService.GetComputerInfo();
+
         public static SocketViewModel socketViewModel = new SocketViewModel();
 
         public static LoginWindow window = null;
+
+        private static PasswordBox passwordBox = null;
+
+        private static TextBox passwordTbox = null;
+
+        public CommandBase _EyeCommand;
+        public CommandBase EyeCommand
+        {
+            get
+            {
+                if (_EyeCommand == null)
+                {
+                    _EyeCommand = new CommandBase();
+                    _EyeCommand.DoExecute = new Action<object>(obj =>//回调函数
+                    {
+                        if(Eyes == "Eye")
+                        {
+                            Eyes = "EyeOff";
+                            passwordBox.Visibility = Visibility.Hidden;
+                            passwordTbox.Visibility = Visibility.Visible;
+                        }
+                        else
+                        {
+                            Eyes = "Eye";
+                            passwordBox.Visibility = Visibility.Visible;
+                            passwordTbox.Visibility = Visibility.Hidden;
+                        }
+                    });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
+                }
+                return _EyeCommand;
+            }
+        }
 
         public CommandBase _RegisterCommand;
         public CommandBase RegisterCommand
@@ -135,6 +170,19 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             }
         }
 
+        public string Eyes
+        {
+            get
+            {
+                return model.Eyes;
+            }
+            set
+            {
+                model.Eyes = value;
+                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+            }
+        }
+
         public CommandBase _LoginCommand;
         public CommandBase LoginCommand
         {
@@ -164,17 +212,25 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
                             return;
                         }
 
-                        if (!Regex.IsMatch(PassWord, @"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^%&',;=?$\x22]).{7,15}$"))
+                        if (!Regex.IsMatch(PassWord, @"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[%&',;=?$\x22]).{7,15}$"))
                         {
                             SendWorryMessage("错误的密码格式，请输入包含A-Z,a-z,且包含特殊字符的密码");
                             return;
                         }
 
+                        var loginMessage = new UserLoginModel()
+                        {
+                            UserName = UserName,
+                            PassWord = PassWord,
+                            ComputerInfo = computerInfo,
+                        };
+
                         var message = new MessageModel()
                         {
                             IsLogin = false,
+                            JsonInfo = JsonInfo.Login,
                             UserName = UserName,
-                            Message = PassWord
+                            Message = FileService.SaveToJson(loginMessage),
                         };
 
                         var getJson = FileService.SaveToJson(message);
@@ -188,6 +244,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
                             
                             await Task.Run(async() =>
                             {
+                                Thread.Sleep(3000);
                                 while (true)
                                 {
                                     if (SocketModel.ClientKeys.ContainsKey(SocketViewModel.socket.RemoteEndPoint.ToString()))
@@ -227,16 +284,84 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             {
                 if (_LoadedCommand == null)
                 {
-                    _LoadedCommand = new RelayCommand<Window>((wd) => {
-
+                    _LoadedCommand = new RelayCommand<Window>(async (wd) => {
+                        Eyes = "Eye";
                         window = wd as LoginWindow;
                         ShowWorryMessage = new _ShowWorryMessage(SendWorryMessage);
+
+                        if (SocketViewModel.socket == null)
+                        {
+                            await socketViewModel.StarSocketTCP();
+                        }
                     });
                 }
                 return _LoadedCommand;
             }
             set { _LoadedCommand = value; }
         }
+
+        private RelayCommand<PasswordBox> _PswLoadedCommand;
+
+        public RelayCommand<PasswordBox> PswLoadedCommand
+        {
+            get
+            {
+                if (_PswLoadedCommand == null)
+                {
+                    _PswLoadedCommand = new RelayCommand<PasswordBox>((pswBox) => {
+
+                        pswBox.PasswordChanged += PswBox_PasswordChanged;
+                        passwordBox = pswBox;
+                    });
+                }
+                return _PswLoadedCommand;
+            }
+            set { _PswLoadedCommand = value; }
+        }
+
+        private void PswBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            
+            var pswBox = sender as PasswordBox;
+
+            if (pswBox.Visibility == Visibility.Visible)
+            {
+                PassWord = pswBox.Password;
+            }
+
+        }
+
+        private RelayCommand<TextBox> _PswTboxLoadedCommand;
+
+        public RelayCommand<TextBox> PswTboxLoadedCommand
+        {
+            get
+            {
+                if (_PswTboxLoadedCommand == null)
+                {
+                    _PswTboxLoadedCommand = new RelayCommand<TextBox>((pswBox) => {
+
+                        pswBox.TextChanged += PswBox_PasswordChanged1;
+
+                        passwordTbox = pswBox;
+                    });
+                }
+                return _PswTboxLoadedCommand;
+            }
+            set { _PswTboxLoadedCommand = value; }
+        }
+
+        private void PswBox_PasswordChanged1(object sender, RoutedEventArgs e)
+        {
+            var pswBox = sender as TextBox;
+
+            if(pswBox.Visibility == Visibility.Visible)
+            {
+               PassWord = pswBox.Text;
+               passwordBox.Password = PassWord;
+            }
+        }
+
 
         public void SendWorryMessage(string txt)
         {
