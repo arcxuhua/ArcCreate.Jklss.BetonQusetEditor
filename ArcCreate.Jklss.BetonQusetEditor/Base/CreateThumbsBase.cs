@@ -112,6 +112,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                             {
                                 x += getScroller.X;
                                 y += getScroller.Y;
+                                break;
                             }
                         }
 

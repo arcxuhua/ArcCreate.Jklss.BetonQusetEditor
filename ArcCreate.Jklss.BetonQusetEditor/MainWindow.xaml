@@ -64,6 +64,7 @@
                 </Border>
                 <Border x:Name="outsaid" ClipToBounds="True" BorderThickness="1" HorizontalAlignment="Center" Height="581" VerticalAlignment="Top" Width="1350" Background="White" CornerRadius="10" Margin="0,60,0,0" PreviewMouseWheel="outside_PreviewMouseWheel" PreviewMouseDown="Scrollviewer_MouseDown" PreviewMouseUp="Scrollviewer_MouseUp">
                     <Grid>
+                        
                         <Canvas x:Name="cvmenu" HorizontalAlignment="Left" Height="509800" VerticalAlignment="Top" Width="1277400" Background="#FFB0AAAA">
 
                             <Canvas.RenderTransform>
@@ -71,6 +72,8 @@
                             </Canvas.RenderTransform>
 
                         </Canvas>
+                        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="15" FontWeight="Bold">缩放比例(%)：</TextBlock>
+                        <TextBlock x:Name="ScalerTBlock" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="15" FontWeight="Bold" Margin="100 0 0 0"></TextBlock>
                     </Grid>
                 </Border>
             </Grid>

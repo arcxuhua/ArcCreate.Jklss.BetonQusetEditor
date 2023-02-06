@@ -12,7 +12,8 @@ namespace ArcCreate.Jklss.Model.SocketModel
         File,
         Image,
         Heart,
-        SendKey
+        SendKey,
+        Version
     }
     public interface IMessageModel
     {

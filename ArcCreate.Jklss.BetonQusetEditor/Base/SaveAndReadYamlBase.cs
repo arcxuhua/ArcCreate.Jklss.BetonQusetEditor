@@ -355,18 +355,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                 {
                     var getInfo = GetThumbInfoBase.GetThumbInfo(item);
 
-                    var fgTalk = getInfo.Text.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+                    var fgTalk = getInfo.Text.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
                     var makeTalk = string.Empty;
 
                     for (int i = 0; i < fgTalk.Length; i++)
                     {
-                        makeTalk += "  " + fgTalk[i] + "\r\n";
+                        makeTalk += @"  " + fgTalk[i] + "\n";
                     }
 
-                    allJournal += getInfo.Config + ": |\r\n"
-                        + makeTalk
-                        + "\r\n";
+                    allJournal += getInfo.Config + ": |\n"
+                        + makeTalk;
                 }
 
                 foreach (var item in saveThumbs.Where(t => t.thumbClass == ThumbClass.Items).ToList())

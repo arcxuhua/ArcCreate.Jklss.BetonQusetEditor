@@ -9,6 +9,7 @@ using static ArcCreate.Jklss.Model.SocketModel.SocketModel;
 using System.Threading;
 using static ArcCreate.Jklss.Services.ScoketService;
 using ArcCreate.Jklss.Model.SocketModel;
+using System.Windows;
 
 namespace ArcCreate.Jklss.Services
 {
@@ -22,44 +23,41 @@ namespace ArcCreate.Jklss.Services
         public static event _GetMessage GetMessage;
 
         public static Socket socket = null;
+
         /// <summary>  
         /// 连接到服务器  
         /// </summary>  
         public Socket AsynConnect()
         {
+            var host = Dns.GetHostAddresses("jklss.cn");
             //端口及IP  
-            IPEndPoint ipe = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 6012);
+            IPEndPoint ipe = new IPEndPoint(host[0], 6012);
             //创建套接字  
             Socket client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             //开始连接到服务器  
 
-            try
+            client.BeginConnect(ipe, asyncResult =>
             {
-                client.BeginConnect(ipe, asyncResult =>
+                try
                 {
-                    try
-                    {
-                        client.EndConnect(asyncResult);
-                        //接受消息  
-                        AsynRecive(client);
+                    client.EndConnect(asyncResult);
+                    //接受消息  
+                    AsynRecive(client);
 
-                        socket = client;
-                        saveSocketClient.Add(client.RemoteEndPoint.ToString(), client);//存储对话
-                        HeartSend();
-                    }
-                    catch
-                    {
-                        
-                    }
-                    
-                }, null);
-            }
-            catch
-            {
+                    socket = client;
+                    saveSocketClient.Add(client.RemoteEndPoint.ToString(), client);//存储对话
+                    HeartSend();
+                }
+                catch
+                {
+                    MessageBox.Show("服务器正在维护请等待维护完成！", "服务器维护中");
 
-            }
-            
-            
+                    Environment.Exit(0);
+
+                }
+
+            }, null);
+
             return client;
         }
 
@@ -93,79 +91,89 @@ namespace ArcCreate.Jklss.Services
         /// <param name="socket"></param>  
         public void AsynRecive(Socket socket)
         {
-            byte[] data = new byte[1024 * 50];
+            byte[] data = new byte[1024 * 1024];
             try
             {
                 //开始接收数据  
                 socket.BeginReceive(data, 0, data.Length, SocketFlags.None,
                 asyncResult =>
                 {
-                    if (!socket.Connected)
+                    try
                     {
-                        return;
-                    }
-
-                    var length = socket.EndReceive(asyncResult);
-
-                    var str = Encoding.UTF8.GetString(data, 0, length);
-
-                    lock (str)
-                    {
-                        if (!ClientKeys.ContainsKey(socket.RemoteEndPoint.ToString()))
+                        if (!socket.Connected)
                         {
-                            MessageMode sendMessage;
-                            try
-                            {
-                                sendMessage = FileService.JsonToProp<MessageMode>(str);
-                            }
-                            catch
-                            {
-                                AsynRecive(socket);
-                                return;
-                            }
-                            GetMessage(sendMessage);
+                            return;
                         }
-                        else
+
+                        var length = socket.EndReceive(asyncResult);
+
+                        var str = Encoding.UTF8.GetString(data, 0, length);
+
+                        lock (str)
                         {
-                            var keyModel = ClientKeys[socket.RemoteEndPoint.ToString()];
-
-                            if (keyModel.ClientSendKey == null)
+                            if (!ClientKeys.ContainsKey(socket.RemoteEndPoint.ToString()))
                             {
-                                AsynRecive(socket);
-                                return;
-                            }
-
-                            try
-                            {
-                                var getMessageModel = FileService.JsonToProp<MessageMode>(str);
-
-                                if (getMessageModel.Class != MessageClass.SendKey && getMessageModel.Class != MessageClass.Heart)
-                                {
-                                    AsynRecive(socket);
-                                    return;
-                                }
-
-                                GetMessage(getMessageModel);
-                            }
-                            catch
-                            {
+                                MessageMode sendMessage;
                                 try
                                 {
-                                    var jm = FileService.PrivateKeyDecrypt(keyModel.ClientSendKey.PrivetKey, str);
-
-                                    var getMessageModel = FileService.JsonToProp<MessageMode>(jm);
-
-                                    GetMessage(getMessageModel);
+                                    sendMessage = FileService.JsonToProp<MessageMode>(str);
+                                    sendMessage.Ip = socket.RemoteEndPoint.ToString();
                                 }
                                 catch
                                 {
                                     AsynRecive(socket);
                                     return;
                                 }
+                                GetMessage(sendMessage);
+                            }
+                            else
+                            {
+                                var keyModel = ClientKeys[socket.RemoteEndPoint.ToString()];
+
+                                if (keyModel.ClientSendKey == null)
+                                {
+                                    AsynRecive(socket);
+                                    return;
+                                }
+
+                                try
+                                {
+                                    var getMessageModel = FileService.JsonToProp<MessageMode>(str);
+                                    getMessageModel.Ip = socket.RemoteEndPoint.ToString();
+                                    if (getMessageModel.Class != MessageClass.SendKey && getMessageModel.Class != MessageClass.Heart && getMessageModel.Class != MessageClass.Version)
+                                    {
+                                        AsynRecive(socket);
+                                        return;
+                                    }
+
+                                    GetMessage(getMessageModel);
+                                }
+                                catch
+                                {
+                                    try
+                                    {
+                                        var jm = FileService.PrivateKeyDecrypt(keyModel.ClientSendKey.PrivetKey, str);
+
+                                        var getMessageModel = FileService.JsonToProp<MessageMode>(jm);
+                                        getMessageModel.Ip = socket.RemoteEndPoint.ToString();
+                                        GetMessage(getMessageModel);
+                                    }
+                                    catch
+                                    {
+                                        AsynRecive(socket);
+                                        return;
+                                    }
+                                }
                             }
                         }
+                        AsynRecive(socket);
                     }
-                    AsynRecive(socket);
+                    catch
+                    {
+                        MessageBox.Show("您已被服务器强制中断连接！","警告");
+                        Environment.Exit(0);
+                    }
+                    
                 }, null);
             }
             catch (Exception ex)

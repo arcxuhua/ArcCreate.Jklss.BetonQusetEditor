@@ -57,5 +57,18 @@ namespace ArcCreate.Jklss.Model.SocketModel
 
             public string Message { get; set; }
         }
+
+        public class config
+        {
+            /// <summary>
+            /// 版本号
+            /// </summary>
+            public string version { get; set; }
+
+            /// <summary>
+            /// 下载地址
+            /// </summary>
+            public string update_path { get; set; }
+        }
     }
 }

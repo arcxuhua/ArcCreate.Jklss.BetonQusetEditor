@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using static ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow.LoginWindowViewModel;
 using static ArcCreate.Jklss.Model.SocketModel.SocketModel;
 
 namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
@@ -20,6 +21,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
     public class RegisterWindowViewModel : NotifyBase
     {
         private static RegisterModel model = new RegisterModel();
+
+        public static RegisterWindow window = null;
 
         #region 属性
         public string UserName
@@ -191,7 +194,37 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             }
         }
 
+        public string WorryMessage
+        {
+            get
+            {
+                return model.WorryMessage;
+            }
+            set
+            {
+                model.WorryMessage = value;
+                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+            }
+        }
+
         #endregion
+
+        public CommandBase _BackCommand;
+        public CommandBase BackCommand
+        {
+            get
+            {
+                if (_BackCommand == null)
+                {
+                    _BackCommand = new CommandBase();
+                    _BackCommand.DoExecute = new Action<object>(obj =>//回调函数
+                    {
+                        ShowPage(0);
+                    });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
+                }
+                return _BackCommand;
+            }
+        }
 
         public CommandBase _LoginCommand;
         public CommandBase LoginCommand
@@ -309,7 +342,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
                         {
                             return;
                         }
-
+                        window.First.IsEnabled = false;
                         var registerModel = new UserRegisterModel()
                         {
                             UserName = UserName,
@@ -357,13 +390,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
                         catch (Exception ex)
                         {
                             MessageBox.Show(ex.Message);
+                            window.First.IsEnabled = true;
                         }
-
-                        LoginWindow window = new LoginWindow();
-                        window.Show();
-
-                        (obj as Window).Close();
-                        
 
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }
@@ -475,6 +503,74 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
                 ActivationChecked = "Green";
                 ActivationWorry = "";
             }
+        }
+
+        private RelayCommand<Window> _LoadedCommand;
+
+        public RelayCommand<Window> LoadedCommand
+        {
+            get
+            {
+                if (_LoadedCommand == null)
+                {
+                    _LoadedCommand = new RelayCommand<Window>((wd) => {
+                        
+                        window = wd as RegisterWindow;
+
+                        ShowWorryMessage = new _ShowWorryMessage(SendWorryMessage);
+                    });
+                }
+                return _LoadedCommand;
+            }
+            set { _LoadedCommand = value; }
+        }
+
+        public delegate void _ShowWorryMessage(string txt);
+
+        public static _ShowWorryMessage ShowWorryMessage;
+
+        public static void ShowPage(int i)
+        {
+            if (i > 2 || i < 0)
+            {
+                return;
+            }
+
+            window.Dispatcher.Invoke(new Action(() =>
+            {
+                switch (i)
+                {
+                    case 0:
+                        AnimationBase.Appear(window.First);
+
+                        if (window.Worry.Visibility == Visibility.Visible)
+                        {
+                            AnimationBase.Disappear(window.Worry);
+                        }
+                        break;
+                    case 1:
+                        AnimationBase.Appear(window.Worry);
+
+                        if (window.First.Visibility == Visibility.Visible)
+                        {
+                            AnimationBase.Disappear(window.First);
+                        }
+                        break;
+                }
+            }));
+        }
+
+        public void SendWorryMessage(string txt)
+        {
+            ShowPage(1);
+
+            WorryMessage = txt;
+
+            window.Dispatcher.Invoke(new Action(() =>
+            {
+                window.First.IsEnabled = true;
+            }));
+            
         }
     }
 }

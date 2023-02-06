@@ -8,6 +8,12 @@ using System.Net.Sockets;
 using System.Windows;
 using ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow;
 using Newtonsoft.Json.Linq;
+using ArcCreate.Jklss.BetonQusetEditor.Windows;
+using System.Collections.Generic;
+using System.IO;
+using System.Diagnostics;
+using System.Windows.Shapes;
+using System;
 
 namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 {
@@ -16,6 +22,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         public static Socket socket;
 
         public static ScoketService socketService = new ScoketService();
+
+        public static string version = "3.0.25";
 
         /// <summary>
         /// 开启Socket通讯
@@ -83,7 +91,22 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                 if(model.JsonInfo == JsonInfo.Register)
                 {
-                    MessageBox.Show(model.Message);
+                    if (model.IsLogin)
+                    {
+                        MessageBox.Show(model.Message);
+                        LoginWindowViewModel.window.Dispatcher.Invoke(new System.Action(() =>
+                        {
+                            var window = new LoginWindow();
+                            window.Show();
+
+                            RegisterWindowViewModel.window.Close();
+                        }));
+                    }
+                    else
+                    {
+                        RegisterWindowViewModel.ShowWorryMessage(model.Message);
+                    }
+                    
                 }
             }
             else if (message.Class == MessageClass.File)
@@ -124,10 +147,40 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                 }
                 await SendRESMessage(MessageClass.SendKey, clientKeys.PublicKey, socket.LocalEndPoint.ToString(),message.Ip);
             }
+            else if(message.Class == MessageClass.Version)
+            {
+                var getMessage = FileService.JsonToProp<config>(Encoding.UTF8.GetString(message.Message));
+
+                if (getMessage.version == version)
+                {
+                    return;
+                }
+
+                var updateExePath = Directory.GetCurrentDirectory()+@"\update.exe";
+
+                try
+                {
+                    ProcessStartInfo versionUpdatePrp = new ProcessStartInfo(updateExePath, getMessage.update_path);
+
+                    Process newProcess = new Process();
+                    newProcess.StartInfo = versionUpdatePrp;
+                    newProcess.Start();
+
+                    Environment.Exit(0);
+                }
+                catch
+                {
+                    MessageBox.Show("更新程序损坏,请重新下载客户端！","错误");
+                    Environment.Exit(0);
+                }
+                
+            }
             else
             {
                 return;
             }
+
+
             lock (cliendSend)
             {
                 if (cliendSend.ContainsKey(message.Ip))

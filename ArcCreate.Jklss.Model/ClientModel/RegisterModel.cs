@@ -10,6 +10,8 @@ namespace ArcCreate.Jklss.Model.ClientModel
     {
         public string UserName { get; set; }
 
+        public string WorryMessage { get; set; }
+
         public string PassWord { get; set; }
 
         public string Activation { get; set; }
