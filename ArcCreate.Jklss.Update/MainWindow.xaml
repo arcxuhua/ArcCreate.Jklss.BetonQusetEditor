@@ -18,7 +18,7 @@
                 </Border.Background>
             </Border>
             <Image Source="/ArcCreate.png" Stretch="Fill" Margin="138,46,138,129"/>
-            <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="25" FontWeight="Bold" Foreground="#FFF5587B" Margin="0,241,0,0">更新中...</TextBlock>
+            <TextBlock x:Name="MessageTBlock" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="25" FontWeight="Bold" Foreground="#FFF5587B" Margin="0,241,0,0">更新中...</TextBlock>
         </Grid>
     </Grid>
 </Window>

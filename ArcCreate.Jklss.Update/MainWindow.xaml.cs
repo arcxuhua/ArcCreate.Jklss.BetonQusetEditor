@@ -31,42 +31,93 @@ namespace ArcCreate.Jklss.Update
         {
             InitializeComponent();
 
-            if(App.Args.Length == 0)
-            {
-                Environment.Exit(0);
-            }
-
-            updatePath = App.Args[0];
-
-            if (string.IsNullOrEmpty(updatePath))
-            {
-                Environment.Exit(0);
-            }
-
-            UpdateFile().Start();
+            UpdateFile();
         }
 
         private async Task UpdateFile() 
         {
-            var downloader = new DownLoadController();
+            await Task.Run(async () =>
+            {
+                
+                if (App.Args.Length == 0)
+                {
+                    this.Dispatcher.Invoke(new Action(() =>
+                    {
+                        this.Close();
+                        Environment.Exit(0);
+                    }));
 
-            var updateExePath = Directory.GetCurrentDirectory() + @"\update.zip";
+                }
 
-            downloader.AddDownLoad(new DownloadInfo() { Url = updatePath, path = updateExePath });
+                updatePath = App.Args[0];
 
-            await downloader.DownloadProgress(1);
+                if (string.IsNullOrEmpty(updatePath))
+                {
+                    this.Dispatcher.Invoke(new Action(() =>
+                    {
+                        this.Close();
+                        Environment.Exit(0);
+                    }));
+                }
+                this.Dispatcher.Invoke(new Action(() =>
+                {
+                    MessageTBlock.Text = "下载中。。。";
+                }));
+                
+                var downloader = new DownLoadController();
 
-            await Task.Run(() => { while (!downloader.GetEndDownload()) Thread.Sleep(3000); });
+                var updateExePath = Directory.GetCurrentDirectory() + @"\update.zip";
 
-            ZipFile.ExtractToDirectory(updateExePath, Directory.GetCurrentDirectory());//解压
+                downloader.AddDownLoad(new DownloadInfo() { Url = updatePath, path = updateExePath });
 
-            ProcessStartInfo versionUpdatePrp = new ProcessStartInfo(Directory.GetCurrentDirectory() + @"\ArcCreate BQ编辑器.exe");
+                await downloader.DownloadProgress(1);
 
-            Process newProcess = new Process();
-            newProcess.StartInfo = versionUpdatePrp;
-            newProcess.Start();
+                while (!downloader.GetEndDownload()) Thread.Sleep(3000);
+                this.Dispatcher.Invoke(new Action(() =>
+                {
+                    MessageTBlock.Text = "解压中。。。";
+                }));
+                Thread.Sleep(10000);
+                try
+                {
+                    ZipService.UnZipFile(updateExePath);
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                this.Dispatcher.Invoke(new Action(() =>
+                {
+                    MessageTBlock.Text = "删除下载文件。。。";
+                }));
+                Thread.Sleep(1000);
+                try
+                {
+                    File.Delete(updateExePath);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
 
-            Environment.Exit(0);
+                ProcessStartInfo versionUpdatePrp = new ProcessStartInfo(Directory.GetCurrentDirectory() + @"\ArcCreate BQ编辑器.exe");
+
+                Process newProcess = new Process();
+                newProcess.StartInfo = versionUpdatePrp;
+                newProcess.Start();
+                this.Dispatcher.Invoke(new Action(() =>
+                {
+                    MessageTBlock.Text = "更新完成！";
+                }));
+                
+                Thread.Sleep(3000);
+                this.Dispatcher.Invoke(new Action(() =>
+                {
+                    this.Close();
+                    Environment.Exit(0);
+                }));
+            });
+            
         } 
     }
 }

@@ -94,8 +94,8 @@ namespace ArcCreate.Jklss.Update.Service
         public double Speed = 0;
         public double Progress = 0;
 
-        public event DownloadProgressChangedEvent DownloadProgressChanged;
-        public delegate void DownloadProgressChangedEvent(DownloadInfoMation Log);
+        //public event DownloadProgressChangedEvent DownloadProgressChanged;
+        //public delegate void DownloadProgressChangedEvent(DownloadInfoMation Log);
 
         int ADindex = 0;
         private DownloadInfo AssignedDownload()
@@ -186,14 +186,14 @@ namespace ArcCreate.Jklss.Update.Service
                 intermation.AllFile = redownload.Count;
                 intermation.Progress = this.Progress;
                 intermation.Speed = this.Speed;
-                DownloadProgressChanged(intermation);
+                //DownloadProgressChanged(intermation);
                 Thread.Sleep(1000);
             }
             intermation.FinishFile = this.EndDownload;
             intermation.AllFile = redownload.Count;
             intermation.Progress = 100;
             intermation.Speed = 2;
-            DownloadProgressChanged(intermation);
+            //DownloadProgressChanged(intermation);
         }
     }
     public class DownloadInfo
