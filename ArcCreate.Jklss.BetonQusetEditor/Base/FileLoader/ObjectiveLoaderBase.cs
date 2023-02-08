@@ -1438,7 +1438,84 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
             }
             catch
             {
-                return;
+                var haveOne = getInfo.ContainsKey(one);
+
+                if (!haveOne)
+                {
+                    var fg = one.Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
+
+                    if (fg.Length == 3)
+                    {
+                        one = fg[1] + ": " + fg[2];
+                    }
+
+                    if (!getInfo.ContainsKey(one))
+                    {
+                        return;
+                    }
+                }
+
+                var haveTwo = getInfo[one].ContainsKey(two);
+
+                if (!haveTwo)
+                {
+                    var fg = two.Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
+
+                    if (fg.Length == 3)
+                    {
+                        two = fg[1] + ": " + fg[2];
+                    }
+
+                    if (!getInfo[one].ContainsKey(two))
+                    {
+                        return;
+                    }
+                }
+
+                var haveThree = getInfo[one][two].ContainsKey(three);
+
+                if (!haveThree)
+                {
+                    var fg = three.Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
+
+                    if (fg.Length == 3)
+                    {
+                        three = fg[1] + ": " + fg[2];
+                    }
+
+                    if (!getInfo[one][two].ContainsKey(three))
+                    {
+                        return;
+                    }
+                }
+
+                var haveFour = getInfo[one][two][three].ContainsKey(four);
+
+                if (!haveFour)
+                {
+                    var fg = four.Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
+
+                    if (fg.Length == 3)
+                    {
+                        four = fg[1] + ": " + fg[2];
+                    }
+
+                    if (!getInfo[one][two][three].ContainsKey(four))
+                    {
+                        return;
+                    }
+                }
+
+                var velue = getInfo[one][two][three][four];
+
+                if (getConditions_TBox.IsEnabled)
+                {
+                    getConditions_TBox.Text = velue;
+                }
+                else
+                {
+                    getConditions_ComboBox.SelectedItem = velue;
+                }
             }
 
         }

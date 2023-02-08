@@ -112,11 +112,11 @@ namespace ArcCreate.Jklss.BetonQusetEditor
                 double s = 0;
                 if (e.Delta > 0)
                 {
-                    s = 0.01;
+                    s = 0.05;
                 }
                 else
                 {
-                    s = -0.01;
+                    s = -0.05;
                 }
                 
 
@@ -128,7 +128,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor
                     {
                         var sx = t.ScaleX + s;
 
-                        if (sx < 3 && sx > 0.05)
+                        if (sx <= 3 && sx >= 0.05)
                         {
                             t.ScaleX += s;
                             Scale = sx;

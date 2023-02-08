@@ -2676,6 +2676,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                         await Task.Run(() =>
                         {
+                            while ((GetControl("ConditionsConfig_TBox", thumb) as TextBox) == null)
+                            {
+                                Thread.Sleep(100);
+                            }
                             mainWindow.cvmenu.Dispatcher.Invoke(new Action(() =>
                             {
                                 (GetControl("ConditionsConfig_TBox", thumb) as TextBox).Text = "PlayerTemp_" + playerNum;
@@ -2780,7 +2784,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                         await Task.Run(() =>
                         {
-                            Thread.Sleep(100);
+                            while ((GetControl("ConditionsConfig_TBox", thumb) as TextBox) == null)
+                            {
+                                Thread.Sleep(100);
+                            }
                             mainWindow.cvmenu.Dispatcher.Invoke(new Action(() =>
                             {
                                 (GetControl("ConditionsConfig_TBox", thumb) as TextBox).Text = "NpcTemp_" + npcNum;
@@ -2836,7 +2843,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         ThumbNums = MainWindowModels.saveThumbs.Count.ToString();
                         await Task.Run(() =>
                         {
-                            Thread.Sleep(100);
+                            while ((GetControl("ConditionsConfig_TBox", thumb) as TextBox) == null)
+                            {
+                                Thread.Sleep(100);
+                            }
                             mainWindow.cvmenu.Dispatcher.Invoke(new Action(() =>
                             {
                                 (GetControl("ConditionsConfig_TBox", thumb) as TextBox).Text = "ConditionTemp_" + conditionsNum;
@@ -2892,6 +2902,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         ThumbNums = MainWindowModels.saveThumbs.Count.ToString();
                         await Task.Run(() =>
                         {
+                            while ((GetControl("ConditionsConfig_TBox", thumb) as TextBox) == null)
+                            {
+                                Thread.Sleep(100);
+                            }
                             mainWindow.cvmenu.Dispatcher.Invoke(new Action(() =>
                             {
                                 (GetControl("ConditionsConfig_TBox", thumb) as TextBox).Text = "EventTemp_" + eventsNum;
@@ -2948,6 +2962,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                         await Task.Run(() =>
                         {
+                            while ((GetControl("ConditionsConfig_TBox", thumb) as TextBox) == null)
+                            {
+                                Thread.Sleep(100);
+                            }
                             mainWindow.cvmenu.Dispatcher.Invoke(new Action(() =>
                             {
                                 (GetControl("ConditionsConfig_TBox", thumb) as TextBox).Text = "ObjectiveTemp_" + objectivesNum;
@@ -3004,6 +3022,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                         await Task.Run(() =>
                         {
+                            while ((GetControl("JournalConfig_TBox", thumb) as TextBox) == null)
+                            {
+                                Thread.Sleep(100);
+                            }
                             mainWindow.cvmenu.Dispatcher.Invoke(new Action(() =>
                             {
                                 (GetControl("JournalConfig_TBox", thumb) as TextBox).Text = "JournalTemp_" + journalsNum;
@@ -3059,6 +3081,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                         await Task.Run(() =>
                         {
+                            while ((GetControl("ItemsConfig_TBox", thumb) as TextBox) == null)
+                            {
+                                Thread.Sleep(100);
+                            }
                             mainWindow.cvmenu.Dispatcher.Invoke(new Action(() =>
                             {
                                 (GetControl("ItemsConfig_TBox", thumb) as TextBox).Text = "ItemsTemp_" + itemsNum;
@@ -3103,16 +3129,40 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                 return;
                             }
 
-                            var haveInfoCmd = mainWindowModels.SaveThumbInfo[nowThumb].ContainsKey(getConditions_CBox.SelectedItem.ToString());
+                            var one = string.Empty;
+
+                            var haveInfoCmd = false;
+
+                            if (!mainWindowModels.SaveThumbInfo[nowThumb].ContainsKey(getConditions_CBox.SelectedItem.ToString()))
+                            {
+                                var fg_one = getConditions_CBox.SelectedItem.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
+
+                                if (fg_one.Length == 3)
+                                {
+                                    haveInfoCmd = mainWindowModels.SaveThumbInfo[nowThumb].ContainsKey(fg_one[1] + ": " + fg_one[2]);
+
+                                    one = fg_one[1] + ": " + fg_one[2];
+                                }
+                                else
+                                {
+                                    haveInfoCmd = false;
+                                    one = getConditions_CBox.SelectedItem.ToString();
+                                }
+                            }
+                            else
+                            {
+                                haveInfoCmd = true;
+                                one = getConditions_CBox.SelectedItem.ToString();
+                            }
 
                             if (!haveInfoCmd)
                             {
-                                if (mainWindowModels.SaveThumbInfo[nowThumb].Count > 0)
+                                if (mainWindowModels.SaveThumbInfo[nowThumb].Count > 0&& getInfo.thumbClass != ThumbClass.Player && getInfo.thumbClass != ThumbClass.NPC)
                                 {
                                     mainWindowModels.SaveThumbInfo[nowThumb].Clear();
                                 }
 
-                                mainWindowModels.SaveThumbInfo[nowThumb].Add(getConditions_CBox.SelectedItem.ToString(), new Dictionary<string, Dictionary<string, Dictionary<string, string>>>());
+                                mainWindowModels.SaveThumbInfo[nowThumb].Add(one, new Dictionary<string, Dictionary<string, Dictionary<string, string>>>());
                             }
 
                             var getConditionsCmdEdit_CBox = GetControl("ConditionsCmdEdit_CBox", nowThumb) as ComboBox;
@@ -3122,13 +3172,37 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                 return;
                             }
 
-                            var haveInfoCmdEdit = mainWindowModels.SaveThumbInfo[nowThumb]
-                            [getConditions_CBox.SelectedItem.ToString()].ContainsKey(getConditionsCmdEdit_CBox.SelectedItem.ToString());
+                            var two = string.Empty;
+
+                            var haveInfoCmdEdit = false;
+
+                            if(!mainWindowModels.SaveThumbInfo[nowThumb]
+                            [one].ContainsKey(getConditionsCmdEdit_CBox.SelectedItem.ToString()))
+                            {
+                                var fg_one = getConditionsCmdEdit_CBox.SelectedItem.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
+
+                                if (fg_one.Length == 3)
+                                {
+                                    haveInfoCmdEdit = mainWindowModels.SaveThumbInfo[nowThumb][one].ContainsKey(fg_one[1] + ": " + fg_one[2]);
+
+                                    two = fg_one[1] + ": " + fg_one[2];
+                                }
+                                else
+                                {
+                                    haveInfoCmdEdit = false;
+                                    two = getConditionsCmdEdit_CBox.SelectedItem.ToString();
+                                }
+                            }
+                            else
+                            {
+                                haveInfoCmdEdit = true;
+                                two = getConditionsCmdEdit_CBox.SelectedItem.ToString();
+                            }
 
                             if (!haveInfoCmdEdit)
                             {
                                 mainWindowModels.SaveThumbInfo[nowThumb]
-                                [getConditions_CBox.SelectedItem.ToString()].Add(getConditionsCmdEdit_CBox.SelectedItem.ToString(), new Dictionary<string, Dictionary<string, string>>());
+                                [one].Add(two, new Dictionary<string, Dictionary<string, string>>());
                             }
 
                             var getConditionsCmdparameterEdit_CBox = GetControl("ConditionsCmdparameterEdit_CBox", nowThumb) as ComboBox;
@@ -3138,15 +3212,37 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                 return;
                             }
 
-                            var haveInfoCmdparameterEdit = mainWindowModels.SaveThumbInfo[nowThumb]
-                            [getConditions_CBox.SelectedItem.ToString()]
-                            [getConditionsCmdEdit_CBox.SelectedItem.ToString()].ContainsKey(getConditionsCmdparameterEdit_CBox.SelectedItem.ToString());
+                            var three = string.Empty;
+                            
+                            var haveInfoCmdparameterEdit = false;
+
+                            if(!mainWindowModels.SaveThumbInfo[nowThumb][one][two].ContainsKey(getConditionsCmdparameterEdit_CBox.SelectedItem.ToString()))
+                            {
+                                var fg_one = getConditionsCmdparameterEdit_CBox.SelectedItem.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
+
+                                if (fg_one.Length == 3)
+                                {
+                                    haveInfoCmdparameterEdit = mainWindowModels.SaveThumbInfo[nowThumb][one][two].ContainsKey(fg_one[1] + ": " + fg_one[2]);
+
+                                    three = fg_one[1] + ": " + fg_one[2];
+                                }
+                                else
+                                {
+                                    haveInfoCmdparameterEdit = false;
+                                    three = getConditionsCmdparameterEdit_CBox.SelectedItem.ToString();
+                                }
+                            }
+                            else
+                            {
+                                haveInfoCmdparameterEdit = true;
+                                three = getConditionsCmdparameterEdit_CBox.SelectedItem.ToString();
+                            }
 
                             if (!haveInfoCmdparameterEdit)
                             {
                                 mainWindowModels.SaveThumbInfo[nowThumb]
-                                [getConditions_CBox.SelectedItem.ToString()]
-                                [getConditionsCmdEdit_CBox.SelectedItem.ToString()].Add(getConditionsCmdparameterEdit_CBox.SelectedItem.ToString(),new Dictionary<string, string>());
+                                [one]
+                                [two].Add(three, new Dictionary<string, string>());
                             }
 
                             var getConditionsCmdProjectEdit_CBox = GetControl("ConditionsCmdProjectEdit_CBox", nowThumb) as ComboBox;
@@ -3156,17 +3252,39 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                 return;
                             }
 
-                            var haveInfoCmdProjectEdit = mainWindowModels.SaveThumbInfo[nowThumb]
-                            [getConditions_CBox.SelectedItem.ToString()]
-                            [getConditionsCmdEdit_CBox.SelectedItem.ToString()]
-                            [getConditionsCmdparameterEdit_CBox.SelectedItem.ToString()].ContainsKey(getConditionsCmdProjectEdit_CBox.SelectedItem.ToString());
+                            var four = string.Empty;
+
+                            var haveInfoCmdProjectEdit = false;
+
+                            if(!mainWindowModels.SaveThumbInfo[nowThumb]
+                            [one][two][three].ContainsKey(getConditionsCmdProjectEdit_CBox.SelectedItem.ToString()))
+                            {
+                                var fg_one = getConditionsCmdProjectEdit_CBox.SelectedItem.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
+
+                                if (fg_one.Length == 3)
+                                {
+                                    haveInfoCmdProjectEdit = mainWindowModels.SaveThumbInfo[nowThumb][one][two][three].ContainsKey(fg_one[1] + ": " + fg_one[2]);
+
+                                    four = fg_one[1] + ": " + fg_one[2];
+                                }
+                                else
+                                {
+                                    haveInfoCmdProjectEdit = false;
+                                    four = getConditionsCmdProjectEdit_CBox.SelectedItem.ToString();
+                                }
+                            }
+                            else
+                            {
+                                haveInfoCmdProjectEdit = true;
+                                four = getConditionsCmdProjectEdit_CBox.SelectedItem.ToString();
+                            }
 
                             if (!haveInfoCmdProjectEdit)
                             {
                                 mainWindowModels.SaveThumbInfo[nowThumb]
-                                [getConditions_CBox.SelectedItem.ToString()]
-                                [getConditionsCmdEdit_CBox.SelectedItem.ToString()]
-                                [getConditionsCmdparameterEdit_CBox.SelectedItem.ToString()].Add(getConditionsCmdProjectEdit_CBox.SelectedItem.ToString(),null);
+                                [one]
+                                [two]
+                                [three].Add(four, null);
                             }
 
                             var vlue = string.Empty;
@@ -3197,10 +3315,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                             }
 
                             mainWindowModels.SaveThumbInfo[nowThumb]
-                            [getConditions_CBox.SelectedItem.ToString()]
-                            [getConditionsCmdEdit_CBox.SelectedItem.ToString()]
-                            [getConditionsCmdparameterEdit_CBox.SelectedItem.ToString()]
-                            [getConditionsCmdProjectEdit_CBox.SelectedItem.ToString()] = vlue;
+                            [one]
+                            [two]
+                            [three]
+                            [four] = vlue;
 
                             ShowMessage("保存成功");
                             var treeViewBase = new TreeViewBase();
