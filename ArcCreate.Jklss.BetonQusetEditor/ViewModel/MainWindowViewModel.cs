@@ -28,6 +28,7 @@ using Thumb = System.Windows.Controls.Primitives.Thumb;
 using Window = System.Windows.Window;
 using System.Windows.Media.Effects;
 using static ArcCreate.Jklss.BetonQusetEditor.Base.SaveAndReadYamlBase;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 {
@@ -65,6 +66,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         public static PlayerLoaderBase playerLoader = new PlayerLoaderBase();
 
         public static NpcLoaderBase npcLoader = new NpcLoaderBase();
+
         //static MainWindowModel.saveThumbs存储在MainWindowModel中
 
         #endregion
@@ -443,6 +445,30 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
         #region 按键命令
 
+        public CommandBase _SwitchCmd;
+        public CommandBase SwitchCmd
+        {
+            get
+            {
+                if (_SwitchCmd == null)
+                {
+                    _SwitchCmd = new CommandBase();
+                    _SwitchCmd.DoExecute = new Action<object>(async obj =>//回调函数
+                    {
+                        var getBacks = await SelectFilePath();
+
+                        if (!getBacks.Succese)
+                        {
+                            return;
+                        }
+
+                        MainFilePath = getBacks.Text;
+                    });//obj是窗口CommandParameter参数传递的值，此处传递为bord
+                }
+                return _SwitchCmd;
+            }
+        }
+
         /// <summary>
         /// 输出为YML文件
         /// </summary>
@@ -502,35 +528,6 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         }
 
         /// <summary>
-        /// 选择文件
-        /// </summary>
-        public CommandBase _SelectFilePathCmd;
-        public CommandBase SelectFilePathCmd
-        {
-            get
-            {
-                if (_SelectFilePathCmd == null)
-                {
-                    _SelectFilePathCmd = new CommandBase();
-                    _SelectFilePathCmd.DoExecute = new Action<object>(obj =>//回调函数
-                    {
-                        System.Windows.Forms.OpenFileDialog dialog = new System.Windows.Forms.OpenFileDialog();
-                        dialog.Multiselect = false;//该值确定是否可以选择多个文件
-                        dialog.Title = "请选择Main.yml";
-                        dialog.Filter = "入口文件|main.yml";
-                        if (dialog.ShowDialog() == DialogResult.OK)
-                        {
-                            string file = dialog.FileName;
-                            MainFilePath = file;
-                            IsFindFile = true;
-                        }
-                    });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
-                }
-                return _SelectFilePathCmd;
-            }
-        }
-
-        /// <summary>
         /// 读取YAML文件
         /// </summary>
         public CommandBase _ReadFilePathCmd;
@@ -545,7 +542,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     {
                         if (string.IsNullOrEmpty(MainFilePath))
                         {
-                            ShowMessage("文件地址不能为空");
+                            ShowMessage("请选则正确的文件");
                             return;
                         }
                         if (!FileService.IsHaveFile(MainFilePath))
@@ -1687,9 +1684,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     {
                         if (string.IsNullOrEmpty(MainFilePath))
                         {
-                            ShowMessage("文件地址不能为空");
+                            ShowMessage("请选则正确的文件");
                             return;
                         }
+
                         if (!FileService.IsHaveFile(MainFilePath))
                         {
                             ShowMessage("main入口文件不存在请重新指定Main.yml文件");
@@ -2579,7 +2577,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         }
 
 
-        private static int playerNum = 0;
+        private int playerNum = 0;
         /// <summary>
         /// 创建新的玩家对话
         /// </summary>
@@ -2694,7 +2692,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             }
         }
 
-        private static int npcNum = 0;
+        private int npcNum = 0;
         /// <summary>
         /// 创建新的NPC对话
         /// </summary>
@@ -2801,7 +2799,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             }
         }
 
-        private static int conditionsNum = 0;
+        private int conditionsNum = 0;
         /// <summary>
         /// 创建新的条件
         /// </summary>
@@ -2860,7 +2858,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             }
         }
 
-        private static int eventsNum = 0;
+        private int eventsNum = 0;
         /// <summary>
         /// 创建新的条件
         /// </summary>
@@ -2919,7 +2917,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             }
         }
 
-        private static int objectivesNum = 0;
+        private int objectivesNum = 0;
         /// <summary>
         /// 创建新的条件
         /// </summary>
@@ -2979,7 +2977,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             }
         }
 
-        private static int journalsNum = 0;
+        private int journalsNum = 0;
         /// <summary>
         /// 创建新的条件
         /// </summary>
@@ -3038,7 +3036,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             }
         }
 
-        private static int itemsNum = 0;
+        private int itemsNum = 0;
         /// <summary>
         /// 创建新的条件
         /// </summary>
@@ -3379,6 +3377,40 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             }
         }
 
+        public CommandBase _CloseCommand;
+        public CommandBase CloseCommand
+        {
+            get
+            {
+                if (_CloseCommand == null)
+                {
+                    _CloseCommand = new CommandBase();
+                    _CloseCommand.DoExecute = new Action<object>(obj =>//回调函数
+                    {
+                        Environment.Exit(0);
+                    });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
+                }
+                return _CloseCommand;
+            }
+        }
+
+        public CommandBase _NarrowCommand;
+        public CommandBase NarrowCommand
+        {
+            get
+            {
+                if (_NarrowCommand == null)
+                {
+                    _NarrowCommand = new CommandBase();
+                    _NarrowCommand.DoExecute = new Action<object>(obj =>//回调函数
+                    {
+                        (obj as Window).WindowState = WindowState.Minimized;
+                    });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
+                }
+                return _NarrowCommand;
+            }
+        }
+
         #endregion
 
         #region 其他事件绑定
@@ -3414,7 +3446,6 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         window.Show();
 
                         window.DataContext = new ThumbInfoWindowViewModel();
-
                     });
                 }
                 return _LoadedCommand;
@@ -3463,6 +3494,44 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         #endregion
 
         #region 具体方法
+
+        private static async Task<ReturnModel> SelectFilePath()
+        {
+            var result = new ReturnModel();
+
+            var path = string.Empty;
+
+            System.Windows.Forms.OpenFileDialog dialog = new System.Windows.Forms.OpenFileDialog();
+            dialog.Multiselect = false;//该值确定是否可以选择多个文件
+            dialog.Title = "请选择Main.yml";
+            dialog.Filter = "入口文件|main.yml";
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                string file = dialog.FileName;
+
+                path = file;
+            }
+            else
+            {
+                path = string.Empty;
+            }
+
+            result = await Task.Run(() =>
+            {
+                if (string.IsNullOrEmpty(path))
+                {
+                    result.SetError();
+                    return result;
+                }
+                else
+                {
+                    result.SetSuccese(path);
+                    return result;
+                }
+            });
+
+            return result;
+        }
 
         private async Task<ReturnModel> ComboBoxChangeSeleted(Thumb nowThumbs, ComboBox control)
         {

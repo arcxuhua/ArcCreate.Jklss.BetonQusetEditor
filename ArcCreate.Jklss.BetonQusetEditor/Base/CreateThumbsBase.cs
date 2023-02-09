@@ -17,6 +17,7 @@ using TextBox = System.Windows.Controls.TextBox;
 using ArcCreate.Jklss.Model.ThumbModel;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 using Thumb = System.Windows.Controls.Primitives.Thumb;
+using ArcCreate.Jklss.BetonQusetEditor.ViewModel;
 
 namespace ArcCreate.Jklss.BetonQusetEditor.Base
 {
@@ -117,14 +118,14 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                         }
 
                         Canvas.SetZIndex(thumb, 1);
-                        Canvas.SetTop(thumb, 262 - thumb.Height / 2 - y + py);
-                        Canvas.SetLeft(thumb, 675.5 - thumb.Width / 2 - x + px);
+                        Canvas.SetTop(thumb, MainWindowViewModel.mainWindow.outsaid.ActualHeight/2 - thumb.Height / 2 - y + py);
+                        Canvas.SetLeft(thumb, MainWindowViewModel.mainWindow.outsaid.ActualWidth/2 - thumb.Width / 2 - x + px);
                     }
                     catch
                     {
                         Canvas.SetZIndex(thumb, 1);
-                        Canvas.SetTop(thumb, 262 - thumb.Height / 2 + py);
-                        Canvas.SetLeft(thumb, 675.5 - thumb.Width / 2 + px);
+                        Canvas.SetTop(thumb, MainWindowViewModel.mainWindow.outsaid.ActualHeight/2 - thumb.Height / 2 + py);
+                        Canvas.SetLeft(thumb, MainWindowViewModel.mainWindow.outsaid.ActualWidth/2 - thumb.Width / 2 + px);
                     }
                 }));
 

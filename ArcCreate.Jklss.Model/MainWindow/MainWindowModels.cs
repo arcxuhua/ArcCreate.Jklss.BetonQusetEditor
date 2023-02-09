@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls.Primitives;
 
 namespace ArcCreate.Jklss.Model.MainWindow
@@ -13,9 +14,7 @@ namespace ArcCreate.Jklss.Model.MainWindow
         public bool isHaveSubjcet { get; set; } = false;
         public string Message { get; set; }
         public string MainFilePath { get; set; }
-
         public string ThumbNums { get; set; }
-
         public string ThumbChecks { get; set; }
 
         public Dictionary<Thumb,Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string,string>>>>> SaveThumbInfo { get; set; } = new Dictionary<Thumb, Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>>();

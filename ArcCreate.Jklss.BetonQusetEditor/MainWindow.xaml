@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:ArcCreate.Jklss.BetonQusetEditor"
-        xmlns:binding="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:binding="http://schemas.microsoft.com/xaml/behaviors" xmlns:viewmodel="clr-namespace:ArcCreate.Jklss.BetonQusetEditor.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
         mc:Ignorable="d"
-        Title="ArcCreate McSpace BetonQuest编辑器" Height="787" Width="1400" MaxHeight="787" MaxWidth="1400" MinHeight="787" MinWidth="1400">
+        Title="ArcCreate BetonQuest编辑器" Height="980" Width="1740" MaxHeight="980" MaxWidth="1740" MinHeight="980" MinWidth="1740" WindowStyle="None" AllowsTransparency="True" Foreground="{x:Null}" Background="{x:Null}">
     <Window.Resources>
         <ControlTemplate x:Key="MyRepeatButtonTemplate" TargetType="RepeatButton">
             <Border Background="Transparent"></Border>
@@ -28,8 +28,221 @@
             </binding:InvokeCommandAction>
         </binding:EventTrigger>
     </binding:Interaction.Triggers>
-    <Grid Background="Black">
-        <Border BorderThickness="1" HorizontalAlignment="Left" Height="78" VerticalAlignment="Top" Width="1372" Background="White" CornerRadius="10" Margin="6,10,0,0">
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition />
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="15*"/>
+            <ColumnDefinition Width="105*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="1" Grid.Row="0"  MouseMove="Move_MouseMove" Background="#FF4C4C4C">
+            <Button Command="{Binding CloseCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Grid.Row="0" Margin="0 0 10 1" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryDarkButton}" ToolTip="关闭" Width="25" Height="25" Background="White" BorderBrush="White" Foreground="#DDFF0000">
+                <materialDesign:PackIcon Kind="Close" Height="20" Width="20" />
+            </Button>
+            <Button Command="{Binding NarrowCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Grid.Row="0" Margin="0 0 45 1" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryDarkButton}" ToolTip="隐藏" Width="25" Height="25" Background="White" BorderBrush="White" Foreground="#DDFFA400">
+                <materialDesign:PackIcon Kind="ElectricSwitchClosed" Height="20" Width="20" />
+            </Button>
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="12" FontWeight="Bold" Foreground="White">欢迎使用ArcCreate BQ编辑器</TextBlock>
+        </Grid>
+        <Grid Grid.Column="0" Grid.Row="0" Background="#FF4C4C4C">
+            <Image HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" Margin="10 0 0 0" Source="/ArcCreate.png"></Image>
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="12" FontWeight="Bold" Foreground="#7FFFFFFF">ArcCreate BQ编辑器</TextBlock>
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="0" Background="#FF4C4C4C">
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Foreground="White">卡片栏</TextBlock>
+        </Grid>
+        <Grid Grid.Column="1" Grid.Row="1" Background="#FF4C4C4C">
+            
+            <Button Width="130" Height="30" materialDesign:ButtonAssist.CornerRadius="0" Margin="0 0 0 0"
+                    VerticalAlignment="Center" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignPaperSecondaryButton}"
+                    Command="{Binding ReadFilePathCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}"
+                    Content="读取任务" Foreground="White" Background="{x:Null}" BorderBrush="White" FontSize="12"/>
+            <Button Width="130" Height="30" materialDesign:ButtonAssist.CornerRadius="0" Margin="130 0 0 0"
+                    VerticalAlignment="Center" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignPaperSecondaryButton}" 
+                    Command="{Binding ReadJsonCmd}" CommandParameter="{Binding ., RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                    Content="读取配置" Foreground="White" Background="{x:Null}" BorderBrush="White" FontSize="12"/>
+            <Button Width="130" Height="30" materialDesign:ButtonAssist.CornerRadius="0" Margin="260 0 0 0"
+                    VerticalAlignment="Center" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignPaperSecondaryButton}" 
+                    Content="如何使用？" Foreground="White" Background="{x:Null}" BorderBrush="White" FontSize="12"/>
+
+            <Button Width="130" Height="30" materialDesign:ButtonAssist.CornerRadius="0" Margin="520 0 0 0"
+                    VerticalAlignment="Center" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignPaperSecondaryButton}" 
+                    Content="主题风格" Foreground="White" Background="{x:Null}" BorderBrush="White" FontSize="12"/>
+            <Button Width="130" Height="30" materialDesign:ButtonAssist.CornerRadius="0" Margin="650 0 0 0"
+                    VerticalAlignment="Center" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignPaperSecondaryButton}" 
+                    Content="卡片风格" Foreground="White" Background="{x:Null}" BorderBrush="White" FontSize="12"/>
+
+            <Button Width="130" Height="30" materialDesign:ButtonAssist.CornerRadius="0" Margin="0 0 0 0"
+                    VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignPaperSecondaryButton}" 
+                    Command="{Binding SaveJson}" CommandParameter="{Binding ., RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                    Content="保存配置" Foreground="White" Background="{x:Null}" BorderBrush="White" FontSize="12"/>
+            <Button Width="130" Height="30" materialDesign:ButtonAssist.CornerRadius="0" Margin="0 0 130 0"
+                    VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignPaperSecondaryButton}"
+                    Command="{Binding SaveYaml}" CommandParameter="{Binding ., RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                    Content="输出YAML" Foreground="White" Background="{x:Null}" BorderBrush="White" FontSize="12"/>
+        </Grid>
+        <Grid Grid.Column="0" Grid.Row="2" Background="#7F000000">
+            <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 10 1 0">
+                <Button Command="{Binding CreateNewTalkCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="#FF5307B3" BorderBrush="#FF5307B3">
+                    <Button.Content>
+                        <materialDesign:PackIcon Kind="Book" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" />
+                    </Button.Content>
+                </Button>
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="White" Margin="60 0 0 0">新建对话主体</TextBlock>
+            </Grid>
+
+            <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 120 1 0">
+                <Button IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateNpcTalkCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" BorderBrush="#FF5307B3" Background="#FF5307B3">
+                    <Button.Content>
+                        <materialDesign:PackIcon Kind="BookEdit" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" />
+                    </Button.Content>
+                </Button>
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="White" Margin="60 0 0 0">新建NPC对话</TextBlock>
+            </Grid>
+
+            <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 230 1 0">
+                <Button IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreatePlayerTalkCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="#FF5307B3" BorderBrush="#FF5307B3">
+                    <Button.Content>
+                        <materialDesign:PackIcon Kind="BookEducation" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" />
+                    </Button.Content>
+                </Button>
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="White" Margin="60 0 0 0">新建玩家对话</TextBlock>
+            </Grid>
+
+            <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 340 1 0">
+                <Button IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateConditionsCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="Black" BorderBrush="Black">
+                    <Button.Content>
+                        <materialDesign:PackIcon Kind="BookmarkMultiple" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" />
+                    </Button.Content>
+                </Button>
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="White" Margin="60 0 0 0">新建条件</TextBlock>
+            </Grid>
+
+            <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 450 1 0">
+                <Button IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateEventsCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="Black" BorderBrush="Black">
+                    <Button.Content>
+                        <materialDesign:PackIcon Kind="BookmarkPlus" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" />
+                    </Button.Content>
+                </Button>
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="White" Margin="60 0 0 0">新建事件</TextBlock>
+            </Grid>
+
+            <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 560 1 0">
+                <Button IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateObjectivesCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="Black" BorderBrush="Black">
+                    <Button.Content>
+                        <materialDesign:PackIcon Kind="BookmarkCheck" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" />
+                    </Button.Content>
+                </Button>
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="White" Margin="60 0 0 0">新建目标</TextBlock>
+            </Grid>
+
+            <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 670 1 0">
+                <Button IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateJournalCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="White" BorderBrush="White">
+                    <Button.Content>
+                        <materialDesign:PackIcon Kind="BookmarkBoxMultipleOutline" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" Foreground="#DD000000" />
+                    </Button.Content>
+                </Button>
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="Black" Margin="60 0 0 0">新建任务笔记</TextBlock>
+            </Grid>
+
+            <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 780 1 0">
+                <Button IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateItemsCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="White" BorderBrush="White" Margin="0,0,0,0">
+                    <Button.Content>
+                        <materialDesign:PackIcon Kind="Boombox" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" Foreground="#DD000000" />
+                    </Button.Content>
+                </Button>
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="Black" Margin="60 0 0 0">新建物品</TextBlock>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="3" Grid.Column="0" Background="#FF4C4C4C">
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="12" FontWeight="Bold" Foreground="#7FFFFFFF">© 2023 ArcCreate Rights Reserved.</TextBlock>
+        </Grid>
+
+        <Grid Grid.Row="3" Grid.Column="1" Background="#FF4C4C4C">
+            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="White">缩放比例(%)：</TextBlock>
+            <TextBlock x:Name="ScalerTBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Margin="100 0 0 0" Foreground="White"></TextBlock>
+            <TextBlock HorizontalAlignment="Center" Margin="0,0,0,0" TextWrapping="Wrap" Text="删除任意对话请直接左键选中对话然后按DELETE" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Foreground="White" FontStyle="Italic" TextDecorations="Underline"/>
+        </Grid>
+
+        <Grid Grid.Column="1" Grid.Row="2" Background="#33000000">
+
+            <materialDesign:DrawerHost x:Name="DrawerHost" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="2" BorderBrush="{DynamicResource MaterialDesignDivider}"
+  BottomDrawerCornerRadius="20 20 0 0" BottomDrawerBackground="{DynamicResource SecondaryHueLightBrush}" Width="1527" Height="900">
+                <materialDesign:DrawerHost.Style>
+                    <Style TargetType="materialDesign:DrawerHost" BasedOn="{StaticResource {x:Type materialDesign:DrawerHost}}">
+                        <Style.Triggers>
+                            
+                        </Style.Triggers>
+                    </Style>
+                </materialDesign:DrawerHost.Style>
+                <materialDesign:DrawerHost.TopDrawerContent>
+                    <Grid Height="40" Margin="0 0 0 0" Background="#7F000000">
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="18" Foreground="White" Margin="0 0 560 0">搜索</TextBlock>
+                        <TextBox VerticalAlignment="Center" HorizontalAlignment="Center" Height="35" Width="500" Foreground="White"></TextBox>
+                    </Grid>
+                </materialDesign:DrawerHost.TopDrawerContent>
+                <materialDesign:DrawerHost.RightDrawerContent>
+                    <Grid Margin="0 0 0 0" Width="400" Background="#7F000000">
+                        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="18" Foreground="White" Margin="0 10 0 0">标签页</TextBlock>
+                        <Border Visibility="Visible" x:Name="ctrl" Background="White" HorizontalAlignment="Center" CornerRadius="10" VerticalAlignment="Top" Width="360" Height="200" Margin="0 40 0 0" BorderBrush="Black">
+                            <Grid>
+                                
+                                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Black" FontWeight="Bold" FontSize="14" Margin="10 10 0 0">存储地址:</TextBlock>
+                                <TextBox Text="{Binding MainFilePath}" Height="25" Width="260" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Black" FontWeight="Bold" FontSize="14" Margin="70 5 0 0"></TextBox>
+                                <Image Margin="10 0 0 5" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="350" Height="120" Source="/img/title/normal.png"></Image>
+                                <Button HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 40 30 0" ToolTipService.Placement="Right" ToolTip="选择Main文件地址" Command="{Binding SwitchCmd}" CommandParameter="{Binding ElementName=ctrl}">
+                                    <materialDesign:PackIcon Kind="FileEdit" Width="20" Height="20"/>
+                                </Button>
+                            </Grid>
+                        </Border>
+                        <Border Visibility="Visible" Background="White" HorizontalAlignment="Center" CornerRadius="10" VerticalAlignment="Top" Width="360" Height="630" Margin="0 250 0 0" BorderBrush="Black">
+                            <Grid>
+                                <TextBlock Foreground="Black" FontSize="19" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center">广告位招租，加Q3140857979</TextBlock>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </materialDesign:DrawerHost.RightDrawerContent>
+
+                <Grid>
+                    <Grid>
+                        <Border x:Name="outsaid" ClipToBounds="True" BorderThickness="1" Background="White" Margin="0,0,0,0" PreviewMouseWheel="outside_PreviewMouseWheel" PreviewMouseDown="Scrollviewer_MouseDown" PreviewMouseUp="Scrollviewer_MouseUp">
+                            <Grid>
+                                <Canvas x:Name="cvmenu" HorizontalAlignment="Left" Height="509800" VerticalAlignment="Top" Width="1277400" Background="#33000000">
+                                    <Canvas.RenderTransform>
+                                        <TransformGroup/>
+                                    </Canvas.RenderTransform>
+                                </Canvas>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Button VerticalAlignment="Top" HorizontalAlignment="Center" Height="40" Width="100" Style="{StaticResource MaterialDesignPaperSecondaryButton}" Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" CommandParameter="{x:Static Dock.Top}" Grid.Row="0" Grid.Column="1" Margin="4" Content="{materialDesign:PackIcon Kind=ArrowDown}" Foreground="Black" BorderBrush="{x:Null}" Background="{x:Null}" />
+                        <Button VerticalAlignment="Center" HorizontalAlignment="Right" Height="100" Width="45" Style="{StaticResource MaterialDesignPaperSecondaryButton}" Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" CommandParameter="{x:Static Dock.Right}" Grid.Row="1" Grid.Column="2" Content="{materialDesign:PackIcon Kind=ArrowLeft}" BorderBrush="{x:Null}" Background="{x:Null}" />
+                    </Grid>
+                </Grid>
+            </materialDesign:DrawerHost>
+            <Border x:Name="MessageBar" BorderThickness="1" HorizontalAlignment="Center" Height="43" VerticalAlignment="Bottom" Width="848" Background="#FF4C4C4C" Margin="0 0 0 10" CornerRadius="10">
+                <Grid>
+                    <TextBlock Text="{Binding Message}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" Height="25" Foreground="White" FontWeight="Bold" TextDecorations="Underline"/>
+                </Grid>
+            </Border>
+        </Grid>
+        <!--<Border BorderThickness="1" HorizontalAlignment="Left" Height="78" VerticalAlignment="Top" Width="1372" Background="White" CornerRadius="10" Margin="168,862,0,0" Grid.Column="1" Grid.Row="1">
             <Grid>
                 <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="文件地址：" VerticalAlignment="Top" FontSize="16" FontWeight="Bold"/>
                 <TextBox HorizontalAlignment="Left" Text="{Binding MainFilePath}" Height="33" Margin="84,5,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="980" FontWeight="Bold" Foreground="#B2000000" FontSize="14"/>
@@ -42,7 +255,7 @@
                 <Button Content="读取配置" Command="{Binding ReadJsonCmd}" CommandParameter="{Binding ., RelativeSource={RelativeSource AncestorType={x:Type Window}}}" HorizontalAlignment="Left" Margin="1170,4,0,0" VerticalAlignment="Top" Width="90" BorderBrush="#FF3AB78A" Background="#FF3AB78A" IsEnabled="{Binding IsFindFile}" Cursor="Hand"/>
             </Grid>
         </Border>
-        <Border BorderThickness="1" HorizontalAlignment="Left" Height="653" VerticalAlignment="Top" Width="1372" Background="#FF673AB7" CornerRadius="10" Margin="6,93,0,0">
+        <Border BorderThickness="1" HorizontalAlignment="Left" Height="652" VerticalAlignment="Center" Width="1372" Background="#FF673AB7" CornerRadius="10" Margin="76,0,0,0" Grid.Row="1" Grid.Column="1">
             <Grid>
                 <Border BorderThickness="1" HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="1350" Background="White" CornerRadius="10" Margin="10,5,0,0">
                     <Grid>
@@ -64,7 +277,7 @@
                 </Border>
                 <Border x:Name="outsaid" ClipToBounds="True" BorderThickness="1" HorizontalAlignment="Center" Height="581" VerticalAlignment="Top" Width="1350" Background="White" CornerRadius="10" Margin="0,60,0,0" PreviewMouseWheel="outside_PreviewMouseWheel" PreviewMouseDown="Scrollviewer_MouseDown" PreviewMouseUp="Scrollviewer_MouseUp">
                     <Grid>
-                        
+
                         <Canvas x:Name="cvmenu" HorizontalAlignment="Left" Height="509800" VerticalAlignment="Top" Width="1277400" Background="#FFB0AAAA">
 
                             <Canvas.RenderTransform>
@@ -78,10 +291,10 @@
                 </Border>
             </Grid>
         </Border>
-        <Border x:Name="MessageBar" BorderThickness="1" HorizontalAlignment="Left" Height="43" Margin="278,685,0,0" VerticalAlignment="Top" Width="848" Background="#FF673AB7" CornerRadius="10">
+        <Border x:Name="MessageBar" BorderThickness="1" HorizontalAlignment="Left" Height="43" Margin="278,649,0,0" VerticalAlignment="Top" Width="848" Background="#FF673AB7" CornerRadius="10" Grid.ColumnSpan="2" Grid.Row="1">
             <Grid>
                 <TextBlock Text="{Binding Message}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" Height="25" Foreground="White" FontWeight="Bold" TextDecorations="Underline"/>
             </Grid>
-        </Border>
+        </Border>-->
     </Grid>
 </Window>

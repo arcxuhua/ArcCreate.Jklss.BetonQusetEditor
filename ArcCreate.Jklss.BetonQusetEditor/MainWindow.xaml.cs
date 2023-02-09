@@ -152,5 +152,13 @@ namespace ArcCreate.Jklss.BetonQusetEditor
                 
             }
         }
+
+        private void Move_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                this.DragMove();
+            }
+        }
     }
 }
