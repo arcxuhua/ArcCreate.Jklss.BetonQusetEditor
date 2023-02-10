@@ -108,7 +108,7 @@
                                     <TextBox x:Name="ConditionsConfig_TBox" Width="100" Height="30" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False"/>
 
                                     <TextBlock Grid.Row="0" Text="编辑类型："  Margin="210 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                    <ComboBox x:Name="Conditions_CBox"  Width="110" Height="30" Grid.Row="0" materialDesign:HintAssist.Hint="请选择" HorizontalAlignment="Left" Margin="270,0,0,0">
+                                    <ComboBox x:Name="Conditions_CBox"  Width="110" ToolTip="除了文案外其他选项不建议您以手动输入的方式添加！" Height="30" Grid.Row="0" materialDesign:HintAssist.Hint="请选择" HorizontalAlignment="Left" Margin="270,0,0,0">
                                         <ComboBoxItem Content="文案: text" />
                                         <ComboBoxItem Content="触发条件: conditions" />
                                         <ComboBoxItem Content="触发事件: events" />
@@ -197,7 +197,7 @@
                                     <TextBox x:Name="ConditionsConfig_TBox" Width="100" Height="30" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False"/>
 
                                     <TextBlock Grid.Row="0" Text="编辑类型："  Margin="210 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                    <ComboBox x:Name="Conditions_CBox"  Width="110" Height="30" Grid.Row="0" materialDesign:HintAssist.Hint="请选择" HorizontalAlignment="Left" Margin="270,0,0,0">
+                                    <ComboBox x:Name="Conditions_CBox" ToolTip="除了文案外其他选项不建议您以手动输入的方式添加！" Width="110" Height="30" Grid.Row="0" materialDesign:HintAssist.Hint="请选择" HorizontalAlignment="Left" Margin="270,0,0,0">
                                         <ComboBoxItem Content="文案: text" />
                                         <ComboBoxItem Content="触发条件: conditions" />
                                         <ComboBoxItem Content="触发事件: events" />
@@ -536,7 +536,7 @@
                                         <ComboBoxItem Content="方块: block" />
                                         <ComboBoxItem Content="击杀生物: mobkill" />
                                         <ComboBoxItem Content="动作: action" />
-                                        <ComboBoxItem Content="死亡: location" />
+                                        <ComboBoxItem Content="死亡: die" />
                                         <ComboBoxItem Content="合成: craft" />
                                         <ComboBoxItem Content="熔炼: smelt" />
                                         <ComboBoxItem Content="驯服: tame" />

@@ -18,5 +18,9 @@ namespace ArcCreate.Jklss.Model.ThumbModel.CommandModel
         public override List<(char i, int j)> TextSplitWords { get; set; }
         public override List<ChildClasses> ChildClasses { get; set; }
         public override Dictionary<string, Dictionary<int, ThumbClass>> NeedTpye { get; set; }
+        public override string MainToolTip { get; set; }
+        public override List<string> CmdToolTip { get; set; }
+        public override Dictionary<int, Dictionary<int, string>> ParameterToolTip { get; set; }
+        public override Dictionary<int, Dictionary<int, Dictionary<int, string>>> TermToolTip { get; set; }
     }
 }

@@ -31,5 +31,9 @@ namespace ArcCreate.Jklss.Model.ThumbModel.TextAbstractModel
 
         public abstract List<ChildClasses> ChildClasses { get; set; }
         public abstract Dictionary<string, Dictionary<int, ThumbClass>> NeedTpye { get; set; }
+        public abstract string MainToolTip { get; set; }
+        public abstract List<string> CmdToolTip { get; set; }
+        public abstract Dictionary<int, Dictionary<int, string>> ParameterToolTip { get; set; }
+        public abstract Dictionary<int, Dictionary<int, Dictionary<int, string>>> TermToolTip { get; set; }
     }
 }

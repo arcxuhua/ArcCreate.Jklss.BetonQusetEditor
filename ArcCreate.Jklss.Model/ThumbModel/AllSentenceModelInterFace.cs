@@ -19,6 +19,26 @@ namespace ArcCreate.Jklss.Model.ThumbModel
         string MainClass { get; set; }
 
         /// <summary>
+        /// 主项帮助提醒
+        /// </summary>
+        string MainToolTip { get; set; }
+
+        /// <summary>
+        /// 命令帮助提醒
+        /// </summary>
+        List<string> CmdToolTip { get; set; }
+
+        /// <summary>
+        /// 参数帮助提醒
+        /// </summary>
+        Dictionary<int,Dictionary<int,string>> ParameterToolTip { get; set; }
+
+        /// <summary>
+        /// 项目帮助提醒
+        /// </summary>
+        Dictionary<int, Dictionary<int, Dictionary<int, string>>> TermToolTip { get; set; }
+
+        /// <summary>
         /// 第二参数分割符
         /// </summary>
         char TextSplitChar { get; set; }

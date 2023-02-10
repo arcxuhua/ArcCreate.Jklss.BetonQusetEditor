@@ -64,6 +64,26 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                         isContisionCmd = false,//是否为条件性参数
 
+                        MainToolTip="这个条件将检测玩家背包中是否拥有指定物品. \n你可以指定一列物品,如果你只指定了名称，插件将假设你指定的是一个物品.",
+
+                        CmdToolTip= new List<string>
+                        {
+
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"项为[物品名]" }
+                            } }
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+
+                        },
+
                         TextSplitWords = new List<(char i, int j)>()
                         {
 
@@ -89,6 +109,26 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                         isContisionCmd = false,//是否为条件性参数
 
+                        MainToolTip="这个条件将检测玩家是否手持指定物品。[无法检测物品的数量]",
+
+                        CmdToolTip= new List<string>
+                        {
+
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"项为[物品名]" }
+                            } }
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+
+                        },
+
                         TextSplitWords = new List<(char i, int j)>()
                         {
 
@@ -113,6 +153,26 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                         TextNum=-1,//第二参数步长（-1为不限制步长）
 
                         isContisionCmd = true,//是否为条件性参数
+
+                        MainToolTip="或门会检测子集中的条件是否满足，只要满足一条条件，则或门将会激活[支持 ！取反标识]",
+
+                        CmdToolTip= new List<string>
+                        {
+
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"项为[条件名][不建议您手动添加]" }
+                            } }
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+
+                        },
 
                         TextSplitWords = new List<(char i, int j)>()
                         {
@@ -141,6 +201,26 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                         isContisionCmd = true,//是否为条件性参数
 
+                        MainToolTip="与门会检测子集中的条件是否满足，全部条件满足后，则与门将会激活[支持 ！取反标识]",
+
+                        CmdToolTip= new List<string>
+                        {
+
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"项为[条件名][不建议您手动添加]" }
+                            } }
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+
+                        },
+
                         TextSplitWords = new List<(char i, int j)>()
                         {
 
@@ -168,6 +248,38 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                         isContisionCmd = false,//是否为条件性参数
 
+                        MainToolTip="当玩家在指定地点（X,Y,Z,世界名,模糊度）上那么该条件则满足",
+
+                        CmdToolTip= new List<string>
+                        {
+
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"指定地点（X,Y,Z,世界名,模糊度）" }
+                            } }
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+                            {0,new Dictionary<int, Dictionary<int, string>>
+                            {
+                                {0,new Dictionary<int, string>
+                                {
+                                    {0,"X轴坐标" },
+                                    {1,"Y轴坐标" },
+                                    {2,"Z轴坐标" },
+                                    {3,"世界名称" },
+                                    {4,"模糊度[范围，在XYZ坐标以模糊度为半径的圆内]" },
+                                } 
+                                }
+                            } 
+                            }
+                        },
+
                         TextSplitWords = new List<(char i, int j)>()
                         {
 
@@ -193,6 +305,34 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                         isContisionCmd = false,//是否为条件性参数
 
+                        MainToolTip="玩家最低要有多少生命值才能满足条件",
+
+                        CmdToolTip= new List<string>
+                        {
+
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"生命值，0意味着玩家死亡" }
+                            } }
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+                            {0,new Dictionary<int, Dictionary<int, string>>
+                            {
+                                {0,new Dictionary<int, string>
+                                {
+                                    {0,"生命值[可带小数点]" },
+                                }
+                                }
+                            }
+                            }
+                        },
+
                         TextSplitWords = new List<(char i, int j)>()
                         {
 
@@ -212,6 +352,34 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                         TextNum=1,//第二参数步长（-1为不限制步长）
 
                         isContisionCmd = false,//是否为条件性参数
+
+                        MainToolTip="这个条件将在玩家拥有指定等级的时候满足 (默认的MC经验)。\n注意这里是完整的等级而非经验点。请填写整数！",
+
+                        CmdToolTip= new List<string>
+                        {
+
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"等级(默认的MC经验)" }
+                            } }
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+                            {0,new Dictionary<int, Dictionary<int, string>>
+                            {
+                                {0,new Dictionary<int, string>
+                                {
+                                    {0,"等级[请填写整数]" },
+                                }
+                                }
+                            }
+                            }
+                        },
 
                         TextSplitWords = new List<(char i, int j)>()
                         {
@@ -233,6 +401,34 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                         isContisionCmd = false,//是否为条件性参数
 
+                        MainToolTip="玩家为了达成条件必须要满足指定权限",
+
+                        CmdToolTip= new List<string>
+                        {
+
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"权限节点[例如 essentials.tpa]" }
+                            } }
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+                            {0,new Dictionary<int, Dictionary<int, string>>
+                            {
+                                {0,new Dictionary<int, string>
+                                {
+                                    {0,"权限节点" },
+                                }
+                                }
+                            }
+                            }
+                        },
+
                         TextSplitWords = new List<(char i, int j)>()
                         {
 
@@ -252,6 +448,43 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                         TextNum=1,//第二参数步长（-1为不限制步长）
 
                         isContisionCmd = false,//是否为条件性参数
+
+                        MainToolTip="需要玩家至少拥有足够的指定类的点数。",
+
+                        CmdToolTip= new List<string>
+                        {
+
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"类别名称 (string型字符串)" }
+                            } },
+                            {1,new Dictionary<int, string>
+                            {
+                                {0,"点数 (int型整数)" }
+                            } }
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+                            {0,new Dictionary<int, Dictionary<int, string>>
+                            {
+                                {0,new Dictionary<int, string>
+                                {
+                                    {0,"类别名称" },
+                                }
+                                },
+                                {1,new Dictionary<int, string>
+                                {
+                                    {0,"点数" },
+                                }
+                                }
+                            }
+                            },
+                        },
 
                         TextSplitWords = new List<(char i, int j)>()
                         {
@@ -273,6 +506,34 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                         isContisionCmd = false,//是否为条件性参数
 
+                        MainToolTip="要求玩家拥有指定标签才能达成条件。这是在创建对话时最有利的工具之一。",
+
+                        CmdToolTip= new List<string>
+                        {
+
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"标签内容[字符串]" }
+                            } },
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+                            {0,new Dictionary<int, Dictionary<int, string>>
+                            {
+                                {0,new Dictionary<int, string>
+                                {
+                                    {0,"标签内容" },
+                                }
+                                }
+                            }
+                            },
+                        },
+
                         TextSplitWords = new List<(char i, int j)>()
                         {
 
@@ -292,6 +553,34 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                         TextNum=1,//第二参数步长（-1为不限制步长）
 
                         isContisionCmd = false,//是否为条件性参数
+
+                        MainToolTip="这个条件要求玩家穿戴指定物品。",
+
+                        CmdToolTip= new List<string>
+                        {
+
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"物品名称[字符串]" }
+                            } },
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+                            {0,new Dictionary<int, Dictionary<int, string>>
+                            {
+                                {0,new Dictionary<int, string>
+                                {
+                                    {0,"物品名称" },
+                                }
+                                }
+                            }
+                            },
+                        },
 
                         TextSplitWords = new List<(char i, int j)>()
                         {
@@ -313,6 +602,34 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                         isContisionCmd = false,//是否为条件性参数
 
+                        MainToolTip="为了满足这种条件，玩家必须具有指定的药水效果",
+
+                        CmdToolTip= new List<string>
+                        {
+
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"药水效果[字符串]" }
+                            } },
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+                            {0,new Dictionary<int, Dictionary<int, string>>
+                            {
+                                {0,new Dictionary<int, string>
+                                {
+                                    {0,"药水效果" },
+                                }
+                                }
+                            }
+                            },
+                        },
+
                         TextSplitWords = new List<(char i, int j)>()
                         {
 
@@ -333,6 +650,82 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                         isContisionCmd = true,//是否为条件性参数
 
+                        MainToolTip="这里必须指定一个特定的时间 (MC时间)，\n当玩家所在的世界的时间为指定时间范围内时，条件达成",
+
+                        CmdToolTip= new List<string>
+                        {
+
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"24小时制,需要指定两个值，用短划线分隔[例:2-23]" }
+                            } },
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+                            {0,new Dictionary<int, Dictionary<int, string>>
+                            {
+                                {0,new Dictionary<int, string>
+                                {
+                                    {0,"小时-小时[区间]" },
+                                }
+                                }
+                            }
+                            },
+                        },
+
+                        TextSplitWords = new List<(char i, int j)>()
+                        {
+
+                        },//多参数下是否有其他分割符
+                         
+                        ChildClasses = new List<ChildClasses>()
+                        {
+
+                        },//子命令
+                    },
+                    new ContisionsCmdModel()
+                    {
+                        MainClass="weather",//主命令
+
+                        TextSplitChar='X',//第二参数分割符号
+
+                        TextNum=1,//第二参数步长（-1为不限制步长）
+
+                        isContisionCmd = true,//是否为条件性参数
+
+                        MainToolTip="为了满足条件，天气必须为指定天气",
+
+                        CmdToolTip= new List<string>
+                        {
+
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"有三个可选项 sun（晴天）, rain（雨天） 和 storm （暴风雨天）" }
+                            } },
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+                            {0,new Dictionary<int, Dictionary<int, string>>
+                            {
+                                {0,new Dictionary<int, string>
+                                {
+                                    {0,"请输入 sun（晴天）、 rain（雨天）、storm （暴风雨天）" },
+                                }
+                                }
+                            }
+                            },
+                        },
+
                         TextSplitWords = new List<(char i, int j)>()
                         {
 
@@ -347,11 +740,39 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                     {
                         MainClass="height",//主命令
 
-                        TextSplitChar=';',//第二参数分割符号
+                        TextSplitChar='X',//第二参数分割符号
 
                         TextNum=1,//第二参数步长（-1为不限制步长）
 
                         isContisionCmd = false,//是否为条件性参数
+
+                        MainToolTip="此条件要求玩家低于特定的Y轴高度。",
+
+                        CmdToolTip= new List<string>
+                        {
+
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"表示Y轴的数字" }
+                            } },
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+                            {0,new Dictionary<int, Dictionary<int, string>>
+                            {
+                                {0,new Dictionary<int, string>
+                                {
+                                    {0,"Y轴" },
+                                }
+                                }
+                            }
+                            },
+                        },
 
                         TextSplitWords = new List<(char i, int j)>()
                         {
@@ -373,6 +794,34 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                         isContisionCmd = false,//是否为条件性参数
 
+                        MainToolTip="这个需要玩家穿戴盔甲并拥有特定的护甲值（护甲图标）",
+
+                        CmdToolTip= new List<string>
+                        {
+
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"护甲值[整数]" }
+                            } },
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+                            {0,new Dictionary<int, Dictionary<int, string>>
+                            {
+                                {0,new Dictionary<int, string>
+                                {
+                                    {0,"护甲值" },
+                                }
+                                }
+                            }
+                            },
+                        },
+
                         TextSplitWords = new List<(char i, int j)>()
                         {
 
@@ -392,6 +841,35 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                         TextNum=2,//第二参数步长（-1为不限制步长）
 
                         isContisionCmd = false,//是否为条件性参数
+
+                        MainToolTip="这个条件用于取随机值。",
+
+                        CmdToolTip= new List<string>
+                        {
+
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"第一项除以第二项的几率" }
+                            } },
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+                            {0,new Dictionary<int, Dictionary<int, string>>
+                            {
+                                {0,new Dictionary<int, string>
+                                {
+                                    {0,"整数[除数]" },
+                                    {1,"整数[被除数]" },
+                                }
+                                }
+                            }
+                            },
+                        },
 
                         TextSplitWords = new List<(char i, int j)>()
                         {
@@ -413,6 +891,23 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                         isContisionCmd = false,//是否为条件性参数
 
+                        MainToolTip="这个条件将检测玩家是否潜行。[此命令无参数仅选择是否开启]",
+
+                        CmdToolTip= new List<string>
+                        {
+
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+
+                        },
+
                         TextSplitWords = new List<(char i, int j)>()
                         {
 
@@ -432,6 +927,34 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                         TextNum=1,//第二参数步长（-1为不限制步长）
 
                         isContisionCmd = false,//是否为条件性参数
+
+                        MainToolTip="这个条件要求玩家的日记中记载有指定的条目",
+
+                        CmdToolTip= new List<string>
+                        {
+
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"任务日记的名称[不建议您手动输入]" }
+                            } },
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+                            {0,new Dictionary<int, Dictionary<int, string>>
+                            {
+                                {0,new Dictionary<int, string>
+                                {
+                                    {0,"任务日记的名称" },
+                                }
+                                }
+                            }
+                            },
+                        },
 
                         TextSplitWords = new List<(char i, int j)>()
                         {
@@ -460,9 +983,43 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                         isContisionCmd = false,//是否为条件性参数
 
-                        TextSplitWords = new List<(char i, int j)>()
+                        MainToolTip="这个条件要求在指定位置的方块是指定方块。",
+
+                        CmdToolTip= new List<string>
                         {
 
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"坐标[X,Y,Z,世界]" },
+                                {1,"方块类型[字符]" }
+                            } },
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+                            {0,new Dictionary<int, Dictionary<int, string>>
+                            {
+                                {0,new Dictionary<int, string>
+                                {
+                                    {0,"坐标" },
+                                }
+                                },
+                                {1,new Dictionary<int, string>
+                                {
+                                    {0,"方块类型" },
+                                }
+                                }
+                            }
+                            },
+                        },
+
+                        TextSplitWords = new List<(char i, int j)>()
+                        {
+                            ('X',1)
                         },//多参数下是否有其他分割符
                          
                         ChildClasses = new List<ChildClasses>()
@@ -479,6 +1036,34 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                         TextNum=1,//第二参数步长（-1为不限制步长）
 
                         isContisionCmd = false,//是否为条件性参数
+
+                        MainToolTip="需要玩家剩余多少个空背包格",
+
+                        CmdToolTip= new List<string>
+                        {
+
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"空背包格数量[整数]" },
+                            } },
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+                            {0,new Dictionary<int, Dictionary<int, string>>
+                            {
+                                {0,new Dictionary<int, string>
+                                {
+                                    {0,"空背包格数量" },
+                                }
+                                },
+                            }
+                            },
+                        },
 
                         TextSplitWords = new List<(char i, int j)>()
                         {
@@ -499,6 +1084,68 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                         TextNum=1,//第二参数步长（-1为不限制步长）
 
                         isContisionCmd = true,//是否为条件性参数
+
+                        MainToolTip="组队非常简单。\n" +
+                        "简单到你难以理解其他的冗杂的任务系统。\n" +
+                        "基本上，只有你需要使用队伍，系统才会创建队伍。\n" +
+                        "队伍直接通过条件/事件定义（队伍事件和队伍条件，可以在下面的列表中看到）。\n" +
+                        "在这样的指令字符串中，第一个参数是数字范围。\n" +
+                        "它定义了将要查找队员的半径。第二个是条件列表。\n" +
+                        "只有符合条件的玩家才会被认为是队伍的成员。\n" +
+                        "对于玩家来说，这是最直观的，因为他们不需要做任何事情，\n" +
+                        "没有任何命令，没有GUI，只需要“正在做一样的任务”或者“拥有一样的物品”\n" +
+                        " 你的选择意味着你的队伍。",
+
+                        CmdToolTip= new List<string>
+                        {
+                            "不做解释",
+                            "队伍中每个玩家必须满足的条件的列表[选填]",
+                            "只要队伍中有一个玩家满足指定条件[选填]",
+                            "要求队伍中至少要有多少个指定玩家[选填]",
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"范围半径[整数]" },
+                                {1,"激活此语句必须的条件列表（感觉跟every参数相同）" },
+                            } },
+                            {1,new Dictionary<int, string>
+                            {
+                                {0,"队伍中每个玩家必须满足以下所有条件" },
+                            } },
+                            {2,new Dictionary<int, string>
+                            {
+                                {0,"队伍中只要有一名玩家满足以下所有条件" },
+                            } },
+                            {3,new Dictionary<int, string>
+                            {
+                                {0,"至少要有多少个玩家" },
+                            } },
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+                            {0,new Dictionary<int, Dictionary<int, string>>
+                            {
+                                {0,new Dictionary<int, string>
+                                {
+                                    {0,"范围半径" },
+                                }
+                                },
+                            }
+                            },
+                            {3,new Dictionary<int, Dictionary<int, string>>
+                            {
+                                {0,new Dictionary<int, string>
+                                {
+                                    {0,"玩家数量" },
+                                }
+                                },
+                            }
+                            },
+                        },
 
                         TextSplitWords = new List<(char i, int j)>()
                         {
@@ -558,9 +1205,56 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                         TextSplitChar='X',//第二参数分割符号
 
-                        TextNum=1,//第二参数步长（-1为不限制步长）
+                        TextNum=-1,//第二参数步长（-1为不限制步长）
 
                         isContisionCmd = false,//是否为条件性参数
+
+                        MainToolTip="指定区域中有指定数量（或更多）的指定怪物时满足条件",
+
+                        CmdToolTip= new List<string>
+                        {
+                            "不做解释",
+                            "指定怪物名称[mm怪物插件名称适用][选填]"
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"怪物及数量[例: ZOMBIE:2]" },
+                                {1,"坐标[X,Y,Z,世界名,模糊度]" },
+                            } },
+                            {1,new Dictionary<int, string>
+                            {
+                                {0,"怪物名称[例: Deamon]" },
+                            } },
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+                            {0,new Dictionary<int, Dictionary<int, string>>
+                            {
+                                {1,new Dictionary<int, string>
+                                {
+                                    {0,"X轴" },
+                                    {1,"Y轴" },
+                                    {2,"Z轴" },
+                                    {3,"世界名" },
+                                    {4,"模糊度[范围半径]" },
+                                }
+                                },
+                            }
+                            },
+                            {1,new Dictionary<int, Dictionary<int, string>>
+                            {
+                                {0,new Dictionary<int, string>
+                                {
+                                    {0,"怪物名称" },
+                                }
+                                },
+                            }
+                            },
+                        },
 
                         TextSplitWords = new List<(char i, int j)>()
                         {
@@ -591,6 +1285,34 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                         isContisionCmd = false,//是否为条件性参数
 
+                        MainToolTip="当玩家拥有指定目标时达成条件",
+
+                        CmdToolTip= new List<string>
+                        {
+
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"目标名称[不建议您手动输入]" },
+                            } },
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+                            {0,new Dictionary<int, Dictionary<int, string>>
+                            {
+                                {0,new Dictionary<int, string>
+                                {
+                                    {0,"目标名称" },
+                                }
+                                },
+                            }
+                            },
+                        },
+
                         TextSplitWords = new List<(char i, int j)>()
                         {
 
@@ -617,6 +1339,27 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                         isContisionCmd = false,//是否为条件性参数
 
+                        MainToolTip="和与门条件有相似之处，这个条件也要求玩家满足列出的全部条件。\n" +
+                        "不同的是，与门条件指定的是条件名称，而这儿直接指定指令字符串。",
+
+                        CmdToolTip= new List<string>
+                        {
+
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"条件列表[如果您不懂的话建议您使用 与门:and 条件]" },
+                            } },
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+
+                        },
+
                         TextSplitWords = new List<(char i, int j)>()
                         {
 
@@ -633,9 +1376,41 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                         TextSplitChar=';',//第二参数分割符号
 
-                        TextNum = 5,//第二参数步长（-1为不限制步长）
+                        TextNum = 4,//第二参数步长（-1为不限制步长）
 
                         isContisionCmd = false,//是否为条件性参数
+
+                        MainToolTip="检测指定的坐标的箱子中是否拥有指定物品",
+
+                        CmdToolTip= new List<string>
+                        {
+
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"坐标[X,Y,Z,世界名]" },
+                                {1,"物品名称及数量[例: emerald:5,sword]" },
+                            } },
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+                            {0,new Dictionary<int, Dictionary<int, string>>
+                            {
+                                {0,new Dictionary<int, string>
+                                {
+                                    {0,"X轴" },
+                                    {1,"Y轴" },
+                                    {2,"Z轴" },
+                                    {3,"世界名" },
+                                }
+                                },
+                            }
+                            },
+                        },
 
                         TextSplitWords = new List<(char i, int j)>()
                         {
@@ -656,6 +1431,40 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                         TextNum = 1,//第二参数步长（-1为不限制步长）
 
                         isContisionCmd = false,//是否为条件性参数
+
+                        MainToolTip="这个条件用于检测玩家的计分板。",
+
+                        CmdToolTip= new List<string>
+                        {
+
+                        },
+
+                        ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"积分版项目名[字符串]" },
+                                {1,"数量[整数]" },
+                            } },
+                        },
+
+                        TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                        {
+                            {0,new Dictionary<int, Dictionary<int, string>>
+                            {
+                                {0,new Dictionary<int, string>
+                                {
+                                    {0,"积分版项目名" },
+                                }
+                                },
+                                {1,new Dictionary<int, string>
+                                {
+                                    {0,"数量" },
+                                }
+                                },
+                            }
+                            },
+                        },
 
                         TextSplitWords = new List<(char i, int j)>()
                         {
@@ -736,6 +1545,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                     getModelInfo = savecmdModels.Find(t => t.MainClass == cmd);
                 }
 
+                (GetControl("Conditions_CBox", thumb) as ComboBox).ToolTip = getModelInfo.MainToolTip;
+
                 var editModel = new List<string>();//参数构造 键为命令
 
                 editModel.Add(getModelInfo.MainClass);
@@ -809,6 +1620,24 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                 }
 
                 cceCoBox.Items.Clear();
+
+                var getSelectIndex = (sender as ComboBox).SelectedIndex;
+
+                if (getSelectIndex == -1)
+                {
+                    (sender as ComboBox).ToolTip = "请选择命令";
+                }
+                else
+                {
+                    try
+                    {
+                        (sender as ComboBox).ToolTip = getModelInfo.CmdToolTip[getSelectIndex];
+                    }
+                    catch
+                    {
+                        (sender as ComboBox).ToolTip = "此命令不做解释";
+                    }
+                }
 
                 if (ccCoBox == getModelInfo.MainClass)//判断其是否为主命令
                 {
@@ -903,6 +1732,26 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                 }
 
                 ccpeCoBox.Items.Clear();
+
+                var getSelectIndex = self.SelectedIndex;
+
+                if (getSelectIndex == -1)
+                {
+                    self.ToolTip = "请选择参数";
+                }
+                else
+                {
+                    try
+                    {
+                        var cmdIndex = cmdCoBox.SelectedIndex;
+
+                        self.ToolTip = getModelInfo.ParameterToolTip[cmdIndex][getSelectIndex];
+                    }
+                    catch
+                    {
+                        self.ToolTip = "此参数不做解释";
+                    }
+                }
 
                 if (cmdCoBox.SelectedItem == null)
                 {
@@ -1131,6 +1980,38 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
             var getConditions_ComboBox = GetControl("Conditions_ComboBox", getThumb) as ComboBox;
 
             var getConditions_TBox = GetControl("Conditions_TBox", getThumb) as TextBox;
+
+            ContisionsCmdModel getModelInfo = null;
+
+            var getRealCMD = TxtSplit(getConditions_CBox.SelectedItem.ToString(), ": ");
+
+            if (getRealCMD.Count >= 2)
+            {
+                getModelInfo = savecmdModels.Find(t => t.MainClass == getRealCMD[getRealCMD.Count - 1]);
+            }
+            else
+            {
+                getModelInfo = savecmdModels.Find(t => t.MainClass == getConditions_CBox.SelectedItem.ToString());
+            }
+
+            var getSelectIndex = getConditionsCmdProjectEdit_CBox.SelectedIndex;
+
+            if (getSelectIndex == -1)
+            {
+                getConditionsCmdProjectEdit_CBox.ToolTip = "请选择项";
+            }
+            else
+            {
+                try
+                {
+                    getConditionsCmdProjectEdit_CBox.ToolTip = getModelInfo.TermToolTip[getConditionsCmdEdit_CBox.SelectedIndex]
+                        [getConditionsCmdparameterEdit_CBox.SelectedIndex][getSelectIndex];
+                }
+                catch
+                {
+                    getConditionsCmdProjectEdit_CBox.ToolTip = "此项不做解释";
+                }
+            }
 
             if (!MainWindowViewModel.mainWindowModels.SaveThumbInfo.ContainsKey(getThumb))
             {

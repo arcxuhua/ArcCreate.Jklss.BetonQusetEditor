@@ -61,6 +61,62 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                     TextNum = 5,//第二参数步长（-1为不限制步长）
 
+                    MainToolTip="当玩家移动至某一特定范围中并且符合其他所有条件时该目标达成。",
+
+                    CmdToolTip= new List<string>
+                    {
+                        "不做解释",
+                        "条件集合",
+                        "事件集合",
+                        "是否通知",
+                    },
+
+                    ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                    {
+                        {0,new Dictionary<int, string>
+                        {
+                            {0,"指定地点[X,Y,Z,世界名,模糊度]" }
+                        } },
+                        {1,new Dictionary<int, string>
+                        {
+                            {0,"目标达到后的将会判断的条件集合[此处不建议您手动输入]" }
+                        } },
+                        {2,new Dictionary<int, string>
+                        {
+                            {0,"目标达到后的将会执行的事件集合[此处不建议您手动输入]" }
+                        } },
+                        {3,new Dictionary<int, string>
+                        {
+                            {0,"是否通知[选填]\n[如果您要启用此项请选择开启并保存]" }
+                        } },
+                    },
+
+                    TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                    {
+                        {0,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"X轴坐标" },
+                                {1,"Y轴坐标" },
+                                {2,"Z轴坐标" },
+                                {3,"世界名称" },
+                                {4,"模糊度[范围，在XYZ坐标以模糊度为半径的圆内]" },
+                            }
+                            },
+                        }
+                        },
+                        {3,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"1.开启\n2.关闭" },
+                            }
+                            },
+                        }
+                        },
+                    },
+
                     TextSplitWords = new List<(char i, int j)>()
                     {
 
@@ -101,6 +157,59 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                     TextNum = 1,//第二参数步长（-1为不限制步长）
 
+                    MainToolTip="玩家破坏或放置特定数量方块之后该目标达成。",
+
+                    CmdToolTip= new List<string>
+                    {
+                        "不做解释",
+                        "事件集合",
+                        "是否通知",
+                    },
+
+                    ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                    {
+                        {0,new Dictionary<int, string>
+                        {
+                            {0,"方块种类[字符串]" },
+                            {1,"数量[正整数表示需要放置，(-)负整数表示需要破坏]" }
+                        } },
+                        {1,new Dictionary<int, string>
+                        {
+                            {0,"目标达到后的将会执行的事件集合[此处不建议您手动输入]" }
+                        } },
+                        {2,new Dictionary<int, string>
+                        {
+                            {0,"是否通知[选填]\n[如果您要启用此项请选择开启并保存]" }
+                        } },
+                    },
+
+                    TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                    {
+                        {0,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"方块种类" },
+                            }
+                            },
+                            {1,new Dictionary<int, string>
+                            {
+                                {0,"数量" },
+                            }
+                            },
+                        }
+                        },
+                        {2,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"1.开启\n2.关闭" },
+                            }
+                            },
+                        }
+                        },
+                    },
+
                     TextSplitWords = new List<(char i, int j)>()
                     {
                         ('X',1)
@@ -136,6 +245,78 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                     TextSplitChar='X',//第二参数分割符
 
                     TextNum = 1,//第二参数步长（-1为不限制步长）
+
+                    MainToolTip="当玩家击杀特定数量的某种生物之后该目标达成。",
+
+                    CmdToolTip= new List<string>
+                    {
+                        "不做解释",
+                        "怪物名称",
+                        "条件集合",
+                        "事件集合",
+                        "是否通知",
+                    },
+
+                    ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                    {
+                        {0,new Dictionary<int, string>
+                        {
+                            {0,"怪物种类[字符串]" },
+                            {1,"数量[正整数]" }
+                        } },
+                        {1,new Dictionary<int, string>
+                        {
+                            {0,"怪物名称[字符串]" }
+                        } },
+                        {2,new Dictionary<int, string>
+                        {
+                            {0,"目标达到后的将会执行的条件集合[此处不建议您手动输入]" }
+                        } },
+                        {3,new Dictionary<int, string>
+                        {
+                            {0,"目标达到后的将会执行的事件集合[此处不建议您手动输入]" }
+                        } },
+                        {4,new Dictionary<int, string>
+                        {
+                            {0,"是否通知[选填]\n[如果您要启用此项请选择开启并保存]" }
+                        } },
+                    },
+
+                    TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                    {
+                        {0,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"怪物种类" },
+                            }
+                            },
+                            {1,new Dictionary<int, string>
+                            {
+                                {0,"数量" },
+                            }
+                            },
+                        }
+                        },
+                        {1,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"怪物名称" },
+                            }
+                            },
+                        }
+                        },
+                        {4,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"1.开启\n2.关闭" },
+                            }
+                            },
+                        }
+                        },
+                    },
 
                     TextSplitWords = new List<(char i, int j)>()
                     {
@@ -185,6 +366,96 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                     TextSplitChar='X',//第二参数分割符
 
                     TextNum = 1,//第二参数步长（-1为不限制步长）
+
+                    MainToolTip="当玩家点击指定种类的方块时即达成该目标。",
+
+                    CmdToolTip= new List<string>
+                    {
+                        "不做解释",
+                        "坐标位置",
+                        "条件集合",
+                        "事件集合",
+                        "是否通知",
+                        "动作失效",
+                    },
+
+                    ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                    {
+                        {0,new Dictionary<int, string>
+                        {
+                            {0,"点击动作[选项]" },
+                            {1,"方块种类[例:DOOR:1]" }
+                        } },
+                        {1,new Dictionary<int, string>
+                        {
+                            {0,"位置[X,Y,Z,世界名,范围]" }
+                        } },
+                        {2,new Dictionary<int, string>
+                        {
+                            {0,"目标达到后的将会执行的条件集合[此处不建议您手动输入]" }
+                        } },
+                        {3,new Dictionary<int, string>
+                        {
+                            {0,"目标达到后的将会执行的事件集合[此处不建议您手动输入]" }
+                        } },
+                        {4,new Dictionary<int, string>
+                        {
+                            {0,"是否通知[选填]\n[如果您要启用此项请选择开启并保存]" }
+                        } },
+                        {5,new Dictionary<int, string>
+                        {
+                            {0,"动作失效[选填]\n[如果您要启用此项请选择开启并保存]" }
+                        } },
+                    },
+
+                    TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                    {
+                        {0,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"点击动作" },
+                            }
+                            },
+                            {1,new Dictionary<int, string>
+                            {
+                                {0,"方块种类" },
+                            }
+                            },
+                        }
+                        },
+                        {1,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"X轴坐标" },
+                                {1,"Y轴坐标" },
+                                {2,"Z轴坐标" },
+                                {3,"世界名称" },
+                                {4,"模糊度[范围，在XYZ坐标以模糊度为半径的圆内]" },
+                            }
+                            },
+                        }
+                        },
+                        {4,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"1.开启\n2.关闭" },
+                            }
+                            },
+                        }
+                        },
+                        {5,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"1.开启\n2.关闭" },
+                            }
+                            },
+                        }
+                        },
+                    },
 
                     TextSplitWords = new List<(char i, int j)>()
                     {
@@ -238,6 +509,77 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                     TextNum = 1,//第二参数步长（-1为不限制步长）
 
+                    MainToolTip="当玩家符合一切条件且角色死亡时达成该目标。",
+
+                    CmdToolTip= new List<string>
+                    {
+                        "选择选项[cancel]并保存后 重生位置 才能起效",
+                        "重生位置",
+                        "条件集合",
+                        "事件集合",
+                        "是否通知",
+                    },
+
+                    ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                    {
+                        {0,new Dictionary<int, string>
+                        {
+                            {0,"选择选项[cancel]并保存后 重生位置 才能起效" },
+                        } },
+                        {1,new Dictionary<int, string>
+                        {
+                            {0,"重生位置[X,Y,Z,世界名,水平旋转度数,垂直旋转度数]" }
+                        } },
+                        {2,new Dictionary<int, string>
+                        {
+                            {0,"目标达到后的将会执行的条件集合[此处不建议您手动输入]" }
+                        } },
+                        {3,new Dictionary<int, string>
+                        {
+                            {0,"目标达到后的将会执行的事件集合[此处不建议您手动输入]" }
+                        } },
+                        {4,new Dictionary<int, string>
+                        {
+                            {0,"是否通知[选填]\n[如果您要启用此项请选择开启并保存]" }
+                        } },
+                    },
+
+                    TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                    {
+                        {0,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"选择选项[cancel]并保存后 重生位置 才能起效\n[选择空白则代表关闭]" },
+                            }
+                            },
+                        }
+                        },
+                        {1,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"X轴坐标" },
+                                {1,"Y轴坐标" },
+                                {2,"Z轴坐标" },
+                                {3,"世界名称" },
+                                {4,"玩家 身体 水平旋转度数" },
+                                {5,"玩家 头部 垂直旋转度数\n[建议0-90范围内]" },
+                            }
+                            },
+                        }
+                        },
+                        {4,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"1.开启\n2.关闭" },
+                            }
+                            },
+                        }
+                        },
+                    },
+
                     TextSplitWords = new List<(char i, int j)>()
                     {
                         
@@ -289,6 +631,59 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                     TextNum = 1,//第二参数步长（-1为不限制步长）
 
+                    MainToolTip="玩家在工作台上合成出某一特定物品时达成此目标。",
+
+                    CmdToolTip= new List<string>
+                    {
+                        "不做解释",
+                        "事件集合",
+                        "是否通知",
+                    },
+
+                    ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                    {
+                        {0,new Dictionary<int, string>
+                        {
+                            {0,"物品类型[字符串]" },
+                            {1,"物品数量[整数]" },
+                        } },
+                        {1,new Dictionary<int, string>
+                        {
+                            {0,"目标达到后的将会执行的事件集合[此处不建议您手动输入]" }
+                        } },
+                        {2,new Dictionary<int, string>
+                        {
+                            {0,"是否通知[选填]\n[如果您要启用此项请选择开启并保存]" }
+                        } },
+                    },
+
+                    TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                    {
+                        {0,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"物品类型" },
+                            }
+                            },
+                            {1,new Dictionary<int, string>
+                            {
+                                {0,"物品数量" },
+                            }
+                            },
+                        }
+                        },
+                        {2,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"1.开启\n2.关闭" },
+                            }
+                            },
+                        }
+                        },
+                    },
+
                     TextSplitWords = new List<(char i, int j)>()
                     {
                         ('X',1)
@@ -326,6 +721,59 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                     TextNum = 1,//第二参数步长（-1为不限制步长）
 
+                    MainToolTip="玩家在熔炉中熔炼出某一特定物品时即达成此目标。",
+
+                    CmdToolTip= new List<string>
+                    {
+                        "不做解释",
+                        "事件集合",
+                        "是否通知",
+                    },
+
+                    ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                    {
+                        {0,new Dictionary<int, string>
+                        {
+                            {0,"物品类型[字符串]" },
+                            {1,"物品数量[整数]" },
+                        } },
+                        {1,new Dictionary<int, string>
+                        {
+                            {0,"目标达到后的将会执行的事件集合[此处不建议您手动输入]" }
+                        } },
+                        {2,new Dictionary<int, string>
+                        {
+                            {0,"是否通知[选填]\n[如果您要启用此项请选择开启并保存]" }
+                        } },
+                    },
+
+                    TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                    {
+                        {0,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"物品类型" },
+                            }
+                            },
+                            {1,new Dictionary<int, string>
+                            {
+                                {0,"物品数量" },
+                            }
+                            },
+                        }
+                        },
+                        {2,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"1.开启\n2.关闭" },
+                            }
+                            },
+                        }
+                        },
+                    },
+
                     TextSplitWords = new List<(char i, int j)>()
                     {
                         ('X',1)
@@ -362,6 +810,59 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                     TextSplitChar='X',//第二参数分割符
 
                     TextNum = 1,//第二参数步长（-1为不限制步长）
+
+                    MainToolTip="当玩家驯服一定数量的生物之后达成此目标。",
+
+                    CmdToolTip= new List<string>
+                    {
+                        "不做解释",
+                        "事件集合",
+                        "是否通知",
+                    },
+
+                    ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                    {
+                        {0,new Dictionary<int, string>
+                        {
+                            {0,"生物类型[选项]" },
+                            {1,"生物数量[整数]" },
+                        } },
+                        {1,new Dictionary<int, string>
+                        {
+                            {0,"目标达到后的将会执行的事件集合[此处不建议您手动输入]" }
+                        } },
+                        {2,new Dictionary<int, string>
+                        {
+                            {0,"是否通知[选填]\n[如果您要启用此项请选择开启并保存]" }
+                        } },
+                    },
+
+                    TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                    {
+                        {0,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"生物类型" },
+                            }
+                            },
+                            {1,new Dictionary<int, string>
+                            {
+                                {0,"生物数量" },
+                            }
+                            },
+                        }
+                        },
+                        {2,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"1.开启\n2.关闭" },
+                            }
+                            },
+                        }
+                        },
+                    },
 
                     TextSplitWords = new List<(char i, int j)>()
                     {
@@ -402,6 +903,53 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                     TextNum = 1,//第二参数步长（-1为不限制步长）
 
+                    MainToolTip="当玩家坚持等待一段特定长度的时间之后就达成了该目标。",
+
+                    CmdToolTip= new List<string>
+                    {
+                        "不做解释",
+                        "事件集合",
+                        "是否通知",
+                    },
+
+                    ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                    {
+                        {0,new Dictionary<int, string>
+                        {
+                            {0,"时间[分为单位]" },
+                        } },
+                        {1,new Dictionary<int, string>
+                        {
+                            {0,"目标达到后的将会执行的事件集合[此处不建议您手动输入]" }
+                        } },
+                        {2,new Dictionary<int, string>
+                        {
+                            {0,"是否通知[选填]\n[如果您要启用此项请选择开启并保存]" }
+                        } },
+                    },
+
+                    TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                    {
+                        {0,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"时间" },
+                            }
+                            },
+                        }
+                        },
+                        {2,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"1.开启\n2.关闭" },
+                            }
+                            },
+                        }
+                        },
+                    },
+
                     TextSplitWords = new List<(char i, int j)>()
                     {
                         
@@ -438,6 +986,62 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                     TextSplitChar=';',//第二参数分割符
 
                     TextNum = 5,//第二参数步长（-1为不限制步长）
+
+                    MainToolTip="当玩家用弓箭射中某个靶标时达成该目标。",
+
+                    CmdToolTip= new List<string>
+                    {
+                        "不做解释",
+                        "条件集合",
+                        "事件集合",
+                        "是否通知",
+                    },
+
+                    ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                    {
+                        {0,new Dictionary<int, string>
+                        {
+                            {0,"指定地点[X,Y,Z,世界名,精准度]" },
+                        } },
+                        {1,new Dictionary<int, string>
+                        {
+                            {0,"目标达到后的将会执行的条件集合[此处不建议您手动输入]" }
+                        } },
+                        {2,new Dictionary<int, string>
+                        {
+                            {0,"目标达到后的将会执行的事件集合[此处不建议您手动输入]" }
+                        } },
+                        {3,new Dictionary<int, string>
+                        {
+                            {0,"是否通知[选填]\n[如果您要启用此项请选择开启并保存]" }
+                        } },
+                    },
+
+                    TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                    {
+                        {0,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"X轴坐标" },
+                                {1,"Y轴坐标" },
+                                {2,"Z轴坐标" },
+                                {3,"世界名称" },
+                                {4,"精准度[范围，在XYZ坐标以精准度为半径的圆内]" },
+                            }
+                            },
+                        }
+                        },
+                        {3,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"1.开启\n2.关闭" },
+                            }
+                            },
+                        }
+                        },
+                    },
 
                     TextSplitWords = new List<(char i, int j)>()
                     {
@@ -480,6 +1084,53 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                     TextNum = 1,//第二参数步长（-1为不限制步长）
 
+                    MainToolTip="当玩家经验值达到某一等级时达成该目标。",
+
+                    CmdToolTip= new List<string>
+                    {
+                        "不做解释",
+                        "事件集合",
+                        "是否通知",
+                    },
+
+                    ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                    {
+                        {0,new Dictionary<int, string>
+                        {
+                            {0,"级别[正整数，级别不是经验]" },
+                        } },
+                        {1,new Dictionary<int, string>
+                        {
+                            {0,"目标达到后的将会执行的事件集合[此处不建议您手动输入]" }
+                        } },
+                        {2,new Dictionary<int, string>
+                        {
+                            {0,"是否通知[选填]\n[如果您要启用此项请选择开启并保存]" }
+                        } },
+                    },
+
+                    TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                    {
+                        {0,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"级别" },
+                            }
+                            },
+                        }
+                        },
+                        {2,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"1.开启\n2.关闭" },
+                            }
+                            },
+                        }
+                        },
+                    },
+
                     TextSplitWords = new List<(char i, int j)>()
                     {
                         
@@ -516,6 +1167,56 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                     TextSplitChar=';',//第二参数分割符
 
                     TextNum = 4,//第二参数步长（-1为不限制步长）
+
+                    MainToolTip="当玩家踩上特定位置的压力板时达成该目标。",
+
+                    CmdToolTip= new List<string>
+                    {
+                        "不做解释",
+                        "事件集合",
+                        "是否通知",
+                    },
+
+                    ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                    {
+                        {0,new Dictionary<int, string>
+                        {
+                            {0,"指定地点[X,Y,Z,世界名]" },
+                        } },
+                        {1,new Dictionary<int, string>
+                        {
+                            {0,"目标达到后的将会执行的事件集合[此处不建议您手动输入]" }
+                        } },
+                        {2,new Dictionary<int, string>
+                        {
+                            {0,"是否通知[选填]\n[如果您要启用此项请选择开启并保存]" }
+                        } },
+                    },
+
+                    TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                    {
+                        {0,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"X轴坐标" },
+                                {1,"Y轴坐标" },
+                                {2,"Z轴坐标" },
+                                {3,"世界名称" },
+                            }
+                            },
+                        }
+                        },
+                        {2,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"1.开启\n2.关闭" },
+                            }
+                            },
+                        }
+                        },
+                    },
 
                     TextSplitWords = new List<(char i, int j)>()
                     {
@@ -554,6 +1255,53 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                     TextNum = 0,//第二参数步长（-1为不限制步长）
 
+                    MainToolTip="当玩家离开服务器时就可以达成这一目标。",
+
+                    CmdToolTip= new List<string>
+                    {
+                        "不做解释",
+                        "事件集合",
+                        "是否通知",
+                    },
+
+                    ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                    {
+                        {0,new Dictionary<int, string>
+                        {
+                            {0,"此命令无参数，可选择保存" },
+                        } },
+                        {1,new Dictionary<int, string>
+                        {
+                            {0,"目标达到后的将会执行的事件集合[此处不建议您手动输入]" }
+                        } },
+                        {2,new Dictionary<int, string>
+                        {
+                            {0,"是否通知[选填]\n[如果您要启用此项请选择开启并保存]" }
+                        } },
+                    },
+
+                    TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                    {
+                        {0,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"此命令无参数，可选择保存" },
+                            }
+                            },
+                        }
+                        },
+                        {2,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"1.开启\n2.关闭" },
+                            }
+                            },
+                        }
+                        },
+                    },
+
                     TextSplitWords = new List<(char i, int j)>()
                     {
 
@@ -590,6 +1338,67 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                     TextSplitChar='X',//第二参数分割符
 
                     TextNum = 1,//第二参数步长（-1为不限制步长）
+
+                    MainToolTip="当玩家在对话栏中输入指定的密码时可以达成这一目标。",
+
+                    CmdToolTip= new List<string>
+                    {
+                        "不做解释",
+                        "事件集合",
+                        "是否通知",
+                        "忽略玩家输入内容的前缀后缀",
+                    },
+
+                    ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                    {
+                        {0,new Dictionary<int, string>
+                        {
+                            {0,"密码[字符串，空格由_代替]\n[支持正则表达式，不懂就百度]" },
+                        } },
+                        {1,new Dictionary<int, string>
+                        {
+                            {0,"目标达到后的将会执行的事件集合[此处不建议您手动输入]" }
+                        } },
+                        {2,new Dictionary<int, string>
+                        {
+                            {0,"是否通知[选填]\n[如果您要启用此项请选择开启并保存]" }
+                        } },
+                        {3,new Dictionary<int, string>
+                        {
+                            {0,"忽略玩家输入内容的前缀后缀[选填]\n[如果您要启用此项请选择开启并保存]" }
+                        } },
+                    },
+
+                    TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                    {
+                        {0,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"密码" },
+                            }
+                            },
+                        }
+                        },
+                        {2,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"1.开启\n2.关闭" },
+                            }
+                            },
+                        }
+                        },
+                        {3,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"1.开启\n2.关闭" },
+                            }
+                            },
+                        }
+                        },
+                    },
 
                     TextSplitWords = new List<(char i, int j)>()
                     {
@@ -628,6 +1437,59 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                     TextNum = 1,//第二参数步长（-1为不限制步长）
 
+                    MainToolTip="玩家钓鱼且有收获时达成该目标。",
+
+                    CmdToolTip= new List<string>
+                    {
+                        "不做解释",
+                        "事件集合",
+                        "是否通知",
+                    },
+
+                    ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                    {
+                        {0,new Dictionary<int, string>
+                        {
+                            {0,"需要钓上的物品名称[例:raw_fish:1]" },
+                            {1,"需要钓上的物品数量[正整数]" },
+                        } },
+                        {1,new Dictionary<int, string>
+                        {
+                            {0,"目标达到后的将会执行的事件集合[此处不建议您手动输入]" }
+                        } },
+                        {2,new Dictionary<int, string>
+                        {
+                            {0,"是否通知[选填]\n[如果您要启用此项请选择开启并保存]" }
+                        } },
+                    },
+
+                    TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                    {
+                        {0,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"需要钓上的物品名称" },
+                            }
+                            },
+                            {1,new Dictionary<int, string>
+                            {
+                                {0,"需要钓上的物品数量" },
+                            }
+                            },
+                        }
+                        },
+                        {2,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"1.开启\n2.关闭" },
+                            }
+                            },
+                        }
+                        },
+                    },
+
                     TextSplitWords = new List<(char i, int j)>()
                     {
                         ('X',1)
@@ -664,6 +1526,81 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                     TextSplitChar='X',//第二参数分割符
 
                     TextNum = 1,//第二参数步长（-1为不限制步长）
+
+                    MainToolTip="当玩家为一定数量的羊剪毛后达成该目标。",
+
+                    CmdToolTip= new List<string>
+                    {
+                        "不做解释",
+                        "羊的名称",
+                        "羊的颜色",
+                        "事件集合",
+                        "是否通知",
+                    },
+
+                    ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                    {
+                        {0,new Dictionary<int, string>
+                        {
+                            {0,"剪羊毛的数量[正整数]" },
+                        } },
+                        {1,new Dictionary<int, string>
+                        {
+                            {0,"羊的名称[字符串]" }
+                        } },
+                        {2,new Dictionary<int, string>
+                        {
+                            {0,"羊的颜色[字符串]" }
+                        } },
+                        {3,new Dictionary<int, string>
+                        {
+                            {0,"目标达到后的将会执行的事件集合[此处不建议您手动输入]" }
+                        } },
+                        {4,new Dictionary<int, string>
+                        {
+                            {0,"是否通知[选填]\n[如果您要启用此项请选择开启并保存]" }
+                        } },
+                    },
+
+                    TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                    {
+                        {0,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"剪羊毛的数量" },
+                            }
+                            },
+                        }
+                        },
+                        {1,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"羊的名称" },
+                            }
+                            },
+                        }
+                        },
+                        {2,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"羊的颜色" },
+                            }
+                            },
+                        }
+                        },
+                        {4,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"1.开启\n2.关闭" },
+                            }
+                            },
+                        }
+                        },
+                    },
 
                     TextSplitWords = new List<(char i, int j)>()
                     {
@@ -721,9 +1658,63 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                     TextNum = 1,//第二参数步长（-1为不限制步长）
 
+                    MainToolTip="当玩家给某种特定物品进行特定种类的附魔时达成该目标。",
+
+                    CmdToolTip= new List<string>
+                    {
+                        "不做解释",
+                        "事件集合",
+                        "是否通知",
+                    },
+
+                    ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                    {
+                        {0,new Dictionary<int, string>
+                        {
+                            {0,"物品名称[例:raw_fish:1]" },
+                            {1,"附魔种类和附魔等级[字符串与整数]" },
+                        } },
+                        {1,new Dictionary<int, string>
+                        {
+                            {0,"目标达到后的将会执行的事件集合[此处不建议您手动输入]" }
+                        } },
+                        {2,new Dictionary<int, string>
+                        {
+                            {0,"是否通知[选填]\n[如果您要启用此项请选择开启并保存]" }
+                        } },
+                    },
+
+                    TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                    {
+                        {0,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"需要钓上的物品名称" },
+                            }
+                            },
+                            {1,new Dictionary<int, string>
+                            {
+                                {0,"附魔种类[字符串]" },
+                                {1,"附魔等级[正整数]" },
+                            }
+                            },
+                        }
+                        },
+                        {2,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"1.开启\n2.关闭" },
+                            }
+                            },
+                        }
+                        },
+                    },
+
                     TextSplitWords = new List<(char i, int j)>()
                     {
-                        ('X',1)
+                        (':',2)
                     },//第n条参数分割符
 
                     Tags = new List<string>()
@@ -757,6 +1748,62 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                     TextSplitChar=';',//第二参数分割符
 
                     TextNum = 4,//第二参数步长（-1为不限制步长）
+
+                    MainToolTip="当玩家把特定物品放进指定的箱子时达成该目标。",
+
+                     CmdToolTip= new List<string>
+                    {
+                        "不做解释",
+                        "事件集合",
+                        "是否通知",
+                    },
+
+                    ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                    {
+                        {0,new Dictionary<int, string>
+                        {
+                            {0,"指定地点[X,Y,Z,世界名]" },
+                            {1,"物品名称与数量[字符串与整数]" },
+                        } },
+                        {1,new Dictionary<int, string>
+                        {
+                            {0,"目标达到后的将会执行的事件集合[此处不建议您手动输入]" }
+                        } },
+                        {2,new Dictionary<int, string>
+                        {
+                            {0,"是否通知[选填]\n[如果您要启用此项请选择开启并保存]" }
+                        } },
+                    },
+
+                    TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                    {
+                        {0,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"X轴坐标" },
+                                {1,"Y轴坐标" },
+                                {2,"Z轴坐标" },
+                                {3,"世界名称" },
+                            }
+                            },
+                            {1,new Dictionary<int, string>
+                            {
+                                {0,"物品名称与数量[例:emerald:5]" },
+                            }
+                            },
+                        }
+                        },
+                        {2,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"1.开启\n2.关闭" },
+                            }
+                            },
+                        }
+                        },
+                    },
 
                     TextSplitWords = new List<(char i, int j)>()
                     {
@@ -794,6 +1841,70 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                     TextSplitChar='X',//第二参数分割符
 
                     TextNum = 1,//第二参数步长（-1为不限制步长）
+
+                    MainToolTip="玩家在某一特定位置炼成某种特定药水时达成该目标。",
+
+                    CmdToolTip= new List<string>
+                    {
+                        "不做解释",
+                        "自定义的效果",
+                        "事件集合",
+                        "是否通知",
+                    },
+
+                    ParameterToolTip= new Dictionary<int, Dictionary<int, string>>
+                    {
+                        {0,new Dictionary<int, string>
+                        {
+                            {0,"药水效果[正整数]" },
+                            {1,"药水数量[正整数]" },
+                        } },
+                        {1,new Dictionary<int, string>
+                        {
+                            {0,"自定义的效果[如果您的服务器有“custom potion brewing”这样的功能\n" +
+                            "（这一功能使玩家有能力炼制出自定义效果的药水，比如说多重效果的药水。\n" +
+                            "mcMMO插件就有这样的功能。）\n" +
+                            "，您就可以使用“effect:”参数。\n" +
+                            "这一参数之后应该填写一连串用逗号分隔的药水效果。\n" +
+                            "每个药水效果都应该写上效果的种类和效果持续时长，\n" +
+                            "这两者应该用冒号分隔。]" },
+                        } },
+                        {2,new Dictionary<int, string>
+                        {
+                            {0,"目标达到后的将会执行的事件集合[此处不建议您手动输入]" }
+                        } },
+                        {3,new Dictionary<int, string>
+                        {
+                            {0,"是否通知[选填]\n[如果您要启用此项请选择开启并保存]" }
+                        } },
+                    },
+
+                    TermToolTip = new Dictionary<int, Dictionary<int, Dictionary<int, string>>>
+                    {
+                        {0,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"药水效果" },
+                            }
+                            },
+                            {1,new Dictionary<int, string>
+                            {
+                                {0,"药水数量" },
+                            }
+                            },
+                        }
+                        },
+                        {3,new Dictionary<int, Dictionary<int, string>>
+                        {
+                            {0,new Dictionary<int, string>
+                            {
+                                {0,"1.开启\n2.关闭" },
+                            }
+                            },
+                        }
+                        },
+                    },
 
                     TextSplitWords = new List<(char i, int j)>()
                     {
@@ -895,6 +2006,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                     getModelInfo = savecmdModels.Find(t => t.MainClass == cmd);
                 }
 
+                (GetControl("Conditions_CBox", thumb) as ComboBox).ToolTip = getModelInfo.MainToolTip;
+
                 var editModel = new List<string>();
 
                 editModel.Add(getModelInfo.MainClass);
@@ -973,6 +2086,24 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                 }
 
                 cceCoBox.Items.Clear();
+
+                var getSelectIndex = (sender as ComboBox).SelectedIndex;
+
+                if (getSelectIndex == -1)
+                {
+                    (sender as ComboBox).ToolTip = "请选择命令";
+                }
+                else
+                {
+                    try
+                    {
+                        (sender as ComboBox).ToolTip = getModelInfo.CmdToolTip[getSelectIndex];
+                    }
+                    catch
+                    {
+                        (sender as ComboBox).ToolTip = "此命令不做解释";
+                    }
+                }
 
                 if (ccCoBox == getModelInfo.MainClass)//判断其是否为主命令
                 {
@@ -1082,6 +2213,26 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                 ccpeCoBox.Items.Clear();
                 (GetControl("Conditions_ComboBox", getThumb) as ComboBox).Items.Clear();
+
+                var getSelectIndex = self.SelectedIndex;
+
+                if (getSelectIndex == -1)
+                {
+                    self.ToolTip = "请选择参数";
+                }
+                else
+                {
+                    try
+                    {
+                        var cmdIndex = cmdCoBox.SelectedIndex;
+
+                        self.ToolTip = getModelInfo.ParameterToolTip[cmdIndex][getSelectIndex];
+                    }
+                    catch
+                    {
+                        self.ToolTip = "此参数不做解释";
+                    }
+                }
 
                 if (cmdCoBox.SelectedItem == null)
                 {
@@ -1377,6 +2528,38 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
             var getConditions_ComboBox = GetControl("Conditions_ComboBox", getThumb) as ComboBox;
 
             var getConditions_TBox = GetControl("Conditions_TBox", getThumb) as TextBox;
+
+            ObjectiveCmdModel getModelInfo = null;
+
+            var getRealCMD = TxtSplit(getConditions_CBox.SelectedItem.ToString(), ": ");
+
+            if (getRealCMD.Count >= 2)
+            {
+                getModelInfo = savecmdModels.Find(t => t.MainClass == getRealCMD[getRealCMD.Count - 1]);
+            }
+            else
+            {
+                getModelInfo = savecmdModels.Find(t => t.MainClass == getConditions_CBox.SelectedItem.ToString());
+            }
+
+            var getSelectIndex = getConditionsCmdProjectEdit_CBox.SelectedIndex;
+
+            if (getSelectIndex == -1)
+            {
+                getConditionsCmdProjectEdit_CBox.ToolTip = "请选择项";
+            }
+            else
+            {
+                try
+                {
+                    getConditionsCmdProjectEdit_CBox.ToolTip = getModelInfo.TermToolTip[getConditionsCmdEdit_CBox.SelectedIndex]
+                        [getConditionsCmdparameterEdit_CBox.SelectedIndex][getSelectIndex];
+                }
+                catch
+                {
+                    getConditionsCmdProjectEdit_CBox.ToolTip = "此项不做解释";
+                }
+            }
 
             if (!MainWindowViewModel.mainWindowModels.SaveThumbInfo.ContainsKey(getThumb))
             {
