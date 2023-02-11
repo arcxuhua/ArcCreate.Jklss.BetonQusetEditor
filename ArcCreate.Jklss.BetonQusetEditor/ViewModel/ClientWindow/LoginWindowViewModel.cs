@@ -251,7 +251,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
                                     {
                                         if (!string.IsNullOrEmpty(SocketModel.ClientKeys[SocketViewModel.socket.RemoteEndPoint.ToString()].ServerSendKey.PublicKey))
                                         {
-                                            break;
+                                            if (!string.IsNullOrEmpty(SocketModel.ClientKeys[SocketViewModel.socket.RemoteEndPoint.ToString()].ClientSendKey.PrivetKey))
+                                            {
+                                                break;
+                                            }
                                         }
                                     }
                                     Thread.Sleep(1000);

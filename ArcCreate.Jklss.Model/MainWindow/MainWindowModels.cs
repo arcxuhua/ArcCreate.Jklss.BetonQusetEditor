@@ -10,6 +10,9 @@ namespace ArcCreate.Jklss.Model.MainWindow
 {
     public class MainWindowModels
     {
+        public List<ThumbClass> SearchListType { get; set; }
+        public ThumbClass SearchType { get; set; }
+        public string SearchText { get; set; }
         public bool IsFindFile { get; set; } = false;
         public bool isHaveSubjcet { get; set; } = false;
         public string Message { get; set; }

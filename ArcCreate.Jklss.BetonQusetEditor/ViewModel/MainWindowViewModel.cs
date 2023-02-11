@@ -29,6 +29,12 @@ using Window = System.Windows.Window;
 using System.Windows.Media.Effects;
 using static ArcCreate.Jklss.BetonQusetEditor.Base.SaveAndReadYamlBase;
 using static System.Net.Mime.MediaTypeNames;
+using Microsoft.Extensions.Logging;
+using Microsoft.Xaml.Behaviors.Core;
+using System.Numerics;
+using static System.Windows.Forms.AxHost;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 {
@@ -72,6 +78,46 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         #endregion
 
         #region 属性字段
+
+        public string SearchText
+        {
+            get
+            {
+                return mainWindowModels.SearchText;
+            }
+            set
+            {
+                mainWindowModels.SearchText = value;
+                this.NotifyChanged();
+            }
+        }
+
+        public ThumbClass SearchType
+        {
+            get
+            {
+                return mainWindowModels.SearchType;
+            }
+            set
+            {
+                mainWindowModels.SearchType = value;
+                this.NotifyChanged();
+            }
+        }
+
+        public List<ThumbClass> SearchListType
+        {
+            get
+            {
+                return mainWindowModels.SearchListType;
+            }
+            set
+            {
+                mainWindowModels.SearchListType = value;
+                this.NotifyChanged();
+            }
+        }
+
         public bool IsFindFile
         {
             get
@@ -168,7 +214,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         /// <param name="e"></param>
         private async void ActBase_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
         {
-
+            if(mainWindow.WindowState != WindowState.Normal)
+            {
+                return;
+            }
             if (e.KeyCode == Keys.Delete)//键盘的Enter，子自行设定。
             {
                 if (mainWindow == null)
@@ -191,37 +240,45 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         return;
                     }
 
-                    foreach (var item in getNeedDeleteThumb.Children)
-                    {
-                        var getDeleteThumb = await FindSaveThumbInfo(item);
+                    var chirld = new List<Thumb>(getNeedDeleteThumb.Children);
 
-                        getDeleteThumb.Fathers.Remove(nowThumb);
+                    foreach (var item in chirld)
+                    {
+                        await ThumbClassOverDelete(nowThumb, item);
+
+                        //var getDeleteThumb = await FindSaveThumbInfo(item);
+
+                        //getDeleteThumb.Fathers.Remove(nowThumb);
                     }
 
-                    foreach (var item in getNeedDeleteThumb.Fathers)
-                    {
-                        var getDeleteThumb = await FindSaveThumbInfo(item);
+                    var father = new List<Thumb>(getNeedDeleteThumb.Fathers);
 
-                        getDeleteThumb.Children.Remove(nowThumb);
+                    foreach (var item in father)
+                    {
+                        await ThumbClassOverDelete(item,nowThumb);
+
+                        //var getDeleteThumb = await FindSaveThumbInfo(item);
+
+                        //getDeleteThumb.Children.Remove(nowThumb);
                     }
 
-                    //链接线的删除
-                    var needDeleteLines = new List<SaveLine>();
+                    ////链接线的删除
+                    //var needDeleteLines = new List<SaveLine>();
 
-                    foreach (var item in saveLines)
-                    {
-                        if (item.ChirldName == nowThumb || item.FatherName == nowThumb)
-                        {
-                            needDeleteLines.Add(item);
-                        }
-                    }
+                    //foreach (var item in saveLines)
+                    //{
+                    //    if (item.ChirldName == nowThumb || item.FatherName == nowThumb)
+                    //    {
+                    //        needDeleteLines.Add(item);
+                    //    }
+                    //}
 
-                    foreach (var item in needDeleteLines)
-                    {
-                        mainWindow.cvmenu.Children.Remove(item.line);
+                    //foreach (var item in needDeleteLines)
+                    //{
+                    //    mainWindow.cvmenu.Children.Remove(item.line);
 
-                        saveLines.Remove(item);
-                    }
+                    //    saveLines.Remove(item);
+                    //}
 
                     mainWindowModels.SaveThumbInfo.Remove(nowThumb);
 
@@ -290,8 +347,6 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         /// <param name="e"></param>
         public async void Thumb_DragCompleted(object sender, DragCompletedEventArgs e)
         {
-            
-
             var info = await ThumbClassification(sender as Thumb);
 
             if (info == null || info.IsThumb == false || info.backs == null)
@@ -302,6 +357,28 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
             Canvas.SetTop(sender as Thumb, thumbcanvas[0]);
             Canvas.SetLeft(sender as Thumb, thumbcanvas[1]);
+
+            var get_ThumbCl = await FindSaveThumbInfo(sender as Thumb);
+
+            var get_ThumbFt = await FindSaveThumbInfo(info.backs);
+
+            if (get_ThumbCl.Fathers.Contains(info.backs) || get_ThumbFt.Children.Contains(sender as Thumb))
+            {
+                if (System.Windows.MessageBox.Show("你确定取消两者的归类？", "请选择", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    var back = await ThumbClassOverDelete(info.backs, sender as Thumb);
+                    if (back.Succese)
+                    {
+                        ShowMessage("归类删除成功");
+
+                    }
+                    else
+                    {
+                        ShowMessage(back.Text);
+                    }
+                }
+                return;
+            }
 
             if (System.Windows.MessageBox.Show("你确定将其归类为子元素？", "请选择", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
@@ -444,6 +521,60 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         #endregion
 
         #region 按键命令
+
+        public CommandBase _SelectSearch;
+        public CommandBase SelectSearch
+        {
+            get
+            {
+                if (_SelectSearch == null)
+                {
+                    _SelectSearch = new CommandBase();
+                    _SelectSearch.DoExecute = new Action<object>(async obj =>//回调函数
+                    {
+                        var ct = new CreateThumbsBase();
+
+                        var back = await ct.UseNameGetThumb(SearchType, SearchText,true);
+
+                        if (!back.Succese)
+                        {
+                            ShowMessage("未找到该卡片");
+                            return;
+                        }
+
+                        var thumbInfo = back.Backs as SaveChird;
+                        var y = -Canvas.GetTop(thumbInfo.Saver) + (mainWindow.outsaid.ActualHeight/2)- (thumbInfo.Saver.Height/2);
+                        var x = -Canvas.GetLeft(thumbInfo.Saver)+ (mainWindow.outsaid.ActualWidth/2) - (thumbInfo.Saver.Width/2);
+                        Console.WriteLine($"卡片 X:{x} Y:{y}");
+                        TransformGroup tg = mainWindow.cvmenu.RenderTransform as TransformGroup;
+
+                        var have = false;
+
+                        foreach (var child in tg.Children)
+                        {
+                            var t = child as TranslateTransform;
+
+                            if (t != null)
+                            {
+                                Console.WriteLine($"视角 X:{t.X} Y:{t.Y}");
+                                t.X = x;
+                                t.Y = y;
+
+                                have = true;
+                                break;
+                            }
+
+                        }
+
+                        if (!have)
+                        {
+                            tg.Children.Add(new TranslateTransform(x, y)); //centerX和centerY用外部包装元素的坐标，不能用内部被变换的Canvas元素的坐标
+                        }
+                    });//obj是窗口CommandParameter参数传递的值，此处传递为bord
+                }
+                return _SelectSearch;
+            }
+        }
 
         public CommandBase _SwitchCmd;
         public CommandBase SwitchCmd
@@ -3446,6 +3577,18 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         window.Show();
 
                         window.DataContext = new ThumbInfoWindowViewModel();
+
+                        SearchListType = new List<ThumbClass> 
+                        {
+                            ThumbClass.Subject,
+                            ThumbClass.NPC,
+                            ThumbClass.Player,
+                            ThumbClass.Conditions,
+                            ThumbClass.Events,
+                            ThumbClass.Items,
+                            ThumbClass.Journal,
+                            ThumbClass.Objectives,
+                        };
                     });
                 }
                 return _LoadedCommand;
@@ -4368,6 +4511,93 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             ThumbChecks = saveLines.Count.ToString();
             back.SetSuccese();
             return back;
+        }
+
+        private async Task<ReturnModel> ThumbClassOverDelete(Thumb thumbFt, Thumb thumbCl)
+        {
+            var result = new ReturnModel();
+
+            var get_ThumbCl = await FindSaveThumbInfo(thumbCl);
+
+            var get_ThumbFt = await FindSaveThumbInfo(thumbFt);
+
+            if (get_ThumbCl == null || get_ThumbFt == null)
+            {
+                result.SetError("获取父级或子级卡片错误！\n这是一个严重的问题,请发送邮件报告jk@jklss.cn");
+                return result;
+            }
+
+            if (!get_ThumbCl.Fathers.Contains(thumbFt) || !get_ThumbFt.Children.Contains(thumbCl))
+            {
+                result.SetError("两个卡片并没有归类过");
+                return result;
+            }
+
+            if(get_ThumbFt.thumbClass == ThumbClass.Conditions||
+                get_ThumbFt.thumbClass == ThumbClass.Events|| 
+                get_ThumbFt.thumbClass == ThumbClass.Objectives|| 
+                get_ThumbFt.thumbClass == ThumbClass.NPC|| 
+                get_ThumbFt.thumbClass == ThumbClass.Player)
+            {
+                if (mainWindowModels.SaveThumbInfo.ContainsKey(thumbFt))
+                {
+                    var getName = (GetControl("ConditionsConfig_TBox", get_ThumbCl.Saver) as TextBox).Text;
+                    var treeBase = new TreeViewBase();
+                    foreach (var item in mainWindowModels.SaveThumbInfo[thumbFt])
+                    {
+                        foreach (var i in item.Value)
+                        {
+                            foreach (var j in i.Value)
+                            {
+                                foreach (var n in j.Value)
+                                {
+                                    if(n.Value == getName)
+                                    {
+                                        if(get_ThumbFt.thumbClass == ThumbClass.Conditions)
+                                        {
+                                            await treeBase.DeleteItemToSaves(get_ThumbFt.Saver, i.Key, j.Key, n.Key, item.Key,
+                                                contisionLoader.saveThumbInfoWindowModel, mainWindowModels.SaveThumbInfo);
+                                        }
+                                        if (get_ThumbFt.thumbClass == ThumbClass.Events)
+                                        {
+                                            await treeBase.DeleteItemToSaves(get_ThumbFt.Saver, i.Key, j.Key, n.Key, item.Key,
+                                                eventLoader.saveThumbInfoWindowModel, mainWindowModels.SaveThumbInfo);
+                                        }
+                                        if (get_ThumbFt.thumbClass == ThumbClass.Objectives)
+                                        {
+                                            await treeBase.DeleteItemToSaves(get_ThumbFt.Saver, i.Key, j.Key, n.Key, item.Key,
+                                                objectiveLoader.saveThumbInfoWindowModel, mainWindowModels.SaveThumbInfo);
+                                        }
+                                        if (get_ThumbFt.thumbClass == ThumbClass.NPC)
+                                        {
+                                            await treeBase.DeleteItemToSaves(get_ThumbFt.Saver, i.Key, j.Key, n.Key, item.Key,
+                                                npcLoader.saveThumbInfoWindowModel, mainWindowModels.SaveThumbInfo);
+                                        }
+                                        if (get_ThumbFt.thumbClass == ThumbClass.Player)
+                                        {
+                                            await treeBase.DeleteItemToSaves(get_ThumbFt.Saver, i.Key, j.Key, n.Key, item.Key,
+                                                playerLoader.saveThumbInfoWindowModel, mainWindowModels.SaveThumbInfo);
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            get_ThumbCl.Fathers.Remove(thumbFt);
+            get_ThumbFt.Children.Remove(thumbCl);
+
+            var delLine = saveLines.Where(t => t.FatherName == thumbFt && t.ChirldName == thumbCl).FirstOrDefault();
+
+            mainWindow.cvmenu.Children.Remove(delLine.line);
+
+            saveLines.Remove(delLine);
+
+            result.SetSuccese();
+            return result;
         }
 
         private async Task<ReturnModel> AddTextToThumb(SaveChird father,SaveChird chird)

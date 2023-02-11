@@ -209,5 +209,27 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
             VisbilityAnimation.KeyFrames.Add(kf);
             element.BeginAnimation(Border.VisibilityProperty, VisbilityAnimation);
         }
+
+        public static void WobbleUI(FrameworkElement element, double distanceX = 2, double distanceY = 1,double oldX =0 , double oldY =0, double centerX = 105, double centerY = 50, double duration = .3)
+        {
+            SkewTransform st = new SkewTransform();
+            st.CenterX = centerX;
+            st.CenterY = centerY;
+            element.RenderTransform = st;  
+            EasingFunctionBase easeFunction = new PowerEase() { EasingMode = EasingMode.EaseInOut, Power = 2 };
+
+            DoubleAnimation AnimationX = new DoubleAnimation(oldX, distanceX, new Duration(TimeSpan.FromSeconds(duration)));
+            AnimationX.EasingFunction = easeFunction;
+
+            element.RenderTransform.BeginAnimation(SkewTransform.AngleXProperty, AnimationX);
+
+            DoubleAnimation AnimationY = new DoubleAnimation(oldY, distanceY, new Duration(TimeSpan.FromSeconds(duration)));
+            AnimationY.EasingFunction = easeFunction;
+            
+            element.RenderTransform.BeginAnimation(SkewTransform.AngleYProperty, AnimationY);
+
+        }
+
+        //public static void 
     }
 }

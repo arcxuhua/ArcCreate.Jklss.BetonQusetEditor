@@ -380,8 +380,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                     {
                         result.SetError();
                     }
-
-                    getSaves[one][two].Remove(three);
+                    getSaves[one][two][three] = false;
 
                     saveThumbInfoWindowModel[thumb].TreeItems = getSaves;
                 });

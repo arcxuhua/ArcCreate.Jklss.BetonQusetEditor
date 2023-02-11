@@ -80,6 +80,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                 Uid = Uid.ToString(),
             };
 
+            //thumb.CacheMode = new BitmapCache() {RenderAtScale=5 };
+
             var getthumb =await Task.Run(() =>
             {
                 Uid++;
@@ -142,7 +144,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
         /// </summary>
         /// <param name="txt"></param>
         /// <returns></returns>
-        public async Task<ReturnModel> UseNameGetThumb(ThumbClass thumbClass,string txt)
+        public async Task<ReturnModel> UseNameGetThumb(ThumbClass thumbClass,string txt,bool vague = false)
         {
             var result = new ReturnModel();
 
@@ -168,12 +170,29 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                             getName = GetControl<TextBox>("ConditionsConfig_TBox", item.Saver).Text;
                         }));
 
-                        if (thumbClass == item.thumbClass && getName == txt)
+                        if (!vague)
                         {
-                            result.SetSuccese("", item);
+                            if (thumbClass == item.thumbClass && getName == txt)
+                            {
+                                result.SetSuccese("", item);
 
-                            return result;
+                                return result;
+                            }
                         }
+                        else
+                        {
+                            var xxgetName = getName.ToLower();
+
+                            var xxtxt = txt.ToLower();
+
+                            if (thumbClass == item.thumbClass && xxgetName.Contains(xxtxt))
+                            {
+                                result.SetSuccese("", item);
+
+                                return result;
+                            }
+                        }
+                        
                     }
 
                     result.SetError();
@@ -200,11 +219,27 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                 getName = GetControl<TextBox>("JournalConfig_TBox", item.Saver).Text;
                             }));
 
-                            if (thumbClass == item.thumbClass && getName == txt)
+                            if (!vague)
                             {
-                                result.SetSuccese("", item);
+                                if (thumbClass == item.thumbClass && getName == txt)
+                                {
+                                    result.SetSuccese("", item);
 
-                                return result;
+                                    return result;
+                                }
+                            }
+                            else
+                            {
+                                var xxgetName = getName.ToLower();
+
+                                var xxtxt = txt.ToLower();
+
+                                if (thumbClass == item.thumbClass && xxgetName.Contains(xxtxt))
+                                {
+                                    result.SetSuccese("", item);
+
+                                    return result;
+                                }
                             }
                         }
 
@@ -231,11 +266,27 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                 getName = GetControl<TextBox>("ItemsConfig_TBox", item.Saver).Text;
                             }));
 
-                            if (thumbClass == item.thumbClass && getName == txt)
+                            if (!vague)
                             {
-                                result.SetSuccese("", item);
+                                if (thumbClass == item.thumbClass && getName == txt)
+                                {
+                                    result.SetSuccese("", item);
 
-                                return result;
+                                    return result;
+                                }
+                            }
+                            else
+                            {
+                                var xxgetName = getName.ToLower();
+
+                                var xxtxt = txt.ToLower();
+
+                                if (thumbClass == item.thumbClass && xxgetName.Contains(xxtxt))
+                                {
+                                    result.SetSuccese("", item);
+
+                                    return result;
+                                }
                             }
                         }
 
@@ -262,11 +313,27 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                                 getName = GetControl<TextBox>("ShowNpcName_TBox", item.Saver).Text;
                             }));
 
-                            if (thumbClass == item.thumbClass && getName == txt)
+                            if (!vague)
                             {
-                                result.SetSuccese("", item);
+                                if (thumbClass == item.thumbClass && getName == txt)
+                                {
+                                    result.SetSuccese("", item);
 
-                                return result;
+                                    return result;
+                                }
+                            }
+                            else
+                            {
+                                var xxgetName = getName.ToLower();
+
+                                var xxtxt = txt.ToLower();
+
+                                if (thumbClass == item.thumbClass && xxgetName.Contains(xxtxt))
+                                {
+                                    result.SetSuccese("", item);
+
+                                    return result;
+                                }
                             }
                         }
 

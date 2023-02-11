@@ -87,7 +87,7 @@
         </Grid>
         <Grid Grid.Column="0" Grid.Row="2" Background="#7F000000">
             <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 10 1 0">
-                <Button Command="{Binding CreateNewTalkCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="#FF5307B3" BorderBrush="#FF5307B3">
+                <Button Command="{Binding CreateNewTalkCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="#FF5307B3" BorderBrush="#FF5307B3" MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave">
                     <Button.Content>
                         <materialDesign:PackIcon Kind="Book" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" />
                     </Button.Content>
@@ -96,7 +96,7 @@
             </Grid>
 
             <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 120 1 0">
-                <Button IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateNpcTalkCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" BorderBrush="#FF5307B3" Background="#FF5307B3">
+                <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateNpcTalkCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" BorderBrush="#FF5307B3" Background="#FF5307B3">
                     <Button.Content>
                         <materialDesign:PackIcon Kind="BookEdit" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" />
                     </Button.Content>
@@ -105,7 +105,7 @@
             </Grid>
 
             <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 230 1 0">
-                <Button IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreatePlayerTalkCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="#FF5307B3" BorderBrush="#FF5307B3">
+                <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreatePlayerTalkCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="#FF5307B3" BorderBrush="#FF5307B3">
                     <Button.Content>
                         <materialDesign:PackIcon Kind="BookEducation" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" />
                     </Button.Content>
@@ -114,7 +114,7 @@
             </Grid>
 
             <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 340 1 0">
-                <Button IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateConditionsCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="Black" BorderBrush="Black">
+                <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateConditionsCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="Black" BorderBrush="Black">
                     <Button.Content>
                         <materialDesign:PackIcon Kind="BookmarkMultiple" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" />
                     </Button.Content>
@@ -123,7 +123,7 @@
             </Grid>
 
             <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 450 1 0">
-                <Button IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateEventsCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="Black" BorderBrush="Black">
+                <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateEventsCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="Black" BorderBrush="Black">
                     <Button.Content>
                         <materialDesign:PackIcon Kind="BookmarkPlus" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" />
                     </Button.Content>
@@ -132,7 +132,7 @@
             </Grid>
 
             <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 560 1 0">
-                <Button IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateObjectivesCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="Black" BorderBrush="Black">
+                <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateObjectivesCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="Black" BorderBrush="Black">
                     <Button.Content>
                         <materialDesign:PackIcon Kind="BookmarkCheck" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" />
                     </Button.Content>
@@ -141,7 +141,7 @@
             </Grid>
 
             <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 670 1 0">
-                <Button IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateJournalCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="White" BorderBrush="White">
+                <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateJournalCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="White" BorderBrush="White">
                     <Button.Content>
                         <materialDesign:PackIcon Kind="BookmarkBoxMultipleOutline" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" Foreground="#DD000000" />
                     </Button.Content>
@@ -150,7 +150,7 @@
             </Grid>
 
             <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 780 1 0">
-                <Button IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateItemsCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="White" BorderBrush="White" Margin="0,0,0,0">
+                <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateItemsCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="White" BorderBrush="White" Margin="0,0,0,0">
                     <Button.Content>
                         <materialDesign:PackIcon Kind="Boombox" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" Foreground="#DD000000" />
                     </Button.Content>
@@ -181,17 +181,27 @@
                     </Style>
                 </materialDesign:DrawerHost.Style>
                 <materialDesign:DrawerHost.TopDrawerContent>
-                    <Grid Height="40" Margin="0 0 0 0" Background="#7F000000">
-                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="18" Foreground="White" Margin="0 0 560 0">搜索</TextBlock>
-                        <TextBox VerticalAlignment="Center" HorizontalAlignment="Center" Height="35" Width="500" Foreground="White"></TextBox>
+                    <Grid Height="60" Margin="0 0 0 0" Background="#7F000000">
+                        <Border HorizontalAlignment="Center" VerticalAlignment="Center" Background="#B2888888" CornerRadius="0" Height="40" Width="500">
+                            <Border.Effect>
+                                <DropShadowEffect Color="Black" ShadowDepth="5" Direction="-40" BlurRadius="20"/>
+                            </Border.Effect>
+                            <Grid>
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="15" Foreground="White" Margin="30 0 0 0">搜索:</TextBlock>
+                                <TextBox Text="{Binding SearchText}" materialDesign:TextFieldAssist.UnderlineBrush="White" materialDesign:HintAssist.Hint="请输入想要查找的卡片名称" Margin="70 0 0 0" VerticalAlignment="Center" HorizontalAlignment="Left" Height="25" Width="200" FontSize="12" Foreground="White"></TextBox>
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="15" Foreground="White" Margin="280 0 0 0">类型:</TextBlock>
+                                <ComboBox Foreground="Black" SelectedItem="{Binding SearchType}" ItemsSource="{Binding SearchListType}" materialDesign:TextFieldAssist.UnderlineBrush="White" Width="90" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="320 0 0 0"></ComboBox>
+                                <Button Command="{Binding SelectSearch}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" materialDesign:ButtonAssist.CornerRadius="0" materialDesign:ButtonProgressAssist.IndicatorForeground="White" Style="{StaticResource MaterialDesignPaperSecondaryButton}" Background="{x:Null}" Foreground="White" BorderBrush="White" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="420 0 0 1" Width="60" Height="25">搜索</Button>
+                            </Grid>
+                        </Border>
+                        
                     </Grid>
                 </materialDesign:DrawerHost.TopDrawerContent>
                 <materialDesign:DrawerHost.RightDrawerContent>
                     <Grid Margin="0 0 0 0" Width="400" Background="#7F000000">
-                        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="18" Foreground="White" Margin="0 10 0 0">标签页</TextBlock>
-                        <Border Visibility="Visible" x:Name="ctrl" Background="White" HorizontalAlignment="Center" CornerRadius="10" VerticalAlignment="Top" Width="360" Height="200" Margin="0 40 0 0" BorderBrush="Black">
+                        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="14" Foreground="White" Margin="0 10 0 0">标签页</TextBlock>
+                        <Border Visibility="Visible" x:Name="ctrl" Background="#B2888888" HorizontalAlignment="Center" VerticalAlignment="Top" Width="360" Height="200" Margin="0 40 0 0" BorderBrush="Black">
                             <Grid>
-                                
                                 <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Black" FontWeight="Bold" FontSize="14" Margin="10 10 0 0">存储地址:</TextBlock>
                                 <TextBox Text="{Binding MainFilePath}" Height="25" Width="260" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Black" FontWeight="Bold" FontSize="14" Margin="70 5 0 0"></TextBox>
                                 <Image Margin="10 0 0 5" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="350" Height="120" Source="/img/title/normal.png"></Image>
@@ -199,11 +209,17 @@
                                     <materialDesign:PackIcon Kind="FileEdit" Width="20" Height="20"/>
                                 </Button>
                             </Grid>
+                            <Border.Effect>
+                                <DropShadowEffect Color="Black" ShadowDepth="5" Direction="-40" BlurRadius="20"/>
+                            </Border.Effect>
                         </Border>
-                        <Border Visibility="Visible" Background="White" HorizontalAlignment="Center" CornerRadius="10" VerticalAlignment="Top" Width="360" Height="630" Margin="0 250 0 0" BorderBrush="Black">
+                        <Border Visibility="Visible" Background="#B2888888" HorizontalAlignment="Center" VerticalAlignment="Top" Width="360" Height="630" Margin="0 250 0 0" BorderBrush="Black">
                             <Grid>
                                 <TextBlock Foreground="Black" FontSize="19" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center">广告位招租，加Q3140857979</TextBlock>
                             </Grid>
+                            <Border.Effect>
+                                <DropShadowEffect Color="Black" ShadowDepth="5" Direction="-40" BlurRadius="20"/>
+                            </Border.Effect>
                         </Border>
                     </Grid>
                 </materialDesign:DrawerHost.RightDrawerContent>
@@ -214,7 +230,7 @@
                             <Grid>
                                 <Canvas x:Name="cvmenu" HorizontalAlignment="Left" Height="509800" VerticalAlignment="Top" Width="1277400" Background="#33000000">
                                     <Canvas.RenderTransform>
-                                        <TransformGroup/>
+                                        <TransformGroup />
                                     </Canvas.RenderTransform>
                                 </Canvas>
                             </Grid>
@@ -231,7 +247,7 @@
                             <ColumnDefinition />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <Button VerticalAlignment="Top" HorizontalAlignment="Center" Height="40" Width="100" Style="{StaticResource MaterialDesignPaperSecondaryButton}" Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" CommandParameter="{x:Static Dock.Top}" Grid.Row="0" Grid.Column="1" Margin="4" Content="{materialDesign:PackIcon Kind=ArrowDown}" Foreground="Black" BorderBrush="{x:Null}" Background="{x:Null}" />
+                        <Button VerticalAlignment="Top" HorizontalAlignment="Center" Height="40" Width="100" Style="{StaticResource MaterialDesignPaperSecondaryButton}" Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" CommandParameter="{x:Static Dock.Top}" Grid.Row="0" Grid.Column="1" Margin="4" Content="{materialDesign:PackIcon Kind=ArrowDown}" Foreground="Black" BorderBrush="{x:Null}" Background="{x:Null}" Cursor="Hand" />
                         <Button VerticalAlignment="Center" HorizontalAlignment="Right" Height="100" Width="45" Style="{StaticResource MaterialDesignPaperSecondaryButton}" Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" CommandParameter="{x:Static Dock.Right}" Grid.Row="1" Grid.Column="2" Content="{materialDesign:PackIcon Kind=ArrowLeft}" BorderBrush="{x:Null}" Background="{x:Null}" />
                     </Grid>
                 </Grid>

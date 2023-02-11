@@ -1,21 +1,11 @@
-﻿using ArcCreate.Jklss.BetonQusetEditor.ViewModel;
-using ArcCreate.Jklss.Model.MainWindow;
+﻿using ArcCreate.Jklss.BetonQusetEditor.Base;
+using ArcCreate.Jklss.BetonQusetEditor.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using static System.Windows.Forms.AxHost;
 
 namespace ArcCreate.Jklss.BetonQusetEditor
 {
@@ -159,6 +149,43 @@ namespace ArcCreate.Jklss.BetonQusetEditor
             {
                 this.DragMove();
             }
+        }
+
+        Dictionary<object, Point> saveuse = new Dictionary<object, Point>();
+
+        private void Btn_MouseMove(object sender, MouseEventArgs e)
+        {
+            var mouseXY = e.GetPosition(sender as Button);
+
+            var x = (mouseXY.X - 105) / 105 * 3.00;
+
+            var y = (mouseXY.Y - 50) / 50 * 2.00;
+
+            if (x < 0.00)
+            {
+                y = -y;
+            }
+
+            var cx = 105 - (mouseXY.X - 105.00);
+
+            var cy = 50 - (mouseXY.Y - 50.00);
+
+            if (!saveuse.TryGetValue(sender, out Point p))
+            {
+                AnimationBase.WobbleUI(sender as Button, x, y, 0, 0, cx ,cy);
+                saveuse.Add(sender, new Point() { X = x, Y = y });
+            }
+            else
+            {
+                AnimationBase.WobbleUI(sender as Button, x, y, p.X, p.Y, cx, cy);
+                saveuse[sender] = new Point() { X = x,Y= y};
+            }
+            
+        }
+
+        private void Btn_MouseLeave(object sender, MouseEventArgs e)
+        {
+            AnimationBase.WobbleUI(sender as Button,0,0, saveuse[sender].X, saveuse[sender].Y);
         }
     }
 }
