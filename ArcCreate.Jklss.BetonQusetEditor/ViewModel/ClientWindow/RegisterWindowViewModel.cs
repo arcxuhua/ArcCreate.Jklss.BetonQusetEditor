@@ -383,7 +383,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
                                     Thread.Sleep(1000);
                                 }
 
-                                await LoginWindowViewModel.socketViewModel.SendRESMessage(MessageClass.Json, getJson, SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString());
+                                await SocketViewModel.SendRESMessage(MessageClass.Json, getJson, SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString());
 
                             });
                         }

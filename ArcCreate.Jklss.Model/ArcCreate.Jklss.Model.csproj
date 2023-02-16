@@ -46,6 +46,7 @@
     <Compile Include="ClientModel\LoginModel.cs" />
     <Compile Include="ClientModel\PayModel.cs" />
     <Compile Include="ClientModel\RegisterModel.cs" />
+    <Compile Include="Data\SelectDataWindowModel.cs" />
     <Compile Include="MainWindow\MainWindowModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReturnModel.cs" />

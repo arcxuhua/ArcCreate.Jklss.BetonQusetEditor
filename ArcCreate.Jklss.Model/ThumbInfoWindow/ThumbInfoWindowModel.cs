@@ -20,7 +20,7 @@ namespace ArcCreate.Jklss.Model.ThumbInfoWindow
     {
         public string Name { get; set; }
 
-        public string FontColor { get; set; } = "#FF000000";
+        public string FontColor { get; set; } = "White";
 
         public IList<DefinitionNode> Children { get; set; }
     }

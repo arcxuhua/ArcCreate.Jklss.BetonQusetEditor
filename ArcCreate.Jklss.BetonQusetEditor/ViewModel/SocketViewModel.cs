@@ -14,6 +14,8 @@ using System.IO;
 using System.Diagnostics;
 using System.Windows.Shapes;
 using System;
+using System.Linq;
+using System.Threading;
 
 namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 {
@@ -23,7 +25,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
         public static ScoketService socketService = new ScoketService();
 
-        public static string version = "3.0.59";
+        public static string version = "3.1.25";
 
         /// <summary>
         /// 开启Socket通讯
@@ -45,13 +47,12 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             return result;
         }
 
-        private async void ScoketService_GetMessage(MessageMode message)
+        private async void ScoketService_GetMessage(MessageMode message,string token="")
         {
             if (message == null)
             {
                 return;
             }
-
             if (message.Class == MessageClass.Json)
             {
                 var getMessage = Encoding.UTF8.GetString(message.Message);
@@ -80,6 +81,11 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                         return;
                     }
+
+                    SocketModel.token = token;
+                    SocketModel.isLogin = model.IsLogin;
+                    SocketModel.userName = model.UserName;
+
                     LoginWindowViewModel.window.Dispatcher.Invoke(new System.Action(() =>
                     {
                         MainWindow window = new MainWindow();
@@ -215,13 +221,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             return result;
         }
 
+        private static int id = 10000;
+
         /// <summary>
-        /// 向客户端发送消息（RES加密）
+        /// 向客户端发送消息（RES加密）可等待返回值
         /// </summary>
         /// <param name="message"></param>
         /// <param name="ip"></param>
         /// <returns></returns>
-        public async Task<ReturnModel> SendRESMessage(MessageClass messageClass,string message, string sendip,string keyIp)
+        public static async Task<ReturnModel> SendRESMessage(MessageClass messageClass,string message, string sendip,string keyIp,string token="",bool waitBack = false)
         {
             var result = new ReturnModel();
 
@@ -229,6 +237,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
             var sendModel = new MessageMode()
             {
+                Key = id,
+                Token = token,
                 Class = messageClass,
                 Ip = sendip,
                 Message = data,
@@ -247,16 +257,54 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                 return result;
             }
 
-            await Task.Run(() =>
-            {
-                var getJM = FileService.PublicKeyEncrypt(publicKey, send);
+            var getJM = FileService.PublicKeyEncrypt(publicKey, send);
 
-                socketService.AsyncSend(saveSocketClient[keyIp], getJM);
-            });
+            socketService.AsyncSend(saveSocketClient[keyIp], getJM);
+            
+            if (waitBack)
+            {
+                if (waitBackDic.ContainsKey(messageClass))
+                {
+                    waitBackDic[messageClass].Add(id, string.Empty);
+                }
+                else
+                {
+                    waitBackDic.Add(messageClass, new Dictionary<int, string>
+                {
+                    {id,string.Empty }
+                });
+                }
+                
+
+                var value = await WaitBack(messageClass, id);
+
+                id++;
+
+                result.SetSuccese("", value);
+                return result;
+
+            }
 
             result.SetSuccese("");
 
             return result;
+        }
+
+        private static async Task<string> WaitBack(MessageClass messageClass, int id)
+        {
+            var value = await Task.Run(() =>
+            {
+                while (true)
+                {
+                    Thread.Sleep(50);//延迟50毫秒
+                    if (!string.IsNullOrEmpty(waitBackDic[messageClass][id]))
+                    {
+                        return waitBackDic[messageClass][id];
+                    }
+                }
+            });
+
+            return value;
         }
     }
 }

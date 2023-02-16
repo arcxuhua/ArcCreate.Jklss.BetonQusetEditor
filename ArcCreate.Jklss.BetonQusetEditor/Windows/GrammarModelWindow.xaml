@@ -1,0 +1,143 @@
+﻿<Window x:Class="ArcCreate.Jklss.BetonQusetEditor.Windows.GrammarModelWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ArcCreate.Jklss.BetonQusetEditor.Windows"
+        mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:binding="http://schemas.microsoft.com/xaml/behaviors"
+        Title="添加\修改一个 语法吧！" Height="850" Width="800" WindowStyle="None" AllowsTransparency="True" Background="{x:Null}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid Background="#FF4C4C4C" >
+            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10 0 0 0" FontSize="13" FontWeight="Bold" Foreground="White">添加\修改\删除 一个语法模型,如果您不懂请立即关闭此页面</TextBlock>
+            <Button Command="{Binding CloseCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Grid.Row="0" Margin="0 0 10 1" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryDarkButton}" ToolTip="关闭" Width="25" Height="25" Background="White" BorderBrush="White" Foreground="#DDFF0000">
+                <materialDesign:PackIcon Kind="Close" Height="20" Width="20" />
+            </Button>
+        </Grid>
+        <Grid Grid.Row="1" Background="#B2B3B3" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height ="40"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="1" >
+                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="30 0 0 0">选择语法模型:</TextBlock>
+                <ComboBox materialDesign:TextFieldAssist.UnderlineBrush="White" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="12" Height="25" Width="200" Margin="120 0 0 0">
+                    <ComboBoxItem>条件(Condition)模型</ComboBoxItem>
+                    <ComboBoxItem>事件(Event)模型</ComboBoxItem>
+                    <ComboBoxItem>目标(Objective)模型</ComboBoxItem>
+                </ComboBox>
+                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="400 0 0 0">选择已有模型:</TextBlock>
+                <ComboBox materialDesign:TextFieldAssist.UnderlineBrush="White" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="12" Height="25" Width="200" Margin="490 0 0 0">
+
+                </ComboBox>
+
+                <Button Width="20" Height="20" Margin="0 0 80 0" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                    <materialDesign:PackIcon Kind="Plus" />
+                </Button>
+                <Button Width="20" Height="20" Margin="0 0 50 0" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                    <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                </Button>
+                <Line X1="20" Y1="40" X2="780" Y2="40" Stroke="Black" StrokeThickness="5"></Line>
+
+            </Grid>
+            <Grid Grid.Row="2">
+                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="30,10,0,0"><Run Text="模型名称(例 tag):"/></TextBlock>
+                <TextBox HorizontalAlignment="Left" Margin="130,6,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="75"/>
+                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="232,10,0,0"><Run Text="主命令第一参数"/><LineBreak/><Run Text="分隔符(例 ,):"/></TextBlock>
+                <TextBox HorizontalAlignment="Left" Margin="322,6,0,0" ToolTip="如果没有分隔符请填写X（大写 X）" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="50"/>
+                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="400,10,0,0"><Run Text="主命令第一参数"/><LineBreak/><Run Text="步长(例 1):"/></TextBlock>
+                <TextBox HorizontalAlignment="Left" Margin="489,6,0,0" ToolTip="如果不限制步长请填写 [-1]" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="30"/>
+                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="541,13,0,0"><Run Text="是否为条件性命令:"/></TextBlock>
+                <ComboBox materialDesign:TextFieldAssist.UnderlineBrush="White" ToolTip="开启将识别 取反标识 [!]" HorizontalAlignment="Left" FontSize="12" Height="25" Width="117" Margin="645,6,0,0" VerticalAlignment="Top">
+                    <ComboBoxItem Content="是"/>
+                    <ComboBoxItem Content="否"/>
+                </ComboBox>
+                <Button Width="20" Height="20" Margin="177,188,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                    <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                </Button>
+                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="177,59,0,0" Text="分隔符(例 ,):"/>
+                <TextBox HorizontalAlignment="Left" Margin="250,55,0,0" ToolTip="如果没有分隔符请填写X（大写 X）" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="48"/>
+                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="181,89,0,0" Text="步长(例 1):"/>
+                <TextBox HorizontalAlignment="Left" Margin="246,85,0,0" ToolTip="如果没有分隔符请填写X（大写 X）" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="52"/>
+                <Button Width="20" Height="20" Margin="177,152,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                    <materialDesign:PackIcon Kind="Plus" />
+                </Button>
+                <DataGrid Margin="12,54,628,552" Width="160"/>
+                <DataGrid Margin="326,54,234,552"/>
+                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="571,59,0,0" Text="子命令:"/>
+                <TextBox HorizontalAlignment="Left" Margin="615,55,0,0" ToolTip="如果没有分隔符请填写X（大写 X）" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="104"/>
+                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="571,89,0,0" Text="参数位置:"/>
+                <TextBox HorizontalAlignment="Left" Margin="627,85,0,0" ToolTip="如果没有分隔符请填写X（大写 X）" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="92"/>
+                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="571,121,0,0"><Run Language="zh-cn" Text="需要类型"/></TextBlock>
+                <ComboBox materialDesign:TextFieldAssist.UnderlineBrush="White" ToolTip="开启将识别 取反标识 [!]" HorizontalAlignment="Left" FontSize="12" Height="25" Width="92" Margin="627,112,0,0" VerticalAlignment="Top">
+                    <ComboBoxItem Content="是"/>
+                    <ComboBoxItem Content="否"/>
+                </ComboBox>
+                <Button Width="20" Height="20" Margin="571,188,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                    <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                </Button>
+                <Button Width="20" Height="20" Margin="571,152,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                    <materialDesign:PackIcon Kind="Plus" />
+                </Button>
+                <DataGrid Margin="9,230,551,394"/>
+                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="254,235,0,0" Text="子命令:"/>
+                <TextBox HorizontalAlignment="Left" Margin="298,231,0,0" ToolTip="如果没有分隔符请填写X（大写 X）" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="126"/>
+                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="254,265,0,0"><Run Language="zh-cn" Text="子命令分隔符"/></TextBlock>
+                <TextBox HorizontalAlignment="Left" Margin="332,261,0,0" ToolTip="如果没有分隔符请填写X（大写 X）" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="92"/>
+                <Button Width="20" Height="20" Margin="254,346,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                    <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                </Button>
+                <Button Width="20" Height="20" Margin="254,321,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                    <materialDesign:PackIcon Kind="Plus" />
+                </Button>
+                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="254,299,0,0"><Run Text="子命令"/><Run Language="zh-cn" Text="步长"/></TextBlock>
+                <TextBox HorizontalAlignment="Left" Margin="319,295,0,0" ToolTip="如果没有分隔符请填写X（大写 X）" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="105"/>
+                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="30,404,0,0"><Run Language="zh-cn" Text="模型"/><Run Text="帮助提醒"/></TextBlock>
+                <TextBox HorizontalAlignment="Left" Margin="119,400,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="643"/>
+                <DataGrid Margin="30,429,38,252"/>
+                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="30,512,0,0"><Run Language="zh-cn" Text="命令"/><Run Text="帮助提醒"/></TextBlock>
+                <TextBox HorizontalAlignment="Left" Margin="107,509,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="597"/>
+                <Button Width="20" Height="20" Margin="742,513,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                    <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                </Button>
+                <Button Width="20" Height="20" Margin="709,513,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                    <materialDesign:PackIcon Kind="Plus" />
+                </Button>
+                <DataGrid Margin="30,538,38,142"/>
+                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="30,623,0,0"><Run Text="第几"/><Run Language="zh-cn" Text="命令"/></TextBlock>
+                <TextBox HorizontalAlignment="Left" Margin="83,619,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="30"/>
+                <Button Width="20" Height="20" Margin="742,623,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                    <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                </Button>
+                <Button Width="20" Height="20" Margin="709,623,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                    <materialDesign:PackIcon Kind="Plus" />
+                </Button>
+                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="120,623,0,0"><Run Language="zh-cn" Text="第几参数"/></TextBlock>
+                <TextBox HorizontalAlignment="Left" Margin="177,619,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="30"/>
+                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="218,623,0,0"><Run Language="zh-cn" Text="参数"/><Run Text="帮助提醒"/></TextBlock>
+                <TextBox HorizontalAlignment="Left" Margin="295,619,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="409"/>
+                <DataGrid Margin="30,649,38,31"/>
+                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="30,734,0,0"><Run Text="第几"/><Run Language="zh-cn" Text="命令"/></TextBlock>
+                <TextBox HorizontalAlignment="Left" Margin="82,730,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="30"/>
+                <Button Width="20" Height="20" Margin="742,734,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                    <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                </Button>
+                <Button Width="20" Height="20" Margin="708,734,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                    <materialDesign:PackIcon Kind="Plus" />
+                </Button>
+                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="120,734,0,0"><Run Language="zh-cn" Text="第几参数"/></TextBlock>
+                <TextBox HorizontalAlignment="Left" Margin="176,730,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="30"/>
+                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="289,734,0,0"><Run Language="zh-cn" Text="参数"/><Run Text="帮助提醒"/></TextBlock>
+                <TextBox HorizontalAlignment="Left" Margin="366,730,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="338"/>
+                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="211,734,0,0"><Run Text="第几"/><Run Language="zh-cn" Text="项"/></TextBlock>
+                <TextBox HorizontalAlignment="Left" Margin="252,730,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="30"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

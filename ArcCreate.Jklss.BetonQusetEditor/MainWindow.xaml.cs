@@ -6,6 +6,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
 
 namespace ArcCreate.Jklss.BetonQusetEditor
 {
@@ -22,6 +24,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor
             ScalerTBlock.Text = Math.Round(Scale * 100, 2).ToString() + "%";
             TransformGroup tg = cvmenu.RenderTransform as TransformGroup;
             tg.Children.Add(new TranslateTransform(-cvmenu.Width/2, -cvmenu.Height/2)); //centerX和centerY用外部包装元素的坐标，不能用内部被变换的Canvas元素的坐标
+            
         }
 
         Point previousPoint;

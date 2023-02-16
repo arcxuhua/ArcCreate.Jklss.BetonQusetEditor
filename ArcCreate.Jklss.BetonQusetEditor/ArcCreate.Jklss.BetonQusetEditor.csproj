@@ -155,10 +155,17 @@
     <Compile Include="ViewModel\ClientWindow\LoginWindowViewModel.cs" />
     <Compile Include="ViewModel\ClientWindow\PayWindowViewModel.cs" />
     <Compile Include="ViewModel\ClientWindow\RegisterWindowViewModel.cs" />
+    <Compile Include="ViewModel\Data\SelectDataWindowViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\SocketViewModel.cs" />
     <Compile Include="ViewModel\ThumbInfoWindowViewModel.cs" />
     <Compile Include="ViewModel\ThumbSetWindowViewModel.cs" />
+    <Compile Include="Windows\Data\SelectDataWindow.xaml.cs">
+      <DependentUpon>SelectDataWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\GrammarModelWindow.xaml.cs">
+      <DependentUpon>GrammarModelWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
@@ -190,6 +197,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ThumbInfoWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Data\SelectDataWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\GrammarModelWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

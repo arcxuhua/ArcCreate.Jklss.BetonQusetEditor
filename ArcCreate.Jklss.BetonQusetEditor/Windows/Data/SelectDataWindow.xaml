@@ -1,0 +1,77 @@
+﻿<Window x:Class="ArcCreate.Jklss.BetonQusetEditor.Windows.Data.SelectDataWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ArcCreate.Jklss.BetonQusetEditor.Windows.Data"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:binding="http://schemas.microsoft.com/xaml/behaviors"
+        mc:Ignorable="d"
+        Title="开始页面" Height="530" Width="830" ResizeMode="NoResize" WindowStyle="None" Background="{x:Null}" AllowsTransparency="True" WindowStartupLocation="CenterScreen">
+    <binding:Interaction.Triggers>
+        <binding:EventTrigger EventName="Loaded">
+            <binding:InvokeCommandAction Command="{Binding Path= LoadedCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}">
+            </binding:InvokeCommandAction>
+        </binding:EventTrigger>
+    </binding:Interaction.Triggers>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="90*"/>
+            <ColumnDefinition Width="325*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid Background="#FF4C4C4C" Grid.ColumnSpan="2" MouseMove="MouseMove">
+            <Image Source="/ArcCreate.png" HorizontalAlignment="Left" Width="35" Height="35" Margin="20 0 0 0"></Image>
+        </Grid>
+        <Grid Grid.Column="1" >
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Foreground="White">欢迎使用ArcCreate BQ编辑器</TextBlock>
+        </Grid>
+        <Grid  Grid.ColumnSpan="2" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="90*"/>
+                <ColumnDefinition Width="325*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Background="#FF757575" Grid.ColumnSpan="1">
+                <Button Command="{Binding MainCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Margin="0,30,0,0" materialDesign:ButtonAssist.CornerRadius="0" VerticalAlignment="Top" materialDesign:ButtonProgressAssist.IndicatorBackground="{x:Null}" materialDesign:ButtonProgressAssist.Value="-1" materialDesign:ButtonProgressAssist.IsIndicatorVisible="True" materialDesign:ButtonProgressAssist.IsIndeterminate="True" Background="{x:Null}" BorderBrush="White">主页</Button>
+                <Button Command="{Binding CreateCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Margin="0,60,0,0" materialDesign:ButtonAssist.CornerRadius="0" VerticalAlignment="Top" materialDesign:ButtonProgressAssist.IndicatorBackground="{x:Null}" materialDesign:ButtonProgressAssist.Value="-1" materialDesign:ButtonProgressAssist.IsIndicatorVisible="True" materialDesign:ButtonProgressAssist.IsIndeterminate="True" Background="{x:Null}" BorderBrush="White">新建项目</Button>
+                <Button Command="{Binding ReadCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Margin="0,92,0,0" materialDesign:ButtonAssist.CornerRadius="0" VerticalAlignment="Top" materialDesign:ButtonProgressAssist.IndicatorBackground="{x:Null}" materialDesign:ButtonProgressAssist.Value="-1" materialDesign:ButtonProgressAssist.IsIndicatorVisible="True" materialDesign:ButtonProgressAssist.IsIndeterminate="True" Background="{x:Null}" BorderBrush="White">原始文件</Button>
+                <Button Margin="0,152,0,0" materialDesign:ButtonAssist.CornerRadius="0" VerticalAlignment="Top" materialDesign:ButtonProgressAssist.Value="-1" materialDesign:ButtonProgressAssist.IsIndicatorVisible="True" materialDesign:ButtonProgressAssist.IndicatorBackground="{x:Null}" materialDesign:ButtonProgressAssist.IsIndeterminate="True" Background="{x:Null}" BorderBrush="White" Content="新建团队项目"/>
+                <Button Margin="0,182,0,0" materialDesign:ButtonAssist.CornerRadius="0" VerticalAlignment="Top" materialDesign:ButtonProgressAssist.Value="-1" materialDesign:ButtonProgressAssist.IsIndicatorVisible="True" materialDesign:ButtonProgressAssist.IndicatorBackground="{x:Null}" materialDesign:ButtonProgressAssist.IsIndeterminate="True" Background="{x:Null}" BorderBrush="White" Content="邀请加入团队"/>
+            </Grid>
+            <Grid x:Name="First" Grid.Column="2" Background="#FFC1C1C1" Visibility="Visible">
+                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30 30 0 0" FontSize="20" FontWeight="Bold" Foreground="White">最近使用项</TextBlock>
+                <TextBox Text="{Binding SearchText}" materialDesign:TextFieldAssist.UnderlineBrush="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="300 30 0 0" Width="300" Foreground="White" CaretBrush="White" SelectionBrush="White" Cursor="Arrow"></TextBox>
+                <Button Command="{Binding SearchCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" ToolTip="搜索" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="605 30 0 0" Width="25" Height="25" Background="{x:Null}" BorderBrush="{x:Null}">
+                    <materialDesign:PackIcon Kind="Magnify" />
+                </Button>
+                <DataGrid x:Name="data" SelectionMode="Extended" ItemsSource="{Binding Data}" CanUserAddRows="False" AutoGenerateColumns="False" HeadersVisibility="All" Margin="30,60,20,10" Background="#FFADADAD" Foreground="White" BorderBrush="White">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Code}" Header="ID" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False" />
+                        <DataGridTextColumn Binding="{Binding Name}" Header="名称" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False" Width="100" />
+                        <DataGridTextColumn Binding="{Binding FilePath}" Header="文件地址" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False" Width="300" />
+                        <DataGridTextColumn Binding="{Binding CreateDate}" Header="创建时间" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False" />
+                        <DataGridTextColumn Binding="{Binding UpdateData}" Header="修改时间" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+            <Grid x:Name="CreatePage" Grid.Column="2" Background="#FFC1C1C1" Visibility="Hidden">
+                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30 30 0 0" FontSize="20" FontWeight="Bold" Foreground="White">创建新的项目</TextBlock>
+                <TextBox Text="{Binding CreateName}" materialDesign:TextFieldAssist.UnderlineBrush="White" Foreground="White" CaretBrush="White" SelectionBrush="White" Cursor="Arrow" HorizontalAlignment="Center" VerticalAlignment="Top" Width="300" Margin="0,167,0,0"></TextBox>
+                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="113,171,0,0" FontSize="14" FontWeight="Bold" Foreground="White">项目名称:</TextBlock>
+
+                <TextBox Text="{Binding FilePath}" materialDesign:TextFieldAssist.UnderlineBrush="White" Foreground="White" CaretBrush="White" SelectionBrush="White" Cursor="Arrow" HorizontalAlignment="Center" VerticalAlignment="Top" Width="300" Margin="0,257,0,0"></TextBox>
+                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="76,261,0,0" FontSize="14" FontWeight="Bold" Foreground="White">Main.yml地址:</TextBlock>
+
+                <Button Command="{Binding CreateNewCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Margin="0 200 0 0" Width="300">新的开始</Button>
+                <Button Width="35" Height="30" Command="{Binding SelectFilePathCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" ToolTip="搜索" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"  Background="{x:Null}" BorderBrush="{x:Null}" Margin="480,250,130,190">
+                    <materialDesign:PackIcon Width="30" Height="30" Kind="CardSearch" />
+                </Button>
+            </Grid>
+        </Grid>
+
+
+    </Grid>
+</Window>

@@ -5,18 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ArcCreate.Jklss.BetonQusetEditor"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        mc:Ignorable="d" Height="777" Width="200" ResizeMode="NoResize" WindowStyle="None" Background="{x:Null}" AllowsTransparency="True" ShowInTaskbar="False">
+        mc:Ignorable="d" Height="980" Width="200" ResizeMode="NoResize" WindowStyle="None" Background="{x:Null}" AllowsTransparency="True" ShowInTaskbar="False">
     <Grid>
-        <Border CornerRadius="25,25,25,25" Background="White" >
+        <Border CornerRadius="0" Background="#FF4C4C4C" >
             <Grid ClipToBounds="True">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="25"></RowDefinition>
-                    <RowDefinition Height="40"></RowDefinition>
-                    <RowDefinition Height="687"></RowDefinition>
-                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="890"></RowDefinition>
+                    <RowDefinition Height="30"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25" FontWeight="Bold"> 当前进度</TextBlock>
-                <TreeView x:Name="TreeView_Tv" Grid.Row="2" Height="680" Background="AliceBlue" Width="190" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock Grid.Row="1" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold"> 当前进度</TextBlock>
+                <TreeView x:Name="TreeView_Tv" Grid.Row="2" Height="890" Background="#FF797979" Width="190" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate ItemsSource="{Binding Children}">
                             <TextBlock FontSize="15" Text="{Binding Name}" FontWeight="Bold" Foreground="{Binding FontColor}"/>
@@ -26,13 +26,14 @@
                     <TreeView.Resources>
                         <Style TargetType="TreeViewItem" BasedOn="{StaticResource MaterialDesignTreeViewItem}">
                             <Setter Property="IsExpanded" Value="True"></Setter>
+                            <Setter Property="Foreground" Value="White"></Setter>
                             <Setter Property="materialDesign:TreeViewAssist.ExpanderSize" Value="15" />
                             <Setter Property="materialDesign:TreeViewAssist.ShowSelection" Value="false" />
                         </Style>
                     </TreeView.Resources>
                 </TreeView>
 
-                <TextBlock Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontStyle="Italic" FontWeight="Bold">ArcCreate @ jklss.cn</TextBlock>
+                <TextBlock Grid.Row="3" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" >© 2023 ArcCreate Rights Reserved.</TextBlock>
             </Grid>
 
         </Border>

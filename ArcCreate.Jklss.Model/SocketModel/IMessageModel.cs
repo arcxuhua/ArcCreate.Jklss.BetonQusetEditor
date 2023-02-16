@@ -23,6 +23,16 @@ namespace ArcCreate.Jklss.Model.SocketModel
         MessageClass Class { get; set; }
 
         /// <summary>
+        /// Token
+        /// </summary>
+        string Token { get; set; }
+
+        /// <summary>
+        /// 数据包唯一ID
+        /// </summary>
+        int Key { get; set; }
+
+        /// <summary>
         /// 发送者IP
         /// </summary>
         string Ip { get; set; }
