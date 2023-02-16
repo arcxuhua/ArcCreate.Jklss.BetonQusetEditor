@@ -1891,38 +1891,67 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         {
                             Thread.Sleep(3000);
                         });
-
-                        SelectDataWindow dataWindow = new SelectDataWindow();
-                        dataWindow.DataContext = new SelectDataWindowViewModel();
-                        dataWindow.ShowDialog();
-                        SelectData = dataWindow.Tag as GridData;
-
-                        if(SelectData == null)
+                        var datacont = new SelectDataWindowViewModel();
+                        while (true) 
                         {
-                            MessageBox.Show("导入错误，请重试");
+                            SelectDataWindow dataWindow = new SelectDataWindow();
+                            dataWindow.DataContext = datacont;
                             dataWindow.ShowDialog();
-                        }
-                        MainFilePath = SelectData.FilePath;
-                        if (SelectData.Code != -1)
-                        {
-                            LoadingMessage = "正在从云端拉取数据，请不要操作页面";
-                            var back = await ReadJson();
+                            SelectData = dataWindow.Tag as GridData;
 
-                            if (!back.Succese)
+                            if (SelectData == null)
                             {
                                 MessageBox.Show("导入错误，请重试");
-                                dataWindow.ShowDialog();
+                                continue;
                             }
-                        }
-                        else
-                        {
-                            LoadingMessage = "正在向云端请求解析，请不要操作页面";
-                            var back = await ReadYaml();
-
-                            if (!back.Succese)
+                            MainFilePath = SelectData.FilePath;
+                            if (SelectData.Code != -1)
                             {
-                                MessageBox.Show("导入错误，请重试");
-                                dataWindow.ShowDialog();
+                                try
+                                {
+                                    LoadingMessage = "正在从云端拉取数据，请不要操作页面";
+                                    var back = await ReadJson();
+
+                                    if (!back.Succese)
+                                    {
+                                        MessageBox.Show("导入错误，请重试");
+                                        continue;
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
+                                }
+                                catch
+                                {
+                                    MessageBox.Show("导入错误，请重试");
+                                    continue;
+                                }
+                            }
+                            else
+                            {
+                                LoadingMessage = "正在向云端请求解析，请不要操作页面";
+
+                                try
+                                {
+                                    var back = await ReadYaml();
+
+                                    if (!back.Succese)
+                                    {
+                                        MessageBox.Show("导入错误，请重试");
+                                        continue;
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show("解析错误,配置文件中请不要使用多语言结构，\n如果您在更改后还出现此错误请联系\njk@jklss.cn");
+                                    continue;
+                                }
+
                             }
                         }
 
@@ -4930,14 +4959,26 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                 }
             }
 
-            get_ThumbCl.Fathers.Remove(thumbFt);
-            get_ThumbFt.Children.Remove(thumbCl);
-
             var delLine = saveLines.Where(t => t.FatherName == thumbFt && t.ChirldName == thumbCl).FirstOrDefault();
 
-            mainWindow.cvmenu.Children.Remove(delLine.line);
+            if(delLine != null)
+            {
+                mainWindow.cvmenu.Children.Remove(delLine.line);
 
-            saveLines.Remove(delLine);
+                saveLines.Remove(delLine);
+            }
+
+            var delLinef = saveLines.Where(t => t.ChirldName == thumbFt && t.FatherName == thumbCl).FirstOrDefault();
+
+            if (delLinef != null)
+            {
+                mainWindow.cvmenu.Children.Remove(delLinef.line);
+
+                saveLines.Remove(delLinef);
+            }
+
+            get_ThumbCl.Fathers.Remove(thumbFt);
+            get_ThumbFt.Children.Remove(thumbCl);
 
             result.SetSuccese();
             return result;
@@ -5344,32 +5385,35 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         return result;
                     }
 
-                    ThumbSetWindow setWindow = new ThumbSetWindow();
-
-                    if (chirdClass == ThumbClass.Conditions)
+                    while(saveResult == null)
                     {
-                        setWindow.DataContext = new ThumbSetWindowViewModel()
+                        ThumbSetWindow setWindow = new ThumbSetWindow();
+
+                        if (chirdClass == ThumbClass.Conditions)
                         {
-                            IsEnabel = true,
+                            setWindow.DataContext = new ThumbSetWindowViewModel()
+                            {
+                                IsEnabel = true,
 
-                            Classifications = oneList,
+                                Classifications = oneList,
 
-                            SaveTerms = twoDic
-                        };
-                    }
-                    else
-                    {
-                        setWindow.DataContext = new ThumbSetWindowViewModel()
+                                SaveTerms = twoDic
+                            };
+                        }
+                        else
                         {
-                            IsEnabel = false,
+                            setWindow.DataContext = new ThumbSetWindowViewModel()
+                            {
+                                IsEnabel = false,
 
-                            Classifications = oneList,
+                                Classifications = oneList,
 
-                            SaveTerms = twoDic
-                        };
+                                SaveTerms = twoDic
+                            };
+                        }
+
+                        setWindow.ShowDialog();
                     }
-
-                    setWindow.ShowDialog();
 
                     if (!mainWindowModels.SaveThumbInfo.ContainsKey(father.Saver))
                     {
@@ -5529,32 +5573,37 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         return result;
                     }
 
-                    setWindow = new ThumbSetWindow();
-
-                    if (chirdClass == ThumbClass.Conditions)
+                    while(saveResult == null)
                     {
-                        setWindow.DataContext = new ThumbSetWindowViewModel()
+                        var setWindow = new ThumbSetWindow();
+
+                        if (chirdClass == ThumbClass.Conditions)
                         {
-                            IsEnabel = true,
+                            setWindow.DataContext = new ThumbSetWindowViewModel()
+                            {
+                                IsEnabel = true,
 
-                            Classifications = oneList,
+                                Classifications = oneList,
 
-                            SaveTerms = twoDic
-                        };
-                    }
-                    else
-                    {
-                        setWindow.DataContext = new ThumbSetWindowViewModel()
+                                SaveTerms = twoDic
+                            };
+                        }
+                        else
                         {
-                            IsEnabel = false,
+                            setWindow.DataContext = new ThumbSetWindowViewModel()
+                            {
+                                IsEnabel = false,
 
-                            Classifications = oneList,
+                                Classifications = oneList,
 
-                            SaveTerms = twoDic
-                        };
+                                SaveTerms = twoDic
+                            };
+                        }
+
+                        setWindow.ShowDialog();
                     }
 
-                    setWindow.ShowDialog();
+                    
 
                     if (!mainWindowModels.SaveThumbInfo.ContainsKey(father.Saver))
                     {
@@ -5710,32 +5759,37 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         return result;
                     }
 
-                    setWindow = new ThumbSetWindow();
-
-                    if (chirdClass == ThumbClass.Conditions)
+                    while (saveResult == null)
                     {
-                        setWindow.DataContext = new ThumbSetWindowViewModel()
+                        var setWindow = new ThumbSetWindow();
+
+                        if (chirdClass == ThumbClass.Conditions)
                         {
-                            IsEnabel = true,
+                            setWindow.DataContext = new ThumbSetWindowViewModel()
+                            {
+                                IsEnabel = true,
 
-                            Classifications = oneList,
+                                Classifications = oneList,
 
-                            SaveTerms = twoDic
-                        };
-                    }
-                    else
-                    {
-                        setWindow.DataContext = new ThumbSetWindowViewModel()
+                                SaveTerms = twoDic
+                            };
+                        }
+                        else
                         {
-                            IsEnabel = false,
+                            setWindow.DataContext = new ThumbSetWindowViewModel()
+                            {
+                                IsEnabel = false,
 
-                            Classifications = oneList,
+                                Classifications = oneList,
 
-                            SaveTerms = twoDic
-                        };
+                                SaveTerms = twoDic
+                            };
+                        }
+
+                        setWindow.ShowDialog();
                     }
 
-                    setWindow.ShowDialog();
+                    
 
                     if (!mainWindowModels.SaveThumbInfo.ContainsKey(father.Saver))
                     {

@@ -53,6 +53,8 @@ namespace ArcCreate.Jklss.Model.ThumbModel
 
     public class MainConfigModel
     {
+
+        public Dictionary<string, string> variables { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -61,47 +63,12 @@ namespace ArcCreate.Jklss.Model.ThumbModel
         /// <summary>
         /// 
         /// </summary>
-        public Cancel cancel { get; set; }
+        public Dictionary<string,Dictionary<string,string>> cancel { get; set; }
+
+        public Dictionary<string, Dictionary<string, string>> journal_main_page { get; set; }
 
     }
 
-    public class Cancel
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        public Dictionary<string, Wood> wood { get; set; }
-
-    }
-
-    public class Wood
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        public string name { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string conditions { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string objectives { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string tags { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string journal { get; set; }
-
-    }
 
     public class AllConfigModel
     {

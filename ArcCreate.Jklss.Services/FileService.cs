@@ -116,10 +116,18 @@ namespace ArcCreate.Jklss.Services
             Deserializer yamlDeserializer = new Deserializer();
 
             //读取持久化对象  
-            T info = yamlDeserializer.Deserialize<T>(yamlReader);
-            yamlReader.Close();
 
-            return info;
+            try
+            {
+                T info = yamlDeserializer.Deserialize<T>(yamlReader);
+                yamlReader.Close();
+                return info;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return default(T);
+            }
         }
 
         /// <summary>
