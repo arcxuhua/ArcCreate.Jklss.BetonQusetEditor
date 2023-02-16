@@ -1930,28 +1930,34 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                             }
                             else
                             {
-                                LoadingMessage = "正在向云端请求解析，请不要操作页面";
-
-                                try
+                                if (!string.IsNullOrEmpty(MainFilePath))
                                 {
-                                    var back = await ReadYaml();
+                                    LoadingMessage = "正在向云端请求解析，请不要操作页面";
 
-                                    if (!back.Succese)
+                                    try
                                     {
-                                        MessageBox.Show("导入错误，请重试");
+                                        var back = await ReadYaml();
+
+                                        if (!back.Succese)
+                                        {
+                                            MessageBox.Show("导入错误，请重试");
+                                            continue;
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        MessageBox.Show("解析错误,配置文件中请不要使用多语言结构，\n如果您在更改后还出现此错误请联系\njk@jklss.cn");
                                         continue;
                                     }
-                                    else
-                                    {
-                                        break;
-                                    }
                                 }
-                                catch (Exception ex)
+                                else
                                 {
-                                    MessageBox.Show("解析错误,配置文件中请不要使用多语言结构，\n如果您在更改后还出现此错误请联系\njk@jklss.cn");
-                                    continue;
+                                    break;
                                 }
-
                             }
                         }
 

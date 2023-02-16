@@ -174,10 +174,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
                     _CreateCommand = new CommandBase();
                     _CreateCommand.DoExecute = new Action<object>(obj =>//回调函数
                     {
-                        if (window.CreatePage.Visibility == Visibility.Hidden)
-                        {
-                            AnimationBase.Appear(window.CreatePage, 1);
-                        }
+                        Grid.SetZIndex(window.CreateNewPage, 1);
+                        Grid.SetZIndex(window.CreatePage, 2);
+                        Grid.SetZIndex(window.First, 1);
+                        AnimationBase.Appear(window.CreatePage, 1);
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }
                 return _CreateCommand;
@@ -194,7 +194,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
                     _ReadCommand = new CommandBase();
                     _ReadCommand.DoExecute = new Action<object>(obj =>//回调函数
                     {
-
+                        Grid.SetZIndex(window.CreateNewPage, 2);
+                        Grid.SetZIndex(window.CreatePage, 1);
+                        Grid.SetZIndex(window.First, 1);
+                        AnimationBase.Appear(window.CreateNewPage, 1);
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }
                 return _ReadCommand;
@@ -211,10 +214,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
                     _MainCommand = new CommandBase();
                     _MainCommand.DoExecute = new Action<object>(obj =>//回调函数
                     {
-                        if(window.CreatePage.Visibility == Visibility.Visible)
-                        {
-                            AnimationBase.Disappear(window.CreatePage,1);
-                        }
+                        Grid.SetZIndex(window.CreateNewPage, 1);
+                        Grid.SetZIndex(window.CreatePage, 1);
+                        Grid.SetZIndex(window.First, 2);
+                        AnimationBase.Appear(window.First, 1);
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }
                 return _MainCommand;
@@ -231,6 +234,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
                     _CreateNewCommand = new CommandBase();
                     _CreateNewCommand.DoExecute = new Action<object>(obj =>//回调函数
                     {
+                        if (Grid.GetZIndex(window.CreatePage)==2)
+                        {
+                            if (string.IsNullOrWhiteSpace(FilePath) || string.IsNullOrWhiteSpace(CreateName))
+                            {
+                                return;
+                            }
+                        }
+                        
+
                         window.Tag = new GridData
                         {
                             Code = -1,
