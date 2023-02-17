@@ -76,9 +76,7 @@
                 <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="113,171,0,0" FontSize="14" FontWeight="Bold" Foreground="White">项目名称:</TextBlock>
 
                 <Button Command="{Binding CreateNewCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Margin="0 200 0 0" Width="300">新的开始</Button>
-                <Button Width="35" Height="30" Command="{Binding SelectFilePathCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" ToolTip="搜索" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"  Background="{x:Null}" BorderBrush="{x:Null}" Margin="480,250,130,190">
-                    <materialDesign:PackIcon Width="30" Height="30" Kind="CardSearch" />
-                </Button>
+                
             </Grid>
         </Grid>
 

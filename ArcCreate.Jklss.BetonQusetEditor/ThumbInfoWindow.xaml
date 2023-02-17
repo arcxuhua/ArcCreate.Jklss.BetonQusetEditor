@@ -19,7 +19,7 @@
                 <TreeView x:Name="TreeView_Tv" Grid.Row="2" Height="890" Background="#FF797979" Width="190" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                            <TextBlock FontSize="15" Text="{Binding Name}" FontWeight="Bold" Foreground="{Binding FontColor}"/>
+                            <TextBlock FontSize="15" Text="{Binding Name}" FontWeight="Bold" Foreground="{Binding FontColor}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </HierarchicalDataTemplate>
                     </TreeView.ItemTemplate>
                     

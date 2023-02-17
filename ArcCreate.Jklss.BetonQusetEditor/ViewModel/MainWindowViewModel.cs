@@ -242,7 +242,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         /// <param name="e"></param>
         private async void ActBase_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
         {
-            if(mainWindow.WindowState != WindowState.Normal)
+            if(!mainWindow.Topmost)
             {
                 return;
             }
@@ -560,9 +560,20 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     _GrammarCmd = new CommandBase();
                     _GrammarCmd.DoExecute = new Action<object>(obj =>//回调函数
                     {
-                        GrammarModelWindow window = new GrammarModelWindow();
+                        //GrammarModelWindow window = new GrammarModelWindow();
 
-                        window.ShowDialog();
+                        //window.ShowDialog();
+
+                        if(thumbInfoWindow.Visibility == Visibility.Hidden)
+                        {
+                            thumbInfoWindow.Visibility = Visibility.Visible;
+                        }
+                        else
+                        {
+                            thumbInfoWindow.Visibility = Visibility.Hidden;
+                        }
+
+                        
                     });//obj是窗口CommandParameter参数传递的值，此处传递为bord
                 }
                 return _GrammarCmd;
@@ -3594,6 +3605,11 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                 var thumb = getThumb.Backs as SaveChird;
 
+                if(item.data == null)
+                {
+                    continue;
+                }
+
                 if (mainWindowModels.SaveThumbInfo.ContainsKey(thumb.Saver))
                 {
                     foreach (var i in item.data)
@@ -3646,12 +3662,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                 if (!getThumb.Succese)
                 {
-                    ShowMessage("未找到相关控件，请尝试重新读取！");
-                    result.SetError();
-                    return result;
+                    ShowMessage($"未找到相关控件:{item.Saver}");
                 }
 
                 var thumb = getThumb.Backs as SaveChird;
+
+                if (thumb == null)
+                {
+                    continue;
+                }
 
                 foreach (var i in item.Children)
                 {
@@ -3659,7 +3678,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                     if (!getchild.Succese)
                     {
-                        ShowMessage("未找到相关控件，请尝试重新读取！");
+                        ShowMessage("未找到相关控件，请尝试重新读取！ 22");
                         result.SetError();
                         return result;
                     }
@@ -3675,7 +3694,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                     if (!getchild.Succese)
                     {
-                        ShowMessage("未找到相关控件，请尝试重新读取！");
+                        ShowMessage("未找到相关控件，请尝试重新读取！ 33");
                         result.SetError();
                         return result;
                     }
@@ -3695,9 +3714,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                 if (!getThumb.Succese)
                 {
-                    ShowMessage("未找到相关控件，请尝试重新读取！");
-                    result.SetError();
-                    return result;
+                    ShowMessage($"位置配置中未找到相关控件{item.Name}");
+                    continue;
                 }
 
                 var thumb = getThumb.Backs as SaveChird;
@@ -3729,7 +3747,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             }
             catch
             {
-                ShowMessage("未找到相关控件，请尝试重新读取！");
+                ShowMessage("未找到相关控件，请尝试重新读取！  44");
                 result.SetError();
                 return result;
             }
@@ -4098,6 +4116,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         catch (Exception ex)
                         {
                             ShowMessage("删除时错误具体信息：\n" + ex);
+                            result.SetError();
+                            return result;
                         }
                     }
                 }
@@ -4113,6 +4133,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     if (loaderBacks != null && !loaderBacks.Succese)
                     {
                         ShowMessage(loaderBacks.Text);
+                        result.SetError();
+                        return result;
                     }
 
                     break;
@@ -4122,6 +4144,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     if (loaderBacks != null && !loaderBacks.Succese)
                     {
                         ShowMessage(loaderBacks.Text);
+                        result.SetError();
+                        return result;
                     }
                     break;
                 case ThumbClass.Conditions:
@@ -4131,6 +4155,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     if (loaderBack != null && !loaderBack.Succese)
                     {
                         ShowMessage(loaderBack.Text);
+                        result.SetError();
+                        return result;
                     }
 
                     var back = await ChangeTheTreeView();
@@ -4152,6 +4178,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     if (loaderBack != null && !loaderBack.Succese)
                     {
                         ShowMessage(loaderBack.Text);
+                        result.SetError();
+                        return result;
                     }
 
                     back = await ChangeTheTreeView();
@@ -4173,6 +4201,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     if (loaderBack != null && !loaderBack.Succese)
                     {
                         ShowMessage(loaderBack.Text);
+                        result.SetError();
+                        return result;
                     }
 
                     back = await ChangeTheTreeView();
@@ -4213,65 +4243,6 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             {
                 return txt;
             }
-        }
-
-        /// <summary>
-        /// 更改TreeItem内容(已丢用)
-        /// </summary>
-        /// <param name="one">命令</param>
-        /// <param name="two">参数</param>
-        /// <param name="three">项</param>
-        /// <returns></returns>
-        [Obsolete]
-        private async Task<ReturnModel> ChangeTreeItem(string one,string two,string three)
-        {
-            var result = new ReturnModel();
-
-            if (thumbInfoWindow == null)
-            {
-                result.SetError();
-
-                return result;
-            }
-
-            var tree = thumbInfoWindow.TreeView_Tv;
-
-            await Task.Run(() =>
-            {
-                var newList = new List<DefinitionNode>();
-                foreach (var item in tree.Items)
-                {
-                    var getTreeItem = item as DefinitionNode;
-
-                    if (getTreeItem.Name == one)
-                    {
-                        var getTwo = getTreeItem.Children.Where(t => t.Name == two).First();
-
-                        foreach (var child in getTwo.Children)
-                        {
-                            var getReal = child.Name.Split(new string[] { " ------ " }, StringSplitOptions.RemoveEmptyEntries);
-
-                            if (getReal[0] == three)
-                            {
-                                child.Name = three + " ------ 已保存";
-                                child.FontColor = "#1f640a";
-                            }
-                        }
-                    }
-
-                    newList.Add(getTreeItem);
-                }
-
-                tree.Dispatcher.Invoke(new Action(() => {
-                    tree.ItemsSource = newList;
-                }));
-                
-            });
-
-            result.SetSuccese();
-
-            return result;
-
         }
 
         /// <summary>
@@ -4347,455 +4318,6 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             
 
             return null;
-        }
-
-        /// <summary>
-        /// 整理全部Thumb信息为实体类（已弃用）
-        /// </summary>
-        /// <returns></returns>
-        [Obsolete]
-        private async Task<ReturnModel> SaveAllThumbs()
-        {
-            var back = new ReturnModel();
-
-            var createJson = new Dictionary<Thumb,ConversationsModel>();
-
-            var mainModel = new MainConfigModel();
-
-            var conditions = string.Empty;
-
-            var events = string.Empty;
-
-            var objcetives = string.Empty;
-
-            var journal = string.Empty;
-
-            var items = string.Empty;
-
-            foreach (var item in MainWindowModels.saveThumbs)
-            {
-                if(item.thumbClass == ThumbClass.Subject)
-                {
-                    var create = new ConversationsModel();
-
-                    create.quester = GetThumbInfoBase.GetThumbInfo(item).Text;
-
-                    create.first = GetThumbInfoBase.GetThumbInfo(await FindSaveThumbInfo(item.Children[0])).Config;
-                    
-                    create.stop = false;
-
-                    createJson.Add(item.Saver, create);
-
-                    mainModel.npcs.Add(GetThumbInfoBase.GetThumbInfo(item).Config, create.quester);//第一项是NPC名称，第二项是配置名称
-                }
-
-                if(item.thumbClass == ThumbClass.NPC)
-                {
-                    var needCon = new List<SaveChird>();
-
-                    var needEvent = new List<SaveChird>();
-
-                    var needPlayerTalk = new List<SaveChird>();
-
-                    foreach (var getter in item.Children)
-                    {
-                        var getInfo = await FindSaveThumbInfo(getter);
-
-                        if (getInfo.thumbClass == ThumbClass.Conditions)
-                        {
-                            needCon.Add(getInfo);
-                        }
-
-                        if(getInfo.thumbClass == ThumbClass.Events)
-                        {
-                            needEvent.Add(getInfo);
-                        }
-
-                        if(getInfo.thumbClass == ThumbClass.Player)
-                        {
-                            needPlayerTalk.Add(getInfo);
-                        }
-                    }
-
-                    var con = string.Empty;//构建对话需要的条件
-
-                    var even = string.Empty;//构建对话需要的事件
-
-                    var talks = string.Empty;//构建对话需要的回话
-
-                    for (int i = 0; i < needCon.Count; i++)
-                    {
-                        if (string.IsNullOrEmpty(con))
-                        {
-                            con += GetThumbInfoBase.GetThumbInfo(needCon[i]).Config;
-                        }
-                        else
-                        {
-                            con += "," + GetThumbInfoBase.GetThumbInfo(needCon[i]).Config;
-                        }
-                    }
-
-                    for (int i = 0; i < needEvent.Count; i++)
-                    {
-                        if (string.IsNullOrEmpty(even))
-                        {
-                            even += GetThumbInfoBase.GetThumbInfo(needEvent[i]).Config;
-                        }
-                        else
-                        {
-                            even += "," + GetThumbInfoBase.GetThumbInfo(needEvent[i]).Config;
-                        }
-                    }
-
-                    for (int i = 0; i < needPlayerTalk.Count; i++)
-                    {
-                        if (string.IsNullOrEmpty(talks))
-                        {
-                            talks += GetThumbInfoBase.GetThumbInfo(needPlayerTalk[i]).Config;
-                        }
-                        else
-                        {
-                            talks += "," + GetThumbInfoBase.GetThumbInfo(needPlayerTalk[i]).Config;
-                        }
-                    }
-
-                    var config = GetThumbInfoBase.GetThumbInfo(item);
-
-                    var talk = new List<string>(config.Text.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries));
-
-                    var newTalk = new AllTalk()
-                    {
-                        conditions = con,
-                        events = even,
-                        text = talk,
-                        pointer = talks
-
-                    };
-
-                    createJson[item.Main].NPC_options.Add(config.Config, newTalk);
-
-                }
-
-                if(item.thumbClass == ThumbClass.Player)
-                {
-                    var needCon = new List<SaveChird>();
-
-                    var needEvent = new List<SaveChird>();
-
-                    var needPlayerTalk = new List<SaveChird>();
-
-                    foreach (var getter in item.Children)
-                    {
-                        var getInfo = await FindSaveThumbInfo(getter);
-
-                        if (getInfo.thumbClass == ThumbClass.Conditions)
-                        {
-                            needCon.Add(getInfo);
-                        }
-
-                        if (getInfo.thumbClass == ThumbClass.Events)
-                        {
-                            needEvent.Add(getInfo);
-                        }
-
-                        if (getInfo.thumbClass == ThumbClass.Player)
-                        {
-                            needPlayerTalk.Add(getInfo);
-                        }
-                    }
-
-                    var con = string.Empty;//构建对话需要的条件
-
-                    var even = string.Empty;//构建对话需要的事件
-
-                    var talks = string.Empty;//构建对话需要的回话
-
-                    for (int i = 0; i < needCon.Count; i++)
-                    {
-                        if (string.IsNullOrEmpty(con))
-                        {
-                            con += GetThumbInfoBase.GetThumbInfo(needCon[i]).Config;
-                        }
-                        else
-                        {
-                            con += "," + GetThumbInfoBase.GetThumbInfo(needCon[i]).Config;
-                        }
-                    }
-
-                    for (int i = 0; i < needEvent.Count; i++)
-                    {
-                        if (string.IsNullOrEmpty(even))
-                        {
-                            even += GetThumbInfoBase.GetThumbInfo(needEvent[i]).Config;
-                        }
-                        else
-                        {
-                            even += "," + GetThumbInfoBase.GetThumbInfo(needEvent[i]).Config;
-                        }
-                    }
-
-                    for (int i = 0; i < needPlayerTalk.Count; i++)
-                    {
-                        if (string.IsNullOrEmpty(talks))
-                        {
-                            talks += GetThumbInfoBase.GetThumbInfo(needPlayerTalk[i]).Config;
-                        }
-                        else
-                        {
-                            talks += "," + GetThumbInfoBase.GetThumbInfo(needPlayerTalk[i]).Config;
-                        }
-                    }
-
-                    var config = GetThumbInfoBase.GetThumbInfo(item);
-
-                    var talk = new List<string>(config.Text.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries));
-
-                    var newTalk = new AllTalk()
-                    {
-                        conditions = con,
-                        events = even,
-                        text = talk,
-                        pointer = talks
-
-                    };
-
-                    createJson[item.Main].player_options.Add(config.Config, newTalk);
-                }
-
-                if (item.thumbClass == ThumbClass.Conditions)
-                {
-                    var getInfo = GetThumbInfoBase.GetThumbInfo(item);
-
-                    var makeConditons = string.Empty;
-
-                    var getCon = new List<SaveChird>();//获取其下是否含有条件
-
-                    foreach (var getter in item.Children)
-                    {
-                        var getGetterInfo = await FindSaveThumbInfo(getter);
-
-                        getCon.Add(getGetterInfo);
-                    }
-
-                    foreach (var getter in getCon)
-                    {
-                        var getConditionInfo = GetThumbInfoBase.GetThumbInfo(getter);
-
-                        if (string.IsNullOrEmpty(makeConditons))
-                        {
-                            makeConditons += getConditionInfo.Config;
-                        }
-                        else
-                        {
-                            makeConditons += ","+ getConditionInfo.Config;
-                        }
-                    }
-
-                    if (string.IsNullOrEmpty(makeConditons))
-                    {
-                        conditions += getInfo.Config + ": '"
-                                                + getInfo.Type + " "
-                                                + getInfo.Text
-                                                + "'\r\n";
-                    }
-                    else
-                    {
-                        conditions += getInfo.Config + ": '"
-                                                + getInfo.Type + " "
-                                                + getInfo.Text + " "
-                                                + makeConditons
-                                                + "'\r\n";
-                    }
-                }
-
-                if(item.thumbClass == ThumbClass.Events)
-                {
-                    var getInfo = GetThumbInfoBase.GetThumbInfo(item);
-
-                    var makeConditons = string.Empty;
-
-                    var getCon = new List<SaveChird>();//获取其下是否含有条件
-
-                    foreach (var getter in item.Children)
-                    {
-                        var getGetterInfo = await FindSaveThumbInfo(getter);
-
-                        getCon.Add(getGetterInfo);
-                    }
-
-                    foreach (var getter in getCon)
-                    {
-                        var getConditionInfo = GetThumbInfoBase.GetThumbInfo(getter);
-
-                        if (string.IsNullOrEmpty(makeConditons))
-                        {
-                            makeConditons += getConditionInfo.Config;
-                        }
-                        else
-                        {
-                            makeConditons += "," + getConditionInfo.Config;
-                        }
-                    }
-
-                    if (string.IsNullOrEmpty(makeConditons))
-                    {
-                        events += getInfo.Config + ": '"
-                        + getInfo.Type + " "
-                        + getInfo.Text
-                        + "'\r\n";
-                    }
-                    else
-                    {
-                        events += getInfo.Config + ": '"
-                        + getInfo.Type + " "
-                        + getInfo.Text + " "
-                        + makeConditons
-                        + "'\r\n";
-                    }
-
-                    
-                }
-
-                if(item.thumbClass == ThumbClass.Objectives)
-                {
-                    var getInfo = GetThumbInfoBase.GetThumbInfo(item);
-
-                    var getCon = new List<SaveChird>();//获取其下是否含有事件
-
-                    var getNothing = new List<SaveChird>();
-
-                    foreach (var getter in item.Children)
-                    {
-                        var getGetterInfo = await FindSaveThumbInfo(getter);
-
-                        if (getGetterInfo.thumbClass == ThumbClass.Events)
-                        {
-                            getCon.Add(getGetterInfo);
-                        }
-                        else
-                        {
-                            getNothing.Add(getGetterInfo);
-                        }
-                    }
-
-                    var makeConditons = string.Empty;
-
-                    foreach (var getter in getCon)
-                    {
-                        var getConditionInfo = GetThumbInfoBase.GetThumbInfo(getter);
-
-                        if (string.IsNullOrEmpty(makeConditons))
-                        {
-                            makeConditons += getConditionInfo.Config;
-                        }
-                        else
-                        {
-                            makeConditons += ","+getConditionInfo.Config;
-                        }
-                    }
-
-                    var makeNoting = string.Empty;
-
-                    foreach (var getter in getNothing)
-                    {
-                        var getConditionInfo = GetThumbInfoBase.GetThumbInfo(getter);
-
-                        if (string.IsNullOrEmpty(makeConditons))
-                        {
-                            makeNoting += getConditionInfo.Config;
-                        }
-                        else
-                        {
-                            makeNoting += "," + getConditionInfo.Config;
-                        }
-                    }
-
-                    if (string.IsNullOrEmpty(makeConditons))
-                    {
-                        if (string.IsNullOrEmpty(makeNoting))
-                        {
-                            objcetives += getInfo.Config + ": '"
-                        + getInfo.Type + " "
-                        + getInfo.Text
-                        + "'\r\n";
-                        }
-                        else
-                        {
-                            objcetives += getInfo.Config + ": '"
-                        + getInfo.Type + " "
-                        + getInfo.Text + " "
-                        + makeNoting
-                        + "'\r\n";
-                        }
-                        
-                    }
-                    else
-                    {
-                        if (string.IsNullOrEmpty(makeNoting))
-                        {
-                            objcetives += getInfo.Config + ": '"
-                            + getInfo.Type + " "
-                            + getInfo.Text
-                            + " events:"
-                            + makeConditons
-                            + "'\r\n";
-                        }
-                        else
-                        {
-                            objcetives += getInfo.Config + ": '"
-                            + getInfo.Type + " "
-                            + getInfo.Text + " "
-                            + makeNoting
-                            + " events:"
-                            + makeConditons
-                            + "'\r\n";
-                        }
-                        
-                    }
-                }
-
-                if(item.thumbClass == ThumbClass.Journal)
-                {
-                    var getInfo = GetThumbInfoBase.GetThumbInfo(item);
-
-                    var fgTalk = getInfo.Text.Split(new string[] { "\r\n"},StringSplitOptions.RemoveEmptyEntries);
-
-                    var makeTalk = string.Empty;
-
-                    for (int i = 0; i < fgTalk.Length; i++)
-                    {
-                        makeTalk += "  " + fgTalk[i] + "\r\n";
-                    }
-
-                    journal += getInfo.Config + ": |\r\n"
-                        + makeTalk
-                        + "\r\n";
-                }
-
-                if(item.thumbClass == ThumbClass.Items)
-                {
-                    var getInfo = GetThumbInfoBase.GetThumbInfo(item);
-
-                    items += getInfo.Config + ":"
-                        + getInfo.Text
-                        + "\r\n";
-                }
-            }
-
-            var backer = new AllConfigModel()
-            {
-                allTalk = createJson,
-                mainConfigModel = mainModel,
-                conditions = conditions,
-                events = events,
-                objcetives = objcetives,
-                journal = journal,
-                items = items,
-            };
-
-            back.SetSuccese("", backer);
-
-            return back;
         }
 
         /// <summary>

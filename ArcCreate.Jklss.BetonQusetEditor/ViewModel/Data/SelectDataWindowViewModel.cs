@@ -240,18 +240,30 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
                             {
                                 return;
                             }
-                        }
-                        
 
-                        window.Tag = new GridData
+                            window.Tag = new GridData
+                            {
+                                Code = -1,
+                                CreateDate = DateTime.Now,
+                                UpdateData = DateTime.Now,
+                                Name = CreateName,
+                                FilePath = FilePath
+                            };
+                            window.Close();
+                        }
+                        else
                         {
-                            Code = -1,
-                            CreateDate = DateTime.Now,
-                            UpdateData = DateTime.Now,
-                            Name = CreateName,
-                            FilePath = FilePath
-                        };
-                        window.Close();
+                            window.Tag = new GridData
+                            {
+                                Code = -1,
+                                CreateDate = DateTime.Now,
+                                UpdateData = DateTime.Now,
+                                Name = CreateName,
+                            };
+                            window.Close();
+                        }
+
+                        
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }
                 return _CreateNewCommand;

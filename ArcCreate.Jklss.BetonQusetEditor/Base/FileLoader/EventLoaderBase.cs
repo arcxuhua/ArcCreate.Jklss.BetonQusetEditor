@@ -134,6 +134,13 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                     getModelInfo = savecmdModels.Find(t => t.MainClass == cmd);
                 }
 
+                if (getModelInfo == null)
+                {
+                    model.SetError("该指令还没有对应的模型！");
+
+                    return model;
+                }
+
                 (GetControl("Conditions_CBox", thumb) as ComboBox).ToolTip = getModelInfo.MainToolTip;
 
                 var editModel = new List<string>();//参数构造 键为命令
