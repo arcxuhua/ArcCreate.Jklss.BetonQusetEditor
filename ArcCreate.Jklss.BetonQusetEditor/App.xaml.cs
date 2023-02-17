@@ -1,14 +1,4 @@
-﻿using Microsoft.Build.Framework;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Threading;
+﻿using System.Windows;
 
 namespace ArcCreate.Jklss.BetonQusetEditor
 {
