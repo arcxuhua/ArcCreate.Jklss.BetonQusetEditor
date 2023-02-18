@@ -40,40 +40,40 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 {
     public class MainWindowViewModel : NotifyBase
     {
-        #region 静态全局变量
+        #region 全局变量
 
         private UserActivityBase ActBase = new UserActivityBase();//按键
-        public static MainWindowModels mainWindowModels { get; set; } = new MainWindowModels();//绑定Model
+        public MainWindowModels mainWindowModels { get; set; } = new MainWindowModels();//绑定Model
 
-        public static MainWindow mainWindow = null;//存储窗体
+        public MainWindow mainWindow = null;//存储窗体
 
-        private static List<SaveLine> saveLines = new List<SaveLine>();//链接线存储
+        private List<SaveLine> saveLines = new List<SaveLine>();//链接线存储
 
-        private static Thumb nowThumb = null;//当前选中的Thumb
+        private Thumb nowThumb = null;//当前选中的Thumb
 
         private List<Thumb> selectThumb = new List<Thumb>();//当前选中的Thumb们
 
-        private static List<double> thumbcanvas = new List<double>();//thumb在Canvas中的相对位置
+        private List<double> thumbcanvas = new List<double>();//thumb在Canvas中的相对位置
 
-        public static List<ContisionsCmdModel> contisionProp = new List<ContisionsCmdModel>();//Contitions语法构造器模型
+        public List<ContisionsCmdModel> contisionProp = new List<ContisionsCmdModel>();//Contitions语法构造器模型
 
-        public static ContisionLoaderBase contisionLoader = null;
+        public ContisionLoaderBase contisionLoader = null;
 
-        public static EventLoaderBase eventLoader = null;
+        public EventLoaderBase eventLoader = null;
 
-        public static List<EventCmdModel> eventProp = new List<EventCmdModel>();
+        public List<EventCmdModel> eventProp = new List<EventCmdModel>();
 
-        public static ObjectiveLoaderBase objectiveLoader = null;
+        public ObjectiveLoaderBase objectiveLoader = null;
 
-        public static List<ObjectiveCmdModel> objectiveProp = new List<ObjectiveCmdModel>();
+        public List<ObjectiveCmdModel> objectiveProp = new List<ObjectiveCmdModel>();
 
-        private static ThumbInfoWindow thumbInfoWindow = null;
+        private ThumbInfoWindow thumbInfoWindow = null;
 
         public static SaveResult saveResult = null;
 
-        public static PlayerLoaderBase playerLoader = new PlayerLoaderBase();
+        public PlayerLoaderBase playerLoader = null;
 
-        public static NpcLoaderBase npcLoader = new NpcLoaderBase();
+        public NpcLoaderBase npcLoader = null;
 
         public GridData SelectData = null;
 
@@ -257,10 +257,6 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         /// <param name="e"></param>
         private async void ActBase_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
         {
-            if(!mainWindow.Topmost)
-            {
-                return;
-            }
             if (e.KeyCode == Keys.Delete)//键盘的Enter，子自行设定。
             {
                 if (mainWindow == null)
@@ -774,7 +770,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     _SelectSearch = new CommandBase();
                     _SelectSearch.DoExecute = new Action<object>(async obj =>//回调函数
                     {
-                        var ct = new CreateThumbsBase();
+                        var ct = new CreateThumbsBase(mainWindow);
 
                         var back = await ct.UseNameGetThumb(SearchType, SearchText,true);
 
@@ -913,10 +909,21 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                         if (getRealMessage == null || getRealMessage.JsonInfo != JsonInfo.SaveToYaml || !getRealMessage.IsLogin)
                         {
-                            mainWindow.IsEnabled = true;
-                            LoadingShow = Visibility.Hidden;
-                            ShowMessage("服务器异常");
-                            return;
+                            if (getRealMessage != null)
+                            {
+                                mainWindow.IsEnabled = true;
+                                LoadingShow = Visibility.Hidden;
+                                ShowMessage(getRealMessage.Message);
+                                return;
+                            }
+                            else
+                            {
+                                mainWindow.IsEnabled = true;
+                                LoadingShow = Visibility.Hidden;
+                                ShowMessage("服务器异常");
+                                return;
+                            }
+                            
                         }
                         if (this.SelectData.Code == -1)
                         {
@@ -1110,7 +1117,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     _CreateNewTalkCmd = new CommandBase();
                     _CreateNewTalkCmd.DoExecute = new Action<object>(async obj =>//回调函数
                     {
-                        CreateThumbsBase createThumbsBase = new CreateThumbsBase();
+                        CreateThumbsBase createThumbsBase = new CreateThumbsBase(mainWindow);
 
                         var back = await createThumbsBase.CreateThumb(ThumbClass.Subject, MainFilePath, obj as MainWindow);
 
@@ -1167,7 +1174,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     _CreatePlayerTalkCmd = new CommandBase();
                     _CreatePlayerTalkCmd.DoExecute = new Action<object>(async obj =>//回调函数
                     {
-                        CreateThumbsBase createThumbsBase = new CreateThumbsBase();
+                        CreateThumbsBase createThumbsBase = new CreateThumbsBase(mainWindow);
 
                         var back = await createThumbsBase.CreateThumb(ThumbClass.Player, MainFilePath, obj as MainWindow);
 
@@ -1282,7 +1289,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     _CreateNpcTalkCmd = new CommandBase();
                     _CreateNpcTalkCmd.DoExecute = new Action<object>(async obj =>//回调函数
                     {
-                        CreateThumbsBase createThumbsBase = new CreateThumbsBase();
+                        CreateThumbsBase createThumbsBase = new CreateThumbsBase(mainWindow);
 
                         var back = await createThumbsBase.CreateThumb(ThumbClass.NPC, MainFilePath, obj as MainWindow);
 
@@ -1389,7 +1396,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     _CreateConditionsCmd = new CommandBase();
                     _CreateConditionsCmd.DoExecute = new Action<object>(async obj =>//回调函数
                     {
-                        CreateThumbsBase createThumbsBase = new CreateThumbsBase();
+                        CreateThumbsBase createThumbsBase = new CreateThumbsBase(mainWindow);
 
                         var back = await createThumbsBase.CreateThumb(ThumbClass.Conditions, MainFilePath, obj as MainWindow);
 
@@ -1448,7 +1455,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     _CreateEventsCmd = new CommandBase();
                     _CreateEventsCmd.DoExecute = new Action<object>(async obj =>//回调函数
                     {
-                        CreateThumbsBase createThumbsBase = new CreateThumbsBase();
+                        CreateThumbsBase createThumbsBase = new CreateThumbsBase(mainWindow);
 
                         var back = await createThumbsBase.CreateThumb(ThumbClass.Events, MainFilePath, obj as MainWindow);
 
@@ -1507,7 +1514,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     _CreateObjectivesCmd = new CommandBase();
                     _CreateObjectivesCmd.DoExecute = new Action<object>(async obj =>//回调函数
                     {
-                        CreateThumbsBase createThumbsBase = new CreateThumbsBase();
+                        CreateThumbsBase createThumbsBase = new CreateThumbsBase(mainWindow);
 
                         var back = await createThumbsBase.CreateThumb(ThumbClass.Objectives, MainFilePath, obj as MainWindow);
 
@@ -1567,7 +1574,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     _CreateJournalCmd = new CommandBase();
                     _CreateJournalCmd.DoExecute = new Action<object>(async obj =>//回调函数
                     {
-                        CreateThumbsBase createThumbsBase = new CreateThumbsBase();
+                        CreateThumbsBase createThumbsBase = new CreateThumbsBase(mainWindow);
 
                         var back = await createThumbsBase.CreateThumb(ThumbClass.Journal, MainFilePath, obj as MainWindow);
 
@@ -1626,7 +1633,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     _CreateItemsCmd = new CommandBase();
                     _CreateItemsCmd.DoExecute = new Action<object>(async obj =>//回调函数
                     {
-                        CreateThumbsBase createThumbsBase = new CreateThumbsBase();
+                        CreateThumbsBase createThumbsBase = new CreateThumbsBase(mainWindow);
 
                         var back = await createThumbsBase.CreateThumb(ThumbClass.Items, MainFilePath, obj as MainWindow);
 
@@ -2029,7 +2036,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         mainWindow = wd as MainWindow;
 
                         mainWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-
+                        playerLoader = new PlayerLoaderBase(mainWindowModels);
+                        npcLoader = new NpcLoaderBase(mainWindowModels);
                         ThumbInfoWindow window = new ThumbInfoWindow();
 
                         thumbInfoWindow = window;
@@ -2062,7 +2070,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                         LoadingMessage = "正在加载条件模型~";
 
-                        contisionLoader = new ContisionLoaderBase();
+                        contisionLoader = new ContisionLoaderBase(mainWindow,mainWindowModels);
 
                         var conJson = await contisionLoader.Saver();
                         
@@ -2077,7 +2085,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                         LoadingMessage = "正在加载事件模型~";
 
-                        eventLoader = new EventLoaderBase();
+                        eventLoader = new EventLoaderBase(mainWindow, mainWindowModels);
 
                         var eventJson = await eventLoader.Saver();
 
@@ -2092,7 +2100,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                         LoadingMessage = "正在加载目标模型~";
 
-                        objectiveLoader = new ObjectiveLoaderBase();
+                        objectiveLoader = new ObjectiveLoaderBase(mainWindow, mainWindowModels);
 
                         var objJson = await objectiveLoader.Saver();
 
@@ -2186,7 +2194,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                         mainWindow.IsEnabled = true;
                         LoadingShow = Visibility.Hidden;
-
+                        
                         mainWindow.cvmenu.MouseLeftButtonDown += Cvmenu_MouseLeftButtonDown;
                         mainWindow.cvmenu.MouseLeftButtonUp += Cvmenu_MouseLeftButtonUp;
                         
@@ -2295,7 +2303,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                 allConversations.Add(FileService.YamlToProp<ConversationsModel>(allConversationsFilePath[i]));
             }
 
-            var createThumbs = new CreateThumbsBase();
+            var createThumbs = new CreateThumbsBase(mainWindow);
 
             var npcnum = 0;
 
@@ -3477,7 +3485,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                 return result;
             }
 
-            var createThumbBase = new CreateThumbsBase();
+            var createThumbBase = new CreateThumbsBase(mainWindow);
 
             if (saveMainInfo == null || saveAllChildInfo == null || dic == null)
             {
@@ -3683,22 +3691,27 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                             (GetControl("ConditionsConfig_TBox", thumb) as TextBox).Text = item.Name;
 
-                            var getRealCmd = GetRealCmd(item.data.Keys.First());
-                            foreach (var i in (GetControl("Conditions_CBox", thumb) as ComboBox).Items)
+                            if (item.data != null)
                             {
-                                var fgf = i.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
+                                var getRealCmd = GetRealCmd(item.data.Keys.First());
 
-                                if (fgf[2] == getRealCmd)
+                                foreach (var i in (GetControl("Conditions_CBox", thumb) as ComboBox).Items)
                                 {
-                                    while (checkde)
+                                    var fgf = i.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
+
+                                    if (fgf[2] == getRealCmd)
                                     {
-                                        await Task.Run(() => { Thread.Sleep(100); });
+                                        while (checkde)
+                                        {
+                                            await Task.Run(() => { Thread.Sleep(100); });
+                                        }
+                                        nowThumb = thumb;
+                                        (GetControl("Conditions_CBox", thumb) as ComboBox).SelectedItem = i;
+                                        break;
                                     }
-                                    nowThumb = thumb;
-                                    (GetControl("Conditions_CBox", thumb) as ComboBox).SelectedItem = i;
-                                    break;
                                 }
                             }
+                            
 
 
                         }));
@@ -4306,7 +4319,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     }
                 }
 
-                var bidui = new GetThumbInfoBase();
+                var bidui = new GetThumbInfoBase(objectiveProp,contisionProp,eventProp);
 
                 for (int i = 0; i < getSaver.Count; i++)
                 {
@@ -4483,7 +4496,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                 {
                     var control = nowThumb.Template.FindName("Conditions_CBox", nowThumb) as ComboBox;
 
-                    if (control.Items.Count > 0 && control.SelectedItem != null && thumbInfoWindow != null)
+                    if (control != null && control.Items.Count > 0 && control.SelectedItem != null && thumbInfoWindow != null)
                     {
                         return await contisionLoader.ChangeTheTree(thumbInfoWindow.FindName("TreeView_Tv") as TreeView, contisionProp, control.SelectedItem.ToString());
                     }
@@ -4496,7 +4509,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
 
 
-                    if (control.Items.Count > 0 && control.SelectedItem != null && thumbInfoWindow != null)
+                    if (control!=null&&control.Items.Count > 0 && control.SelectedItem != null && thumbInfoWindow != null)
                     {
                         return await eventLoader.ChangeTheTree(thumbInfoWindow.FindName("TreeView_Tv") as TreeView, eventProp, control.SelectedItem.ToString());
                     }
@@ -4507,7 +4520,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                 {
                     var control = nowThumb.Template.FindName("Conditions_CBox", nowThumb) as ComboBox;
 
-                    if (control.Items.Count > 0 && control.SelectedItem != null && thumbInfoWindow != null)
+                    if (control != null && control.Items.Count > 0 && control.SelectedItem != null && thumbInfoWindow != null)
                     {
                         return await objectiveLoader.ChangeTheTree(thumbInfoWindow.FindName("TreeView_Tv") as TreeView, objectiveProp, control.SelectedItem.ToString());
                     }
@@ -4574,7 +4587,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                 return back;
             }
 
-            var comparison = new GetThumbInfoBase();
+            var comparison = new GetThumbInfoBase(objectiveProp, contisionProp, eventProp);
 
             var cando = await comparison.GetThisCanFather(get_ThumbFt, get_ThumbCl);
 

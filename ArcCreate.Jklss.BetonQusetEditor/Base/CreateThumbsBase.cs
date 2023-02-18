@@ -23,6 +23,12 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 {
     public class CreateThumbsBase
     {
+        private MainWindow MainWindow = null;
+        public CreateThumbsBase(MainWindow mainWindow)
+        {
+            this.MainWindow = mainWindow;
+        }
+
         private static int Uid = 0;
 
         public async Task<ReturnModel> CreateThumb(ThumbClass thumbClass,string MainFilePath,MainWindow window,double px=0,double py= 0)
@@ -120,14 +126,14 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                         }
 
                         Canvas.SetZIndex(thumb, 1);
-                        Canvas.SetTop(thumb, MainWindowViewModel.mainWindow.outsaid.ActualHeight/2 - thumb.Height / 2 - y + py);
-                        Canvas.SetLeft(thumb, MainWindowViewModel.mainWindow.outsaid.ActualWidth/2 - thumb.Width / 2 - x + px);
+                        Canvas.SetTop(thumb, MainWindow.outsaid.ActualHeight/2 - thumb.Height / 2 - y + py);
+                        Canvas.SetLeft(thumb, MainWindow.outsaid.ActualWidth/2 - thumb.Width / 2 - x + px);
                     }
                     catch
                     {
                         Canvas.SetZIndex(thumb, 1);
-                        Canvas.SetTop(thumb, MainWindowViewModel.mainWindow.outsaid.ActualHeight/2 - thumb.Height / 2 + py);
-                        Canvas.SetLeft(thumb, MainWindowViewModel.mainWindow.outsaid.ActualWidth/2 - thumb.Width / 2 + px);
+                        Canvas.SetTop(thumb, MainWindow.outsaid.ActualHeight/2 - thumb.Height / 2 + py);
+                        Canvas.SetLeft(thumb, MainWindow.outsaid.ActualWidth/2 - thumb.Width / 2 + px);
                     }
                 }));
 

@@ -7,6 +7,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Controls;
 using ArcCreate.Jklss.Model.ThumbInfoWindow;
 using System.Security.Policy;
+using ArcCreate.Jklss.Model.MainWindow;
 
 namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 {
@@ -17,6 +18,12 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
         public Dictionary<Thumb, ThumbInfoWindowModel> saveThumbInfoWindowModel = null;
 
         private TreeView saveTree = null;
+
+        private MainWindowModels mainWindowModels = null;
+        public PlayerLoaderBase(MainWindowModels mainWindowModels)
+        {
+            this.mainWindowModels = mainWindowModels;
+        }
 
         /// <summary>
         /// 
@@ -158,9 +165,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                 saveThumbInfoWindowModel[getThumb].TreeItems[one][two].Remove(three);
 
-                if (MainWindowViewModel.mainWindowModels.SaveThumbInfo.ContainsKey(getThumb))
+                if (mainWindowModels.SaveThumbInfo.ContainsKey(getThumb))
                 {
-                    var getInfo = MainWindowViewModel.mainWindowModels.SaveThumbInfo[getThumb];
+                    var getInfo = mainWindowModels.SaveThumbInfo[getThumb];
 
                     try
                     {
@@ -215,7 +222,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
         private void GetConditionsCmdProjectEdit_CBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (!MainWindowViewModel.mainWindowModels.SaveThumbInfo.ContainsKey(getThumb))
+            if (!mainWindowModels.SaveThumbInfo.ContainsKey(getThumb))
             {
                 return;
             }
@@ -232,7 +239,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
             var getConditions_TBox = GetControl("Conditions_TBox", getThumb) as TextBox;
 
-            var getInfo = MainWindowViewModel.mainWindowModels.SaveThumbInfo[getThumb];
+            var getInfo = mainWindowModels.SaveThumbInfo[getThumb];
 
             string one = string.Empty, two = string.Empty, three = string.Empty, four = string.Empty;
 

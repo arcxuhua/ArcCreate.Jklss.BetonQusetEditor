@@ -2,6 +2,7 @@
 using ArcCreate.Jklss.Model;
 using ArcCreate.Jklss.Model.MainWindow;
 using ArcCreate.Jklss.Model.ThumbModel;
+using ArcCreate.Jklss.Model.ThumbModel.CommandModel;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,7 +18,14 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
     public class GetThumbInfoBase
     {
         private Dictionary<ThumbClass, ThumbCanFather> bidui = new Dictionary<ThumbClass, ThumbCanFather>();
-        public GetThumbInfoBase()
+
+        public List<EventCmdModel> eventProp = null;
+
+        public List<ObjectiveCmdModel> objectiveProp = null;
+
+        public List<ContisionsCmdModel> contisionProp = null;
+
+        public GetThumbInfoBase(List<ObjectiveCmdModel> objectiveProp, List<ContisionsCmdModel> contisionProp, List<EventCmdModel> eventProp)
         {
             bidui.Add(ThumbClass.Conditions, new ThumbCanFather()
             {
@@ -336,6 +344,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                     {ThumbClass.Subject,"" }
                 }
             });
+            this.objectiveProp = objectiveProp;
+            this.contisionProp = contisionProp;
+            this.eventProp = eventProp;
         }
 
         private string[] GetMoreMust(string text)
@@ -359,14 +370,14 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
             if (father.thumbClass == ThumbClass.Conditions)
             {
-                if(!MainWindowViewModel.contisionProp.Where(t => t.MainClass == GetRealCmd(father.Saver)).Any())
+                if(!contisionProp.Where(t => t.MainClass == GetRealCmd(father.Saver)).Any())
                 {
                     back.SetError();
 
                     return back;
                 }
 
-                var getModel = MainWindowViewModel.contisionProp.Where(t => t.MainClass == GetRealCmd(father.Saver)).First();
+                var getModel = contisionProp.Where(t => t.MainClass == GetRealCmd(father.Saver)).First();
 
                 if (getModel.NeedTpye == null || getModel.NeedTpye.Count == 0)
                 {
@@ -386,14 +397,14 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
             }
             else if(father.thumbClass == ThumbClass.Events)
             {
-                if (!MainWindowViewModel.eventProp.Where(t => t.MainClass == GetRealCmd(father.Saver)).Any())
+                if (!eventProp.Where(t => t.MainClass == GetRealCmd(father.Saver)).Any())
                 {
                     back.SetError();
 
                     return back;
                 }
 
-                var getModel = MainWindowViewModel.eventProp.Where(t => t.MainClass == GetRealCmd(father.Saver)).First();
+                var getModel = eventProp.Where(t => t.MainClass == GetRealCmd(father.Saver)).First();
 
                 if (getModel.NeedTpye==null||getModel.NeedTpye.Count == 0)
                 {
@@ -413,14 +424,14 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
             }
             else if(father.thumbClass == ThumbClass.Objectives)
             {
-                if (!MainWindowViewModel.objectiveProp.Where(t => t.MainClass == GetRealCmd(father.Saver)).Any())
+                if (!objectiveProp.Where(t => t.MainClass == GetRealCmd(father.Saver)).Any())
                 {
                     back.SetError();
 
                     return back;
                 }
 
-                var getModel = MainWindowViewModel.objectiveProp.Where(t => t.MainClass == GetRealCmd(father.Saver)).First();
+                var getModel = objectiveProp.Where(t => t.MainClass == GetRealCmd(father.Saver)).First();
 
                 if (getModel.NeedTpye == null || getModel.NeedTpye.Count == 0)
                 {

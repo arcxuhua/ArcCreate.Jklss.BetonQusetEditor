@@ -31,6 +31,16 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
         public Dictionary<Thumb, ThumbInfoWindowModel> saveThumbInfoWindowModel = null;
 
+        private MainWindow mainWindow = null;
+
+        private MainWindowModels mainWindowModels = null;
+
+        public ObjectiveLoaderBase(MainWindow mainWindow, MainWindowModels mainWindowModels)
+        {
+            this.mainWindow = mainWindow;
+            this.mainWindowModels = mainWindowModels;
+        }
+
         /// <summary>
         /// 初始化默认的Json文本
         /// </summary>
@@ -164,7 +174,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                 {
                     await Task.Run(() =>
                     {
-                        MainWindowViewModel.mainWindow.Dispatcher.Invoke(new Action(() => {
+                        mainWindow.Dispatcher.Invoke(new Action(() => {
                             cmdCoBox.Items.Add(item);
                         }));
                     });
@@ -603,9 +613,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                     }
                 }
 
-                if (MainWindowViewModel.mainWindowModels.SaveThumbInfo.ContainsKey(getThumb))
+                if (mainWindowModels.SaveThumbInfo.ContainsKey(getThumb))
                 {
-                    var getInfo = MainWindowViewModel.mainWindowModels.SaveThumbInfo[getThumb];
+                    var getInfo = mainWindowModels.SaveThumbInfo[getThumb];
 
                     try
                     {
@@ -695,12 +705,12 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                 }
             }
 
-            if (!MainWindowViewModel.mainWindowModels.SaveThumbInfo.ContainsKey(getThumb))
+            if (!mainWindowModels.SaveThumbInfo.ContainsKey(getThumb))
             {
                 return;
             }
 
-            var getInfo = MainWindowViewModel.mainWindowModels.SaveThumbInfo[getThumb];
+            var getInfo = mainWindowModels.SaveThumbInfo[getThumb];
 
             string one = string.Empty, two = string.Empty, three = string.Empty, four = string.Empty;
 
@@ -854,9 +864,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                 var cs = saveThumbInfoWindowModel[getThumb].TreeItems[one][two].Remove(three);
 
-                if (MainWindowViewModel.mainWindowModels.SaveThumbInfo.ContainsKey(getThumb))
+                if (mainWindowModels.SaveThumbInfo.ContainsKey(getThumb))
                 {
-                    var getInfo = MainWindowViewModel.mainWindowModels.SaveThumbInfo[getThumb];
+                    var getInfo = mainWindowModels.SaveThumbInfo[getThumb];
 
                     try
                     {
@@ -948,7 +958,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                 }
                 //确保对象存储区始终有值
 
-                if (!IsSame(MainWindowViewModel.mainWindowModels.SaveThumbInfo, saveThumbInfoWindowModel, getModelInfo.MainClass))//当数据存储区与对象存储区不相同时
+                if (!IsSame(mainWindowModels.SaveThumbInfo, saveThumbInfoWindowModel, getModelInfo.MainClass))//当数据存储区与对象存储区不相同时
                 {
                     saveThumbInfoWindowModel[getThumb] = await CreateThunbInfowModel(getModelInfo);
                 }
@@ -1441,7 +1451,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
         /// </summary>
         protected async void CheckData()
         {
-            if (!MainWindowViewModel.mainWindowModels.SaveThumbInfo.ContainsKey(getThumb))
+            if (!mainWindowModels.SaveThumbInfo.ContainsKey(getThumb))
             {
                 return;
             }
@@ -1453,7 +1463,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
             try
             {
-                var dataOne = MainWindowViewModel.mainWindowModels.SaveThumbInfo[getThumb][MainWindowViewModel.mainWindowModels.SaveThumbInfo[getThumb].Keys.First()];
+                var dataOne = mainWindowModels.SaveThumbInfo[getThumb][mainWindowModels.SaveThumbInfo[getThumb].Keys.First()];
 
                 var dataTwo = saveThumbInfoWindowModel[getThumb];
 
@@ -1470,7 +1480,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                     {
                         foreach (var j in i.Value)
                         {
-                            await treeViewBase.AddItemToSaves(getThumb, item.Key, i.Key, j.Key, "", "", true, saveThumbInfoWindowModel, MainWindowViewModel.mainWindowModels.SaveThumbInfo, false);
+                            await treeViewBase.AddItemToSaves(getThumb, item.Key, i.Key, j.Key, "", "", true, saveThumbInfoWindowModel, mainWindowModels.SaveThumbInfo, false);
                         }
                     }
                 }
