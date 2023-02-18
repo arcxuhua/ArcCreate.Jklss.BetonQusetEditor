@@ -51,6 +51,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
         private static Thumb nowThumb = null;//当前选中的Thumb
 
+        private List<Thumb> selectThumb = new List<Thumb>();//当前选中的Thumb们
+
         private static List<double> thumbcanvas = new List<double>();//thumb在Canvas中的相对位置
 
         public static List<ContisionsCmdModel> contisionProp = new List<ContisionsCmdModel>();//Contitions语法构造器模型
@@ -80,6 +82,19 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         #endregion
 
         #region 属性字段
+
+        public string PageName
+        {
+            get
+            {
+                return mainWindowModels.PageName;
+            }
+            set
+            {
+                mainWindowModels.PageName = value;
+                this.NotifyChanged();
+            }
+        }
 
         public string LoadingMessage
         {
@@ -375,6 +390,11 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         /// <param name="e"></param>
         public async void Thumb_DragCompleted(object sender, DragCompletedEventArgs e)
         {
+            if (selectThumb.Count > 0)
+            {
+                return;
+            }
+
             var info = await ThumbClassification(sender as Thumb);
 
             if (info == null || info.IsThumb == false || info.backs == null)
@@ -437,26 +457,55 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         {
             cfnum++;
             Thumb myThumb = (Thumb)sender;
-            double nTop = Canvas.GetTop(myThumb) + e.VerticalChange;
-            double nLeft = Canvas.GetLeft(myThumb) + e.HorizontalChange;
-            if (nTop <= 0)
-                nTop = 0;
-            if (nTop >= (504400 - myThumb.Height))
-                nTop = 504400 - myThumb.Height;
-            if (nLeft <= 0)
-                nLeft = 0;
-            if (nLeft >= (1267800 - myThumb.Width))
-                nLeft = 1267800 - myThumb.Width;
-
-            if (cfnum >= 50)
+            if (selectThumb.Count > 0 && selectThumb.Contains(myThumb))
             {
-                cfnum = 0;
+                for (int i = 0; i < selectThumb.Count; i++)
+                {
+                    if (cfnum >= 50)
+                    {
+                        cfnum = 0;
 
-                DrawAllThumpLine(sender as Thumb);
+                        DrawAllThumpLine(selectThumb[i]);
+                    }
+                    double nTop = Canvas.GetTop(selectThumb[i]) + e.VerticalChange;
+                    double nLeft = Canvas.GetLeft(selectThumb[i]) + e.HorizontalChange;
+                    if (nTop <= 0)
+                        nTop = 0;
+                    if (nTop >= (504400 - selectThumb[i].Height))
+                        nTop = 504400 - selectThumb[i].Height;
+                    if (nLeft <= 0)
+                        nLeft = 0;
+                    if (nLeft >= (1267800 - selectThumb[i].Width))
+                        nLeft = 1267800 - selectThumb[i].Width;
+                    Canvas.SetTop(selectThumb[i], nTop);
+                    Canvas.SetLeft(selectThumb[i], nLeft);
+                }
+            }
+            else
+            {
+                selectThumb.Clear();
+
+                if (cfnum >= 50)
+                {
+                    cfnum = 0;
+
+                    DrawAllThumpLine(sender as Thumb);
+                }
+                double nTop = Canvas.GetTop(myThumb) + e.VerticalChange;
+                double nLeft = Canvas.GetLeft(myThumb) + e.HorizontalChange;
+                if (nTop <= 0)
+                    nTop = 0;
+                if (nTop >= (504400 - myThumb.Height))
+                    nTop = 504400 - myThumb.Height;
+                if (nLeft <= 0)
+                    nLeft = 0;
+                if (nLeft >= (1267800 - myThumb.Width))
+                    nLeft = 1267800 - myThumb.Width;
+                Canvas.SetTop(myThumb, nTop);
+                Canvas.SetLeft(myThumb, nLeft);
             }
 
-            Canvas.SetTop(myThumb, nTop);
-            Canvas.SetLeft(myThumb, nLeft);
+            
         }
 
         /// <summary>
@@ -468,6 +517,18 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         {
             nowThumb = (Thumb)sender;
 
+            if (selectThumb.Count > 0&&selectThumb.Contains(nowThumb))
+            {
+                for (int i = 0; i < selectThumb.Count; i++)
+                {
+                    (GetControl("ColorModel", selectThumb[i]) as DropShadowEffect).Color = Brushes.GreenYellow.Color;
+                }
+            }
+            else
+            {
+                selectThumb.Clear();
+            }
+
             double nTop = Canvas.GetTop(nowThumb);
             double nLeft = Canvas.GetLeft(nowThumb);
 
@@ -478,11 +539,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
         private async void Thumb_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            var first = false;
-
             if (nowThumb != (Thumb)sender)
             {
-                first = true;
 
                 if (nowThumb != null)
                 {
@@ -497,7 +555,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         (GetControl("ColorModel", item) as DropShadowEffect).Color = Brushes.Black.Color;
                     }
 
-                    if(find.Children==null|| find.Children.Count == 0)
+                    if (find.Children == null || find.Children.Count == 0)
                     {
                         foreach (var item in MainWindowModels.saveThumbs)
                         {
@@ -509,41 +567,167 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     }
                 }
             }
+            nowThumb = (Thumb)sender;
 
-            if (first)
+            contisionLoader.getThumb = (Thumb)sender;
+
+            eventLoader.getThumb = (Thumb)sender;
+
+            objectiveLoader.getThumb = (Thumb)sender;
+
+            playerLoader.getThumb = (Thumb)sender;
+
+            npcLoader.getThumb = (Thumb)sender;
+
+            Canvas.SetZIndex((Thumb)sender, 2);
+
+            (GetControl("ColorModel", (Thumb)sender) as DropShadowEffect).Color = Brushes.Red.Color;
+
+            var finds = await FindSaveThumbInfo((Thumb)sender);
+
+            foreach (var item in finds.Children)
             {
-                nowThumb = (Thumb)sender;
-
-                contisionLoader.getThumb = (Thumb)sender;
-
-                eventLoader.getThumb = (Thumb)sender;
-
-                objectiveLoader.getThumb = (Thumb)sender;
-
-                playerLoader.getThumb = (Thumb)sender;
-
-                npcLoader.getThumb = (Thumb)sender;
-
-                Canvas.SetZIndex((Thumb)sender, 2);
-
-                (GetControl("ColorModel", (Thumb)sender) as DropShadowEffect).Color = Brushes.Red.Color;
-
-                var find = await FindSaveThumbInfo((Thumb)sender);
-
-                foreach (var item in find.Children)
-                {
-                    (GetControl("ColorModel", item) as DropShadowEffect).Color = Brushes.Yellow.Color;
-                }
-
-                var back = await ChangeTheTreeView();
-
-                if (back != null && !back.Succese)
-                {
-                    ShowMessage(back.Text);
-                }
+                (GetControl("ColorModel", item) as DropShadowEffect).Color = Brushes.Yellow.Color;
             }
 
-            first = false;
+            var back = await ChangeTheTreeView();
+
+            if (back != null && !back.Succese)
+            {
+                ShowMessage(back.Text);
+            }
+
+
+            
+        }
+
+        #endregion
+
+        #region Canvas事件绑定
+
+        private Border currentBoxSelectedBorder = null;//拖动展示的提示框
+        private bool isCanMove = false;//鼠标是否移动
+        private Point tempStartPoint;//起始坐标
+
+        private void Cvmenu_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (isCanMove)
+            {
+                Point tempEndPoint = e.GetPosition(mainWindow.cvmenu);
+                //绘制跟随鼠标移动的方框
+                DrawMultiselectBorder(tempEndPoint, tempStartPoint);
+            }
+        }
+
+        private void Cvmenu_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            foreach (var child in selectThumb)
+            {
+                (GetControl("ColorModel", child) as DropShadowEffect).Color = Brushes.Black.Color;
+            }
+            selectThumb.Clear();
+
+            if (currentBoxSelectedBorder != null)
+            {
+                
+                //获取选框的矩形位置
+                Point tempEndPoint = e.GetPosition(mainWindow.cvmenu);
+                Rect tempRect = new Rect(tempStartPoint, tempEndPoint);
+                //获取子控件
+
+                var list = GetChildObjects<Thumb>(mainWindow.cvmenu);
+                foreach (var child in list)
+                {//获取子控件矩形位置
+                    Rect childRect = new Rect(Canvas.GetLeft(child), Canvas.GetTop(child), child.Width, child.Height);
+                    //若子控件与选框相交则改变样式
+                    if (childRect.IntersectsWith(tempRect))
+                    {
+                        (GetControl("ColorModel", child) as DropShadowEffect).Color = Brushes.GreenYellow.Color;
+                        selectThumb.Add(child);
+                    }
+                    
+                }
+                mainWindow.cvmenu.Children.Remove(currentBoxSelectedBorder);
+                currentBoxSelectedBorder = null;
+            }
+
+            isCanMove = false;
+
+            mainWindow.cvmenu.MouseMove -= Cvmenu_MouseMove;
+        }
+
+        private void Cvmenu_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!isCanMove)
+            {
+                isCanMove = true;
+                tempStartPoint = e.GetPosition(mainWindow.cvmenu);
+
+                mainWindow.cvmenu.MouseMove += Cvmenu_MouseMove;
+            }
+            
+        }
+
+        /// <summary>
+        /// 绘制跟随鼠标移动的方框
+        /// </summary>
+        private void DrawMultiselectBorder(Point endPoint, Point startPoint)
+        {
+            if (currentBoxSelectedBorder == null)
+            {
+                currentBoxSelectedBorder = new Border();
+                currentBoxSelectedBorder.Background = new SolidColorBrush(new Color() { R = 83, G = 7, B = 179,A=100 });
+                currentBoxSelectedBorder.Opacity = 0.4;
+                currentBoxSelectedBorder.BorderThickness = new Thickness(1);
+                currentBoxSelectedBorder.BorderBrush = new SolidColorBrush(new Color() { R=67,G=11,B=138, A = 100 });
+                Canvas.SetZIndex(currentBoxSelectedBorder, 100);
+                mainWindow.cvmenu.Children.Add(currentBoxSelectedBorder);
+            }
+            currentBoxSelectedBorder.Width = Math.Abs(endPoint.X - startPoint.X);
+            currentBoxSelectedBorder.Height = Math.Abs(endPoint.Y - startPoint.Y);
+            if (endPoint.X - startPoint.X >= 0)
+            {
+                Canvas.SetLeft(currentBoxSelectedBorder, startPoint.X);
+
+                Console.WriteLine("x:" + startPoint.X);
+            }
+            else
+            {
+                Canvas.SetLeft(currentBoxSelectedBorder, endPoint.X);
+                Console.WriteLine("x:" + endPoint.X);
+            }
+               
+            if (endPoint.Y - startPoint.Y >= 0)
+            {
+                Canvas.SetTop(currentBoxSelectedBorder, startPoint.Y);
+
+                Console.WriteLine("y:" + startPoint.Y);
+            }
+            else
+            {
+                Canvas.SetTop(currentBoxSelectedBorder, endPoint.Y);
+
+                Console.WriteLine("y:" + endPoint.Y);
+            }
+                
+        }
+        /// <summary>
+        /// 获得所有子控件
+        /// </summary>
+        public static List<T> GetChildObjects<T>(System.Windows.DependencyObject obj) where T : System.Windows.FrameworkElement
+        {
+            System.Windows.DependencyObject child = null;
+            List<T> childList = new List<T>();
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+            {
+                child = VisualTreeHelper.GetChild(obj, i);
+                if (child is T)
+                {
+                    childList.Add((T)child);
+                }
+                childList.AddRange(GetChildObjects<T>(child));
+            }
+            return childList;
         }
 
         #endregion
@@ -1803,6 +1987,31 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             }
         }
 
+        public CommandBase _MinimizeCommand;
+        public CommandBase MinimizeCommand
+        {
+            get
+            {
+                if (_MinimizeCommand == null)
+                {
+                    _MinimizeCommand = new CommandBase();
+                    _MinimizeCommand.DoExecute = new Action<object>(obj =>//回调函数
+                    {
+                        var window = obj as Window;
+                        if (window.WindowState == WindowState.Maximized)
+                        {
+                            window.WindowState = WindowState.Normal;
+                        }
+                        else if(window.WindowState == WindowState.Normal)
+                        {
+                            window.WindowState = WindowState.Maximized;
+                        }
+                    });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
+                }
+                return _MinimizeCommand;
+            }
+        }
+
         #endregion
 
         #region 其他事件绑定
@@ -1930,6 +2139,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                     }
                                     else
                                     {
+                                        PageName = SelectData.Name;
                                         break;
                                     }
                                 }
@@ -1956,6 +2166,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                         }
                                         else
                                         {
+                                            PageName = SelectData.Name;
                                             break;
                                         }
                                     }
@@ -1967,6 +2178,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                 }
                                 else
                                 {
+                                    PageName = SelectData.Name;
                                     break;
                                 }
                             }
@@ -1975,6 +2187,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         mainWindow.IsEnabled = true;
                         LoadingShow = Visibility.Hidden;
 
+                        mainWindow.cvmenu.MouseLeftButtonDown += Cvmenu_MouseLeftButtonDown;
+                        mainWindow.cvmenu.MouseLeftButtonUp += Cvmenu_MouseLeftButtonUp;
                         
                     });
                 }
@@ -1982,6 +2196,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             }
             set { _LoadedCommand = value; }
         }
+
+        
 
         private RelayCommand<Window> _ClosedCommand;
 

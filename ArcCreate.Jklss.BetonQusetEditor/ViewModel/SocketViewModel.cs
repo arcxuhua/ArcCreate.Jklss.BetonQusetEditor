@@ -25,7 +25,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
         public static ScoketService socketService = new ScoketService();
 
-        public static string version = "3.1.37";
+        public static string version = "3.1.45";
 
         /// <summary>
         /// 开启Socket通讯
@@ -155,30 +155,30 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             }
             else if(message.Class == MessageClass.Version)
             {
-                var getMessage = FileService.JsonToProp<config>(Encoding.UTF8.GetString(message.Message));
+                //var getMessage = FileService.JsonToProp<config>(Encoding.UTF8.GetString(message.Message));
 
-                if (getMessage.version == version)
-                {
-                    return;
-                }
+                //if (getMessage.version == version)
+                //{
+                //    return;
+                //}
 
-                var updateExePath = Directory.GetCurrentDirectory()+@"\update.exe";
+                //var updateExePath = Directory.GetCurrentDirectory()+@"\update.exe";
 
-                try
-                {
-                    ProcessStartInfo versionUpdatePrp = new ProcessStartInfo(updateExePath, getMessage.update_path);
+                //try
+                //{
+                //    ProcessStartInfo versionUpdatePrp = new ProcessStartInfo(updateExePath, getMessage.update_path);
 
-                    Process newProcess = new Process();
-                    newProcess.StartInfo = versionUpdatePrp;
-                    newProcess.Start();
+                //    Process newProcess = new Process();
+                //    newProcess.StartInfo = versionUpdatePrp;
+                //    newProcess.Start();
 
-                    Environment.Exit(0);
-                }
-                catch
-                {
-                    MessageBox.Show("更新程序损坏,请重新下载客户端！","错误");
-                    Environment.Exit(0);
-                }
+                //    Environment.Exit(0);
+                //}
+                //catch
+                //{
+                //    MessageBox.Show("更新程序损坏,请重新下载客户端！","错误");
+                //    Environment.Exit(0);
+                //}
                 
             }
             else

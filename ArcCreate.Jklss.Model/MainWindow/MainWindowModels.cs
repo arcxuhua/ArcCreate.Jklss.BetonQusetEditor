@@ -11,6 +11,7 @@ namespace ArcCreate.Jklss.Model.MainWindow
         public ThumbClass SearchType { get; set; }
         public string LoadingMessage { get; set; }
         public Visibility LoadingShow { get; set; } = Visibility.Hidden;
+        public string PageName { get; set; }
         public string SearchText { get; set; }
         public bool IsFindFile { get; set; } = false;
         public bool isHaveSubjcet { get; set; } = false;

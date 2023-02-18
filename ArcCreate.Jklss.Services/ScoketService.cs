@@ -121,19 +121,43 @@ namespace ArcCreate.Jklss.Services
                         {
                             if (!ClientKeys.ContainsKey(socket.RemoteEndPoint.ToString()))
                             {
-                                MessageMode sendMessage;
                                 try
                                 {
+                                    var fgf = str.Substring(str.Length - 2, 2);
                                     var fg = str.Split(new string[] { "$$" }, StringSplitOptions.RemoveEmptyEntries);
-                                    sendMessage = FileService.JsonToProp<MessageMode>(fg[0]);
-                                    sendMessage.Ip = socket.RemoteEndPoint.ToString();
+                                    for (int i = 0; i < fg.Length; i++)
+                                    {
+                                        if (i == 0)
+                                        {
+                                            fg[i] = saveNeed + fg[i];
+
+                                            saveNeed = string.Empty;
+                                        }
+
+                                        MessageMode sendMessage = null;
+
+                                        try
+                                        {
+                                            sendMessage = FileService.JsonToProp<MessageMode>(fg[0]);
+                                            sendMessage.Ip = socket.RemoteEndPoint.ToString();
+                                            GetMessage(sendMessage);
+                                        }
+                                        catch
+                                        {
+                                            saveNeed = fg[i];
+
+                                            AsynRecive(socket);
+                                            return;
+                                        }
+                                    }
+                                    
                                 }
                                 catch
                                 {
                                     AsynRecive(socket);
                                     return;
                                 }
-                                GetMessage(sendMessage);
+                                
                             }
                             else
                             {
@@ -151,118 +175,74 @@ namespace ArcCreate.Jklss.Services
 
                                     var fg = str.Split(new string[] { "$$" }, StringSplitOptions.RemoveEmptyEntries);
 
-                                    var getMessageModel = FileService.JsonToProp<MessageMode>(fg[0]);
-
-                                    getMessageModel.Ip = socket.RemoteEndPoint.ToString();
-
-                                    if (getMessageModel.Class != MessageClass.SendKey && getMessageModel.Class != MessageClass.Heart && getMessageModel.Class != MessageClass.Version)
+                                    for (int i = 0; i < fg.Length; i++)
                                     {
-                                        AsynRecive(socket);
-                                        return;
-                                    }
-
-                                    GetMessage(getMessageModel);
-                                }
-                                catch
-                                {
-                                    
-                                    try
-                                    {
-                                        var fgf = str.Substring(str.Length - 2, 2);
-
-                                        var fg = str.Split(new string[] { "$$" }, StringSplitOptions.RemoveEmptyEntries);
-
-                                        for (int i = 0; i < fg.Length; i++)
+                                        if (i == 0)
                                         {
-                                            if (i == 0)
+                                            fg[i] = saveNeed + fg[i];
+
+                                            saveNeed = string.Empty;
+                                        }
+
+                                        MessageMode getMessageModels = null;
+
+                                        try
+                                        {
+                                            getMessageModels = FileService.JsonToProp<MessageMode>(fg[0]);
+                                            getMessageModels.Ip = socket.RemoteEndPoint.ToString();
+
+                                            if (getMessageModels.Class != MessageClass.SendKey && getMessageModels.Class != MessageClass.Heart && getMessageModels.Class != MessageClass.Version)
                                             {
-                                                fg[i] = saveNeed + fg[i];
-
-                                                saveNeed = string.Empty;
+                                                AsynRecive(socket);
+                                                return;
                                             }
-                                            
-                                            
-                                            MessageMode getMessageModels = null;
 
-                                            try
-                                            {
-                                                var jm = FileService.PrivateKeyDecrypt(keyModel.ClientSendKey.PrivetKey, fg[i]);
-                                                getMessageModels = FileService.JsonToProp<MessageMode>(jm);
+                                            GetMessage(getMessageModels);
 
-                                                try
-                                                {
-                                                    SocketModel.waitBackDic[getMessageModels.Class][getMessageModels.Key] = jm;
-                                                }
-                                                catch
-                                                {
-                                                    getMessageModels.Ip = socket.RemoteEndPoint.ToString();
-
-                                                    GetMessage(getMessageModels, getMessageModels.Token);
-                                                }
-
-                                            }
-                                            catch
+                                        }
+                                        catch
+                                        {
+                                            if (fgf != "$$")
                                             {
                                                 saveNeed = fg[i];
 
                                                 AsynRecive(socket);
                                                 return;
                                             }
+                                            else
+                                            {
+                                                try
+                                                {
+                                                    var jm = FileService.PrivateKeyDecrypt(keyModel.ClientSendKey.PrivetKey, fg[i]);
+                                                    getMessageModels = FileService.JsonToProp<MessageMode>(jm);
 
-                                            //if (getMessageModels.Length != 1)
-                                            //{
-                                            //    if (fb.TryGetValue(getMessageModels.Key, out Dictionary<int, byte[]> b))
-                                            //    {
-                                            //        fb[getMessageModels.Key].Add(Convert.ToInt32(getMessageModels.NowLength), getMessageModels.Message);
+                                                    try
+                                                    {
+                                                        SocketModel.waitBackDic[getMessageModels.Class][getMessageModels.Key] = jm;
+                                                    }
+                                                    catch
+                                                    {
+                                                        getMessageModels.Ip = socket.RemoteEndPoint.ToString();
 
-                                            //        if (fb[getMessageModels.Key].Count == getMessageModels.Length)
-                                            //        {
-                                            //            byte[] wzdata = new byte[0];
+                                                        GetMessage(getMessageModels, getMessageModels.Token);
+                                                    }
+                                                }
+                                                catch
+                                                {
+                                                    saveNeed = fg[i];
 
-                                            //            for (int j = 1; j <= fb[getMessageModels.Key].Count; j++)
-                                            //            {
-                                            //                wzdata = addBytes(wzdata, fb[getMessageModels.Key][j]);
-                                            //            }
-
-                                            //            getMessageModels.Message = wzdata;
-
-                                            //            try
-                                            //            {
-                                            //                SocketModel.waitBackDic[getMessageModels.Class][getMessageModels.Key] = FileService.SaveToYaml(getMessageModels);
-                                            //                continue;
-                                            //            }
-                                            //            catch
-                                            //            {
-                                            //                getMessageModels.Ip = socket.RemoteEndPoint.ToString();
-
-                                            //                GetMessage(getMessageModels, getMessageModels.Token);
-                                            //                continue;
-                                            //            }
-                                            //        }
-                                            //        else
-                                            //        {
-                                            //            continue;
-                                            //        }
-                                            //    }
-                                            //    else
-                                            //    {
-                                            //        fb.Add(getMessageModels.Key, new Dictionary<int, byte[]>
-                                            //                {
-                                            //                    { Convert.ToInt32(getMessageModels.NowLength),getMessageModels.Message }
-                                            //                });
-                                            //        continue;
-                                            //    }
-
-                                            //}
-
+                                                    AsynRecive(socket);
+                                                    return;
+                                                }
+                                            }
                                             
                                         }
                                     }
-                                    catch
-                                    {
-                                        AsynRecive(socket);
-                                        return;
-                                    }
+                                }
+                                catch
+                                {
+                                    AsynRecive(socket);
+                                    return;
                                 }
                             }
                         }

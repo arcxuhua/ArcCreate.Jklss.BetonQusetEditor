@@ -368,7 +368,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
                 var getModel = MainWindowViewModel.contisionProp.Where(t => t.MainClass == GetRealCmd(father.Saver)).First();
 
-                if (getModel.NeedTpye.Count == 0)
+                if (getModel.NeedTpye == null || getModel.NeedTpye.Count == 0)
                 {
                     back.SetError();
 
@@ -395,7 +395,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
                 var getModel = MainWindowViewModel.eventProp.Where(t => t.MainClass == GetRealCmd(father.Saver)).First();
 
-                if (getModel.NeedTpye.Count == 0)
+                if (getModel.NeedTpye==null||getModel.NeedTpye.Count == 0)
                 {
                     back.SetError();
 
@@ -422,7 +422,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
                 var getModel = MainWindowViewModel.objectiveProp.Where(t => t.MainClass == GetRealCmd(father.Saver)).First();
 
-                if (getModel.NeedTpye.Count == 0)
+                if (getModel.NeedTpye == null || getModel.NeedTpye.Count == 0)
                 {
                     back.SetError();
 

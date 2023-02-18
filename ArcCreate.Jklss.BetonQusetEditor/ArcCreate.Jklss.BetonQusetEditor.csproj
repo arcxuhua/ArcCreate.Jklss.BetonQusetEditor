@@ -26,7 +26,7 @@
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <Optimize>true</Optimize>
+    <Optimize>False</Optimize>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>arccreate.ico</ApplicationIcon>
@@ -43,6 +43,10 @@
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>true</SignManifests>
+    <IsPublishable>True</IsPublishable>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Optimize>False</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Build.Framework" />
