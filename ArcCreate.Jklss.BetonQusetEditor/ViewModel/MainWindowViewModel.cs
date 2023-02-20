@@ -561,8 +561,11 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                             }
                         }
                     }
+
+                    
                 }
             }
+
             nowThumb = (Thumb)sender;
 
             contisionLoader.getThumb = (Thumb)sender;
@@ -594,7 +597,6 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             }
 
 
-            
         }
 
         #endregion
@@ -1714,9 +1716,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                             var haveInfoCmd = false;
 
-                            if (!mainWindowModels.SaveThumbInfo[nowThumb].ContainsKey(getConditions_CBox.SelectedItem.ToString()))
+                            if (!mainWindowModels.SaveThumbInfo[nowThumb].ContainsKey((getConditions_CBox.SelectedItem as ComboBoxItem).Content.ToString()))
                             {
-                                var fg_one = getConditions_CBox.SelectedItem.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
+                                var fg_one = (getConditions_CBox.SelectedItem as ComboBoxItem).Content.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
 
                                 if (fg_one.Length == 3)
                                 {
@@ -1727,13 +1729,13 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                 else
                                 {
                                     haveInfoCmd = false;
-                                    one = getConditions_CBox.SelectedItem.ToString();
+                                    one = (getConditions_CBox.SelectedItem as ComboBoxItem).Content.ToString();
                                 }
                             }
                             else
                             {
                                 haveInfoCmd = true;
-                                one = getConditions_CBox.SelectedItem.ToString();
+                                one = (getConditions_CBox.SelectedItem as ComboBoxItem).Content.ToString();
                             }
 
                             if (!haveInfoCmd)
@@ -1757,10 +1759,21 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                             var haveInfoCmdEdit = false;
 
-                            if(!mainWindowModels.SaveThumbInfo[nowThumb]
-                            [one].ContainsKey(getConditionsCmdEdit_CBox.SelectedItem.ToString()))
+                            var getConditionsCmdEdit_CBoxItem = getConditionsCmdEdit_CBox.SelectedItem as ComboBoxItem;
+                            var getConditionsCmdEdit_CBoxItemStr = string.Empty;
+                            if (getConditionsCmdEdit_CBoxItem != null)
                             {
-                                var fg_one = getConditionsCmdEdit_CBox.SelectedItem.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
+                                getConditionsCmdEdit_CBoxItemStr = getConditionsCmdEdit_CBoxItem.Content.ToString();
+                            }
+                            else
+                            {
+                                getConditionsCmdEdit_CBoxItemStr = getConditionsCmdEdit_CBox.SelectedItem.ToString();
+                            }
+
+                            if (!mainWindowModels.SaveThumbInfo[nowThumb]
+                            [one].ContainsKey(getConditionsCmdEdit_CBoxItemStr))
+                            {
+                                var fg_one = getConditionsCmdEdit_CBoxItemStr.Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
 
                                 if (fg_one.Length == 3)
                                 {
@@ -1771,13 +1784,13 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                 else
                                 {
                                     haveInfoCmdEdit = false;
-                                    two = getConditionsCmdEdit_CBox.SelectedItem.ToString();
+                                    two = getConditionsCmdEdit_CBoxItemStr;
                                 }
                             }
                             else
                             {
                                 haveInfoCmdEdit = true;
-                                two = getConditionsCmdEdit_CBox.SelectedItem.ToString();
+                                two = getConditionsCmdEdit_CBoxItemStr;
                             }
 
                             if (!haveInfoCmdEdit)
@@ -1797,9 +1810,22 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                             
                             var haveInfoCmdparameterEdit = false;
 
-                            if(!mainWindowModels.SaveThumbInfo[nowThumb][one][two].ContainsKey(getConditionsCmdparameterEdit_CBox.SelectedItem.ToString()))
+                            var getConditionsCmdparameterEdit_CBoxItem = getConditionsCmdparameterEdit_CBox.SelectedItem as ComboBoxItem;
+
+                            var getConditionsCmdparameterEdit_CBoxItemStr = string.Empty;
+
+                            if (getConditionsCmdparameterEdit_CBoxItem != null)
                             {
-                                var fg_one = getConditionsCmdparameterEdit_CBox.SelectedItem.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
+                                getConditionsCmdparameterEdit_CBoxItemStr = getConditionsCmdparameterEdit_CBoxItem.Content.ToString();
+                            }
+                            else
+                            {
+                                getConditionsCmdparameterEdit_CBoxItemStr = getConditionsCmdparameterEdit_CBox.SelectedItem.ToString();
+                            }
+
+                            if (!mainWindowModels.SaveThumbInfo[nowThumb][one][two].ContainsKey(getConditionsCmdparameterEdit_CBoxItemStr))
+                            {
+                                var fg_one = getConditionsCmdparameterEdit_CBoxItemStr.Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
 
                                 if (fg_one.Length == 3)
                                 {
@@ -1810,13 +1836,13 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                 else
                                 {
                                     haveInfoCmdparameterEdit = false;
-                                    three = getConditionsCmdparameterEdit_CBox.SelectedItem.ToString();
+                                    three = getConditionsCmdparameterEdit_CBoxItemStr;
                                 }
                             }
                             else
                             {
                                 haveInfoCmdparameterEdit = true;
-                                three = getConditionsCmdparameterEdit_CBox.SelectedItem.ToString();
+                                three = getConditionsCmdparameterEdit_CBoxItemStr;
                             }
 
                             if (!haveInfoCmdparameterEdit)
@@ -1837,10 +1863,23 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                             var haveInfoCmdProjectEdit = false;
 
-                            if(!mainWindowModels.SaveThumbInfo[nowThumb]
-                            [one][two][three].ContainsKey(getConditionsCmdProjectEdit_CBox.SelectedItem.ToString()))
+                            var getConditionsCmdProjectEdit_CBoxItem = getConditionsCmdProjectEdit_CBox.SelectedItem as ComboBoxItem;
+
+                            var getConditionsCmdProjectEdit_CBoxItemStr = string.Empty;
+
+                            if (getConditionsCmdProjectEdit_CBoxItem != null)
                             {
-                                var fg_one = getConditionsCmdProjectEdit_CBox.SelectedItem.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
+                                getConditionsCmdProjectEdit_CBoxItemStr = getConditionsCmdProjectEdit_CBoxItem.Content.ToString();
+                            }
+                            else
+                            {
+                                getConditionsCmdProjectEdit_CBoxItemStr = getConditionsCmdProjectEdit_CBox.SelectedItem.ToString();
+                            }
+
+                            if (!mainWindowModels.SaveThumbInfo[nowThumb]
+                            [one][two][three].ContainsKey(getConditionsCmdProjectEdit_CBoxItemStr))
+                            {
+                                var fg_one = getConditionsCmdProjectEdit_CBoxItemStr.Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
 
                                 if (fg_one.Length == 3)
                                 {
@@ -1851,13 +1890,13 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                 else
                                 {
                                     haveInfoCmdProjectEdit = false;
-                                    four = getConditionsCmdProjectEdit_CBox.SelectedItem.ToString();
+                                    four = getConditionsCmdProjectEdit_CBoxItemStr;
                                 }
                             }
                             else
                             {
                                 haveInfoCmdProjectEdit = true;
-                                four = getConditionsCmdProjectEdit_CBox.SelectedItem.ToString();
+                                four = getConditionsCmdProjectEdit_CBoxItemStr;
                             }
 
                             if (!haveInfoCmdProjectEdit)
@@ -1882,8 +1921,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                     {
                                         return;
                                     }
-
-                                    vlue = getConditions_ComboBox.SelectedItem.ToString();
+                                    try
+                                    {
+                                        vlue = (getConditions_ComboBox.SelectedItem as ComboBoxItem).Content.ToString();
+                                    }
+                                    catch
+                                    {
+                                        vlue = getConditions_ComboBox.SelectedItem.ToString();
+                                    }
+                                    
                                 }
                                 else
                                 {
@@ -2135,25 +2181,26 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                             MainFilePath = SelectData.FilePath;
                             if (SelectData.Code != -1)
                             {
+                                LoadingMessage = "正在从云端拉取数据，请不要操作页面";
+                                var back = await ReadJson();
+
+                                if (!back.Succese)
+                                {
+                                    MessageBox.Show("导入错误，请重试" + back.Text);
+                                    continue;
+                                }
+                                else
+                                {
+                                    PageName = SelectData.Name;
+                                    break;
+                                }
                                 try
                                 {
-                                    LoadingMessage = "正在从云端拉取数据，请不要操作页面";
-                                    var back = await ReadJson();
-
-                                    if (!back.Succese)
-                                    {
-                                        MessageBox.Show("导入错误，请重试");
-                                        continue;
-                                    }
-                                    else
-                                    {
-                                        PageName = SelectData.Name;
-                                        break;
-                                    }
+                                    
                                 }
                                 catch
                                 {
-                                    MessageBox.Show("导入错误，请重试");
+                                    MessageBox.Show("导入错误，请重试","错误");
                                     continue;
                                 }
                             }
@@ -3618,7 +3665,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                             npcLoader.saveThumbInfoWindowModel.Add(thumbs, infoModel);
                         }
                     }
-                    else
+                    else if(item.thumbClass == ThumbClass.Player)
                     {
                         if (playerLoader.saveThumbInfoWindowModel == null)
                         {
@@ -3636,7 +3683,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                     await Task.Run(() =>
                     {
-                        Thread.Sleep(100);
+                        Thread.Sleep(500);
                         thumbs.Dispatcher.Invoke(new Action(() =>
                         {
                             (GetControl("ConditionsConfig_TBox", thumbs) as TextBox).Text = item.Name;
@@ -4086,7 +4133,16 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                 {
                                     foreach (var j in i.Value)
                                     {//j.key是命令
-                                        var num = 0;
+
+                                        var model = findModel.NeedTpye.Where(t => t.Key == j.Key).First().Value;
+
+                                        var newModel = new Dictionary<string, ThumbClass>();
+
+                                        foreach (var sd in model)
+                                        {
+                                            newModel.Add($"第 {sd.Key + 1} 条参数", sd.Value);
+                                        }
+
                                         foreach (var n in j.Value)
                                         {//n.key是参数
                                             foreach (var m in n.Value)
@@ -4096,18 +4152,16 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                                     break;
                                                 }
 
-                                                var model = findModel.NeedTpye.Where(t => t.Key == j.Key).First().Value;
-
-                                                if (!model.ContainsKey(num))//找到是否存在参数
+                                                if (!newModel.ContainsKey(n.Key))//找到是否存在参数
                                                 {
                                                     break;
                                                 }
 
-                                                var getNeedClass = model[num];
+                                                var getNeedClass = newModel[n.Key];
 
                                                 var changeinfo = m.Value;
 
-                                                if (findModel.isContisionCmd)
+                                                if (getNeedClass == ThumbClass.Conditions)
                                                 {
                                                     changeinfo = changeinfo.TrimStart('!');
                                                 }
@@ -4124,9 +4178,12 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                                     {
                                                         DrawThumbLine(item.Key, getinfo.Saver);
                                                     }
+                                                    else
+                                                    {
+                                                        ShowMessage(classoverBack.Text);
+                                                    }
                                                 }
                                             }
-                                            num++;
                                         }
                                     }
                                 }
@@ -4143,7 +4200,16 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                 {
                                     foreach (var j in i.Value)
                                     {//j.key是命令
-                                        var num = 0;
+
+                                        var model = findModel.NeedTpye.Where(t => t.Key == j.Key).First().Value;
+
+                                        var newModel = new Dictionary<string, ThumbClass>();
+
+                                        foreach (var sd in model)
+                                        {
+                                            newModel.Add($"第 {sd.Key + 1} 条参数", sd.Value);
+                                        }
+
                                         foreach (var n in j.Value)
                                         {//n.key是参数
                                             foreach (var m in n.Value)
@@ -4153,14 +4219,12 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                                     break;
                                                 }
 
-                                                var model = findModel.NeedTpye.Where(t => t.Key == j.Key).First().Value;
-
-                                                if (!model.ContainsKey(num))//找到是否存在参数
+                                                if (!newModel.ContainsKey(n.Key))//找到是否存在参数
                                                 {
                                                     break;
                                                 }
 
-                                                var getNeedClass = model[num];
+                                                var getNeedClass = newModel[n.Key];
 
                                                 var changeinfo = m.Value;
 
@@ -4181,9 +4245,12 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                                     {
                                                         DrawThumbLine(item.Key, getinfo.Saver);
                                                     }
+                                                    else
+                                                    {
+                                                        ShowMessage(classoverBack.Text);
+                                                    }
                                                 }
                                             }
-                                            num++;
                                         }
                                     }
                                 }
@@ -4200,7 +4267,16 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                 {
                                     foreach (var j in i.Value)
                                     {//j.key是命令
-                                        var num = 0;
+
+                                        var model = findModel.NeedTpye.Where(t => t.Key == j.Key).First().Value;
+
+                                        var newModel = new Dictionary<string, ThumbClass>();
+
+                                        foreach (var sd in model)
+                                        {
+                                            newModel.Add($"第 {sd.Key + 1} 条参数", sd.Value);
+                                        }
+
                                         foreach (var n in j.Value)
                                         {//n.key是参数
                                             foreach (var m in n.Value)
@@ -4210,14 +4286,12 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                                     break;
                                                 }
 
-                                                var model = findModel.NeedTpye.Where(t => t.Key == j.Key).First().Value;
-
-                                                if (!model.ContainsKey(num))//找到是否存在参数
+                                                if (!newModel.ContainsKey(n.Key))//找到是否存在参数
                                                 {
                                                     break;
                                                 }
 
-                                                var getNeedClass = model[num];
+                                                var getNeedClass = newModel[n.Key];
 
                                                 var changeinfo = m.Value;
 
@@ -4238,9 +4312,12 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                                     {
                                                         DrawThumbLine(item.Key, getinfo.Saver);
                                                     }
+                                                    else
+                                                    {
+                                                        ShowMessage(classoverBack.Text);
+                                                    }
                                                 }
                                             }
-                                            num++;
                                         }
                                     }
                                 }
@@ -4357,7 +4434,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             switch (thumbClass)
             {
                 case ThumbClass.Player:
-                    var loaderBacks = await playerLoader.ChangeThumb(control.SelectedItem.ToString(), nowThumbs, thumbInfoWindow.TreeView_Tv);
+                    var loaderBacks = await playerLoader.ChangeThumb((control.SelectedItem as ComboBoxItem).Content.ToString(), nowThumbs, thumbInfoWindow.TreeView_Tv);
 
                     if (loaderBacks != null && !loaderBacks.Succese)
                     {
@@ -4368,7 +4445,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                     break;
                 case ThumbClass.NPC:
-                    loaderBacks = await npcLoader.ChangeThumb(control.SelectedItem.ToString(), nowThumbs, thumbInfoWindow.TreeView_Tv);
+                    loaderBacks = await npcLoader.ChangeThumb((control.SelectedItem as ComboBoxItem).Content.ToString(), nowThumbs, thumbInfoWindow.TreeView_Tv);
 
                     if (loaderBacks != null && !loaderBacks.Succese)
                     {
@@ -4378,8 +4455,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     }
                     break;
                 case ThumbClass.Conditions:
-
-                    var loaderBack = await contisionLoader.ChangeThumb(contisionProp, control.SelectedItem.ToString(), nowThumbs);
+                    
+                    var loaderBack = await contisionLoader.ChangeThumb(contisionProp, (control.SelectedItem as ComboBoxItem).Content.ToString(), nowThumbs);
 
                     if (loaderBack != null && !loaderBack.Succese)
                     {
@@ -4394,7 +4471,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     {
                         ShowMessage(back.Text);
                     }
-                    if (mainWindowModels.SaveThumbInfo.ContainsKey(nowThumbs) && mainWindow.IsEnabled)
+
+                    if (mainWindowModels.SaveThumbInfo.ContainsKey(nowThumbs) && mainWindow.IsEnabled && loaderBack.Backs ==null)
                     {
                         mainWindowModels.SaveThumbInfo[nowThumbs].Clear();
                     }
@@ -4402,7 +4480,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                 case ThumbClass.Events:
 
-                    loaderBack = await eventLoader.ChangeThumb(eventProp, control.SelectedItem.ToString(), nowThumbs);
+                    loaderBack = await eventLoader.ChangeThumb(eventProp, (control.SelectedItem as ComboBoxItem).Content.ToString(), nowThumbs);
 
                     if (loaderBack != null && !loaderBack.Succese)
                     {
@@ -4425,7 +4503,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                 case ThumbClass.Objectives:
 
-                    loaderBack = await objectiveLoader.ChangeThumb(objectiveProp, control.SelectedItem.ToString(), nowThumbs);
+                    loaderBack = await objectiveLoader.ChangeThumb(objectiveProp, (control.SelectedItem as ComboBoxItem).Content.ToString(), nowThumbs);
 
                     if (loaderBack != null && !loaderBack.Succese)
                     {
@@ -4498,7 +4576,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                     if (control != null && control.Items.Count > 0 && control.SelectedItem != null && thumbInfoWindow != null)
                     {
-                        return await contisionLoader.ChangeTheTree(thumbInfoWindow.FindName("TreeView_Tv") as TreeView, contisionProp, control.SelectedItem.ToString());
+                        return await contisionLoader.ChangeTheTree(thumbInfoWindow.FindName("TreeView_Tv") as TreeView, contisionProp, (control.SelectedItem as ComboBoxItem).Content.ToString());
                     }
 
                 }
@@ -4511,7 +4589,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                     if (control!=null&&control.Items.Count > 0 && control.SelectedItem != null && thumbInfoWindow != null)
                     {
-                        return await eventLoader.ChangeTheTree(thumbInfoWindow.FindName("TreeView_Tv") as TreeView, eventProp, control.SelectedItem.ToString());
+                        return await eventLoader.ChangeTheTree(thumbInfoWindow.FindName("TreeView_Tv") as TreeView, eventProp, (control.SelectedItem as ComboBoxItem).Content.ToString());
                     }
 
                 }
@@ -4522,7 +4600,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                     if (control != null && control.Items.Count > 0 && control.SelectedItem != null && thumbInfoWindow != null)
                     {
-                        return await objectiveLoader.ChangeTheTree(thumbInfoWindow.FindName("TreeView_Tv") as TreeView, objectiveProp, control.SelectedItem.ToString());
+                        return await objectiveLoader.ChangeTheTree(thumbInfoWindow.FindName("TreeView_Tv") as TreeView, objectiveProp, (control.SelectedItem as ComboBoxItem).Content.ToString());
                     }
 
                 }
@@ -5091,17 +5169,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         return result;
                     }
 
-                    var fg = getComb.SelectedItem.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
+                    var fg = (getComb.SelectedItem as ComboBoxItem).Content.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
 
                     var realCmd = string.Empty;
 
                     if(fg.Length > 1)
                     {
-                        realCmd = fg[2];
+                        realCmd = fg[fg.Length - 1];
                     }
                     else
                     {
-                        realCmd = getComb.SelectedItem.ToString();
+                        realCmd = (getComb.SelectedItem as ComboBoxItem).Content.ToString();
                     }
 
                     var getFatherJson = contisionProp.Find(t => t.MainClass == realCmd);
@@ -5176,7 +5254,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     {
                         mainWindowModels.SaveThumbInfo.Add(father.Saver, new Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>()
                         {
-                            { getComb.SelectedItem.ToString(),new Dictionary<string, Dictionary<string, Dictionary<string, string>>>()
+                            { (getComb.SelectedItem as ComboBoxItem).Content.ToString(),new Dictionary<string, Dictionary<string, Dictionary<string, string>>>()
                                 {
                                     { saveResult.One,new Dictionary<string, Dictionary<string, string>>()
                                     {
@@ -5187,9 +5265,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         });
                     }
 
-                    if (!mainWindowModels.SaveThumbInfo[father.Saver].ContainsKey(getComb.SelectedItem.ToString()))
+                    if (!mainWindowModels.SaveThumbInfo[father.Saver].ContainsKey((getComb.SelectedItem as ComboBoxItem).Content.ToString()))
                     {
-                        mainWindowModels.SaveThumbInfo[father.Saver].Add(getComb.SelectedItem.ToString(), new Dictionary<string, Dictionary<string, Dictionary<string, string>>>()
+                        mainWindowModels.SaveThumbInfo[father.Saver].Add((getComb.SelectedItem as ComboBoxItem).Content.ToString(), new Dictionary<string, Dictionary<string, Dictionary<string, string>>>()
                         {
                             { saveResult.One,new Dictionary<string, Dictionary<string, string>>()
                                 {
@@ -5199,17 +5277,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         });
                     }
 
-                    if (!mainWindowModels.SaveThumbInfo[father.Saver][getComb.SelectedItem.ToString()].ContainsKey(saveResult.One))
+                    if (!mainWindowModels.SaveThumbInfo[father.Saver][(getComb.SelectedItem as ComboBoxItem).Content.ToString()].ContainsKey(saveResult.One))
                     {
-                        mainWindowModels.SaveThumbInfo[father.Saver][getComb.SelectedItem.ToString()].Add(saveResult.One, new Dictionary<string, Dictionary<string, string>>
+                        mainWindowModels.SaveThumbInfo[father.Saver][(getComb.SelectedItem as ComboBoxItem).Content.ToString()].Add(saveResult.One, new Dictionary<string, Dictionary<string, string>>
                         {
                             { saveResult.Two,new Dictionary<string, string>()}
                         });
                     }
 
-                    if (!mainWindowModels.SaveThumbInfo[father.Saver][getComb.SelectedItem.ToString()][saveResult.One].ContainsKey(saveResult.Two))
+                    if (!mainWindowModels.SaveThumbInfo[father.Saver][(getComb.SelectedItem as ComboBoxItem).Content.ToString()][saveResult.One].ContainsKey(saveResult.Two))
                     {
-                        mainWindowModels.SaveThumbInfo[father.Saver][getComb.SelectedItem.ToString()][saveResult.One].Add(saveResult.Two, new Dictionary<string, string>
+                        mainWindowModels.SaveThumbInfo[father.Saver][(getComb.SelectedItem as ComboBoxItem).Content.ToString()][saveResult.One].Add(saveResult.Two, new Dictionary<string, string>
                         {
 
                         });
@@ -5225,7 +5303,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         }
 
                         var cs = mainWindowModels.SaveThumbInfo[father.Saver]
-                            [getComb.SelectedItem.ToString()]
+                            [(getComb.SelectedItem as ComboBoxItem).Content.ToString()]
                             [saveResult.One]
                             [saveResult.Two];
 
@@ -5242,19 +5320,19 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         }
 
                         //mainWindowModels.SaveThumbInfo[father.Saver]
-                        //    [getComb.SelectedItem.ToString()]
+                        //    [getComb.SelectedItem as ComboBoxItem).Content.ToString()]
                         //    [saveResult.One]
                         //    [saveResult.Two].Add($"第 {num + 1} 项", newChirldText);
 
                         var treeBase = new TreeViewBase();
 
                         await treeBase.AddItemToSaves(father.Saver, saveResult.One, saveResult.Two, 
-                            $"第 {num + 1} 项", getComb.SelectedItem.ToString(), newChirldText, true, 
+                            $"第 {num + 1} 项", (getComb.SelectedItem as ComboBoxItem).Content.ToString(), newChirldText, true, 
                             contisionLoader.saveThumbInfoWindowModel, mainWindowModels.SaveThumbInfo);
 
                         //await treeBase.AddItemToTreeView(thumbInfoWindow.FindName("TreeView_Tv") as TreeView, saveResult.One, saveResult.Two, $"第 {num + 1} 项",true);
 
-                        await treeBase.AddItemToComBox(father.Saver, getComb.SelectedItem.ToString(), saveResult.One, saveResult.Two, $"第 {num + 1} 项");
+                        await treeBase.AddItemToComBox(father.Saver, (getComb.SelectedItem as ComboBoxItem).Content.ToString(), saveResult.One, saveResult.Two, $"第 {num + 1} 项");
 
                         await ChangeTheTreeView();
 
@@ -5278,18 +5356,18 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                         return result;
                     }
-
-                    fg = getComb.SelectedItem.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
+                     
+                    fg = (getComb.SelectedItem as ComboBoxItem).Content.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
 
                     realCmd = string.Empty;
 
                     if (fg.Length > 1)
                     {
-                        realCmd = fg[2];
+                        realCmd = fg[fg.Length-1];
                     }
                     else
                     {
-                        realCmd = getComb.SelectedItem.ToString();
+                        realCmd = (getComb.SelectedItem as ComboBoxItem).Content.ToString();
                     }
 
                     var getFatherJson_event = eventProp.Find(t => t.MainClass == realCmd);
@@ -5330,7 +5408,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         return result;
                     }
 
-                    while(saveResult == null)
+                    saveResult = null;
+
+                    while (saveResult == null)
                     {
                         var setWindow = new ThumbSetWindow();
 
@@ -5366,7 +5446,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     {
                         mainWindowModels.SaveThumbInfo.Add(father.Saver, new Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>()
                         {
-                            { getComb.SelectedItem.ToString(),new Dictionary<string, Dictionary<string, Dictionary<string, string>>>()
+                            { (getComb.SelectedItem as ComboBoxItem).Content.ToString(),new Dictionary<string, Dictionary<string, Dictionary<string, string>>>()
                                 {
                                     { saveResult.One,new Dictionary<string, Dictionary<string, string>>()
                                     {
@@ -5377,9 +5457,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         });
                     }
 
-                    if (!mainWindowModels.SaveThumbInfo[father.Saver].ContainsKey(getComb.SelectedItem.ToString()))
+                    if (!mainWindowModels.SaveThumbInfo[father.Saver].ContainsKey((getComb.SelectedItem as ComboBoxItem).Content.ToString()))
                     {
-                        mainWindowModels.SaveThumbInfo[father.Saver].Add(getComb.SelectedItem.ToString(), new Dictionary<string, Dictionary<string, Dictionary<string, string>>>()
+                        mainWindowModels.SaveThumbInfo[father.Saver].Add((getComb.SelectedItem as ComboBoxItem).Content.ToString(), new Dictionary<string, Dictionary<string, Dictionary<string, string>>>()
                         {
                             { saveResult.One,new Dictionary<string, Dictionary<string, string>>()
                                 {
@@ -5389,17 +5469,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         });
                     }
 
-                    if (!mainWindowModels.SaveThumbInfo[father.Saver][getComb.SelectedItem.ToString()].ContainsKey(saveResult.One))
+                    if (!mainWindowModels.SaveThumbInfo[father.Saver][(getComb.SelectedItem as ComboBoxItem).Content.ToString()].ContainsKey(saveResult.One))
                     {
-                        mainWindowModels.SaveThumbInfo[father.Saver][getComb.SelectedItem.ToString()].Add(saveResult.One, new Dictionary<string, Dictionary<string, string>>
+                        mainWindowModels.SaveThumbInfo[father.Saver][(getComb.SelectedItem as ComboBoxItem).Content.ToString()].Add(saveResult.One, new Dictionary<string, Dictionary<string, string>>
                         {
                             { saveResult.Two,new Dictionary<string, string>()}
                         });
                     }
 
-                    if (!mainWindowModels.SaveThumbInfo[father.Saver][getComb.SelectedItem.ToString()][saveResult.One].ContainsKey(saveResult.Two))
+                    if (!mainWindowModels.SaveThumbInfo[father.Saver][(getComb.SelectedItem as ComboBoxItem).Content.ToString()][saveResult.One].ContainsKey(saveResult.Two))
                     {
-                        mainWindowModels.SaveThumbInfo[father.Saver][getComb.SelectedItem.ToString()][saveResult.One].Add(saveResult.Two, new Dictionary<string, string>
+                        mainWindowModels.SaveThumbInfo[father.Saver][(getComb.SelectedItem as ComboBoxItem).Content.ToString()][saveResult.One].Add(saveResult.Two, new Dictionary<string, string>
                         {
 
                         });
@@ -5415,7 +5495,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         }
 
                         var cs = mainWindowModels.SaveThumbInfo[father.Saver]
-                            [getComb.SelectedItem.ToString()]
+                            [(getComb.SelectedItem as ComboBoxItem).Content.ToString()]
                             [saveResult.One]
                             [saveResult.Two];
 
@@ -5432,19 +5512,19 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         }
 
                         //mainWindowModels.SaveThumbInfo[father.Saver]
-                        //    [getComb.SelectedItem.ToString()]
+                        //    [getComb.SelectedItem as ComboBoxItem).Content.ToString()]
                         //    [saveResult.One]
                         //    [saveResult.Two].Add($"第 {num + 1} 项", newChirldText);
 
                         var treeBase = new TreeViewBase();
 
                         await treeBase.AddItemToSaves(father.Saver, saveResult.One, saveResult.Two,
-                            $"第 {num + 1} 项", getComb.SelectedItem.ToString(), newChirldText, true,
+                            $"第 {num + 1} 项", (getComb.SelectedItem as ComboBoxItem).Content.ToString(), newChirldText, true,
                             eventLoader.saveThumbInfoWindowModel, mainWindowModels.SaveThumbInfo);
 
                         //await treeBase.AddItemToTreeView(thumbInfoWindow.FindName("TreeView_Tv") as TreeView, saveResult.One, saveResult.Two, $"第 {num + 1} 项", true);
 
-                        await treeBase.AddItemToComBox(father.Saver, getComb.SelectedItem.ToString(), saveResult.One, saveResult.Two, $"第 {num + 1} 项");
+                        await treeBase.AddItemToComBox(father.Saver, (getComb.SelectedItem as ComboBoxItem).Content.ToString(), saveResult.One, saveResult.Two, $"第 {num + 1} 项");
 
                         result.SetSuccese();
 
@@ -5468,17 +5548,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         return result;
                     }
 
-                    fg = getComb.SelectedItem.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
+                    fg = (getComb.SelectedItem as ComboBoxItem).Content.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
 
                     realCmd = string.Empty;
 
                     if (fg.Length > 1)
                     {
-                        realCmd = fg[2];
+                        realCmd = fg[fg.Length - 1];
                     }
                     else
                     {
-                        realCmd = getComb.SelectedItem.ToString();
+                        realCmd = (getComb.SelectedItem as ComboBoxItem).Content.ToString();
                     }
 
                     var getFatherJson_objective = objectiveProp.Find(t => t.MainClass == realCmd);
@@ -5552,7 +5632,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     {
                         mainWindowModels.SaveThumbInfo.Add(father.Saver, new Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>()
                         {
-                            { getComb.SelectedItem.ToString(),new Dictionary<string, Dictionary<string, Dictionary<string, string>>>()
+                            { (getComb.SelectedItem as ComboBoxItem).Content.ToString(),new Dictionary<string, Dictionary<string, Dictionary<string, string>>>()
                                 {
                                     { saveResult.One,new Dictionary<string, Dictionary<string, string>>()
                                     {
@@ -5563,9 +5643,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         });
                     }
 
-                    if (!mainWindowModels.SaveThumbInfo[father.Saver].ContainsKey(getComb.SelectedItem.ToString()))
+                    if (!mainWindowModels.SaveThumbInfo[father.Saver].ContainsKey((getComb.SelectedItem as ComboBoxItem).Content.ToString()))
                     {
-                        mainWindowModels.SaveThumbInfo[father.Saver].Add(getComb.SelectedItem.ToString(), new Dictionary<string, Dictionary<string, Dictionary<string, string>>>()
+                        mainWindowModels.SaveThumbInfo[father.Saver].Add((getComb.SelectedItem as ComboBoxItem).Content.ToString(), new Dictionary<string, Dictionary<string, Dictionary<string, string>>>()
                         {
                             { saveResult.One,new Dictionary<string, Dictionary<string, string>>()
                                 {
@@ -5575,17 +5655,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         });
                     }
 
-                    if (!mainWindowModels.SaveThumbInfo[father.Saver][getComb.SelectedItem.ToString()].ContainsKey(saveResult.One))
+                    if (!mainWindowModels.SaveThumbInfo[father.Saver][(getComb.SelectedItem as ComboBoxItem).Content.ToString()].ContainsKey(saveResult.One))
                     {
-                        mainWindowModels.SaveThumbInfo[father.Saver][getComb.SelectedItem.ToString()].Add(saveResult.One, new Dictionary<string, Dictionary<string, string>>
+                        mainWindowModels.SaveThumbInfo[father.Saver][(getComb.SelectedItem as ComboBoxItem).Content.ToString()].Add(saveResult.One, new Dictionary<string, Dictionary<string, string>>
                         {
                             { saveResult.Two,new Dictionary<string, string>()}
                         });
                     }
 
-                    if (!mainWindowModels.SaveThumbInfo[father.Saver][getComb.SelectedItem.ToString()][saveResult.One].ContainsKey(saveResult.Two))
+                    if (!mainWindowModels.SaveThumbInfo[father.Saver][(getComb.SelectedItem as ComboBoxItem).Content.ToString()][saveResult.One].ContainsKey(saveResult.Two))
                     {
-                        mainWindowModels.SaveThumbInfo[father.Saver][getComb.SelectedItem.ToString()][saveResult.One].Add(saveResult.Two, new Dictionary<string, string>
+                        mainWindowModels.SaveThumbInfo[father.Saver][(getComb.SelectedItem as ComboBoxItem).Content.ToString()][saveResult.One].Add(saveResult.Two, new Dictionary<string, string>
                         {
 
                         });
@@ -5601,7 +5681,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         }
 
                         var cs = mainWindowModels.SaveThumbInfo[father.Saver]
-                            [getComb.SelectedItem.ToString()]
+                            [(getComb.SelectedItem as ComboBoxItem).Content.ToString()]
                             [saveResult.One]
                             [saveResult.Two];
 
@@ -5618,19 +5698,19 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         }
 
                         //mainWindowModels.SaveThumbInfo[father.Saver]
-                        //    [getComb.SelectedItem.ToString()]
+                        //    [getComb.SelectedItem as ComboBoxItem).Content.ToString()]
                         //    [saveResult.One]
                         //    [saveResult.Two].Add($"第 {num + 1} 项", newChirldText);
 
                         var treeBase = new TreeViewBase();
 
                         await treeBase.AddItemToSaves(father.Saver, saveResult.One, saveResult.Two,
-                            $"第 {num + 1} 项", getComb.SelectedItem.ToString(), newChirldText, true,
+                            $"第 {num + 1} 项", (getComb.SelectedItem as ComboBoxItem).Content.ToString(), newChirldText, true,
                             objectiveLoader.saveThumbInfoWindowModel, mainWindowModels.SaveThumbInfo);
 
                         //await treeBase.AddItemToTreeView(thumbInfoWindow.FindName("TreeView_Tv") as TreeView, saveResult.One, saveResult.Two, $"第 {num + 1} 项", true);
 
-                        await treeBase.AddItemToComBox(father.Saver, getComb.SelectedItem.ToString(), saveResult.One, saveResult.Two, $"第 {num + 1} 项");
+                        await treeBase.AddItemToComBox(father.Saver, (getComb.SelectedItem as ComboBoxItem).Content.ToString(), saveResult.One, saveResult.Two, $"第 {num + 1} 项");
 
                         result.SetSuccese();
 

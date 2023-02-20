@@ -463,25 +463,61 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
             var getConditionsCmdProjectEdit_CBox = GetControl("ConditionsCmdProjectEdit_CBox", thumb) as ComboBox;
 
-            if(getConditions_CBox.SelectedItem.ToString()!= cmd)
+            if(getConditions_CBox.SelectedItem as ComboBoxItem != null)
             {
-                result.SetError();
+                if ((getConditions_CBox.SelectedItem as ComboBoxItem).Content.ToString() != cmd)
+                {
+                    result.SetError();
 
-                return result;
+                    return result;
+                }
+            }
+            else
+            {
+                if (getConditions_CBox.SelectedItem.ToString() != cmd)
+                {
+                    result.SetError();
+
+                    return result;
+                }
             }
 
-            if(getConditionsCmdEdit_CBox.SelectedItem.ToString() != one)
+            if(getConditionsCmdEdit_CBox.SelectedItem as ComboBoxItem != null)
             {
-                result.SetError();
+                if ((getConditionsCmdEdit_CBox.SelectedItem as ComboBoxItem).Content.ToString() != one)
+                {
+                    result.SetError();
 
-                return result;
+                    return result;
+                }
             }
-
-            if (getConditionsCmdparameterEdit_CBox.SelectedItem.ToString() != two)
+            else
             {
-                result.SetError();
+                if (getConditionsCmdEdit_CBox.SelectedItem.ToString() != one)
+                {
+                    result.SetError();
 
-                return result;
+                    return result;
+                }
+            }
+            
+            if(getConditionsCmdparameterEdit_CBox.SelectedItem as ComboBoxItem != null)
+            {
+                if ((getConditionsCmdparameterEdit_CBox.SelectedItem as ComboBoxItem).Content.ToString() != two)
+                {
+                    result.SetError();
+
+                    return result;
+                }
+            }
+            else
+            {
+                if (getConditionsCmdparameterEdit_CBox.SelectedItem.ToString() != two)
+                {
+                    result.SetError();
+
+                    return result;
+                }
             }
 
             result = await Task.Run(() =>
@@ -559,21 +595,21 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
             var getConditionsCmdProjectEdit_CBox = GetControl("ConditionsCmdparameterEdit_CBox", thumb) as ComboBox;
 
-            if (getConditions_CBox.SelectedItem.ToString() != cmd)
+            if ((getConditions_CBox.SelectedItem as ComboBoxItem).Content.ToString() != cmd)
             {
                 result.SetError();
 
                 return result;
             }
 
-            if (getConditionsCmdEdit_CBox.SelectedItem.ToString() != one)
+            if ((getConditionsCmdEdit_CBox.SelectedItem as ComboBoxItem).Content.ToString() != one)
             {
                 result.SetError();
 
                 return result;
             }
 
-            if (getConditionsCmdparameterEdit_CBox.SelectedItem.ToString() != two)
+            if ((getConditionsCmdparameterEdit_CBox.SelectedItem as ComboBoxItem).Content.ToString() != two)
             {
                 result.SetError();
 

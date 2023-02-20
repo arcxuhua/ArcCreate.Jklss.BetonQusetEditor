@@ -67,6 +67,7 @@ namespace ArcCreate.Jklss.Model.SocketModel
             SaveToYaml,
             SaveToJson,
             GetSaveData,
+            DeleteSaveData,
         }
 
         public class MessageModel

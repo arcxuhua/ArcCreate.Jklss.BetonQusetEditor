@@ -38,8 +38,8 @@
             <Button Command="{Binding NarrowCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Grid.Row="0" Margin="0 10 45 0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryDarkButton}" ToolTip="隐藏" Width="30" Height="30" Background="White" BorderBrush="White" Foreground="#DDFFA400">
                 <materialDesign:PackIcon Kind="ElectricSwitchClosed" Height="20" Width="20" />
             </Button>
-            <TextBox materialDesign:HintAssist.Hint="请输入账号" materialDesign:TextFieldAssist.UnderlineBrush="#FFE09321" Grid.Row="1" Height="30" Width="200" Margin="54 50 0 0" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="12" Text="{Binding UserName}" Cursor="Arrow"></TextBox>
-            <PasswordBox x:Name="PasswordBoxes" InputMethod.IsInputMethodEnabled="False" Visibility="Visible" materialDesign:TextFieldAssist.UnderlineBrush="#FFE09321" Grid.Row="1" Height="30" Width="200" Margin="54 90 0 0" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="12" Cursor="Arrow">
+            <TextBox materialDesign:HintAssist.Hint="请输入账号" materialDesign:TextFieldAssist.UnderlineBrush="#FFE09321" Grid.Row="1" Height="30" Width="200" Margin="54 30 0 0" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="12" Text="{Binding UserName}" Cursor="Arrow"></TextBox>
+            <PasswordBox x:Name="PasswordBoxes" InputMethod.IsInputMethodEnabled="False" Visibility="Visible" materialDesign:TextFieldAssist.UnderlineBrush="#FFE09321" Grid.Row="1" Height="30" Width="200" Margin="54 70 0 0" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="12" Cursor="Arrow">
                 <binding:Interaction.Triggers>
                     <binding:EventTrigger EventName="Loaded">
                         <binding:InvokeCommandAction Command="{Binding Path= PswLoadedCommand}" CommandParameter="{Binding ElementName=PasswordBoxes}">
@@ -47,7 +47,7 @@
                     </binding:EventTrigger>
                 </binding:Interaction.Triggers>
             </PasswordBox>
-            <TextBox x:Name="PasswordTBox" InputMethod.IsInputMethodEnabled="False" Visibility="Hidden" materialDesign:TextFieldAssist.UnderlineBrush="#FFE09321" Grid.Row="1" Height="30" Width="200" Margin="54 90 0 0" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="12" Text="{Binding PassWord}" Cursor="Arrow">
+            <TextBox x:Name="PasswordTBox" InputMethod.IsInputMethodEnabled="False" Visibility="Hidden" materialDesign:TextFieldAssist.UnderlineBrush="#FFE09321" Grid.Row="1" Height="30" Width="200" Margin="54 70 0 0" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="12" Text="{Binding PassWord}" Cursor="Arrow">
                 <binding:Interaction.Triggers>
                     <binding:EventTrigger EventName="Loaded">
                         <binding:InvokeCommandAction Command="{Binding Path= PswTboxLoadedCommand}" CommandParameter="{Binding ElementName=PasswordTBox}">
@@ -56,12 +56,13 @@
                 </binding:Interaction.Triggers>
             </TextBox>
 
-            <Button Command="{Binding EyeCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Grid.Row="1" Margin="0 0 60 70" VerticalAlignment="Bottom" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryDarkButton}" ToolTip="显示\隐藏密码" Width="20" Height="20" Background="White" BorderBrush="White" Foreground="#DD5F3939">
+            <Button Command="{Binding EyeCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Grid.Row="1" Margin="0 0 60 90" VerticalAlignment="Bottom" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryDarkButton}" ToolTip="显示\隐藏密码" Width="20" Height="20" Background="White" BorderBrush="White" Foreground="#DD5F3939">
                 <materialDesign:PackIcon Kind="{Binding Eyes}" Height="15" Width="15" />
             </Button>
 
-            <TextBlock Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="84 55 0 0" FontSize="18" FontWeight="Bold">账号：</TextBlock>
-            <TextBlock Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="84 95 0 0" FontSize="18" FontWeight="Bold">密码：</TextBlock>
+            <TextBlock Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="84 35 0 0" FontSize="18" FontWeight="Bold">账号：</TextBlock>
+            <TextBlock Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="84 75 0 0" FontSize="18" FontWeight="Bold">密码：</TextBlock>
+            <CheckBox Width="90" Height="28" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="220 50 0 0" Style="{StaticResource MaterialDesignFilterChipCheckBox}" IsChecked="{Binding RememberPassword}" Content="记住密码" BorderBrush="White" Foreground="#DD000000" />
             <Button Command="{Binding LoginCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 20" Width="280" Background="#FFE09321" BorderBrush="{x:Null}" Cursor="Hand">登录</Button>
             <Button Command="{Binding RegisterCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0 0 0 0" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF777474" Height="25" Width="88" Cursor="Hand">我要注册</Button>
             <Button Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0 0 0 0" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF777474" Height="25" Width="88" Content="忘记密码"/>

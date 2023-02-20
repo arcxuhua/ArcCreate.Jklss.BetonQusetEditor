@@ -482,14 +482,14 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
             if (fatherNeed[chirld.thumbClass])
             {
-                if (father.thumbClass == ThumbClass.Subject)//特殊情况 对话主体首选仅能一个对话
-                {
-                    if (father.Children.Count >= 1)
-                    {
-                        back.SetError("");
-                        return back;
-                    }
-                }
+                //if (father.thumbClass == ThumbClass.Subject)//特殊情况 对话主体首选仅能一个对话
+                //{
+                //    if (father.Children.Count >= 1)
+                //    {
+                //        back.SetError("");
+                //        return back;
+                //    }
+                //}
 
                 if(father.thumbClass == ThumbClass.Player && chirld.thumbClass == ThumbClass.NPC)//玩家对话不允许有多个Npc对话
                 {
@@ -568,7 +568,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
                         try
                         {
-                            var fg = conditions_CBox.SelectedItem.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[2];
+                            var fg = (conditions_CBox.SelectedItem as ComboBoxItem).Content.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[2];
                             needModel = new ThumbsModels(conditions_ConfigBox.Text, fg, conditions_TBox.Text);
                         }
                         catch
@@ -586,7 +586,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
                         try
                         {
-                            var event_fg = event_CBox.SelectedItem.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[2];
+                            var event_fg = (event_CBox.SelectedItem as ComboBoxItem).Content.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[2];
                             needModel = new ThumbsModels(event_ConfigBox.Text, event_fg, event_TBox.Text);
                         }
                         catch
@@ -604,7 +604,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
                         try
                         {
-                            var objectives_fg = objectives_CBox.SelectedItem.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[2];
+                            var objectives_fg = (objectives_CBox.SelectedItem as ComboBoxItem).Content.ToString().Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[2];
 
                             needModel = new ThumbsModels(objectives_ConfigBox.Text, objectives_fg, objectives_TBox.Text);
                         }
@@ -739,7 +739,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                 return string.Empty;
             }
 
-            var fg = TxtSplit(conditions_CBox.SelectedItem.ToString(), ": ");
+            var fg = TxtSplit((conditions_CBox.SelectedItem as ComboBoxItem).Content.ToString(), ": ");
 
             if (fg.Count == 3)
             {
@@ -751,7 +751,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
             }
             else
             {
-                return conditions_CBox.SelectedItem.ToString();
+                return (conditions_CBox.SelectedItem as ComboBoxItem).Content.ToString();
             }
         }
 

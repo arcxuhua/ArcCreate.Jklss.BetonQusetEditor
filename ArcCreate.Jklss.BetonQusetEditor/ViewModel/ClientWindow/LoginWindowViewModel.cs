@@ -7,6 +7,7 @@ using ArcCreate.Jklss.Services;
 using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -32,6 +33,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
         private static PasswordBox passwordBox = null;
 
         private static TextBox passwordTbox = null;
+
+        private RememberPassword rememberPassword = null;
 
         public CommandBase _EyeCommand;
         public CommandBase EyeCommand
@@ -183,6 +186,19 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             }
         }
 
+        public bool RememberPassword
+        {
+            get
+            {
+                return model.RememberPassword;
+            }
+            set
+            {
+                model.RememberPassword = value;
+                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+            }
+        }
+
         public CommandBase _LoginCommand;
         public CommandBase LoginCommand
         {
@@ -262,6 +278,24 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
 
                                 await SocketViewModel.SendRESMessage(MessageClass.Json, getJson, SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString());
 
+                                var getFilePath = Directory.GetCurrentDirectory();
+
+                                if (RememberPassword)
+                                {
+                                    rememberPassword.UserName = UserName;
+                                    rememberPassword.Password = PassWord;
+                                    rememberPassword.AutoLogin = true;
+                                }
+                                else
+                                {
+                                    rememberPassword.AutoLogin = false;
+
+                                    rememberPassword.UserName = "";
+
+                                    rememberPassword.Password = "";
+                                }
+
+                                FileService.ChangeFile(getFilePath + @"\config.json", FileService.SaveToJson(rememberPassword));
                             });
                         }
                         catch(Exception ex)
@@ -296,6 +330,55 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
                         {
                             await socketViewModel.StarSocketTCP();
                         }
+
+                        var getFilePath = Directory.GetCurrentDirectory();
+
+                        if (FileService.IsHaveFile(getFilePath + @"\config.json"))
+                        {
+                            try
+                            {
+                                rememberPassword = FileService.JsonToProp<RememberPassword>(FileService.GetFileText(getFilePath + @"\config.json"));
+                            }
+                            catch
+                            {
+                                rememberPassword = new RememberPassword()
+                                {
+                                    Password = "",
+                                    UserName = "",
+                                    AutoLogin = false,
+                                };
+
+                                FileService.ChangeFile(getFilePath + @"\config.json", FileService.SaveToJson(rememberPassword));
+                            }
+                        }
+                        else
+                        {
+                            rememberPassword = new RememberPassword()
+                            {
+                                Password = "",
+                                UserName = "",
+                                AutoLogin = false,
+                            };
+
+                            FileService.ChangeFile(getFilePath + @"\config.json", FileService.SaveToJson(rememberPassword));
+                        }
+
+                        if (rememberPassword.AutoLogin)
+                        {
+                            rememberPassword.AutoLogin = true;
+
+                            UserName = rememberPassword.UserName;
+
+                            PassWord = rememberPassword.Password;
+                        }
+                        else
+                        {
+                            rememberPassword.AutoLogin = false;
+
+                            rememberPassword.UserName = "";
+
+                            rememberPassword.Password = "";
+                        }
                     });
                 }
                 return _LoadedCommand;
@@ -311,10 +394,21 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             {
                 if (_PswLoadedCommand == null)
                 {
-                    _PswLoadedCommand = new RelayCommand<PasswordBox>((pswBox) => {
+                    _PswLoadedCommand = new RelayCommand<PasswordBox>(async (pswBox) => {
 
                         pswBox.PasswordChanged += PswBox_PasswordChanged;
                         passwordBox = pswBox;
+
+                        await Task.Run(() =>
+                        {
+                            while (rememberPassword == null)
+                            {
+                                Thread.Sleep(100);
+                            }
+                            
+                        });
+                        pswBox.Password = rememberPassword.Password;
+                        RememberPassword = rememberPassword.AutoLogin;
                     });
                 }
                 return _PswLoadedCommand;

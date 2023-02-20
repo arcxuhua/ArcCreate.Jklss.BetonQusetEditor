@@ -44,6 +44,14 @@
   <PropertyGroup>
     <SignManifests>true</SignManifests>
     <IsPublishable>True</IsPublishable>
+    <SignAssembly>False</SignAssembly>
+    <Title>我的世界Betonquest任务编辑器</Title>
+    <Version>3.1.69</Version>
+    <Authors>ArcCreate</Authors>
+    <Company>ArcCreate</Company>
+    <Product>ArcCreate</Product>
+    <Description>我的世界Betonquest任务编辑器</Description>
+    <Copyright>Copyright © 2020 jklss Rights Reserved.</Copyright>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <Optimize>False</Optimize>

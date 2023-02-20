@@ -93,7 +93,7 @@
                 <ScrollViewer>
                     <Grid>
                         <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 10 1 0">
-                            <Button Command="{Binding CreateNewTalkCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="#FF5307B3" BorderBrush="#FF5307B3" MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave">
+                            <Button Command="{Binding CreateNewTalkCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="#FF5307B3" BorderBrush="#FF5307B3" MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" Cursor="Hand">
                                 <Button.Content>
                                     <materialDesign:PackIcon Kind="Book" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" />
                                 </Button.Content>

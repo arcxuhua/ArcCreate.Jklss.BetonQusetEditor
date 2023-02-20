@@ -157,13 +157,60 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
             if (self.IsEnabled && ccpeCoBox.SelectedItem != null)
             {
-                var one = (GetControl("ConditionsCmdEdit_CBox", getThumb) as ComboBox).SelectedItem.ToString();
 
-                var two = (GetControl("ConditionsCmdparameterEdit_CBox", getThumb) as ComboBox).SelectedItem.ToString();
+                var ConditionsEdit_CBoxItem = (GetControl("Conditions_CBox", getThumb) as ComboBox).SelectedItem as ComboBoxItem;
 
-                var three = ccpeCoBox.SelectedItem.ToString();
+                var cmd = string.Empty;
 
-                saveThumbInfoWindowModel[getThumb].TreeItems[one][two].Remove(three);
+                if (ConditionsEdit_CBoxItem != null)
+                {
+                    cmd = ConditionsEdit_CBoxItem.Content.ToString();
+                }
+                else
+                {
+                    cmd = (GetControl("Conditions_CBox", getThumb) as ComboBox).SelectedItem.ToString();
+                }
+
+                var ConditionsCmdEdit_CBoxItem = (GetControl("ConditionsCmdEdit_CBox", getThumb) as ComboBox).SelectedItem as ComboBoxItem;
+
+                var one = string.Empty;
+
+                if (ConditionsCmdEdit_CBoxItem != null)
+                {
+                    one = ConditionsCmdEdit_CBoxItem.Content.ToString();
+                }
+                else
+                {
+                    one = (GetControl("ConditionsCmdEdit_CBox", getThumb) as ComboBox).SelectedItem.ToString();
+                }
+
+                var ConditionsCmdparameterEdit_CBoxItem = (GetControl("ConditionsCmdparameterEdit_CBox", getThumb) as ComboBox).SelectedItem as ComboBoxItem;
+
+                var two = string.Empty;
+
+                if (ConditionsCmdparameterEdit_CBoxItem != null)
+                {
+                    two = ConditionsCmdparameterEdit_CBoxItem.Content.ToString();
+                }
+                else
+                {
+                    two = (GetControl("ConditionsCmdparameterEdit_CBox", getThumb) as ComboBox).SelectedItem.ToString();
+                }
+
+                var ccpeCoBoxItem = ccpeCoBox.SelectedItem as ComboBoxItem;
+
+                var three = string.Empty;
+
+                if (ccpeCoBoxItem != null)
+                {
+                    three = ccpeCoBoxItem.Content.ToString();
+                }
+                else
+                {
+                    three = ccpeCoBox.SelectedItem.ToString();
+                }
+
+                var cs = saveThumbInfoWindowModel[getThumb].TreeItems[one][two].Remove(three);
 
                 if (mainWindowModels.SaveThumbInfo.ContainsKey(getThumb))
                 {
@@ -171,9 +218,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
                     try
                     {
-                        var getNeed = getInfo[(GetControl("Conditions_CBox", getThumb) as ComboBox).SelectedItem.ToString()]
-                            [(GetControl("ConditionsCmdEdit_CBox", getThumb) as ComboBox).SelectedItem.ToString()]
-                            [(GetControl("ConditionsCmdparameterEdit_CBox", getThumb) as ComboBox).SelectedItem.ToString()];
+                        var getNeed = getInfo[cmd][one][two];
 
                         if (getNeed.ContainsKey(three))
                         {
@@ -186,7 +231,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                     }
                 }
                 var treeBase = new TreeViewBase();
-                await treeBase.DeleteToTreeView(saveTree,one, two, three);
+                await treeBase.DeleteToTreeView(saveTree, one, two, three);
 
                 ccpeCoBox.Items.Remove(ccpeCoBox.SelectedItem);
             }
@@ -199,10 +244,30 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
             if (self.IsEnabled)
             {
                 var ccpeCoBox = GetControl("ConditionsCmdProjectEdit_CBox", getThumb) as ComboBox;
+                var ConditionsCmdEdit_CBoxItem = (GetControl("ConditionsCmdEdit_CBox", getThumb) as ComboBox).SelectedItem as ComboBoxItem;
+                var one = string.Empty;
 
-                var one = (GetControl("ConditionsCmdEdit_CBox", getThumb) as ComboBox).SelectedItem.ToString();
+                if (ConditionsCmdEdit_CBoxItem != null)
+                {
+                    one = ConditionsCmdEdit_CBoxItem.Content.ToString();
+                }
+                else
+                {
+                    one = (GetControl("ConditionsCmdEdit_CBox", getThumb) as ComboBox).SelectedItem.ToString();
+                }
 
-                var two = (GetControl("ConditionsCmdparameterEdit_CBox", getThumb) as ComboBox).SelectedItem.ToString();
+                var ConditionsCmdparameterEdit_CBoxItem = (GetControl("ConditionsCmdparameterEdit_CBox", getThumb) as ComboBox).SelectedItem as ComboBoxItem;
+
+                var two = string.Empty;
+
+                if (ConditionsCmdparameterEdit_CBoxItem != null)
+                {
+                    two = ConditionsCmdparameterEdit_CBoxItem.Content.ToString();
+                }
+                else
+                {
+                    two = (GetControl("ConditionsCmdparameterEdit_CBox", getThumb) as ComboBox).SelectedItem.ToString();
+                }
 
                 var cs1 = saveThumbInfoWindowModel.ContainsKey(getThumb);
 
@@ -245,7 +310,26 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
             if (getConditions_CBox.SelectedItem != null)
             {
-                one = getConditions_CBox.SelectedItem.ToString();
+                one = (getConditions_CBox.SelectedItem as ComboBoxItem).Content.ToString();
+            }
+            else
+            {
+                return;
+            }
+
+            if (getConditions_CBox.SelectedItem != null)
+            {
+                var getConditions_CBoxItem = getConditions_CBox.SelectedItem as ComboBoxItem;
+
+                if (getConditions_CBoxItem != null)
+                {
+                    one = getConditions_CBoxItem.Content.ToString();
+                }
+                else
+                {
+                    one = getConditions_CBox.SelectedItem.ToString();
+                }
+
             }
             else
             {
@@ -254,7 +338,18 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
             if (getConditionsCmdEdit_CBox.SelectedItem != null)
             {
-                two = getConditionsCmdEdit_CBox.SelectedItem.ToString();
+                var getConditionsCmdEdit_CBoxItem = getConditionsCmdEdit_CBox.SelectedItem as ComboBoxItem;
+
+                if (getConditionsCmdEdit_CBoxItem != null)
+                {
+                    two = getConditionsCmdEdit_CBoxItem.Content.ToString();
+                }
+                else
+                {
+                    two = getConditionsCmdEdit_CBox.SelectedItem.ToString();
+                }
+
+
             }
             else
             {
@@ -263,7 +358,16 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
             if (getConditionsCmdparameterEdit_CBox.SelectedItem != null)
             {
-                three = getConditionsCmdparameterEdit_CBox.SelectedItem.ToString();
+                var getConditionsCmdparameterEdit_CBoxItem = getConditionsCmdparameterEdit_CBox.SelectedItem as ComboBoxItem;
+
+                if (getConditionsCmdparameterEdit_CBoxItem != null)
+                {
+                    three = getConditionsCmdparameterEdit_CBoxItem.Content.ToString();
+                }
+                else
+                {
+                    three = getConditionsCmdparameterEdit_CBox.SelectedItem.ToString();
+                }
             }
             else
             {
@@ -272,7 +376,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
             if (getConditionsCmdProjectEdit_CBox.SelectedItem != null)
             {
-                four = getConditionsCmdProjectEdit_CBox.SelectedItem.ToString();
+                var getConditionsCmdProjectEdit_CBoxItem = getConditionsCmdProjectEdit_CBox.SelectedItem as ComboBoxItem;
+
+                if (getConditionsCmdProjectEdit_CBoxItem != null)
+                {
+                    four = getConditionsCmdProjectEdit_CBoxItem.Content.ToString();
+                }
+                else
+                {
+                    four = getConditionsCmdProjectEdit_CBox.SelectedItem.ToString();
+                }
+
             }
             else
             {

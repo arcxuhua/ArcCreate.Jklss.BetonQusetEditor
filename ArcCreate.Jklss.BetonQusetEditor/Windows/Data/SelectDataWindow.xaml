@@ -47,11 +47,11 @@
                 <Button Command="{Binding SearchCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" ToolTip="搜索" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="605 30 0 0" Width="25" Height="25" Background="{x:Null}" BorderBrush="{x:Null}">
                     <materialDesign:PackIcon Kind="Magnify" />
                 </Button>
-                <DataGrid x:Name="data" SelectionMode="Extended" ItemsSource="{Binding Data}" CanUserAddRows="False" AutoGenerateColumns="False" HeadersVisibility="All" Margin="30,60,20,10" Background="#FFADADAD" Foreground="White" BorderBrush="White">
+                <DataGrid x:Name="data" ItemsSource="{Binding Data,Mode=TwoWay}" SelectionMode="Extended" CanUserAddRows="False" AutoGenerateColumns="False" HeadersVisibility="All" Margin="30,60,20,10" Background="#FFADADAD" Foreground="Black" BorderBrush="White">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Code}" Header="ID" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False" />
                         <DataGridTextColumn Binding="{Binding Name}" Header="名称" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False" Width="100" />
-                        <DataGridTextColumn Binding="{Binding FilePath}" Header="文件地址" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False" Width="300" />
+                        <DataGridTextColumn Binding="{Binding FilePath}" Header="文件地址" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False" Width="100" />
                         <DataGridTextColumn Binding="{Binding CreateDate}" Header="创建时间" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False" />
                         <DataGridTextColumn Binding="{Binding UpdateData}" Header="修改时间" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False" />
                     </DataGrid.Columns>

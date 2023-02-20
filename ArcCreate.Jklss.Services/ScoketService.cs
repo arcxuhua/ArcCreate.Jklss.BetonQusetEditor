@@ -18,6 +18,12 @@ namespace ArcCreate.Jklss.Services
     {
         public delegate void _GetMessage(MessageMode message,string token = "");
 
+        byte[] data = new byte[1024 * 1024];
+
+        public static Dictionary<int, Dictionary<int, byte[]>> fb = new Dictionary<int, Dictionary<int, byte[]>>();
+
+        private static string saveNeed = string.Empty;
+
         /// <summary>
         /// 接受到消息
         /// </summary>
@@ -45,8 +51,8 @@ namespace ArcCreate.Jklss.Services
                 try
                 {
                     client.EndConnect(asyncResult);
-                    //接受消息  
-                    AsynRecive(client);
+
+                    client.BeginReceive(data, 0, data.Length, SocketFlags.None, new AsyncCallback(AsynRecive), client);
 
                     socket = client;
                     saveSocketClient.Add(client.RemoteEndPoint.ToString(), client);//存储对话
@@ -86,181 +92,172 @@ namespace ArcCreate.Jklss.Services
             }
             catch (Exception ex)
             {
-                
+                MessageBox.Show("服务器强制关闭了您的链接");
+
+                Environment.Exit(0);
             }
         }
-
-        public static Dictionary<int, Dictionary<int, byte[]>> fb = new Dictionary<int, Dictionary<int, byte[]>>();
-
-        private static string saveNeed = string.Empty;
 
         /// <summary>  
         /// 接收消息  
         /// </summary>  
         /// <param name="socket"></param>  
-        public void AsynRecive(Socket socket)
+        public void AsynRecive(IAsyncResult Iay)
         {
-            byte[] data = new byte[1024 * 1024];
             try
             {
-                //开始接收数据  
-                socket.BeginReceive(data, 0, data.Length, SocketFlags.None,
-                asyncResult =>
+                Socket socket = Iay.AsyncState as Socket;
+
+                if (!(socket != null && IsSocketConnected(socket)))
+                {
+                    return;
+                }
+
+                var length = socket.EndReceive(Iay);
+
+                var str = Encoding.UTF8.GetString(data, 0, length);
+
+                if (!ClientKeys.ContainsKey(socket.RemoteEndPoint.ToString()))
                 {
                     try
                     {
-                        if (!socket.Connected)
+                        var fgf = str.Substring(str.Length - 2, 2);
+                        var fg = str.Split(new string[] { "$$" }, StringSplitOptions.RemoveEmptyEntries);
+                        for (int i = 0; i < fg.Length; i++)
                         {
-                            return;
-                        }
-
-                        var length = socket.EndReceive(asyncResult);
-
-                        var str = Encoding.UTF8.GetString(data, 0, length);
-                        lock (str)
-                        {
-                            if (!ClientKeys.ContainsKey(socket.RemoteEndPoint.ToString()))
+                            if (i == 0)
                             {
-                                try
-                                {
-                                    var fgf = str.Substring(str.Length - 2, 2);
-                                    var fg = str.Split(new string[] { "$$" }, StringSplitOptions.RemoveEmptyEntries);
-                                    for (int i = 0; i < fg.Length; i++)
-                                    {
-                                        if (i == 0)
-                                        {
-                                            fg[i] = saveNeed + fg[i];
+                                fg[i] = saveNeed + fg[i];
 
-                                            saveNeed = string.Empty;
-                                        }
-
-                                        MessageMode sendMessage = null;
-
-                                        try
-                                        {
-                                            sendMessage = FileService.JsonToProp<MessageMode>(fg[0]);
-                                            sendMessage.Ip = socket.RemoteEndPoint.ToString();
-                                            GetMessage(sendMessage);
-                                        }
-                                        catch
-                                        {
-                                            saveNeed = fg[i];
-
-                                            AsynRecive(socket);
-                                            return;
-                                        }
-                                    }
-                                    
-                                }
-                                catch
-                                {
-                                    AsynRecive(socket);
-                                    return;
-                                }
-                                
+                                saveNeed = string.Empty;
                             }
-                            else
+
+                            MessageMode sendMessage = null;
+
+                            try
                             {
-                                var keyModel = ClientKeys[socket.RemoteEndPoint.ToString()];
+                                sendMessage = FileService.JsonToProp<MessageMode>(fg[0]);
+                                sendMessage.Ip = socket.RemoteEndPoint.ToString();
+                                GetMessage(sendMessage);
+                            }
+                            catch
+                            {
+                                saveNeed = fg[i];
 
-                                if (keyModel.ClientSendKey == null)
-                                {
-                                    AsynRecive(socket);
-                                    return;
-                                }
-
-                                try
-                                {
-                                    var fgf = str.Substring(str.Length - 2, 2);
-
-                                    var fg = str.Split(new string[] { "$$" }, StringSplitOptions.RemoveEmptyEntries);
-
-                                    for (int i = 0; i < fg.Length; i++)
-                                    {
-                                        if (i == 0)
-                                        {
-                                            fg[i] = saveNeed + fg[i];
-
-                                            saveNeed = string.Empty;
-                                        }
-
-                                        MessageMode getMessageModels = null;
-
-                                        try
-                                        {
-                                            getMessageModels = FileService.JsonToProp<MessageMode>(fg[0]);
-                                            getMessageModels.Ip = socket.RemoteEndPoint.ToString();
-
-                                            if (getMessageModels.Class != MessageClass.SendKey && getMessageModels.Class != MessageClass.Heart && getMessageModels.Class != MessageClass.Version)
-                                            {
-                                                AsynRecive(socket);
-                                                return;
-                                            }
-
-                                            GetMessage(getMessageModels);
-
-                                        }
-                                        catch
-                                        {
-                                            if (fgf != "$$")
-                                            {
-                                                saveNeed = fg[i];
-
-                                                AsynRecive(socket);
-                                                return;
-                                            }
-                                            else
-                                            {
-                                                try
-                                                {
-                                                    var jm = FileService.PrivateKeyDecrypt(keyModel.ClientSendKey.PrivetKey, fg[i]);
-                                                    getMessageModels = FileService.JsonToProp<MessageMode>(jm);
-
-                                                    try
-                                                    {
-                                                        SocketModel.waitBackDic[getMessageModels.Class][getMessageModels.Key] = jm;
-                                                    }
-                                                    catch
-                                                    {
-                                                        getMessageModels.Ip = socket.RemoteEndPoint.ToString();
-
-                                                        GetMessage(getMessageModels, getMessageModels.Token);
-                                                    }
-                                                }
-                                                catch
-                                                {
-                                                    saveNeed = fg[i];
-
-                                                    AsynRecive(socket);
-                                                    return;
-                                                }
-                                            }
-                                            
-                                        }
-                                    }
-                                }
-                                catch
-                                {
-                                    AsynRecive(socket);
-                                    return;
-                                }
+                                socket.BeginReceive(data, 0, data.Length, SocketFlags.None, new AsyncCallback(AsynRecive), socket);
+                                return;
                             }
                         }
-                        AsynRecive(socket);
+
                     }
                     catch
                     {
-                        MessageBox.Show("您已被服务器强制中断连接！","警告");
-                        Environment.Exit(0);
+                        socket.BeginReceive(data, 0, data.Length, SocketFlags.None, new AsyncCallback(AsynRecive), socket);
+                        return;
                     }
-                    
-                }, null);
+
+                }
+                else
+                {
+                    var keyModel = ClientKeys[socket.RemoteEndPoint.ToString()];
+
+                    if (keyModel.ClientSendKey == null)
+                    {
+                        socket.BeginReceive(data, 0, data.Length, SocketFlags.None, new AsyncCallback(AsynRecive), socket);
+                        return;
+                    }
+
+                    try
+                    {
+                        var fgf = str.Substring(str.Length - 2, 2);
+
+                        var fg = str.Split(new string[] { "$$" }, StringSplitOptions.RemoveEmptyEntries);
+
+                        for (int i = 0; i < fg.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                fg[i] = saveNeed + fg[i];
+
+                                saveNeed = string.Empty;
+                            }
+
+                            MessageMode getMessageModels = null;
+
+                            try
+                            {
+                                getMessageModels = FileService.JsonToProp<MessageMode>(fg[0]);
+                                getMessageModels.Ip = socket.RemoteEndPoint.ToString();
+
+                                if (getMessageModels.Class != MessageClass.SendKey && getMessageModels.Class != MessageClass.Heart && getMessageModels.Class != MessageClass.Version)
+                                {
+                                    socket.BeginReceive(data, 0, data.Length, SocketFlags.None, new AsyncCallback(AsynRecive), socket);
+                                    return;
+                                }
+
+                                GetMessage(getMessageModels);
+
+                            }
+                            catch
+                            {
+                                if (fgf != "$$")
+                                {
+                                    saveNeed = fg[i];
+
+                                    socket.BeginReceive(data, 0, data.Length, SocketFlags.None, new AsyncCallback(AsynRecive), socket);
+                                    return;
+                                }
+                                else
+                                {
+                                    try
+                                    {
+                                        var jm = FileService.PrivateKeyDecrypt(keyModel.ClientSendKey.PrivetKey, fg[i]);
+                                        getMessageModels = FileService.JsonToProp<MessageMode>(jm);
+
+                                        try
+                                        {
+                                            SocketModel.waitBackDic[getMessageModels.Class][getMessageModels.Key] = jm;
+                                        }
+                                        catch
+                                        {
+                                            getMessageModels.Ip = socket.RemoteEndPoint.ToString();
+
+                                            GetMessage(getMessageModels, getMessageModels.Token);
+                                        }
+                                    }
+                                    catch
+                                    {
+                                        saveNeed = fg[i];
+
+                                        socket.BeginReceive(data, 0, data.Length, SocketFlags.None, new AsyncCallback(AsynRecive), socket);
+                                        return;
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        socket.BeginReceive(data, 0, data.Length, SocketFlags.None, new AsyncCallback(AsynRecive), socket);
+                        return;
+                    }
+                }
+                socket.BeginReceive(data, 0, data.Length, SocketFlags.None, new AsyncCallback(AsynRecive), socket);
             }
-            catch (Exception ex)
+            catch
             {
-                
+                MessageBox.Show("您已被服务器强制中断连接！", "警告");
+                Environment.Exit(0);
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data1"></param>
+        /// <param name="data2"></param>
+        /// <returns></returns>
         public static byte[] addBytes(byte[] data1, byte[] data2)
         {
             byte[] data3 = new byte[data1.Length + data2.Length];
@@ -268,6 +265,10 @@ namespace ArcCreate.Jklss.Services
             data2.CopyTo(data3, data1.Length);
             return data3;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public async void HeartSend()
         {
             var sendModel = new MessageMode()
@@ -291,5 +292,16 @@ namespace ArcCreate.Jklss.Services
             });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public bool IsSocketConnected(Socket s)
+        {
+            if (s == null)
+                return false;
+            return !((s.Poll(1000, SelectMode.SelectRead) && (s.Available == 0)) || !s.Connected);
+        }
     }
 }

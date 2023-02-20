@@ -14,7 +14,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Forms;
 using static ArcCreate.Jklss.Model.SocketModel.SocketModel;
-using DataGrid = System.Windows.Controls.DataGrid;
+using MessageBox = System.Windows.MessageBox;
 
 namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
 {
@@ -85,7 +85,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
                 if (_LoadedCommand == null)
                 {
                     _LoadedCommand = new RelayCommand<Window>(async (wd) => {
-                        (wd as SelectDataWindow).data.SelectedCellsChanged += Data_SelectedCellsChanged;
+                        (wd as SelectDataWindow).data.SelectedCellsChanged += Data_SelectedCellsChangedAsync;
                         window = wd as SelectDataWindow;
                         wd.IsEnabled = false;
 
@@ -138,13 +138,68 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
             set { _LoadedCommand = value; }
         }
 
-        private void Data_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
+        private async void Data_SelectedCellsChangedAsync(object sender, SelectedCellsChangedEventArgs e)
         {
             var dg = sender as DataGrid;
+            var dataItem = dg.SelectedItem as GridData;
+            if (dataItem == null)
+            {
+                return;
+            }
 
-            window.Tag = dg.SelectedItem as GridData;
+            var res = MessageBox.Show("导入请选择 [是]\n删除请选择 [否]\n取消操作请 [取消]", "操作指导",MessageBoxButton.YesNoCancel);
 
-            window.Close();
+            if(res == MessageBoxResult.Yes)
+            {
+                window.Tag = dg.SelectedItem as GridData;
+
+                window.Close();
+            }
+            else if(res == MessageBoxResult.No)
+            {
+
+                var message = new MessageModel()
+                {
+                    IsLogin = SocketModel.isLogin,
+                    JsonInfo = JsonInfo.DeleteSaveData,
+                    UserName = SocketModel.userName,
+                    Message = dataItem.Code.ToString(),
+                };
+
+                var jsonMessage = FileService.SaveToJson(message);
+
+                var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessage,
+                    SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), SocketModel.token, true);
+
+                if (getMessage == null || !getMessage.Succese)
+                {
+                    MessageBox.Show("请求错误请尝试重新请求");
+                    return;
+                }
+
+                var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
+
+                if (getModel.Token != SocketModel.token)
+                {
+                    return;
+                }
+
+                var getRealMessage = FileService.JsonToProp<MessageModel>(Encoding.UTF8.GetString(getModel.Message));
+
+                if (getRealMessage == null || getRealMessage.JsonInfo != JsonInfo.DeleteSaveData || !getRealMessage.IsLogin)
+                {
+                    if (getRealMessage != null)
+                    {
+                        MessageBox.Show(getRealMessage.Message);
+                    }
+
+                    return;
+                }
+                MessageBox.Show(getRealMessage.Message);
+                Data.Remove(dataItem);
+                dg.ItemsSource = null;
+                dg.ItemsSource = Data;
+            }
         }
 
         public CommandBase _SearchCommand;
