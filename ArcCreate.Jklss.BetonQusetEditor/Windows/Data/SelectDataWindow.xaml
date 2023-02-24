@@ -7,7 +7,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:binding="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        Title="开始页面" Height="530" Width="830" ResizeMode="NoResize" WindowStyle="None" Background="{x:Null}" AllowsTransparency="True" WindowStartupLocation="CenterScreen">
+        Title="开始页面" Topmost="True" Height="530" Width="830" ResizeMode="NoResize" WindowStyle="None" Background="{x:Null}" AllowsTransparency="True" WindowStartupLocation="CenterScreen">
     <binding:Interaction.Triggers>
         <binding:EventTrigger EventName="Loaded">
             <binding:InvokeCommandAction Command="{Binding Path= LoadedCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}">

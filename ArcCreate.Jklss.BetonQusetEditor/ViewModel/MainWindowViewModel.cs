@@ -35,6 +35,7 @@ using ArcCreate.Jklss.BetonQusetEditor.Windows.Data;
 using ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data;
 using ArcCreate.Jklss.Model.Data;
 using MessageBox = System.Windows.MessageBox;
+using Button = System.Windows.Controls.Button;
 
 namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 {
@@ -76,6 +77,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         public NpcLoaderBase npcLoader = null;
 
         public GridData SelectData = null;
+
+        private Dictionary<Thumb, string> saveHelpTool = new Dictionary<Thumb, string>();
 
         //static MainWindowModel.saveThumbs存储在MainWindowModel中
 
@@ -864,7 +867,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                             ShowMessage("main入口文件不存在请重新指定Main.yml文件");
                         }
 
-                        var saveBase = new SaveAndReadYamlBase(MainFilePath, objectiveProp, eventProp, contisionProp, saveThumbs, mainWindowModels.SaveThumbInfo);
+                        var saveBase = new SaveAndReadYamlBase(MainFilePath, objectiveProp, eventProp, contisionProp, saveThumbs, mainWindowModels.SaveThumbInfo, saveHelpTool);
 
                         var back = await saveBase.SaveToJson(SelectData.Name, SelectData.Code);
 
@@ -975,7 +978,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                             ShowMessage("main入口文件不存在请重新指定Main.yml文件");
                         }
 
-                        var saveBase = new SaveAndReadYamlBase(MainFilePath, objectiveProp, eventProp, contisionProp, saveThumbs, mainWindowModels.SaveThumbInfo);
+                        var saveBase = new SaveAndReadYamlBase(MainFilePath, objectiveProp, eventProp, contisionProp, saveThumbs, mainWindowModels.SaveThumbInfo, saveHelpTool);
 
                         var back = await saveBase.SaveToJson(SelectData.Name, SelectData.Code);
 
@@ -2006,6 +2009,74 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             }
         }
 
+        /// <summary>
+        /// 指令输出
+        /// </summary>
+        public CommandBase _OutPutCmdCommand;
+        public CommandBase OutPutCmdCommand
+        {
+            get
+            {
+                if (_OutPutCmdCommand == null)
+                {
+                    _OutPutCmdCommand = new CommandBase();
+                    _OutPutCmdCommand.DoExecute = new Action<object>(obj =>//回调函数
+                    {
+                        var btn = obj as Button;
+
+
+                    });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
+                }
+                return _OutPutCmdCommand;
+            }
+        }
+
+        /// <summary>
+        /// 帮助项
+        /// </summary>
+        public CommandBase _HelpToolCommand;
+        public CommandBase HelpToolCommand
+        {
+            get
+            {
+                if (_HelpToolCommand == null)
+                {
+                    _HelpToolCommand = new CommandBase();
+                    _HelpToolCommand.DoExecute = new Action<object>(obj =>//回调函数
+                    {
+                        var btn = obj as Button;
+
+                        HelpToolSettingWindow window = new HelpToolSettingWindow();
+
+                        var isHaveTool = saveHelpTool.ContainsKey(nowThumb);
+
+                        if (isHaveTool)
+                        {
+                            window.DataContext = new HelpToolSetWindowViewModel(saveHelpTool[nowThumb]);
+                        }
+                        else
+                        {
+                            window.DataContext = new HelpToolSetWindowViewModel("该命令还没有帮助提示");
+                        }
+
+                        window.ShowDialog();
+
+                        btn.ToolTip = window.Tag as string;
+
+                        if (isHaveTool)
+                        {
+                            saveHelpTool[nowThumb] = btn.ToolTip as string;
+                        }
+                        else
+                        {
+                            saveHelpTool.Add(nowThumb, btn.ToolTip as string);
+                        }
+                    });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
+                }
+                return _HelpToolCommand;
+            }
+        }
+
         public CommandBase _CloseCommand;
         public CommandBase CloseCommand
         {
@@ -2314,7 +2385,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                 return result;
             }
 
-            var cs = new SaveAndReadYamlBase(MainFilePath, objectiveProp, eventProp, contisionProp, saveThumbs, mainWindowModels.SaveThumbInfo);
+            var cs = new SaveAndReadYamlBase(MainFilePath, objectiveProp, eventProp, contisionProp, saveThumbs, mainWindowModels.SaveThumbInfo, saveHelpTool);
 
             var disPath = FileService.GetFileDirectory(MainFilePath);
 
@@ -3440,7 +3511,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
             if (string.IsNullOrEmpty(MainFilePath))
             {
-                ShowMessage("请选则正确的文件");
+                ShowMessage("请选择正确的文件");
                 result.SetError();
                 return result;
             }
@@ -3507,6 +3578,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
             var saveItemsInfo = new List<ThumbsModels>();
 
+            var saveHelpTool = new List<HelpToolModel>();
+
             var dic = new List<ThumbCoordinateModel>();
 
             var disPath = FileService.GetFileDirectory(MainFilePath);
@@ -3522,6 +3595,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                 saveJournalInfo = FileService.JsonToProp<List<ThumbsModels>>(getData.journaldata);
 
                 saveItemsInfo = FileService.JsonToProp<List<ThumbsModels>>(getData.itemsdata);
+
+                saveHelpTool = FileService.JsonToProp<List<HelpToolModel>>(getData.helptooldata);
 
                 dic = FileService.JsonToProp<List<ThumbCoordinateModel>>(getData.coordinate);
             }
@@ -4326,6 +4401,36 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     }
                 }
             }
+            #endregion
+
+            #region 帮助录入
+
+            foreach (var item in saveHelpTool)
+            {
+                var getThumb = await createThumbBase.UseNameGetThumb(item.Class, item.Name);
+
+                if (!getThumb.Succese)
+                {
+                    ShowMessage($"帮助配置中未找到相关控件{item.Name}");
+                    continue;
+                }
+
+                var thumb = getThumb.Backs as SaveChird;
+
+                var btn = GetControl("HelpTool_Btn", thumb.Saver) as Button;
+
+                btn.ToolTip = item.Tool;
+
+                if (this.saveHelpTool.ContainsKey(thumb.Saver))
+                {
+                    this.saveHelpTool[thumb.Saver] = item.Tool;
+                }
+                else
+                {
+                    this.saveHelpTool.Add(thumb.Saver,item.Tool);
+                }
+            }
+
             #endregion
 
             await Task.Run(() =>

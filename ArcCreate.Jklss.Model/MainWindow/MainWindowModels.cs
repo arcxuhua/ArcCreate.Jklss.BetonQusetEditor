@@ -23,22 +23,22 @@ namespace ArcCreate.Jklss.Model.MainWindow
         public Dictionary<Thumb,Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string,string>>>>> SaveThumbInfo { get; set; } = new Dictionary<Thumb, Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>>();
 
         public static List<SaveChird> saveThumbs = new List<SaveChird>();
-        public class SaveChird
-        {
-            public Thumb Saver { get; set; }
-
-            public List<Thumb> Children { get; set; }
-
-            public List<Thumb> Fathers { get; set; }
-
-            public bool CanFather { get; set; }
-
-            public Thumb Main { get; set; }
-
-            public ThumbClass thumbClass { get; set; }
-        }
+        
     }
+    public class SaveChird
+    {
+        public Thumb Saver { get; set; }
 
+        public List<Thumb> Children { get; set; }
+
+        public List<Thumb> Fathers { get; set; }
+
+        public bool CanFather { get; set; }
+
+        public Thumb Main { get; set; }
+
+        public ThumbClass thumbClass { get; set; }
+    }
     public enum ThumbClass
     {
         /// <summary>
@@ -91,6 +91,8 @@ namespace ArcCreate.Jklss.Model.MainWindow
         public string Idata { get; set; }
 
         public string Coordinate { get; set; }
+
+        public string HelpTool { get; set; }
     }
 
     public class YamlSaver
@@ -151,6 +153,11 @@ namespace ArcCreate.Jklss.Model.MainWindow
         /// 日记数据
         /// </summary>
         public string journaldata { get; set; }
+
+        /// <summary>
+        /// 帮助数据
+        /// </summary>
+        public string helptooldata { get; set; }
 
         /// <summary>
         /// main数据

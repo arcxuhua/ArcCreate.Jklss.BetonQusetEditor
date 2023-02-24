@@ -20,6 +20,9 @@
                                 <materialDesign:ColorZone Mode="PrimaryDark" VerticalAlignment="Stretch">
                                     <materialDesign:PackIcon Kind="Book" Height="64" Width="64" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </materialDesign:ColorZone>
+                                <Button x:Name="HelpTool_Btn" Command="{Binding HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" Background="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
+                                    <materialDesign:PackIcon  Kind="Help" />
+                                </Button>
                                 <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <TextBlock HorizontalAlignment="Center" Margin="0 0 0 0" FontSize="22" FontWeight="Bold" Text="对话主体" />
                                     <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
@@ -78,6 +81,9 @@
                                 <materialDesign:ColorZone Mode="PrimaryDark" VerticalAlignment="Stretch">
                                     <materialDesign:PackIcon Kind="BookEdit" Height="64" Width="64" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </materialDesign:ColorZone>
+                                <Button x:Name="HelpTool_Btn" Command="{Binding HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" Background="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
+                                    <materialDesign:PackIcon  Kind="Help" />
+                                </Button>
                                 <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <TextBlock HorizontalAlignment="Center" Margin="0 0 0 0" FontSize="22" FontWeight="Bold" Text="NPC对话" />
                                     <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
@@ -167,6 +173,9 @@
                                 <materialDesign:ColorZone Mode="PrimaryDark" VerticalAlignment="Stretch">
                                     <materialDesign:PackIcon Kind="BookEducation" Height="64" Width="64" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </materialDesign:ColorZone>
+                                <Button x:Name="HelpTool_Btn" Command="{Binding HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" Background="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
+                                    <materialDesign:PackIcon  Kind="Help" />
+                                </Button>
                                 <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <TextBlock HorizontalAlignment="Center" Margin="0 0 0 0" FontSize="22" FontWeight="Bold" Text="玩家对话" />
                                     <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
@@ -256,6 +265,9 @@
                                 <materialDesign:ColorZone Mode="Dark" VerticalAlignment="Stretch">
                                     <materialDesign:PackIcon Kind="BookmarkMultiple" Height="64" Width="64" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </materialDesign:ColorZone>
+                                <Button  x:Name="HelpTool_Btn" Command="{Binding HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" Background="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
+                                    <materialDesign:PackIcon  Kind="Help" />
+                                </Button>
                                 <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <TextBlock HorizontalAlignment="Center" Margin="0 0 0 0" FontSize="22" FontWeight="Bold" Text="条件" />
                                     <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
@@ -378,6 +390,9 @@
                                 <materialDesign:ColorZone Mode="Dark" VerticalAlignment="Stretch">
                                     <materialDesign:PackIcon Kind="BookmarkPlus" Height="64" Width="64" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </materialDesign:ColorZone>
+                                <Button x:Name="HelpTool_Btn" Command="{Binding HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" Background="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
+                                    <materialDesign:PackIcon  Kind="Help" />
+                                </Button>
                                 <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <TextBlock HorizontalAlignment="Center" Margin="0 0 0 0" FontSize="22" FontWeight="Bold" Text="事件" />
                                     <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
@@ -501,8 +516,11 @@
                                 <materialDesign:ColorZone Mode="Dark" VerticalAlignment="Stretch">
                                     <materialDesign:PackIcon Kind="BookmarkCheck" Height="64" Width="64" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </materialDesign:ColorZone>
+                                <Button  x:Name="HelpTool_Btn" Command="{Binding HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" Background="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
+                                    <materialDesign:PackIcon  Kind="Help" />
+                                </Button>
                                 <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <TextBlock HorizontalAlignment="Center" Margin="0 0 0 0" FontSize="22" FontWeight="Bold" Text="任务" />
+                                    <TextBlock HorizontalAlignment="Center" Margin="0 0 0 0" FontSize="22" FontWeight="Bold" Text="目标" />
                                     <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
                                 </StackPanel>
                             </Grid>
@@ -609,6 +627,10 @@
                                 <materialDesign:ColorZone Mode="Light" VerticalAlignment="Stretch">
                                     <materialDesign:PackIcon Kind="BookmarkBoxMultipleOutline" Height="64" Width="64" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </materialDesign:ColorZone>
+                                <Button  x:Name="HelpTool_Btn" Command="{Binding HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" Background="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
+                                    <materialDesign:PackIcon  Kind="Help" />
+                                </Button>
+                                
                                 <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <TextBlock HorizontalAlignment="Center" Margin="0 0 0 0" FontSize="22" FontWeight="Bold" Text="任务笔记" />
                                     <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
@@ -629,7 +651,7 @@
                                         <TextBlock Margin="0 0 0 0" VerticalAlignment="Center" Text="编辑页" />
                                     </StackPanel>
                                 </materialDesign:ColorZone>
-                                <Grid Grid.Row="1" Margin="0 0 0 0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="400">
+                                <Grid Background="White" Height="148" Grid.Row="1" Margin="0 0 0 0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="400">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="30" />
                                         <RowDefinition Height="*" />
@@ -665,6 +687,10 @@
                                 <materialDesign:ColorZone Mode="Light" VerticalAlignment="Stretch">
                                     <materialDesign:PackIcon Kind="Boombox" Height="64" Width="64" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </materialDesign:ColorZone>
+                                <Button  x:Name="HelpTool_Btn" Command="{Binding HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" Background="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
+                                    <materialDesign:PackIcon  Kind="Help" />
+                                </Button>
+                                
                                 <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <TextBlock HorizontalAlignment="Center" Margin="0 0 0 0" FontSize="22" FontWeight="Bold" Text="任务物品" />
                                     <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />

@@ -9,13 +9,13 @@ using ArcCreate.Jklss.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Xml.Linq;
-using static ArcCreate.Jklss.Model.MainWindow.MainWindowModels;
 using static ArcCreate.Jklss.Model.SocketModel.SocketModel;
 
 namespace ArcCreate.Jklss.BetonQusetEditor.Base
@@ -34,6 +34,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
         private List<ObjectiveCmdModel> objectiveProp = null;
 
+        private Dictionary<Thumb, string> saveHelpTool;
+
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -46,7 +48,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
         /// <exception cref="ArgumentNullException"></exception>
         public SaveAndReadYamlBase(string filePath, List<ObjectiveCmdModel> objectiveProp, 
             List<EventCmdModel> eventProp, List<ContisionsCmdModel> contisionProp, List<SaveChird> saveThumbs,
-            Dictionary<Thumb, Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>> saveInfo)
+            Dictionary<Thumb, Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>> saveInfo, Dictionary<Thumb, string> saveHelpTool)
         {
             if (string.IsNullOrEmpty(filePath))
             {
@@ -89,6 +91,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
             this.saveThumbs = saveThumbs;
 
             this.saveInfo = saveInfo;
+
+            this.saveHelpTool = saveHelpTool;
         }
 
         /// <summary>
@@ -310,6 +314,69 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
             var coordinateJson = FileService.SaveToJson(dic);//转换为Json
 
+            var newToolList = new List<HelpToolModel>();
+
+            try
+            {
+                await Task.Run(async () =>
+                {
+                    foreach (var item in saveHelpTool)
+                    {
+                        var thumbInfo = await FindSaveThumbInfo(item.Key);
+
+                        if (thumbInfo == null)
+                        {
+                            continue;
+                        }
+
+                        if (thumbInfo.thumbClass == ThumbClass.Subject)
+                        {
+                            GetControl<TextBox>("ShowNpcName_TBox", thumbInfo.Saver).Dispatcher.Invoke(new Action(() =>
+                            {
+                                newToolList.Add(new HelpToolModel
+                                {
+                                    Class = thumbInfo.thumbClass,
+                                    Name = GetControl<TextBox>("ShowNpcName_TBox", thumbInfo.Saver).Text,
+                                    Tool = item.Value,
+                                }) ;
+                            }));
+                        }
+                        else if(thumbInfo.thumbClass == ThumbClass.Items|| thumbInfo.thumbClass == ThumbClass.Journal)
+                        {
+                            var getInfo = GetThumbInfoBase.GetThumbInfo(await FindSaveThumbInfo(item.Key));
+
+                            newToolList.Add(new HelpToolModel
+                            {
+                                Class = thumbInfo.thumbClass,
+                                Name = getInfo.Config,
+                                Tool = item.Value,
+                            });
+
+                        }
+                        else
+                        {
+                            GetControl<TextBox>("ConditionsConfig_TBox", thumbInfo.Saver).Dispatcher.Invoke(new Action(() =>
+                            {
+                                newToolList.Add(new HelpToolModel
+                                {
+                                    Class = thumbInfo.thumbClass,
+                                    Name = GetControl<TextBox>("ConditionsConfig_TBox", thumbInfo.Saver).Text,
+                                    Tool = item.Value,
+                                });
+                            }));
+                        }
+                    }
+                });
+
+                
+            }
+            catch
+            {
+
+            }
+
+            var toolListJson = FileService.SaveToJson(newToolList);
+
             var path = new SaveJsonModel()
             {
                 id = id,
@@ -320,7 +387,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                 Jdata = journalJson,
                 Idata = itemsJson,
                 Coordinate = coordinateJson,
-                filepath = filePath
+                filepath = filePath,
+                HelpTool = toolListJson,
             };
 
             result.SetSuccese("配置生成成功", path);
@@ -328,43 +396,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
             return result;
         }
 
-        public class ThumbInfoModel
-        {
-            public string Name { get; set; }
-
-            public string Main { get; set; }
-
-            public ThumbClass thumbClass { get; set; }
-
-            public Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>> data { get; set; }
-        }
-
-        public class ThumbCoordinateModel
-        {
-            public string Name { get; set; }
-
-            public ThumbClass thumbClass { get; set; }
-
-            public double X { get; set; }
-
-            public double Y { get; set; }
-        }
-
-        public class SaveChilds
-        {
-            public string Saver { get; set; }
-
-            public List<string> Children { get; set; } = new List<string>();
-
-            public List<string> Fathers { get; set; } = new List<string>();
-
-            public bool CanFather { get; set; }
-
-            public string Main { get; set; }
-
-            public ThumbClass thumbClass { get; set; }
-        }
-
+        
         /// <summary>
         /// Condition语法解析器
         /// </summary>
@@ -678,17 +710,60 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
             await Task.Run(() =>
             {
-                foreach (var item in saveThumbs)
+                if(saveThumbs.Where(t => t.Saver == thumb).Any())
                 {
-                    if (item.Saver == thumb)
-                    {
-                        save = item;
-                        break;
-                    }
+                    save = saveThumbs.Where(t => t.Saver == thumb).FirstOrDefault();
                 }
             });
 
             return save;
         }
     }
+
+    public class ThumbInfoModel
+    {
+        public string Name { get; set; }
+
+        public string Main { get; set; }
+
+        public ThumbClass thumbClass { get; set; }
+
+        public Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>> data { get; set; }
+    }
+
+    public class ThumbCoordinateModel
+    {
+        public string Name { get; set; }
+
+        public ThumbClass thumbClass { get; set; }
+
+        public double X { get; set; }
+
+        public double Y { get; set; }
+    }
+
+    public class SaveChilds
+    {
+        public string Saver { get; set; }
+
+        public List<string> Children { get; set; } = new List<string>();
+
+        public List<string> Fathers { get; set; } = new List<string>();
+
+        public bool CanFather { get; set; }
+
+        public string Main { get; set; }
+
+        public ThumbClass thumbClass { get; set; }
+    }
+
+    public class HelpToolModel
+    {
+        public string Name { get; set; }
+
+        public ThumbClass Class { get; set; }
+
+        public string Tool { get; set; }
+    }
+
 }

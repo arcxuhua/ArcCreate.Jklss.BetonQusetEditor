@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ArcCreate.Jklss.BetonQusetEditor.Windows"
         xmlns:binding="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        Title="ThumbSetWindow" Height="120" Width="400" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True" Background="{x:Null}" ShowInTaskbar="False">
+        Title="归类设置" Topmost="True" Height="120" Width="400" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True" Background="{x:Null}" ShowInTaskbar="False">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>

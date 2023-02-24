@@ -29,6 +29,11 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
             this.MainWindow = mainWindow;
         }
 
+        public CreateThumbsBase()
+        {
+
+        }
+
         private static int Uid = 0;
 
         public async Task<ReturnModel> CreateThumb(ThumbClass thumbClass,string MainFilePath,MainWindow window,double px=0,double py= 0)
@@ -92,7 +97,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
             {
                 Uid++;
 
-                var model = new MainWindowModels.SaveChird()
+                var model = new SaveChird()
                 {
                     Saver = thumb,
                     Children = new List<Thumb>(),

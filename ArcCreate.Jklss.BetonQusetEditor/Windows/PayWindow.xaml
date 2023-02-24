@@ -7,7 +7,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:binding="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        Title="PayWindow" Height="330" Width="430" ResizeMode="NoResize" WindowStyle="None" Background="{x:Null}" AllowsTransparency="True" WindowStartupLocation="CenterScreen">
+        Title="支付窗口" Height="330" Width="430" ResizeMode="NoResize" WindowStyle="None" Background="{x:Null}" AllowsTransparency="True" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="140"/>
