@@ -25,7 +25,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
         public static ScoketService socketService = new ScoketService();
 
-        public static string version = "3.1.69";
+        public static string version = "3.2.20";
 
         /// <summary>
         /// 开启Socket通讯

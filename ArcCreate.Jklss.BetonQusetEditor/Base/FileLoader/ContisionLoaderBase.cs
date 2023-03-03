@@ -25,7 +25,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
         public Thumb getThumb = null;
                
-        private List<ContisionsCmdModel> savecmdModels = null;
+        public static List<ContisionsCmdModel> savecmdModels = null;
 
         private TreeView saveTree = null;
 
@@ -59,8 +59,6 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
             var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessage, 
                 SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(),SocketModel.token,true);
-
-            Console.WriteLine("Condition已经获得返回值");
 
             if (getMessage == null || !getMessage.Succese)
             {
@@ -115,7 +113,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                 {
                     return null;
                 }
-
+                savecmdModels = models;
                 return models;
             }
             catch

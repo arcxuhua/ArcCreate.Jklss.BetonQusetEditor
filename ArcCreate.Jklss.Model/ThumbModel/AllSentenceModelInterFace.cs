@@ -86,6 +86,6 @@ namespace ArcCreate.Jklss.Model.ThumbModel
         /// <summary>
         /// 子命令第n条参数同时存储分隔符及步长
         /// </summary>
-        public List<(char i, int j)> ChildTextSplitWords { get; set; }
+        public List<(char i, int j)> ChildTextSplitWords { get; set; } = new List<(char i, int j)>();
     }
 }

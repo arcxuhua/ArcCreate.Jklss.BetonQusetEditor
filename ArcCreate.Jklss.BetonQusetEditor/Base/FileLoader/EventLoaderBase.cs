@@ -25,7 +25,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
         public Thumb getThumb = null;
 
-        private List<EventCmdModel> savecmdModels = null;
+        public static List<EventCmdModel> savecmdModels = null;
 
         private TreeView saveTree = null;
 
@@ -110,7 +110,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                 {
                     return null;
                 }
-
+                savecmdModels = models;
                 return models;
             }
             catch

@@ -20,7 +20,7 @@
                                 <materialDesign:ColorZone Mode="PrimaryDark" VerticalAlignment="Stretch">
                                     <materialDesign:PackIcon Kind="Book" Height="64" Width="64" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </materialDesign:ColorZone>
-                                <Button x:Name="HelpTool_Btn" Command="{Binding HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" Background="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
+                                <Button x:Name="HelpTool_Btn" Command="{Binding HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" Background="White" BorderBrush="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
                                     <materialDesign:PackIcon  Kind="Help" />
                                 </Button>
                                 <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -81,7 +81,7 @@
                                 <materialDesign:ColorZone Mode="PrimaryDark" VerticalAlignment="Stretch">
                                     <materialDesign:PackIcon Kind="BookEdit" Height="64" Width="64" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </materialDesign:ColorZone>
-                                <Button x:Name="HelpTool_Btn" Command="{Binding HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" Background="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
+                                <Button x:Name="HelpTool_Btn" Command="{Binding HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" Background="White" BorderBrush="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
                                     <materialDesign:PackIcon  Kind="Help" />
                                 </Button>
                                 <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -173,7 +173,7 @@
                                 <materialDesign:ColorZone Mode="PrimaryDark" VerticalAlignment="Stretch">
                                     <materialDesign:PackIcon Kind="BookEducation" Height="64" Width="64" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </materialDesign:ColorZone>
-                                <Button x:Name="HelpTool_Btn" Command="{Binding HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" Background="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
+                                <Button x:Name="HelpTool_Btn" Command="{Binding HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" Background="White" BorderBrush="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
                                     <materialDesign:PackIcon  Kind="Help" />
                                 </Button>
                                 <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -265,7 +265,7 @@
                                 <materialDesign:ColorZone Mode="Dark" VerticalAlignment="Stretch">
                                     <materialDesign:PackIcon Kind="BookmarkMultiple" Height="64" Width="64" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </materialDesign:ColorZone>
-                                <Button  x:Name="HelpTool_Btn" Command="{Binding HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" Background="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
+                                <Button  x:Name="HelpTool_Btn" Command="{Binding HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" BorderBrush="White" Background="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
                                     <materialDesign:PackIcon  Kind="Help" />
                                 </Button>
                                 <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -390,7 +390,7 @@
                                 <materialDesign:ColorZone Mode="Dark" VerticalAlignment="Stretch">
                                     <materialDesign:PackIcon Kind="BookmarkPlus" Height="64" Width="64" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </materialDesign:ColorZone>
-                                <Button x:Name="HelpTool_Btn" Command="{Binding HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" Background="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
+                                <Button x:Name="HelpTool_Btn" Command="{Binding HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" Background="White" BorderBrush="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
                                     <materialDesign:PackIcon  Kind="Help" />
                                 </Button>
                                 <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -516,7 +516,7 @@
                                 <materialDesign:ColorZone Mode="Dark" VerticalAlignment="Stretch">
                                     <materialDesign:PackIcon Kind="BookmarkCheck" Height="64" Width="64" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </materialDesign:ColorZone>
-                                <Button  x:Name="HelpTool_Btn" Command="{Binding HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" Background="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
+                                <Button  x:Name="HelpTool_Btn" Command="{Binding HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" Background="White" BorderBrush="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
                                     <materialDesign:PackIcon  Kind="Help" />
                                 </Button>
                                 <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -627,7 +627,7 @@
                                 <materialDesign:ColorZone Mode="Light" VerticalAlignment="Stretch">
                                     <materialDesign:PackIcon Kind="BookmarkBoxMultipleOutline" Height="64" Width="64" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </materialDesign:ColorZone>
-                                <Button  x:Name="HelpTool_Btn" Command="{Binding HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" Background="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
+                                <Button  x:Name="HelpTool_Btn" Command="{Binding HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" Background="Black" BorderBrush="Black" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="White" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
                                     <materialDesign:PackIcon  Kind="Help" />
                                 </Button>
                                 
@@ -687,7 +687,7 @@
                                 <materialDesign:ColorZone Mode="Light" VerticalAlignment="Stretch">
                                     <materialDesign:PackIcon Kind="Boombox" Height="64" Width="64" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 </materialDesign:ColorZone>
-                                <Button  x:Name="HelpTool_Btn" Command="{Binding HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" Background="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
+                                <Button  x:Name="HelpTool_Btn" Command="{Binding HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" BorderBrush="Black" Background="Black" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="White" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
                                     <materialDesign:PackIcon  Kind="Help" />
                                 </Button>
                                 

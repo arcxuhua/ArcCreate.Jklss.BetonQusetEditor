@@ -2928,7 +2928,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                             if (fgf[2] == getConditionsProp.Keys.First())
                             {
                                 (GetControl("Conditions_CBox", thumb) as ComboBox).SelectedItem = item;
-                                cmd = item.ToString();
+                                cmd = (item as ComboBoxItem).Content.ToString();
                                 mainWindowModels.SaveThumbInfo[thumb].Add(cmd, getConditionsProp[getConditionsProp.Keys.First()]);
                                 break;
                             }
@@ -3015,7 +3015,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                             if (fgf[2] == getConditionsProp.Keys.First())
                             {
                                 (GetControl("Conditions_CBox", thumb) as ComboBox).SelectedItem = item;
-                                cmd = item.ToString();
+                                cmd = (item as ComboBoxItem).Content.ToString();
                                 mainWindowModels.SaveThumbInfo[thumb].Add(cmd, getConditionsProp[getConditionsProp.Keys.First()]);
                                 break;
                             }
@@ -3098,7 +3098,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                             if (fgf[2] == getConditionsProp.Keys.First())
                             {
                                 (GetControl("Conditions_CBox", thumb) as ComboBox).SelectedItem = item;
-                                cmd = item.ToString();
+                                cmd = (item as ComboBoxItem).Content.ToString();
                                 mainWindowModels.SaveThumbInfo[thumb].Add(cmd, getConditionsProp[getConditionsProp.Keys.First()]);
                                 break;
                             }
@@ -3354,7 +3354,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                                 {
                                                     changeinfo = changeinfo.TrimStart('!');
                                                 }
-
+                                                else if (getNeedClass == ThumbClass.Items)
+                                                {
+                                                    changeinfo = changeinfo.Split(':')[0];
+                                                }
                                                 var reback = await createThumbs.UseNameGetThumb(getNeedClass, changeinfo);
 
                                                 if (reback.Succese)
@@ -3411,7 +3414,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                                 {
                                                     changeinfo = changeinfo.TrimStart('!');
                                                 }
-
+                                                else if (getNeedClass == ThumbClass.Items)
+                                                {
+                                                    changeinfo = changeinfo.Split(':')[0];
+                                                }
                                                 var reback = await createThumbs.UseNameGetThumb(getNeedClass, changeinfo);
 
                                                 if (reback.Succese)
@@ -3468,7 +3474,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                                 {
                                                     changeinfo = changeinfo.TrimStart('!');
                                                 }
-
+                                                else if (getNeedClass == ThumbClass.Items)
+                                                {
+                                                    changeinfo = changeinfo.Split(':')[0];
+                                                }
                                                 var reback = await createThumbs.UseNameGetThumb(getNeedClass, changeinfo);
 
                                                 if (reback.Succese)
@@ -4240,7 +4249,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                                 {
                                                     changeinfo = changeinfo.TrimStart('!');
                                                 }
-
+                                                else if (getNeedClass == ThumbClass.Items)
+                                                {
+                                                    changeinfo = changeinfo.Split(':')[0];
+                                                }
                                                 var reback = await createThumbBase.UseNameGetThumb(getNeedClass, changeinfo);
 
                                                 if (reback.Succese)
@@ -4307,7 +4319,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                                 {
                                                     changeinfo = changeinfo.TrimStart('!');
                                                 }
-
+                                                else if (getNeedClass == ThumbClass.Items)
+                                                {
+                                                    changeinfo = changeinfo.Split(':')[0];
+                                                }
                                                 var reback = await createThumbBase.UseNameGetThumb(getNeedClass, changeinfo);
 
                                                 if (reback.Succese)
@@ -4373,6 +4388,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                                 if (getNeedClass == ThumbClass.Conditions)
                                                 {
                                                     changeinfo = changeinfo.TrimStart('!');
+                                                }
+                                                else if(getNeedClass == ThumbClass.Items)
+                                                {
+                                                    changeinfo = changeinfo.Split(':')[0];
                                                 }
 
                                                 var reback = await createThumbBase.UseNameGetThumb(getNeedClass, changeinfo);
@@ -4853,7 +4872,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             {
                 if (mainWindowModels.SaveThumbInfo.ContainsKey(thumbFt))
                 {
-                    var getName = (GetControl("ConditionsConfig_TBox", get_ThumbCl.Saver) as TextBox).Text;
+                    var getName = string.Empty;
+
+                    if(get_ThumbCl.thumbClass == ThumbClass.Items)
+                    {
+                        getName = (GetControl("ItemsConfig_TBox", get_ThumbCl.Saver) as TextBox).Text;
+                    }
+                    else
+                    {
+                        getName = (GetControl("ConditionsConfig_TBox", get_ThumbCl.Saver) as TextBox).Text;
+                    }
+
                     var treeBase = new TreeViewBase();
                     foreach (var item in mainWindowModels.SaveThumbInfo[thumbFt])
                     {
@@ -4936,10 +4965,21 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                 return result;
             }
 
-            if(string.IsNullOrEmpty((GetControl("ConditionsConfig_TBox", chird.Saver) as TextBox).Text))
+            if (chird.thumbClass == ThumbClass.Items)
             {
-                result.SetError("子级的配置名称未填写");
-                return result;
+                if (string.IsNullOrEmpty((GetControl("ItemsConfig_TBox", chird.Saver) as TextBox).Text))
+                {
+                    result.SetError("子级的配置名称未填写");
+                    return result;
+                }
+            }
+            else
+            {
+                if (string.IsNullOrEmpty((GetControl("ConditionsConfig_TBox", chird.Saver) as TextBox).Text))
+                {
+                    result.SetError("子级的配置名称未填写");
+                    return result;
+                }
             }
 
             var chirdClass = chird.thumbClass;
@@ -5325,7 +5365,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         return result;
                     }
 
-                    while(saveResult == null)
+                    saveResult = null;
+
+                    while (saveResult == null)
                     {
                         ThumbSetWindow setWindow = new ThumbSetWindow();
 
@@ -5334,6 +5376,19 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                             setWindow.DataContext = new ThumbSetWindowViewModel()
                             {
                                 IsEnabel = true,
+
+                                Classifications = oneList,
+
+                                SaveTerms = twoDic
+                            };
+                        }
+                        else if(chirdClass == ThumbClass.Items)
+                        {
+                            setWindow.DataContext = new ThumbSetWindowViewModel()
+                            {
+                                IsEnabel = false,
+
+                                UseItem = true,
 
                                 Classifications = oneList,
 
@@ -5400,11 +5455,27 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                     try
                     {
-                        var newChirldText = (GetControl("ConditionsConfig_TBox", chird.Saver) as TextBox).Text;
+                        var newChirldText = string.Empty;
 
-                        if (saveResult.Three)
+                        if(chirdClass == ThumbClass.Items)
                         {
-                            newChirldText = "!" + newChirldText;
+                            if (saveResult.Four > 1)
+                            {
+                                newChirldText = (GetControl("ItemsConfig_TBox", chird.Saver) as TextBox).Text + ":" + saveResult.Four;
+                            }
+                            else
+                            {
+                                newChirldText = (GetControl("ItemsConfig_TBox", chird.Saver) as TextBox).Text;
+                            }
+                        }
+                        else
+                        {
+                            newChirldText = (GetControl("ConditionsConfig_TBox", chird.Saver) as TextBox).Text;
+
+                            if (saveResult.Three)
+                            {
+                                newChirldText = "!" + newChirldText;
+                            }
                         }
 
                         var cs = mainWindowModels.SaveThumbInfo[father.Saver]
@@ -5530,6 +5601,19 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                                 SaveTerms = twoDic
                             };
                         }
+                        else if (chirdClass == ThumbClass.Items)
+                        {
+                            setWindow.DataContext = new ThumbSetWindowViewModel()
+                            {
+                                IsEnabel = false,
+
+                                UseItem = true,
+
+                                Classifications = oneList,
+
+                                SaveTerms = twoDic
+                            };
+                        }
                         else
                         {
                             setWindow.DataContext = new ThumbSetWindowViewModel()
@@ -5592,11 +5676,27 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                     try
                     {
-                        var newChirldText = (GetControl("ConditionsConfig_TBox", chird.Saver) as TextBox).Text;
+                        var newChirldText = string.Empty;
 
-                        if (saveResult.Three)
+                        if (chirdClass == ThumbClass.Items)
                         {
-                            newChirldText = "!" + newChirldText;
+                            if (saveResult.Four > 1)
+                            {
+                                newChirldText = (GetControl("ItemsConfig_TBox", chird.Saver) as TextBox).Text + ":" + saveResult.Four;
+                            }
+                            else
+                            {
+                                newChirldText = (GetControl("ItemsConfig_TBox", chird.Saver) as TextBox).Text;
+                            }
+                        }
+                        else
+                        {
+                            newChirldText = (GetControl("ConditionsConfig_TBox", chird.Saver) as TextBox).Text;
+
+                            if (saveResult.Three)
+                            {
+                                newChirldText = "!" + newChirldText;
+                            }
                         }
 
                         var cs = mainWindowModels.SaveThumbInfo[father.Saver]
@@ -5701,6 +5801,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         return result;
                     }
 
+                    saveResult = null;
+
                     while (saveResult == null)
                     {
                         var setWindow = new ThumbSetWindow();
@@ -5710,6 +5812,19 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                             setWindow.DataContext = new ThumbSetWindowViewModel()
                             {
                                 IsEnabel = true,
+
+                                Classifications = oneList,
+
+                                SaveTerms = twoDic
+                            };
+                        }
+                        else if (chirdClass == ThumbClass.Items)
+                        {
+                            setWindow.DataContext = new ThumbSetWindowViewModel()
+                            {
+                                IsEnabel = false,
+
+                                UseItem = true,
 
                                 Classifications = oneList,
 
@@ -5778,11 +5893,27 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                     try
                     {
-                        var newChirldText = (GetControl("ConditionsConfig_TBox", chird.Saver) as TextBox).Text;
+                        var newChirldText = string.Empty;
 
-                        if (saveResult.Three)
+                        if (chirdClass == ThumbClass.Items)
                         {
-                            newChirldText = "!" + newChirldText;
+                            if (saveResult.Four > 1)
+                            {
+                                newChirldText = (GetControl("ItemsConfig_TBox", chird.Saver) as TextBox).Text + ":" + saveResult.Four;
+                            }
+                            else
+                            {
+                                newChirldText = (GetControl("ItemsConfig_TBox", chird.Saver) as TextBox).Text;
+                            }
+                        }
+                        else
+                        {
+                            newChirldText = (GetControl("ConditionsConfig_TBox", chird.Saver) as TextBox).Text;
+
+                            if (saveResult.Three)
+                            {
+                                newChirldText = "!" + newChirldText;
+                            }
                         }
 
                         var cs = mainWindowModels.SaveThumbInfo[father.Saver]
@@ -6124,6 +6255,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             public string Two { get; set; }
 
             public bool Three { get; set; }
+
+            public int Four { get; set; }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ArcCreate.Jklss.BetonQusetEditor.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Windows
         public GrammarModelWindow()
         {
             InitializeComponent();
+            this.DataContext = new GrammerModelViewModel(this);
         }
     }
 }

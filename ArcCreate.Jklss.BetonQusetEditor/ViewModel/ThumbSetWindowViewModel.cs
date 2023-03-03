@@ -8,12 +8,27 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows;
+using System.Text.RegularExpressions;
 
 namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 {
     public class ThumbSetWindowViewModel:NotifyBase
     {
-        public static ThumbSetWindowModel model = new ThumbSetWindowModel();
+        public ThumbSetWindowModel model = new ThumbSetWindowModel();
+
+        public bool UseItem
+        {
+            get
+            {
+                return model.UseItem;
+            }
+            set
+            {
+                model.UseItem = value;
+
+                this.NotifyChanged();
+            }
+        }
 
         public bool IsNegate
         {
@@ -71,6 +86,20 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             }
         }
 
+        public string ItemNum
+        {
+            get
+            {
+                return model.ItemNum;
+            }
+            set
+            {
+                model.ItemNum = value;
+
+                this.NotifyChanged();
+            }
+        }
+
         public List<string> Classifications
         {
             get
@@ -118,6 +147,18 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         {
                             IsNegate = false;
                         }
+                        var itemNums = 0;
+                        if (UseItem)
+                        {
+                            if (!Regex.IsMatch(ItemNum, @"^[1-9]\d*"))
+                            {
+                                return;
+                            }
+                            else
+                            {
+                                itemNums = Convert.ToInt32(ItemNum);
+                            }
+                        }
 
                         if (string.IsNullOrEmpty(ClassificationsSeleted))
                         {
@@ -133,7 +174,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         {
                             One = ClassificationsSeleted,
                             Two = TermsSeleted,
-                            Three = IsNegate
+                            Three = IsNegate,
+                            Four = itemNums
                         };
 
                         (obj as Window).Close();

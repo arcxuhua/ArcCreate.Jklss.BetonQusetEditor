@@ -12,10 +12,13 @@
             <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Border Grid.Row="0" Background="White" CornerRadius="20,20,0,0" MouseMove="BordMoveMove"></Border>
-        <Border Grid.Row="1" Background="White" CornerRadius="0,0,20,20"></Border>
-        <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontWeight="Bold">归类设置(Setting)</TextBlock>
-        <TextBlock Grid.Row="1" FontSize="15" FontWeight="Bold" Margin="10 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Top">归类命令：</TextBlock>
+        <Grid Background="#FF4C4C4C" MouseMove="BordMoveMove" TextBlock.FontSize="14" TextBlock.Foreground="White">
+            <TextBlock Margin="10 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">归类设置(Setting)</TextBlock>
+        </Grid>
+        <Grid Grid.Row="1" Background="#FFC1C1C1">
+
+        </Grid>
+        <TextBlock Grid.Row="1" FontSize="12" FontWeight="Bold" Margin="20 10 0 0" HorizontalAlignment="Left" VerticalAlignment="Top">归类命令：</TextBlock>
         <ComboBox x:Name="Classifications_CBox" Grid.Row="1" ItemsSource="{Binding Classifications}" SelectedItem="{Binding ClassificationsSeleted}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="80 0 0 0" Width="120" Height="25">
             <binding:Interaction.Triggers>
                 <binding:EventTrigger EventName="Loaded">
@@ -24,9 +27,11 @@
                 </binding:EventTrigger>
             </binding:Interaction.Triggers>
         </ComboBox>
-        <TextBlock Grid.Row="1" FontSize="15" FontWeight="Bold" Margin="205 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Top">归类参数：</TextBlock>
+        <TextBlock Grid.Row="1" FontSize="12" FontWeight="Bold" Margin="215 10 0 0" HorizontalAlignment="Left" VerticalAlignment="Top">归类参数：</TextBlock>
         <ComboBox Grid.Row="1" ItemsSource="{Binding Terms}" SelectedItem="{Binding TermsSeleted}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="275 0 0 0" Width="120" Height="25"></ComboBox>
-        <CheckBox Content="取反(仅条件使用)" IsChecked="{Binding IsNegate}" HorizontalAlignment="Left" Margin="10,30,0,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="{Binding IsEnabel}"/>
-        <Button Grid.Row="1" Width="70" Height="30" Command="{Binding SendOk}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,55,0,0" Cursor="Hand">确定</Button>
+        <CheckBox Content="取反(仅条件使用)" IsChecked="{Binding IsNegate}" HorizontalAlignment="Left" Margin="20,35,0,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="{Binding IsEnabel}"/>
+        <Button Grid.Row="1" Width="70" Height="25" Command="{Binding SendOk}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,60,0,0" Cursor="Hand" Background="Black" BorderBrush="Black">确定</Button>
+        <TextBlock Grid.Row="1" FontSize="12" FontWeight="Bold" Margin="215,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"><Run Text="物品数量："/></TextBlock>
+        <TextBox IsEnabled="{Binding UseItem}" Text="{Binding ItemNum}" Grid.Row="1" Width="120" Height="25" Margin="275,28,5,37" Cursor="Arrow"></TextBox>
     </Grid>
 </Window>

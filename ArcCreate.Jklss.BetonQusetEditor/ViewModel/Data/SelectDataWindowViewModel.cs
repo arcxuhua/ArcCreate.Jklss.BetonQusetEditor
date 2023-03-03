@@ -1,4 +1,5 @@
 ﻿using ArcCreate.Jklss.BetonQusetEditor.Base;
+using ArcCreate.Jklss.BetonQusetEditor.Windows;
 using ArcCreate.Jklss.BetonQusetEditor.Windows.Data;
 using ArcCreate.Jklss.Model.Data;
 using ArcCreate.Jklss.Model.SocketModel;
@@ -347,6 +348,25 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }
                 return _SelectFilePathCommand;
+            }
+        }
+
+        public CommandBase _GrammarCommand;
+        public CommandBase GrammarCommand
+        {
+            get
+            {
+                if (_GrammarCommand == null)
+                {
+                    _GrammarCommand = new CommandBase();
+                    _GrammarCommand.DoExecute = new Action<object>(obj =>//回调函数
+                    {
+                        GrammarModelWindow window = new GrammarModelWindow();
+
+                        window.ShowDialog();
+                    });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
+                }
+                return _GrammarCommand;
             }
         }
     }

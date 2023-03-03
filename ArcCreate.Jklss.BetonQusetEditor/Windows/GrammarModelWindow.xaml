@@ -7,136 +7,769 @@
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:binding="http://schemas.microsoft.com/xaml/behaviors"
-        Title="添加\修改一个 语法吧！" Height="850" Width="800" WindowStyle="None" AllowsTransparency="True" Background="{x:Null}">
+        Title="添加\修改一个 语法吧！" Topmost="True" Height="400" Width="800" WindowStyle="None" AllowsTransparency="True" Background="{x:Null}" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
-            <RowDefinition/>
+            <RowDefinition />
         </Grid.RowDefinitions>
-        <Grid Background="#FF4C4C4C" >
+        <Grid Background="#FF4C4C4C">
             <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10 0 0 0" FontSize="13" FontWeight="Bold" Foreground="White">添加\修改\删除 一个语法模型,如果您不懂请立即关闭此页面</TextBlock>
             <Button Command="{Binding CloseCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Grid.Row="0" Margin="0 0 10 1" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryDarkButton}" ToolTip="关闭" Width="25" Height="25" Background="White" BorderBrush="White" Foreground="#DDFF0000">
                 <materialDesign:PackIcon Kind="Close" Height="20" Width="20" />
             </Button>
         </Grid>
-        <Grid Grid.Row="1" Background="#B2B3B3" >
+        <Grid Grid.Row="1" Background="#FF757575">
             <Grid.RowDefinitions>
-                <RowDefinition Height="20"/>
-                <RowDefinition Height ="40"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="150"/>
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <Grid Grid.Row="1" >
-                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="30 0 0 0">选择语法模型:</TextBlock>
-                <ComboBox materialDesign:TextFieldAssist.UnderlineBrush="White" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="12" Height="25" Width="200" Margin="120 0 0 0">
+            <Grid>
+                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="30 0 0 0">选择模型类型:</TextBlock>
+                <ComboBox x:Name="SelectType_Cbox" SelectedIndex="{Binding SelectType}" materialDesign:TextFieldAssist.UnderlineBrush="White" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="12" Height="25" Width="200" Margin="120 0 0 0">
                     <ComboBoxItem>条件(Condition)模型</ComboBoxItem>
                     <ComboBoxItem>事件(Event)模型</ComboBoxItem>
                     <ComboBoxItem>目标(Objective)模型</ComboBoxItem>
+                    <binding:Interaction.Triggers>
+                        <binding:EventTrigger EventName="SelectionChanged">
+                            <binding:InvokeCommandAction Command="{Binding SelectTypeSelectionChangedCommand}" CommandParameter="{Binding ElementName=SelectType_Cbox}">
+                            </binding:InvokeCommandAction>
+                        </binding:EventTrigger>
+                    </binding:Interaction.Triggers>
                 </ComboBox>
                 <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="400 0 0 0">选择已有模型:</TextBlock>
-                <ComboBox materialDesign:TextFieldAssist.UnderlineBrush="White" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="12" Height="25" Width="200" Margin="490 0 0 0">
-
+                <ComboBox x:Name="SelectModel_Cbox" SelectedItem="{Binding ModelSelect,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding ModelItems}" materialDesign:TextFieldAssist.UnderlineBrush="White" HorizontalAlignment="Left" FontSize="12" Height="26" Width="129" Margin="490,0,0,0">
+                    <binding:Interaction.Triggers>
+                        <binding:EventTrigger EventName="SelectionChanged">
+                            <binding:InvokeCommandAction Command="{Binding SelectModelSelectionChangedCommand}" CommandParameter="{Binding ElementName=SelectModel_Cbox}">
+                            </binding:InvokeCommandAction>
+                        </binding:EventTrigger>
+                    </binding:Interaction.Triggers>
                 </ComboBox>
-
-                <Button Width="20" Height="20" Margin="0 0 80 0" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
-                    <materialDesign:PackIcon Kind="Plus" />
+                <Button Command="{Binding AddGrammarModelToListCommand}" CommandParameter="{Binding ElementName=SelectModel_Cbox}" Width="20" Height="20" Margin="624,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                    <materialDesign:PackIcon Kind="Plus" VerticalAlignment="Center" />
                 </Button>
-                <Button Width="20" Height="20" Margin="0 0 50 0" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                <Button Command="{Binding DeleteGrammarModelToListCommand}" CommandParameter="{Binding ElementName=SelectModel_Cbox}" Width="20" Height="20" Margin="658,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
                     <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
                 </Button>
-                <Line X1="20" Y1="40" X2="780" Y2="40" Stroke="Black" StrokeThickness="5"></Line>
-
+                <Button  Command="{Binding SaveGrammarModelCommand}" CommandParameter="{Binding ElementName=SelectModel_Cbox}" Width="107" Height="26" Margin="683,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="12" Content="保存"/>
             </Grid>
+
+            <Grid Grid.Row="1">
+                <ListBox x:Name="Grammer_ListBox" SelectedItem="{Binding GrammerSelect,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Parameter,NotifyOnSourceUpdated=True,Mode=TwoWay}" d:ItemsSource="{d:SampleData ItemCount=5}">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Margin="0 0 0 0" Orientation="Horizontal" IsItemsHost="True"></WrapPanel>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Control x:Name="ctrl" Margin="0 2 0 0" HorizontalAlignment="Left" VerticalAlignment="Center" Height="50"></Control>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding Path=Type}" Value="0">
+                                    <Setter Property="Template" TargetName="ctrl">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Grid>
+                                                    <Border Margin="0 0 0 2" HorizontalAlignment="Left" VerticalAlignment="Center" Width="100" Height="30" Background="#FFDE8686">
+                                                        <Grid TextBlock.Foreground="White" TextBlock.FontWeight="Bold">
+                                                            <Button Command="{Binding Path=SelectItCommand}" Background="#FFDE8686" BorderBrush="#FFDE8686"></Button>
+                                                            <TextBlock Margin="5 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Center">主命令</TextBlock>
+                                                            <Button Command="{Binding Path=AddControlCommand}" CommandParameter="{Binding ElementName=ctrl}" Width="20" Height="20" Margin="0 0 30 0" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                                <materialDesign:PackIcon Kind="Plus" />
+                                                            </Button>
+                                                            <Button IsEnabled="False" Command="{Binding Path=DeleteControlCommand}" CommandParameter="{Binding ElementName=ctrl}" Width="20" Height="20" Margin="0 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                                <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                            </Button>
+                                                        </Grid>
+                                                        <Border.Effect>
+                                                            <DropShadowEffect BlurRadius="13" Direction="315" Opacity="0.8" ShadowDepth="3"></DropShadowEffect>
+                                                        </Border.Effect>
+                                                    </Border>
+                                                    <ListBox SelectedItem="{Binding GrammerSelect}" HorizontalAlignment="Left" VerticalAlignment="Center" Height="50" Margin="110 0 0 0" x:Name="Grammer_ListBox" ItemsSource="{Binding Path=Parameter,NotifyOnSourceUpdated=True,Mode=TwoWay}">
+                                                        <ListBox.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <WrapPanel Margin="0 0 0 0" Orientation="Horizontal" IsItemsHost="True"></WrapPanel>
+                                                            </ItemsPanelTemplate>
+                                                        </ListBox.ItemsPanel>
+                                                        <ListBox.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Control x:Name="ctrl" Margin="0 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Center" Height="30"></Control>
+                                                                <DataTemplate.Triggers>
+                                                                    <DataTrigger Binding="{Binding Path=Type}" Value="1">
+                                                                        <Setter Property="Template" TargetName="ctrl">
+                                                                            <Setter.Value>
+                                                                                <ControlTemplate>
+                                                                                    <Border Margin="0 2 0 0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="100" Height="30" Background="#FF8DBCBD">
+                                                                                        <Grid TextBlock.Foreground="White" TextBlock.FontWeight="Bold">
+                                                                                            <Button Command="{Binding Path=SelectItCommand}" Background="#FF8DBCBD" BorderBrush="#FF8DBCBD"></Button>
+                                                                                            <TextBlock Margin="5 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Center">主参数</TextBlock>
+                                                                                            <Button Command="{Binding Path=AddControlCommand}" CommandParameter="{Binding ElementName=ctrl}" Width="20" Height="20" Margin="0 0 30 0" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                                                                <materialDesign:PackIcon Kind="Plus" />
+                                                                                            </Button>
+                                                                                            <Button IsEnabled="False" Command="{Binding Path=DeleteControlCommand}" CommandParameter="{Binding ElementName=ctrl}" Width="20" Height="20" Margin="0 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                                                                <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                                                            </Button>
+                                                                                        </Grid>
+                                                                                        <Border.Effect>
+                                                                                            <DropShadowEffect BlurRadius="13" Direction="315" Opacity="0.8" ShadowDepth="3"></DropShadowEffect>
+                                                                                        </Border.Effect>
+                                                                                    </Border>
+                                                                                </ControlTemplate>
+                                                                            </Setter.Value>
+                                                                        </Setter>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Path=Type}" Value="2">
+                                                                        <Setter Property="Template" TargetName="ctrl">
+                                                                            <Setter.Value>
+                                                                                <ControlTemplate>
+                                                                                    <Border Margin="0 2 0 0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="100" Height="30" Background="#FFA08DBD">
+                                                                                        <Grid TextBlock.Foreground="White" TextBlock.FontWeight="Bold">
+                                                                                            <Button Command="{Binding Path=SelectItCommand}" Background="#FFA08DBD" BorderBrush="#FFA08DBD"></Button>
+                                                                                            <TextBlock Margin="10 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Center">参数</TextBlock>
+                                                                                            <Button Command="{Binding Path=AddControlCommand}" CommandParameter="{Binding ElementName=ctrl}" Width="20" Height="20" Margin="0 0 30 0" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                                                                <materialDesign:PackIcon Kind="Plus" />
+                                                                                            </Button>
+                                                                                            <Button Command="{Binding Path=DeleteControlCommand}" CommandParameter="{Binding ElementName=ctrl}" Width="20" Height="20" Margin="0 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                                                                <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                                                            </Button>
+                                                                                        </Grid>
+                                                                                        <Border.Effect>
+                                                                                            <DropShadowEffect BlurRadius="13" Direction="315" Opacity="0.8" ShadowDepth="3"></DropShadowEffect>
+                                                                                        </Border.Effect>
+                                                                                    </Border>
+                                                                                </ControlTemplate>
+                                                                            </Setter.Value>
+                                                                        </Setter>
+                                                                    </DataTrigger>
+                                                                </DataTemplate.Triggers>
+                                                            </DataTemplate>
+                                                        </ListBox.ItemTemplate>
+                                                    </ListBox>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding Path=Type}" Value="3">
+                                    <Setter Property="Template" TargetName="ctrl">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Grid>
+                                                    <Border Margin="0 0 0 2" HorizontalAlignment="Left" VerticalAlignment="Center" Width="100" Height="30"  Background="#FF8EBD8D">
+                                                        <Grid TextBlock.Foreground="White" TextBlock.FontWeight="Bold">
+                                                            <Button Command="{Binding Path=SelectItCommand}" Background="#FF8EBD8D" BorderBrush="#FF8EBD8D"></Button>
+                                                            <TextBlock Margin="5 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Center">子命令</TextBlock>
+                                                            <Button Command="{Binding Path=AddControlCommand}" CommandParameter="{Binding ElementName=ctrl}" Width="20" Height="20" Margin="0 0 30 0" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                                <materialDesign:PackIcon Kind="Plus" />
+                                                            </Button>
+                                                            <Button Command="{Binding Path=DeleteControlCommand}" CommandParameter="{Binding ElementName=ctrl}" Width="20" Height="20" Margin="0 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                                <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                            </Button>
+                                                        </Grid>
+                                                        <Border.Effect>
+                                                            <DropShadowEffect BlurRadius="13" Direction="315" Opacity="0.8" ShadowDepth="3"></DropShadowEffect>
+                                                        </Border.Effect>
+                                                    </Border>
+                                                    <ListBox SelectedItem="{Binding GrammerSelect}" HorizontalAlignment="Left" VerticalAlignment="Center" Height="50" Margin="110 0 0 0" x:Name="Grammer_ListBox" ItemsSource="{Binding Path=Parameter,NotifyOnSourceUpdated=True,Mode=TwoWay}">
+                                                        <ListBox.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <WrapPanel Margin="0 0 0 0" Orientation="Horizontal" IsItemsHost="True"></WrapPanel>
+                                                            </ItemsPanelTemplate>
+                                                        </ListBox.ItemsPanel>
+                                                        <ListBox.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Control x:Name="ctrl" Margin="0 2 0 0" HorizontalAlignment="Left" VerticalAlignment="Center" Height="30"></Control>
+                                                                <DataTemplate.Triggers>
+                                                                    <DataTrigger Binding="{Binding Path=Type}" Value="1">
+                                                                        <Setter Property="Template" TargetName="ctrl">
+                                                                            <Setter.Value>
+                                                                                <ControlTemplate>
+                                                                                    <Border Margin="0 2 0 0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="100" Height="30" Background="#FF8DBCBD">
+                                                                                        <Grid TextBlock.Foreground="White" TextBlock.FontWeight="Bold">
+                                                                                            <Button Command="{Binding Path=SelectItCommand}" Background="#FF8DBCBD" BorderBrush="#FF8DBCBD"></Button>
+                                                                                            <TextBlock Margin="5 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Center">主参数</TextBlock>
+                                                                                            <Button Command="{Binding Path=AddControlCommand}" CommandParameter="{Binding ElementName=ctrl}" Width="20" Height="20" Margin="0 0 30 0" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                                                                <materialDesign:PackIcon Kind="Plus" />
+                                                                                            </Button>
+                                                                                            <Button IsEnabled="False" Command="{Binding Path=DeleteControlCommand}" CommandParameter="{Binding ElementName=ctrl}" Width="20" Height="20" Margin="0 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                                                                <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                                                            </Button>
+                                                                                        </Grid>
+                                                                                        <Border.Effect>
+                                                                                            <DropShadowEffect BlurRadius="13" Direction="315" Opacity="0.8" ShadowDepth="3"></DropShadowEffect>
+                                                                                        </Border.Effect>
+                                                                                    </Border>
+                                                                                </ControlTemplate>
+                                                                            </Setter.Value>
+                                                                        </Setter>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Type}" Value="2">
+                                                                        <Setter Property="Template" TargetName="ctrl">
+                                                                            <Setter.Value>
+                                                                                <ControlTemplate>
+                                                                                    <Border Margin="0 2 0 0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="100" Height="30" Background="#FFA08DBD">
+                                                                                        <Grid TextBlock.Foreground="White" TextBlock.FontWeight="Bold">
+                                                                                            <Button Command="{Binding Path=SelectItCommand}" Background="#FFA08DBD" BorderBrush="#FFA08DBD"></Button>
+                                                                                            <TextBlock Margin="10 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Center">参数</TextBlock>
+                                                                                            <Button Command="{Binding Path=AddControlCommand}" CommandParameter="{Binding ElementName=ctrl}" Width="20" Height="20" Margin="0 0 30 0" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                                                                <materialDesign:PackIcon Kind="Plus" />
+                                                                                            </Button>
+                                                                                            <Button Command="{Binding Path=DeleteControlCommand}" CommandParameter="{Binding ElementName=ctrl}" Width="20" Height="20" Margin="0 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                                                                <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                                                            </Button>
+                                                                                        </Grid>
+                                                                                        <Border.Effect>
+                                                                                            <DropShadowEffect BlurRadius="13" Direction="315" Opacity="0.8" ShadowDepth="3"></DropShadowEffect>
+                                                                                        </Border.Effect>
+                                                                                    </Border>
+                                                                                </ControlTemplate>
+                                                                            </Setter.Value>
+                                                                        </Setter>
+                                                                    </DataTrigger>
+                                                                </DataTemplate.Triggers>
+                                                            </DataTemplate>
+                                                        </ListBox.ItemTemplate>
+                                                    </ListBox>
+                                                </Grid>
+
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+
             <Grid Grid.Row="2">
-                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="30,10,0,0"><Run Text="模型名称(例 tag):"/></TextBlock>
-                <TextBox HorizontalAlignment="Left" Margin="130,6,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="75"/>
-                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="232,10,0,0"><Run Text="主命令第一参数"/><LineBreak/><Run Text="分隔符(例 ,):"/></TextBlock>
-                <TextBox HorizontalAlignment="Left" Margin="322,6,0,0" ToolTip="如果没有分隔符请填写X（大写 X）" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="50"/>
-                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="400,10,0,0"><Run Text="主命令第一参数"/><LineBreak/><Run Text="步长(例 1):"/></TextBlock>
-                <TextBox HorizontalAlignment="Left" Margin="489,6,0,0" ToolTip="如果不限制步长请填写 [-1]" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="30"/>
-                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="541,13,0,0"><Run Text="是否为条件性命令:"/></TextBlock>
-                <ComboBox materialDesign:TextFieldAssist.UnderlineBrush="White" ToolTip="开启将识别 取反标识 [!]" HorizontalAlignment="Left" FontSize="12" Height="25" Width="117" Margin="645,6,0,0" VerticalAlignment="Top">
-                    <ComboBoxItem Content="是"/>
-                    <ComboBoxItem Content="否"/>
-                </ComboBox>
-                <Button Width="20" Height="20" Margin="177,188,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
-                    <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
-                </Button>
-                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="177,59,0,0" Text="分隔符(例 ,):"/>
-                <TextBox HorizontalAlignment="Left" Margin="250,55,0,0" ToolTip="如果没有分隔符请填写X（大写 X）" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="48"/>
-                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="181,89,0,0" Text="步长(例 1):"/>
-                <TextBox HorizontalAlignment="Left" Margin="246,85,0,0" ToolTip="如果没有分隔符请填写X（大写 X）" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="52"/>
-                <Button Width="20" Height="20" Margin="177,152,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
-                    <materialDesign:PackIcon Kind="Plus" />
-                </Button>
-                <DataGrid Margin="12,54,628,552" Width="160"/>
-                <DataGrid Margin="326,54,234,552"/>
-                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="571,59,0,0" Text="子命令:"/>
-                <TextBox HorizontalAlignment="Left" Margin="615,55,0,0" ToolTip="如果没有分隔符请填写X（大写 X）" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="104"/>
-                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="571,89,0,0" Text="参数位置:"/>
-                <TextBox HorizontalAlignment="Left" Margin="627,85,0,0" ToolTip="如果没有分隔符请填写X（大写 X）" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="92"/>
-                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="571,121,0,0"><Run Language="zh-cn" Text="需要类型"/></TextBlock>
-                <ComboBox materialDesign:TextFieldAssist.UnderlineBrush="White" ToolTip="开启将识别 取反标识 [!]" HorizontalAlignment="Left" FontSize="12" Height="25" Width="92" Margin="627,112,0,0" VerticalAlignment="Top">
-                    <ComboBoxItem Content="是"/>
-                    <ComboBoxItem Content="否"/>
-                </ComboBox>
-                <Button Width="20" Height="20" Margin="571,188,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
-                    <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
-                </Button>
-                <Button Width="20" Height="20" Margin="571,152,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
-                    <materialDesign:PackIcon Kind="Plus" />
-                </Button>
-                <DataGrid Margin="9,230,551,394"/>
-                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="254,235,0,0" Text="子命令:"/>
-                <TextBox HorizontalAlignment="Left" Margin="298,231,0,0" ToolTip="如果没有分隔符请填写X（大写 X）" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="126"/>
-                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="254,265,0,0"><Run Language="zh-cn" Text="子命令分隔符"/></TextBlock>
-                <TextBox HorizontalAlignment="Left" Margin="332,261,0,0" ToolTip="如果没有分隔符请填写X（大写 X）" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="92"/>
-                <Button Width="20" Height="20" Margin="254,346,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
-                    <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
-                </Button>
-                <Button Width="20" Height="20" Margin="254,321,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
-                    <materialDesign:PackIcon Kind="Plus" />
-                </Button>
-                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="254,299,0,0"><Run Text="子命令"/><Run Language="zh-cn" Text="步长"/></TextBlock>
-                <TextBox HorizontalAlignment="Left" Margin="319,295,0,0" ToolTip="如果没有分隔符请填写X（大写 X）" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="105"/>
-                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="30,404,0,0"><Run Language="zh-cn" Text="模型"/><Run Text="帮助提醒"/></TextBlock>
-                <TextBox HorizontalAlignment="Left" Margin="119,400,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="643"/>
-                <DataGrid Margin="30,429,38,252"/>
-                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="30,512,0,0"><Run Language="zh-cn" Text="命令"/><Run Text="帮助提醒"/></TextBlock>
-                <TextBox HorizontalAlignment="Left" Margin="107,509,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="597"/>
-                <Button Width="20" Height="20" Margin="742,513,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
-                    <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
-                </Button>
-                <Button Width="20" Height="20" Margin="709,513,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
-                    <materialDesign:PackIcon Kind="Plus" />
-                </Button>
-                <DataGrid Margin="30,538,38,142"/>
-                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="30,623,0,0"><Run Text="第几"/><Run Language="zh-cn" Text="命令"/></TextBlock>
-                <TextBox HorizontalAlignment="Left" Margin="83,619,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="30"/>
-                <Button Width="20" Height="20" Margin="742,623,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
-                    <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
-                </Button>
-                <Button Width="20" Height="20" Margin="709,623,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
-                    <materialDesign:PackIcon Kind="Plus" />
-                </Button>
-                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="120,623,0,0"><Run Language="zh-cn" Text="第几参数"/></TextBlock>
-                <TextBox HorizontalAlignment="Left" Margin="177,619,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="30"/>
-                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="218,623,0,0"><Run Language="zh-cn" Text="参数"/><Run Text="帮助提醒"/></TextBlock>
-                <TextBox HorizontalAlignment="Left" Margin="295,619,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="409"/>
-                <DataGrid Margin="30,649,38,31"/>
-                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="30,734,0,0"><Run Text="第几"/><Run Language="zh-cn" Text="命令"/></TextBlock>
-                <TextBox HorizontalAlignment="Left" Margin="82,730,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="30"/>
-                <Button Width="20" Height="20" Margin="742,734,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
-                    <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
-                </Button>
-                <Button Width="20" Height="20" Margin="708,734,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
-                    <materialDesign:PackIcon Kind="Plus" />
-                </Button>
-                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="120,734,0,0"><Run Language="zh-cn" Text="第几参数"/></TextBlock>
-                <TextBox HorizontalAlignment="Left" Margin="176,730,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="30"/>
-                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="289,734,0,0"><Run Language="zh-cn" Text="参数"/><Run Text="帮助提醒"/></TextBlock>
-                <TextBox HorizontalAlignment="Left" Margin="366,730,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="338"/>
-                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" Foreground="White" Margin="211,734,0,0"><Run Text="第几"/><Run Language="zh-cn" Text="项"/></TextBlock>
-                <TextBox HorizontalAlignment="Left" Margin="252,730,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="30"/>
+                <ItemsControl x:Name="items" ItemsSource="{Binding Editer}">
+                    <ItemsControl.Template>
+                        <ControlTemplate>
+                            <Control x:Name="items"></Control>
+                            <ControlTemplate.Triggers>
+                                <DataTrigger Binding="{Binding Editer.Type}" Value="Contidons_MainClass">
+                                    <Setter Property="Control.Template" TargetName="items">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Grid x:Name="MainClass" TextBlock.FontSize="14" TextBlock.FontWeight="Bold" TextBlock.Foreground="White">
+
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">命令名称:</TextBlock>
+                                                    <TextBox Text="{Binding Editer.CmdName}" Height="22" FontSize="12" Width="200" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,10,0,0"></TextBox>
+                                                    <CheckBox IsChecked="{Binding Editer.IsUseCondition}" Style="{StaticResource MaterialDesignFilterChipOutlineCheckBox}" Height="25" Margin="295,8,0,137" Content="是否为条件性参数"/>
+                                                    <Button Command="{Binding Editer.SaveThisCommand}" CommandParameter="{Binding ElementName=MainClass}" Width="60" Height="25" Margin="0 5 11 0" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="12">保存</Button>
+                                                    <DataGrid x:Name="data" ItemsSource="{Binding Editer.HelpInfoMessages,Mode=TwoWay}" SelectionMode="Extended" CanUserAddRows="False" AutoGenerateColumns="False" HeadersVisibility="All" Margin="10,35,10,35">
+                                                        <DataGrid.Columns>
+                                                            <DataGridTextColumn Header="内容" Binding="{Binding HelpInfo,Mode=TwoWay}"  ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False"></DataGridTextColumn>
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,145,0,0">命令帮助:</TextBlock>
+                                                    <TextBox Text="{Binding Editer.HelpInfoMessage}" Height="22" FontSize="12" Width="645" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,145,0,0"></TextBox>
+                                                    <Button Command="{Binding Editer.AddHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=data}" Width="20" Height="20" Margin="0,145,35,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                        <materialDesign:PackIcon Kind="Plus" />
+                                                    </Button>
+                                                    <Button Command="{Binding Editer.DeleteHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=data}" Width="20" Height="20" Margin="0,145,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                        <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                    </Button>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding Editer.Type}" Value="Contidons_ParameterFirst">
+                                    <Setter Property="Control.Template" TargetName="items">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Grid x:Name="ParameterFirst" TextBlock.FontSize="14" TextBlock.FontWeight="Bold" TextBlock.Foreground="White">
+
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">参数分割符:</TextBlock>
+                                                    <TextBox Text="{Binding Editer.ParameterSpiltChar}" Height="22" FontSize="12" Width="85" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,10,0,0"></TextBox>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="180,10,0,0">参数步长:</TextBlock>
+                                                    <TextBox x:Name="ParameterSpiltStep_TBox" Text="{Binding Editer.ParameterSpiltStep,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="22" FontSize="12" Width="135" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="245,10,0,0">
+                                                        <binding:Interaction.Triggers>
+                                                            <binding:EventTrigger EventName="TextChanged">
+                                                                <binding:InvokeCommandAction Command="{Binding Editer.ParameterSpiltStepChangedCommand}" CommandParameter="{Binding ElementName=ParameterSpiltStep_TBox}">
+                                                                </binding:InvokeCommandAction>
+                                                            </binding:EventTrigger>
+                                                        </binding:Interaction.Triggers>
+                                                    </TextBox>
+                                                    <Button Command="{Binding Editer.SaveThisCommand}" CommandParameter="{Binding ElementName=ParameterFirst}" Width="60" Height="25" Margin="0 5 11 0" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="12">保存</Button>
+                                                    <DataGrid x:Name="help_data" ItemsSource="{Binding Editer.ParameterHelpInfoMessages,Mode=TwoWay}" SelectionMode="Extended" CanUserAddRows="False" AutoGenerateColumns="False" HeadersVisibility="All" Margin="10,35,420,35">
+                                                        <DataGrid.Columns>
+                                                            <DataGridTextColumn Binding="{Binding ParameterHelpInfo,Mode=TwoWay}" Header="内容" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False"></DataGridTextColumn>
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,145,0,0">参数帮助:</TextBlock>
+                                                    <TextBox Text="{Binding Editer.ParameterHelpInfoMessage}" Height="22" FontSize="12" Width="216" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,145,0,0"></TextBox>
+                                                    <Button Command="{Binding Editer.AddParameterHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=help_data}" Width="20" Height="20" Margin="0,145,459,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                        <materialDesign:PackIcon Kind="Plus" />
+                                                    </Button>
+                                                    <Button Command="{Binding Editer.DeleteParameterHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=help_data}" Width="20" Height="20" Margin="0,145,420,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                        <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                    </Button>
+                                                    <DataGrid x:Name="napeHelpInfoMessages" ItemsSource="{Binding Editer.NapeHelpInfoMessages,Mode=TwoWay}" SelectionMode="Extended" CanUserAddRows="False" AutoGenerateColumns="False" HeadersVisibility="All" Margin="400,35,10,35">
+                                                        <DataGrid.Columns>
+                                                            <DataGridTextColumn Binding="{Binding NapeHelpInfoMessageNum,Mode=TwoWay}" Header="项" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False"/>
+                                                            <DataGridTextColumn Binding="{Binding NapeHelpInfoMessage,Mode=TwoWay}" Header="内容" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False"/>
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="400,145,0,0"><Run Text="项的帮助:"/></TextBlock>
+
+                                                    <TextBox Text="{Binding Editer.NapeHelpInfoMessage}" Height="22" FontSize="12" Width="175" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="465,145,0,0"/>
+                                                    <Button Command="{Binding Editer.AddNapeHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=napeHelpInfoMessages}" Width="20" Height="20" Margin="0,145,50,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                        <materialDesign:PackIcon Kind="Plus" />
+                                                    </Button>
+                                                    <Button  Command="{Binding Editer.DeleteNapeHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=napeHelpInfoMessages}" Width="20" Height="20" Margin="0,145,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                        <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                    </Button>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="645,145,0,0"><Run Text="项:"/></TextBlock>
+                                                    <ComboBox ItemsSource="{Binding Editer.NapeNums}" SelectedItem="{Binding Editer.NapeSelectNum}" Margin="668,145,77,0" VerticalAlignment="Top" Height="22" FontSize="12" ></ComboBox>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="400,10,0,0"><Run Text="卡片需求类型:"/></TextBlock>
+                                                    <ComboBox SelectedIndex="{Binding Editer.NeedCardSelectIndex}" Margin="493,10,160,0" VerticalAlignment="Top" Height="22" FontSize="12" >
+                                                        <ComboBoxItem>对话主体</ComboBoxItem>
+                                                        <ComboBoxItem>玩家对话</ComboBoxItem>
+                                                        <ComboBoxItem>NPC对话</ComboBoxItem>
+                                                        <ComboBoxItem>条件</ComboBoxItem>
+                                                        <ComboBoxItem>事件</ComboBoxItem>
+                                                        <ComboBoxItem>目标</ComboBoxItem>
+                                                        <ComboBoxItem>任务笔记</ComboBoxItem>
+                                                        <ComboBoxItem>物品</ComboBoxItem>
+                                                    </ComboBox>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding Editer.Type}" Value="Contidons_ChirldClass">
+                                    <Setter Property="Control.Template" TargetName="items">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Grid x:Name="ChirldClass" TextBlock.FontSize="14" TextBlock.FontWeight="Bold" TextBlock.Foreground="White">
+
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">命令名称:</TextBlock>
+                                                    <TextBox Text="{Binding Editer.ChirdCmdName}" Height="22" FontSize="12" Width="634" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,10,0,0"></TextBox>
+
+                                                    <Button Command="{Binding Editer.SaveThisCommand}" CommandParameter="{Binding ElementName=ChirldClass}" Width="60" Height="25" Margin="0 5 11 0" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="12">保存</Button>
+                                                    <DataGrid x:Name="data" ItemsSource="{Binding Editer.ChirdCmdHelpInfoMessages,Mode=TwoWay}" SelectionMode="Extended" CanUserAddRows="False" AutoGenerateColumns="False" HeadersVisibility="All" Margin="10,35,10,35">
+                                                        <DataGrid.Columns>
+                                                            <DataGridTextColumn Binding="{Binding ChirdCmdHelpInfo,Mode=TwoWay}" Header="内容" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False"></DataGridTextColumn>
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,145,0,0">命令帮助:</TextBlock>
+                                                    <TextBox Text="{Binding Editer.ChirdCmdHelpInfoMessage}" Height="22" FontSize="12" Width="645" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,145,0,0"></TextBox>
+                                                    <Button Command="{Binding Editer.AddChirdCmdHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=data}" Width="20" Height="20" Margin="0,145,35,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                        <materialDesign:PackIcon Kind="Plus" />
+                                                    </Button>
+                                                    <Button Command="{Binding Editer.DeleteChirdCmdHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=data}" Width="20" Height="20" Margin="0,145,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                        <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                    </Button>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding Editer.Type}" Value="Events_MainClass">
+                                    <Setter Property="Control.Template" TargetName="items">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Grid x:Name="MainClass" TextBlock.FontSize="14" TextBlock.FontWeight="Bold" TextBlock.Foreground="White">
+
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">命令名称:</TextBlock>
+                                                    <TextBox Text="{Binding Editer.CmdName}" Height="22" FontSize="12" Width="634" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,10,0,0"></TextBox>
+                                                    <Button Command="{Binding Editer.SaveThisCommand}" CommandParameter="{Binding ElementName=MainClass}" Width="60" Height="25" Margin="0 5 11 0" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="12">保存</Button>
+                                                    <DataGrid x:Name="data" ItemsSource="{Binding Editer.HelpInfoMessages,Mode=TwoWay}" SelectionMode="Extended" CanUserAddRows="False" AutoGenerateColumns="False" HeadersVisibility="All" Margin="10,35,10,35">
+                                                        <DataGrid.Columns>
+                                                            <DataGridTextColumn Header="内容" Binding="{Binding HelpInfo,Mode=TwoWay}" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False"></DataGridTextColumn>
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,145,0,0">命令帮助:</TextBlock>
+                                                    <TextBox Text="{Binding Editer.HelpInfoMessage}" Height="22" FontSize="12" Width="645" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,145,0,0"></TextBox>
+                                                    <Button Command="{Binding Editer.AddHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=data}" Width="20" Height="20" Margin="0,145,35,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                        <materialDesign:PackIcon Kind="Plus" />
+                                                    </Button>
+                                                    <Button Command="{Binding Editer.DeleteHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=data}" Width="20" Height="20" Margin="0,145,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                        <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                    </Button>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding Editer.Type}" Value="Events_ParameterFirst">
+                                    <Setter Property="Control.Template" TargetName="items">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Grid x:Name="ParameterFirst" TextBlock.FontSize="14" TextBlock.FontWeight="Bold" TextBlock.Foreground="White">
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">参数分割符:</TextBlock>
+                                                    <TextBox Text="{Binding Editer.ParameterSpiltChar}" Height="22" FontSize="12" Width="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,10,0,0"></TextBox>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="125,10,0,0">参数步长:</TextBlock>
+                                                    <CheckBox IsChecked="{Binding Editer.ParameterOnlyOne}" Style="{StaticResource MaterialDesignFilterChipOutlineCheckBox}" Height="25" Margin="225,5,0,140" Content="参数单项"/>
+                                                    <TextBox x:Name="ParameterSpiltStep_TBox"  Text="{Binding Editer.ParameterSpiltNum,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="22" FontSize="12" Width="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="190,10,0,0">
+                                                        <binding:Interaction.Triggers>
+                                                            <binding:EventTrigger EventName="TextChanged">
+                                                                <binding:InvokeCommandAction Command="{Binding Editer.ParameterSpiltStepChangedCommand}" CommandParameter="{Binding ElementName=ParameterSpiltStep_TBox}">
+                                                                </binding:InvokeCommandAction>
+                                                            </binding:EventTrigger>
+                                                        </binding:Interaction.Triggers>
+                                                    </TextBox>
+                                                    <Button Command="{Binding Editer.SaveThisCommand}" Width="60" Height="25" Margin="0 5 11 0" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="12">保存</Button>
+                                                    <DataGrid x:Name="helpdata" ItemsSource="{Binding Editer.ParameterHelpInfoMessages,Mode=TwoWay}" SelectionMode="Extended" CanUserAddRows="False" AutoGenerateColumns="False" HeadersVisibility="All" Margin="10,35,420,35">
+                                                        <DataGrid.Columns>
+                                                            <DataGridTextColumn Binding="{Binding ParameterHelpInfo,Mode=TwoWay}" Header="内容" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False"></DataGridTextColumn>
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,145,0,0">参数帮助:</TextBlock>
+                                                    <TextBox Text="{Binding Editer.ParameterHelpInfoMessage}" Height="22" FontSize="12" Width="216" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,145,0,0"></TextBox>
+                                                    <Button Command="{Binding Editer.AddParameterHelpInfoCommand}" CommandParameter="{Binding ElementName=helpdata}" Width="20" Height="20" Margin="0,145,459,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                        <materialDesign:PackIcon Kind="Plus" />
+                                                    </Button>
+                                                    <Button Command="{Binding Editer.DeleteParameterHelpInfoCommand}" CommandParameter="{Binding ElementName=helpdata}" Width="20" Height="20" Margin="0,145,420,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                        <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                    </Button>
+                                                    <DataGrid x:Name="napedata" ItemsSource="{Binding Editer.NapeHelpInfoMessages,Mode=TwoWay}" SelectionMode="Extended" CanUserAddRows="False" AutoGenerateColumns="False" HeadersVisibility="All" Margin="400,35,10,35">
+                                                        <DataGrid.Columns>
+                                                            <DataGridTextColumn Binding="{Binding NapeHelpInfoMessageNum,Mode=TwoWay}" Header="项" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False"/>
+                                                            <DataGridTextColumn Binding="{Binding NapeHelpInfoMessageSave,Mode=TwoWay}" Header="内容" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False"/>
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="400,145,0,0"><Run Text="项的帮助:"/></TextBlock>
+
+                                                    <TextBox Text="{Binding Editer.NapeHelpInfoMessage}" Height="22" FontSize="12" Width="175" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="465,145,0,0"/>
+                                                    <Button Command="{Binding Editer.AddNapeHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=napedata}" Width="20" Height="20" Margin="0,145,50,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                        <materialDesign:PackIcon Kind="Plus" />
+                                                    </Button>
+                                                    <Button Command="{Binding Editer.DeleteNapeHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=napedata}" Width="20" Height="20" Margin="0,145,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                        <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                    </Button>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="645,145,0,0"><Run Text="项:"/></TextBlock>
+                                                    <ComboBox ItemsSource="{Binding Editer.NapeNums}" SelectedItem="{Binding Editer.NapeNumsSelectItem}" Margin="668,145,77,0" VerticalAlignment="Top" Height="22" FontSize="12" ></ComboBox>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="312,8,0,0"><Run Text="卡片需求类型:"/></TextBlock>
+                                                    <ComboBox SelectedIndex="{Binding Editer.NapeNumsSelectNow}" Margin="400,8,340,0" VerticalAlignment="Top" Height="22" FontSize="12" >
+                                                        <ComboBoxItem>对话主体</ComboBoxItem>
+                                                        <ComboBoxItem>玩家对话</ComboBoxItem>
+                                                        <ComboBoxItem>NPC对话</ComboBoxItem>
+                                                        <ComboBoxItem>条件</ComboBoxItem>
+                                                        <ComboBoxItem>事件</ComboBoxItem>
+                                                        <ComboBoxItem>目标</ComboBoxItem>
+                                                        <ComboBoxItem>任务笔记</ComboBoxItem>
+                                                        <ComboBoxItem>物品</ComboBoxItem>
+                                                    </ComboBox>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="464,8,0,0"><Run Text="固有形式:"/></TextBlock>
+                                                    <ComboBox x:Name="parameternapeNeedType" ItemsSource="{Binding Editer.ParameterNapeNeedTypes}" SelectedItem="{Binding Editer.ParameterNapeNeedTypeSelectItem}" Margin="529,8,211,0" VerticalAlignment="Top" Height="22" FontSize="12" />
+                                                    <Button Command="{Binding Editer.AddParameterNapeNeedTypeCommand}" CommandParameter="{Binding ElementName=parameternapeNeedType}" Width="20" Height="20" Margin="0,8,74,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                        <materialDesign:PackIcon Kind="Plus" />
+                                                    </Button>
+                                                    <Button Command="{Binding Editer.DeleteParameterNapeNeedTypeCommand}" CommandParameter="{Binding ElementName=parameternapeNeedType}" Width="20" Height="20" Margin="0,10,185,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                        <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                    </Button>
+                                                    <TextBox Text="{Binding Editer.ParameterNapeNeedType}" Height="22" FontSize="12" Width="83" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="621,9,0,0"/>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding Editer.Type}" Value="Events_Parameter">
+                                    <Setter Property="Control.Template" TargetName="items">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Grid x:Name="Parameter" TextBlock.FontSize="14" TextBlock.FontWeight="Bold" TextBlock.Foreground="White">
+
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">参数分割符:</TextBlock>
+                                                    <TextBox Text="{Binding Editer.ParameterSpiltChar}" Height="22" FontSize="12" Width="85" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,10,0,0"></TextBox>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="180,10,0,0">参数步长:</TextBlock>
+                                                    <TextBox x:Name="ParameterSpiltStep_TBox"  Text="{Binding Editer.ParameterSpiltStep,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="22" FontSize="12" Width="135" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="245,10,0,0">
+                                                        <binding:Interaction.Triggers>
+                                                            <binding:EventTrigger EventName="TextChanged">
+                                                                <binding:InvokeCommandAction Command="{Binding Editer.ParameterSpiltStepChangedCommand}" CommandParameter="{Binding ElementName=ParameterSpiltStep_TBox}">
+                                                                </binding:InvokeCommandAction>
+                                                            </binding:EventTrigger>
+                                                        </binding:Interaction.Triggers>
+                                                    </TextBox>
+                                                    <Button Command="{Binding Editer.SaveThisCommand}" CommandParameter="{Binding ElementName=Parameter}" Width="60" Height="25" Margin="0 5 11 0" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="12">保存</Button>
+                                                    <DataGrid x:Name="help_data" ItemsSource="{Binding Editer.ParameterHelpInfoMessages,Mode=TwoWay}" SelectionMode="Extended" CanUserAddRows="False" AutoGenerateColumns="False" HeadersVisibility="All" Margin="10,35,420,35">
+                                                        <DataGrid.Columns>
+                                                            <DataGridTextColumn Binding="{Binding ParameterHelpInfo,Mode=TwoWay}" Header="内容" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False"></DataGridTextColumn>
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,145,0,0">参数帮助:</TextBlock>
+                                                    <TextBox Text="{Binding Editer.ParameterHelpInfoMessage}" Height="22" FontSize="12" Width="216" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,145,0,0"></TextBox>
+                                                    <Button Command="{Binding Editer.AddParameterHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=help_data}" Width="20" Height="20" Margin="0,145,459,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                        <materialDesign:PackIcon Kind="Plus" />
+                                                    </Button>
+                                                    <Button Command="{Binding Editer.DeleteParameterHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=help_data}" Width="20" Height="20" Margin="0,145,420,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                        <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                    </Button>
+                                                    <DataGrid x:Name="napeHelpInfoMessages" ItemsSource="{Binding Editer.NapeHelpInfoMessages,Mode=TwoWay}" SelectionMode="Extended" CanUserAddRows="False" AutoGenerateColumns="False" HeadersVisibility="All" Margin="400,35,10,35">
+                                                        <DataGrid.Columns>
+                                                            <DataGridTextColumn Binding="{Binding NapeHelpInfoMessageNum,Mode=TwoWay}" Header="项" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False"/>
+                                                            <DataGridTextColumn Binding="{Binding NapeHelpInfoMessage,Mode=TwoWay}" Header="内容" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False"/>
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="400,145,0,0"><Run Text="项的帮助:"/></TextBlock>
+
+                                                    <TextBox Text="{Binding Editer.NapeHelpInfoMessage}" Height="22" FontSize="12" Width="175" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="465,145,0,0"/>
+                                                    <Button Command="{Binding Editer.AddNapeHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=napeHelpInfoMessages}" Width="20" Height="20" Margin="0,145,50,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                        <materialDesign:PackIcon Kind="Plus" />
+                                                    </Button>
+                                                    <Button  Command="{Binding Editer.DeleteNapeHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=napeHelpInfoMessages}" Width="20" Height="20" Margin="0,145,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                        <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                    </Button>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="645,145,0,0"><Run Text="项:"/></TextBlock>
+                                                    <ComboBox ItemsSource="{Binding Editer.NapeNums}" SelectedItem="{Binding Editer.NapeSelectNum}" Margin="668,145,77,0" VerticalAlignment="Top" Height="22" FontSize="12" ></ComboBox>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="400,10,0,0"><Run Text="卡片需求类型:"/></TextBlock>
+                                                    <ComboBox SelectedIndex="{Binding Editer.NeedCardSelectIndex}" Margin="493,10,160,0" VerticalAlignment="Top" Height="22" FontSize="12" >
+                                                        <ComboBoxItem>对话主体</ComboBoxItem>
+                                                        <ComboBoxItem>玩家对话</ComboBoxItem>
+                                                        <ComboBoxItem>NPC对话</ComboBoxItem>
+                                                        <ComboBoxItem>条件</ComboBoxItem>
+                                                        <ComboBoxItem>事件</ComboBoxItem>
+                                                        <ComboBoxItem>目标</ComboBoxItem>
+                                                        <ComboBoxItem>任务笔记</ComboBoxItem>
+                                                        <ComboBoxItem>物品</ComboBoxItem>
+                                                    </ComboBox>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding Editer.Type}" Value="Events_ChirldClass">
+                                    <Setter Property="Control.Template" TargetName="items">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Grid x:Name="ChirldClass" TextBlock.FontSize="14" TextBlock.FontWeight="Bold" TextBlock.Foreground="White">
+
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">命令名称:</TextBlock>
+                                                    <TextBox Text="{Binding Editer.ChirdCmdName}" Height="22" FontSize="12" Width="634" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,10,0,0"></TextBox>
+
+                                                    <Button Command="{Binding Editer.SaveThisCommand}" CommandParameter="{Binding ElementName=ChirldClass}" Width="60" Height="25" Margin="0 5 11 0" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="12">保存</Button>
+                                                    <DataGrid x:Name="data" ItemsSource="{Binding Editer.ChirdCmdHelpInfoMessages,Mode=TwoWay}" SelectionMode="Extended" CanUserAddRows="False" AutoGenerateColumns="False" HeadersVisibility="All" Margin="10,35,10,35">
+                                                        <DataGrid.Columns>
+                                                            <DataGridTextColumn Binding="{Binding ChirdCmdHelpInfo,Mode=TwoWay}" Header="内容" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False"></DataGridTextColumn>
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,145,0,0">命令帮助:</TextBlock>
+                                                    <TextBox Text="{Binding Editer.ChirdCmdHelpInfoMessage}" Height="22" FontSize="12" Width="645" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,145,0,0"></TextBox>
+                                                    <Button Command="{Binding Editer.AddChirdCmdHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=data}" Width="20" Height="20" Margin="0,145,35,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                        <materialDesign:PackIcon Kind="Plus" />
+                                                    </Button>
+                                                    <Button Command="{Binding Editer.DeleteChirdCmdHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=data}" Width="20" Height="20" Margin="0,145,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                        <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                    </Button>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding Editer.Type}" Value="Objectives_MainClass">
+                                    <Setter Property="Control.Template" TargetName="items">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Grid x:Name="MainClass" TextBlock.FontSize="14" TextBlock.FontWeight="Bold" TextBlock.Foreground="White">
+
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">命令名称:</TextBlock>
+                                                    <TextBox Text="{Binding Editer.CmdName}" Height="22" FontSize="12" Width="634" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,10,0,0"></TextBox>
+                                                    <Button Command="{Binding Editer.SaveThisCommand}" CommandParameter="{Binding ElementName=MainClass}" Width="60" Height="25" Margin="0 5 11 0" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="12">保存</Button>
+                                                    <DataGrid x:Name="data" ItemsSource="{Binding Editer.HelpInfoMessages,Mode=TwoWay}" SelectionMode="Extended" CanUserAddRows="False" AutoGenerateColumns="False" HeadersVisibility="All" Margin="10,35,10,35">
+                                                        <DataGrid.Columns>
+                                                            <DataGridTextColumn Header="内容" Binding="{Binding HelpInfo,Mode=TwoWay}" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False"></DataGridTextColumn>
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,145,0,0">命令帮助:</TextBlock>
+                                                    <TextBox Text="{Binding Editer.HelpInfoMessage}" Height="22" FontSize="12" Width="645" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,145,0,0"></TextBox>
+                                                    <Button Command="{Binding Editer.AddHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=data}" Width="20" Height="20" Margin="0,145,35,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                        <materialDesign:PackIcon Kind="Plus" />
+                                                    </Button>
+                                                    <Button Command="{Binding Editer.DeleteHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=data}" Width="20" Height="20" Margin="0,145,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                        <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                    </Button>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding Editer.Type}" Value="Objectives_ParameterFirst">
+                                    <Setter Property="Control.Template" TargetName="items">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Grid x:Name="ParameterFirst" TextBlock.FontSize="14" TextBlock.FontWeight="Bold" TextBlock.Foreground="White">
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">参数分割符:</TextBlock>
+                                                    <TextBox Text="{Binding Editer.ParameterSpiltChar}" Height="22" FontSize="12" Width="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,10,0,0"></TextBox>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="125,10,0,0">参数步长:</TextBlock>
+
+                                                    <TextBox x:Name="ParameterSpiltStep_TBox" Text="{Binding Editer.ParameterSpiltNum,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="22" FontSize="12" Width="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="190,10,0,0">
+                                                        <binding:Interaction.Triggers>
+                                                            <binding:EventTrigger EventName="TextChanged">
+                                                                <binding:InvokeCommandAction Command="{Binding Editer.ParameterSpiltStepChangedCommand}" CommandParameter="{Binding ElementName=ParameterSpiltStep_TBox}">
+                                                                </binding:InvokeCommandAction>
+                                                            </binding:EventTrigger>
+                                                        </binding:Interaction.Triggers>
+                                                    </TextBox>
+                                                    <Button Command="{Binding Editer.SaveThisCommand}" Width="60" Height="25" Margin="0 5 11 0" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="12">保存</Button>
+                                                    <DataGrid x:Name="helpdata" ItemsSource="{Binding Editer.ParameterHelpInfoMessages,Mode=TwoWay}" SelectionMode="Extended" CanUserAddRows="False" AutoGenerateColumns="False" HeadersVisibility="All" Margin="10,35,420,35">
+                                                        <DataGrid.Columns>
+                                                            <DataGridTextColumn Binding="{Binding ParameterHelpInfo,Mode=TwoWay}" Header="内容" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False"></DataGridTextColumn>
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,145,0,0">参数帮助:</TextBlock>
+                                                    <TextBox Text="{Binding Editer.ParameterHelpInfoMessage}" Height="22" FontSize="12" Width="216" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,145,0,0"></TextBox>
+                                                    <Button Command="{Binding Editer.AddParameterHelpInfoCommand}" CommandParameter="{Binding ElementName=helpdata}" Width="20" Height="20" Margin="0,145,459,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                        <materialDesign:PackIcon Kind="Plus" />
+                                                    </Button>
+                                                    <Button Command="{Binding Editer.DeleteParameterHelpInfoCommand}" CommandParameter="{Binding ElementName=helpdata}" Width="20" Height="20" Margin="0,145,420,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                        <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                    </Button>
+                                                    <DataGrid x:Name="napedata" ItemsSource="{Binding Editer.NapeHelpInfoMessages,Mode=TwoWay}" SelectionMode="Extended" CanUserAddRows="False" AutoGenerateColumns="False" HeadersVisibility="All" Margin="400,35,10,35">
+                                                        <DataGrid.Columns>
+                                                            <DataGridTextColumn Binding="{Binding NapeHelpInfoMessageNum,Mode=TwoWay}" Header="项" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False"/>
+                                                            <DataGridTextColumn Binding="{Binding NapeHelpInfoMessageSave,Mode=TwoWay}" Header="内容" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False"/>
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="400,145,0,0"><Run Text="项的帮助:"/></TextBlock>
+
+                                                    <TextBox Text="{Binding Editer.NapeHelpInfoMessage}" Height="22" FontSize="12" Width="175" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="465,145,0,0"/>
+                                                    <Button Command="{Binding Editer.AddNapeHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=napedata}" Width="20" Height="20" Margin="0,145,50,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                        <materialDesign:PackIcon Kind="Plus" />
+                                                    </Button>
+                                                    <Button Command="{Binding Editer.DeleteNapeHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=napedata}" Width="20" Height="20" Margin="0,145,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                        <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                    </Button>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="645,145,0,0"><Run Text="项:"/></TextBlock>
+                                                    <ComboBox ItemsSource="{Binding Editer.NapeNums}" SelectedItem="{Binding Editer.NapeNumsSelectItem}" Margin="668,145,77,0" VerticalAlignment="Top" Height="22" FontSize="12" ></ComboBox>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="225,10,0,0"><Run Text="卡片需求类型:"/></TextBlock>
+                                                    <ComboBox SelectedIndex="{Binding Editer.NapeNumsSelectNow}" Margin="318,10,422,0" VerticalAlignment="Top" Height="22" FontSize="12" >
+                                                        <ComboBoxItem>对话主体</ComboBoxItem>
+                                                        <ComboBoxItem>玩家对话</ComboBoxItem>
+                                                        <ComboBoxItem>NPC对话</ComboBoxItem>
+                                                        <ComboBoxItem>条件</ComboBoxItem>
+                                                        <ComboBoxItem>事件</ComboBoxItem>
+                                                        <ComboBoxItem>目标</ComboBoxItem>
+                                                        <ComboBoxItem>任务笔记</ComboBoxItem>
+                                                        <ComboBoxItem>物品</ComboBoxItem>
+                                                    </ComboBox>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="400,9,0,0"><Run Text="固有形式:"/></TextBlock>
+                                                    <ComboBox x:Name="parameternapeNeedType" ItemsSource="{Binding Editer.ParameterNapeNeedTypes}" SelectedItem="{Binding Editer.ParameterNapeNeedTypeSelectItem}" Margin="465,8,211,0" VerticalAlignment="Top" Height="22" FontSize="12" />
+                                                    <Button Command="{Binding Editer.AddParameterNapeNeedTypeCommand}" CommandParameter="{Binding ElementName=parameternapeNeedType}" Width="20" Height="20" Margin="0,8,74,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                        <materialDesign:PackIcon Kind="Plus" />
+                                                    </Button>
+                                                    <Button Command="{Binding Editer.DeleteParameterNapeNeedTypeCommand}" CommandParameter="{Binding ElementName=parameternapeNeedType}" Width="20" Height="20" Margin="0,10,185,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                        <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                    </Button>
+                                                    <TextBox Text="{Binding Editer.ParameterNapeNeedType}" Height="22" FontSize="12" Width="83" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="621,9,0,0"/>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding Editer.Type}" Value="Objectives_Parameter">
+                                    <Setter Property="Control.Template" TargetName="items">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Grid x:Name="Parameter" TextBlock.FontSize="14" TextBlock.FontWeight="Bold" TextBlock.Foreground="White">
+
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">参数分割符:</TextBlock>
+                                                    <TextBox Text="{Binding Editer.ParameterSpiltChar}" Height="22" FontSize="12" Width="85" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,10,0,0"></TextBox>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="180,10,0,0">参数步长:</TextBlock>
+                                                    <TextBox x:Name="ParameterSpiltStep_TBox" Text="{Binding Editer.ParameterSpiltStep,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="22" FontSize="12" Width="135" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="245,10,0,0">
+                                                        <binding:Interaction.Triggers>
+                                                            <binding:EventTrigger EventName="TextChanged">
+                                                                <binding:InvokeCommandAction Command="{Binding Editer.ParameterSpiltStepChangedCommand}" CommandParameter="{Binding ElementName=ParameterSpiltStep_TBox}">
+                                                                </binding:InvokeCommandAction>
+                                                            </binding:EventTrigger>
+                                                        </binding:Interaction.Triggers>
+                                                    </TextBox>
+                                                    <Button Command="{Binding Editer.SaveThisCommand}" CommandParameter="{Binding ElementName=Parameter}" Width="60" Height="25" Margin="0 5 11 0" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="12">保存</Button>
+                                                    <DataGrid x:Name="help_data" ItemsSource="{Binding Editer.ParameterHelpInfoMessages,Mode=TwoWay}" SelectionMode="Extended" CanUserAddRows="False" AutoGenerateColumns="False" HeadersVisibility="All" Margin="10,35,420,35">
+                                                        <DataGrid.Columns>
+                                                            <DataGridTextColumn Binding="{Binding ParameterHelpInfo,Mode=TwoWay}" Header="内容" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False"></DataGridTextColumn>
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,145,0,0">参数帮助:</TextBlock>
+                                                    <TextBox Text="{Binding Editer.ParameterHelpInfoMessage}" Height="22" FontSize="12" Width="216" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,145,0,0"></TextBox>
+                                                    <Button Command="{Binding Editer.AddParameterHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=help_data}" Width="20" Height="20" Margin="0,145,459,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                        <materialDesign:PackIcon Kind="Plus" />
+                                                    </Button>
+                                                    <Button Command="{Binding Editer.DeleteParameterHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=help_data}" Width="20" Height="20" Margin="0,145,420,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                        <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                    </Button>
+                                                    <DataGrid x:Name="napeHelpInfoMessages" ItemsSource="{Binding Editer.NapeHelpInfoMessages,Mode=TwoWay}" SelectionMode="Extended" CanUserAddRows="False" AutoGenerateColumns="False" HeadersVisibility="All" Margin="400,35,10,35">
+                                                        <DataGrid.Columns>
+                                                            <DataGridTextColumn Binding="{Binding NapeHelpInfoMessageNum,Mode=TwoWay}" Header="项" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False"/>
+                                                            <DataGridTextColumn Binding="{Binding NapeHelpInfoMessage,Mode=TwoWay}" Header="内容" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False"/>
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="400,145,0,0"><Run Text="项的帮助:"/></TextBlock>
+
+                                                    <TextBox Text="{Binding Editer.NapeHelpInfoMessage}" Height="22" FontSize="12" Width="175" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="465,145,0,0"/>
+                                                    <Button Command="{Binding Editer.AddNapeHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=napeHelpInfoMessages}" Width="20" Height="20" Margin="0,145,50,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                        <materialDesign:PackIcon Kind="Plus" />
+                                                    </Button>
+                                                    <Button  Command="{Binding Editer.DeleteNapeHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=napeHelpInfoMessages}" Width="20" Height="20" Margin="0,145,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                        <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                    </Button>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="645,145,0,0"><Run Text="项:"/></TextBlock>
+                                                    <ComboBox ItemsSource="{Binding Editer.NapeNums}" SelectedItem="{Binding Editer.NapeSelectNum}" Margin="668,145,77,0" VerticalAlignment="Top" Height="22" FontSize="12" ></ComboBox>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="400,10,0,0"><Run Text="卡片需求类型:"/></TextBlock>
+                                                    <ComboBox SelectedIndex="{Binding Editer.NeedCardSelectIndex}" Margin="493,10,160,0" VerticalAlignment="Top" Height="22" FontSize="12" >
+                                                        <ComboBoxItem>对话主体</ComboBoxItem>
+                                                        <ComboBoxItem>玩家对话</ComboBoxItem>
+                                                        <ComboBoxItem>NPC对话</ComboBoxItem>
+                                                        <ComboBoxItem>条件</ComboBoxItem>
+                                                        <ComboBoxItem>事件</ComboBoxItem>
+                                                        <ComboBoxItem>目标</ComboBoxItem>
+                                                        <ComboBoxItem>任务笔记</ComboBoxItem>
+                                                        <ComboBoxItem>物品</ComboBoxItem>
+                                                    </ComboBox>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding Editer.Type}" Value="Objectives_ChirldClass">
+                                    <Setter Property="Control.Template" TargetName="items">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Grid x:Name="ChirldClass" TextBlock.FontSize="14" TextBlock.FontWeight="Bold" TextBlock.Foreground="White">
+
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">命令名称:</TextBlock>
+                                                    <TextBox Text="{Binding Editer.ChirdCmdName}" Height="22" FontSize="12" Width="634" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,10,0,0"></TextBox>
+
+                                                    <Button Command="{Binding Editer.SaveThisCommand}" CommandParameter="{Binding ElementName=ChirldClass}" Width="60" Height="25" Margin="0 5 11 0" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="12">保存</Button>
+                                                    <DataGrid x:Name="data" ItemsSource="{Binding Editer.ChirdCmdHelpInfoMessages,Mode=TwoWay}" SelectionMode="Extended" CanUserAddRows="False" AutoGenerateColumns="False" HeadersVisibility="All" Margin="10,35,10,35">
+                                                        <DataGrid.Columns>
+                                                            <DataGridTextColumn Binding="{Binding ChirdCmdHelpInfo,Mode=TwoWay}" Header="内容" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False"></DataGridTextColumn>
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>
+                                                    <TextBlock Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,145,0,0">命令帮助:</TextBlock>
+                                                    <TextBox Text="{Binding Editer.ChirdCmdHelpInfoMessage}" Height="22" FontSize="12" Width="645" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,145,0,0"></TextBox>
+                                                    <Button Command="{Binding Editer.AddChirdCmdHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=data}" Width="20" Height="20" Margin="0,145,35,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                        <materialDesign:PackIcon Kind="Plus" />
+                                                    </Button>
+                                                    <Button Command="{Binding Editer.DeleteChirdCmdHelpInfoMessageCommand}" CommandParameter="{Binding ElementName=data}" Width="20" Height="20" Margin="0,145,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                        <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                    </Button>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </ItemsControl.Template>
+                </ItemsControl>
+                
             </Grid>
         </Grid>
     </Grid>
