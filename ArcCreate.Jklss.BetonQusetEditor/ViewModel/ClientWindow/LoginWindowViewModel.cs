@@ -1,4 +1,5 @@
 ﻿using ArcCreate.Jklss.BetonQusetEditor.Base;
+using ArcCreate.Jklss.BetonQusetEditor.View;
 using ArcCreate.Jklss.BetonQusetEditor.Windows;
 using ArcCreate.Jklss.Model.ClientModel;
 using ArcCreate.Jklss.Model.MainWindow;
@@ -228,11 +229,13 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
                             return;
                         }
 
-                        if (!Regex.IsMatch(PassWord, @"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[%&',;=?$\x22]).{7,15}$"))
+                        if (!Regex.IsMatch(PassWord, @"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[%&',!@#%$^*+;=?$\x22]).{8,16}$"))
                         {
                             SendWorryMessage("错误的密码格式，请输入包含A-Z,a-z,且包含特殊字符的密码");
                             return;
                         }
+
+                        SocketModel.userName = UserName;
 
                         var loginMessage = new UserLoginModel()
                         {
@@ -309,7 +312,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             }
         }
 
-        public delegate void _ShowWorryMessage(string txt);
+        public delegate void _ShowWorryMessage(string txt,bool showBtn = false);
 
         public static _ShowWorryMessage ShowWorryMessage;
 
@@ -460,11 +463,24 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
         }
 
 
-        public void SendWorryMessage(string txt)
+        public void SendWorryMessage(string txt,bool showBtn =false)
         {
             ShowPage(2);
 
             WorryMessage = txt;
+
+            if (showBtn)
+            {
+                window.Dispatcher.Invoke(new Action(() =>
+                {
+                    EmailWindow email = new EmailWindow();
+
+                    email.Show();
+
+                    window.Close();
+                }));
+                
+            }
         }
 
         public static void ShowPage(int i)

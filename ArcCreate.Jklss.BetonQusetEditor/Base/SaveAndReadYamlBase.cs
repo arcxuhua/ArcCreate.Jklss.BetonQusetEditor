@@ -99,7 +99,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
         /// 保存为Json[不需要迁移]
         /// </summary>
         /// <returns></returns>
-        public async Task<ReturnModel> SaveToJson(string txt ,int id = -1)
+        public async Task<ReturnModel> SaveToJson(string txt ,int id = -1,bool isShowMessage = false)
         {
             var result = new ReturnModel();
 
@@ -390,6 +390,18 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
                 filepath = filePath,
                 HelpTool = toolListJson,
             };
+
+            if (isShowMessage)
+            {
+                var points = saveMainInfo.Count + saveNPCEOInfo.Count + saveJournalInfo.Count + saveItemsInfo.Count;
+
+                if (MessageBox.Show($"你确定要花费积分：{points} 来生成YML文件？\n如果是请选择是，这将是不可逆的操作！","警告",MessageBoxButton.YesNo) == MessageBoxResult.No)
+                {
+                    result.SetError();
+
+                    return result;
+                }
+            }
 
             result.SetSuccese("配置生成成功", path);
 

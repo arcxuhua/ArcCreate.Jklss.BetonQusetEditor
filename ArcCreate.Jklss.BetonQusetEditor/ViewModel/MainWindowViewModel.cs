@@ -27,15 +27,14 @@ using TreeView = System.Windows.Controls.TreeView;
 using Thumb = System.Windows.Controls.Primitives.Thumb;
 using Window = System.Windows.Window;
 using System.Windows.Media.Effects;
-using static ArcCreate.Jklss.BetonQusetEditor.Base.SaveAndReadYamlBase;
 using ArcCreate.Jklss.Model.SocketModel;
-using static ArcCreate.Jklss.Model.SocketModel.SocketModel;
 using System.Text;
 using ArcCreate.Jklss.BetonQusetEditor.Windows.Data;
 using ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data;
 using ArcCreate.Jklss.Model.Data;
 using MessageBox = System.Windows.MessageBox;
 using Button = System.Windows.Controls.Button;
+using ArcCreate.Jklss.BetonQusetEditor.Windows.Market;
 
 namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 {
@@ -869,7 +868,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
                         var saveBase = new SaveAndReadYamlBase(MainFilePath, objectiveProp, eventProp, contisionProp, saveThumbs, mainWindowModels.SaveThumbInfo, saveHelpTool);
 
-                        var back = await saveBase.SaveToJson(SelectData.Name, SelectData.Code);
+                        var back = await saveBase.SaveToJson(SelectData.Name, SelectData.Code,true);
 
                         if (!back.Succese)
                         {
@@ -1060,7 +1059,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     _ReadFilePathCmd = new CommandBase();
                     _ReadFilePathCmd.DoExecute = new Action<object>(async obj =>//回调函数
                     {
-                        
+                        MarketWindow window = new MarketWindow();
+
+                        window.Show();
                         
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }
@@ -1124,6 +1125,13 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     {
                         CreateThumbsBase createThumbsBase = new CreateThumbsBase(mainWindow);
 
+                        var success = await PayPoint(1);
+
+                        if (!success.Succese)
+                        {
+                            return;
+                        }
+
                         var back = await createThumbsBase.CreateThumb(ThumbClass.Subject, MainFilePath, obj as MainWindow);
 
                         if (!back.Succese)
@@ -1180,6 +1188,13 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     _CreatePlayerTalkCmd.DoExecute = new Action<object>(async obj =>//回调函数
                     {
                         CreateThumbsBase createThumbsBase = new CreateThumbsBase(mainWindow);
+
+                        var success = await PayPoint(1);
+
+                        if (!success.Succese)
+                        {
+                            return;
+                        }
 
                         var back = await createThumbsBase.CreateThumb(ThumbClass.Player, MainFilePath, obj as MainWindow);
 
@@ -1296,6 +1311,13 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     {
                         CreateThumbsBase createThumbsBase = new CreateThumbsBase(mainWindow);
 
+                        var success = await PayPoint(1);
+
+                        if (!success.Succese)
+                        {
+                            return;
+                        }
+
                         var back = await createThumbsBase.CreateThumb(ThumbClass.NPC, MainFilePath, obj as MainWindow);
 
                         if (!back.Succese)
@@ -1403,6 +1425,13 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     {
                         CreateThumbsBase createThumbsBase = new CreateThumbsBase(mainWindow);
 
+                        var success = await PayPoint(1);
+
+                        if (!success.Succese)
+                        {
+                            return;
+                        }
+
                         var back = await createThumbsBase.CreateThumb(ThumbClass.Conditions, MainFilePath, obj as MainWindow);
 
                         if (!back.Succese)
@@ -1462,6 +1491,13 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     {
                         CreateThumbsBase createThumbsBase = new CreateThumbsBase(mainWindow);
 
+                        var success = await PayPoint(1);
+
+                        if (!success.Succese)
+                        {
+                            return;
+                        }
+
                         var back = await createThumbsBase.CreateThumb(ThumbClass.Events, MainFilePath, obj as MainWindow);
 
                         if (!back.Succese)
@@ -1520,6 +1556,13 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     _CreateObjectivesCmd.DoExecute = new Action<object>(async obj =>//回调函数
                     {
                         CreateThumbsBase createThumbsBase = new CreateThumbsBase(mainWindow);
+
+                        var success = await PayPoint(1);
+
+                        if (!success.Succese)
+                        {
+                            return;
+                        }
 
                         var back = await createThumbsBase.CreateThumb(ThumbClass.Objectives, MainFilePath, obj as MainWindow);
 
@@ -1581,6 +1624,13 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     {
                         CreateThumbsBase createThumbsBase = new CreateThumbsBase(mainWindow);
 
+                        var success = await PayPoint(1);
+
+                        if (!success.Succese)
+                        {
+                            return;
+                        }
+
                         var back = await createThumbsBase.CreateThumb(ThumbClass.Journal, MainFilePath, obj as MainWindow);
 
                         if (!back.Succese)
@@ -1639,6 +1689,13 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     _CreateItemsCmd.DoExecute = new Action<object>(async obj =>//回调函数
                     {
                         CreateThumbsBase createThumbsBase = new CreateThumbsBase(mainWindow);
+
+                        var success = await PayPoint(1);
+
+                        if (!success.Succese)
+                        {
+                            return;
+                        }
 
                         var back = await createThumbsBase.CreateThumb(ThumbClass.Items, MainFilePath, obj as MainWindow);
 
@@ -2366,6 +2423,58 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         #endregion
 
         #region 具体方法
+
+        private async Task<ReturnModel> PayPoint(int point)
+        {
+            var result = new ReturnModel();
+
+            var message = new MessageModel()
+            {
+                IsLogin = SocketModel.isLogin,
+                JsonInfo = JsonInfo.UsePath,
+                UserName = SocketModel.userName,
+                Message = point.ToString(),
+                Path = "PayPoints"
+            };
+
+            var jsonMessage = FileService.SaveToJson(message);
+
+            var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessage,
+                SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), SocketModel.token, true);
+
+            if (getMessage == null || !getMessage.Succese)
+            {
+                ShowMessage("请求失败");
+                result.SetError();
+
+                return result;
+            }
+
+            var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
+
+            if (getModel.Token != SocketModel.token)
+            {
+                ShowMessage("请求失败");
+                result.SetError();
+
+                return result;
+            }
+
+            var getRealMessage = FileService.JsonToProp<MessageModel>(Encoding.UTF8.GetString(getModel.Message));
+
+            if (getRealMessage == null || getRealMessage.JsonInfo != JsonInfo.UsePath||getRealMessage.Path != "PayPoints" || !getRealMessage.IsLogin)
+            {
+                ShowMessage(getRealMessage.Message);
+                result.SetError();
+
+                return result;
+            }
+
+            ShowMessage(getRealMessage.Message);
+            result.SetSuccese();
+
+            return result;
+        }
 
         private async Task<ReturnModel> ReadYaml()
         {

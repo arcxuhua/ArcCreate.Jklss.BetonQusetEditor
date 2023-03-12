@@ -38,7 +38,7 @@
             <Button Command="{Binding NarrowCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Grid.Row="0" Margin="0 10 45 0" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryDarkButton}" ToolTip="隐藏" Width="30" Height="30" Background="White" BorderBrush="White" Foreground="#DDFFA400">
                 <materialDesign:PackIcon Kind="ElectricSwitchClosed" Height="20" Width="20" />
             </Button>
-            <TextBox x:Name="UserNameTbox" materialDesign:HintAssist.Hint="请输入您的邮箱" Grid.Row="1" Height="30" Width="200" Margin="54 0 0 0" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="12" Text="{Binding UserName}" Cursor="Arrow">
+            <TextBox x:Name="UserNameTbox" materialDesign:HintAssist.Hint="请输入您的邮箱" Grid.Row="1" Height="30" Width="200" Margin="54 30 0 0" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="12" Text="{Binding UserName}" Cursor="Arrow">
                 <binding:Interaction.Triggers>
                     <binding:EventTrigger EventName="Loaded">
                         <binding:InvokeCommandAction Command="{Binding Path= UserNameTboxLoadedCommand}" CommandParameter="{Binding ElementName=UserNameTbox}">
@@ -46,10 +46,10 @@
                     </binding:EventTrigger>
                 </binding:Interaction.Triggers>
             </TextBox>
-            <materialDesign:PackIcon Grid.Row="1" Margin="343 10 0 0" Kind="{Binding UserNameCheckIco}" Height="20" Width="20" Foreground="{Binding UserNameChecked}" />
+            <materialDesign:PackIcon Grid.Row="1" Margin="343 40 0 0" Kind="{Binding UserNameCheckIco}" Height="20" Width="20" Foreground="{Binding UserNameChecked}" />
             <TextBlock Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="363 12 0 0" FontSize="10" Foreground="Red" Text="{Binding UserNameWorry}"></TextBlock>
 
-            <TextBox x:Name="PasswordTbox" materialDesign:HintAssist.Hint="请输入包含大小写及特殊字符的密码" Grid.Row="1" Height="30" Width="200" Margin="54 40 0 0" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="12" Text="{Binding PassWord}">
+            <TextBox x:Name="PasswordTbox" materialDesign:HintAssist.Hint="请输入包含大小写及特殊字符的密码" Grid.Row="1" Height="30" Width="200" Margin="54 80 0 0" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="12" Text="{Binding PassWord}">
                 <binding:Interaction.Triggers>
                     <binding:EventTrigger EventName="Loaded">
                         <binding:InvokeCommandAction Command="{Binding Path= PasswordTboxLoadedCommand}" CommandParameter="{Binding ElementName=PasswordTbox}">
@@ -57,26 +57,14 @@
                     </binding:EventTrigger>
                 </binding:Interaction.Triggers>
             </TextBox>
-            <materialDesign:PackIcon Grid.Row="1" Margin="343 50 0 0" Kind="{Binding PasswordCheckIco}" Height="20" Width="20" Foreground="{Binding PasswordChecked}" />
+            <materialDesign:PackIcon Grid.Row="1" Margin="343 90 0 0" Kind="{Binding PasswordCheckIco}" Height="20" Width="20" Foreground="{Binding PasswordChecked}" />
             <TextBlock Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="363 52 0 0" FontSize="10" Foreground="Red" Text="{Binding PasswordWorry}"></TextBlock>
-
-            <materialDesign:PackIcon Grid.Row="1" Margin="343 90 0 0" Kind="{Binding ActivationCheckIco}" Height="20" Width="20" Foreground="{Binding ActivationChecked}" />
             <TextBlock Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="363 92 0 0" FontSize="10" Foreground="Red" Text="{Binding ActivationWorry}"></TextBlock>
-            <TextBox x:Name="ActivationTbox" Grid.Row="1" Height="30" Width="180" Margin="74 80 0 0" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="12" Text="{Binding Activation}">
-                <binding:Interaction.Triggers>
-                    <binding:EventTrigger EventName="Loaded">
-                        <binding:InvokeCommandAction Command="{Binding Path= ActivationTboxLoadedCommand}" CommandParameter="{Binding ElementName=ActivationTbox}">
-                        </binding:InvokeCommandAction>
-                    </binding:EventTrigger>
-                </binding:Interaction.Triggers>
-            </TextBox>
 
-            <TextBlock Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="84 5 0 0" FontSize="18" FontWeight="Bold">账号：</TextBlock>
-            <TextBlock Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="84 45 0 0" FontSize="18" FontWeight="Bold">密码：</TextBlock>
-            <TextBlock Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="84 85 0 0" FontSize="18" FontWeight="Bold">激活码：</TextBlock>
+            <TextBlock Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="84,30,0,0" FontSize="18" FontWeight="Bold">账号：</TextBlock>
+            <TextBlock Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="84,80,0,0" FontSize="18" FontWeight="Bold">密码：</TextBlock>
             <Button IsEnabled="{Binding RegisterEnabled}" Command="{Binding RegisterCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 130 30" Width="130" Background="#FFE09321" BorderBrush="{x:Null}" Cursor="Hand">注册</Button>
             <Button Command="{Binding LoginCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="130 0 0 30" Width="130" Background="#FF219EE0" BorderBrush="{x:Null}">返回登录</Button>
-            <Button Command="{Binding PayCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 0" Width="130" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#DD5E1FD2" Height="28" Cursor="Hand">购买激活码</Button>
             <TextBlock Grid.Row="0" Width="180" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15 10 0 0" FontSize="18" FontWeight="Bold" Foreground="#7F000000">ArcCreate McSpace</TextBlock>
         </Grid>
 

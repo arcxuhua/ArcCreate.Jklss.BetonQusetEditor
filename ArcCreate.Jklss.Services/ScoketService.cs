@@ -269,7 +269,7 @@ namespace ArcCreate.Jklss.Services
         /// <summary>
         /// 
         /// </summary>
-        public async void HeartSend()
+        public void HeartSend()
         {
             var sendModel = new MessageMode()
             {
@@ -282,10 +282,11 @@ namespace ArcCreate.Jklss.Services
 
             var toJson = FileService.SaveToJson(sendModel);
 
-            await Task.Run(() =>
+            Task.Run(() =>
             {
                 while (true)
                 {
+                    Console.Write("心跳包");
                     AsyncSend(socket, toJson);
                     Thread.Sleep(1000);
                 }

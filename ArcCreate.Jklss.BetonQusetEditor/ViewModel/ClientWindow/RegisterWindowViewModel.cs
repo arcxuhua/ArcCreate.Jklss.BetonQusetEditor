@@ -5,16 +5,11 @@ using ArcCreate.Jklss.Model.SocketModel;
 using ArcCreate.Jklss.Services;
 using GalaSoft.MvvmLight.Command;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using static ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow.LoginWindowViewModel;
-using static ArcCreate.Jklss.Model.SocketModel.SocketModel;
 
 namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
 {
@@ -333,21 +328,18 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
                             return;
                         }
 
-                        if (!Regex.IsMatch(PassWord, @"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[%&',;=?$\x22]).{8,16}$"))
+                        if (!Regex.IsMatch(PassWord, @"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[%&',!@#%$^*+;=?$\x22]).{8,16}$"))
                         {
                             return;
                         }
 
-                        if (Activation.Length != 44)
-                        {
-                            return;
-                        }
+                        SocketModel.userName = UserName;
+
                         window.First.IsEnabled = false;
                         var registerModel = new UserRegisterModel()
                         {
                             UserName = UserName,
                             PassWord = PassWord,
-                            Activation = Activation,
                             ComputerInfo = LoginWindowViewModel.computerInfo,
                             BackMessage = "注册流程"
                         };
@@ -455,7 +447,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
         private void TBox_TextChanged1(object sender, TextChangedEventArgs e)
         {
             PassWord = (sender as TextBox).Text;
-            if (!Regex.IsMatch(PassWord, @"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[%&',;=?$\x22]).{8,16}$"))
+            if (!Regex.IsMatch(PassWord, @"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[%&',!@#%$^*+;=?$\x22]).{8,16}$"))
             {
                 PasswordCheckIco = "AlertCircleOutline";
                 PasswordChecked = "Red";

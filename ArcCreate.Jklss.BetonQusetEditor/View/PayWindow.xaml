@@ -33,11 +33,11 @@
         <TextBlock Grid.Row="0" Width="180" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15 10 0 0" FontSize="18" FontWeight="Bold" Foreground="#7F000000">ArcCreate McSpace</TextBlock>
         <TextBlock Grid.Row="0" Height="30" Width="180" HorizontalAlignment="Center" FontSize="25" Margin="0 30 0 0" FontWeight="Bold" TextAlignment="Center" Foreground="#CCFFDC9E">选择一份Gift</TextBlock>
         <ComboBox x:Name="PayImage" materialDesign:TextFieldAssist.UnderlineBrush="#FFE09321" Grid.Row="0" Width="300" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 100 0 0">
-            <ComboBoxItem Content="新春特惠：  99RMB/1年 使用权激活码"></ComboBoxItem>
-            <ComboBoxItem Content="新春特惠：  199RMB/永久 使用权激活码"></ComboBoxItem>
-            <ComboBoxItem Content="原价：      99RMB/0.5年 使用权激活码"></ComboBoxItem>
-            <ComboBoxItem Content="原价：      199RMB/1年 使用权激活码"></ComboBoxItem>
-            <ComboBoxItem Content="原价：      299RMB/永久 使用权激活码"></ComboBoxItem>
+            <ComboBoxItem Content="积分充值  99RMB/10000点"></ComboBoxItem>
+            <ComboBoxItem Content="积分充值  199RMB/30000点"></ComboBoxItem>
+            <ComboBoxItem Content="VIP充值   99RMB/1年 VIP1级 每日赠送26点积分且市场价格9折"></ComboBoxItem>
+            <ComboBoxItem Content="VIP充值   199RMB/1年 VIP2级 每日赠送80点积分且市场价格8折"></ComboBoxItem>
+            <ComboBoxItem Content="VIP充值   299RMB/1年 VIPS级 每日赠送160点积分且市场价格7折"></ComboBoxItem>
 
             <binding:Interaction.Triggers>
                 <binding:EventTrigger EventName="SelectionChanged">

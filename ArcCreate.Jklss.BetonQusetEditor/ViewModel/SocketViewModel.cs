@@ -16,6 +16,8 @@ using System.Windows.Shapes;
 using System;
 using System.Linq;
 using System.Threading;
+using ArcCreate.Jklss.BetonQusetEditor.View;
+using Org.BouncyCastle.Asn1.Esf;
 
 namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 {
@@ -77,7 +79,16 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                 {
                     if (!model.IsLogin)
                     {
-                        LoginWindowViewModel.ShowWorryMessage(model.Message);
+
+                        if (model.Other == "1")
+                        {
+                            LoginWindowViewModel.ShowWorryMessage(model.Message,true);
+                        }
+                        else
+                        {
+                            LoginWindowViewModel.ShowWorryMessage(model.Message);
+                        }
+                        
 
                         return;
                     }
@@ -85,6 +96,12 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     SocketModel.token = token;
                     SocketModel.isLogin = model.IsLogin;
                     SocketModel.userName = model.UserName;
+
+                    if (!string.IsNullOrEmpty(model.Other))
+                    {
+                        MessageBox.Show($"今日的赠送已经到账哦~\n今日获得: {model.Other} 点积分");
+                    }
+                    
 
                     LoginWindowViewModel.window.Dispatcher.Invoke(new System.Action(() =>
                     {
@@ -102,7 +119,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         MessageBox.Show(model.Message);
                         LoginWindowViewModel.window.Dispatcher.Invoke(new System.Action(() =>
                         {
-                            var window = new LoginWindow();
+                            var window = new EmailWindow();
                             window.Show();
 
                             RegisterWindowViewModel.window.Close();
@@ -114,6 +131,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     }
                     
                 }
+
+                
             }
             else if (message.Class == MessageClass.File)
             {
@@ -292,19 +311,20 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
         private static async Task<string> WaitBack(MessageClass messageClass, int id)
         {
-            var value = await Task.Run(() =>
+            
+            await Task.Run(() =>
             {
                 while (true)
                 {
                     Thread.Sleep(50);//延迟50毫秒
                     if (!string.IsNullOrEmpty(waitBackDic[messageClass][id]))
                     {
-                        return waitBackDic[messageClass][id];
+                        break;
                     }
                 }
             });
 
-            return value;
+            return waitBackDic[messageClass][id];
         }
     }
 }

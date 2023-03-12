@@ -3,7 +3,6 @@ using ArcCreate.Jklss.Model;
 using ArcCreate.Jklss.Model.MainWindow;
 using ArcCreate.Jklss.Model.SocketModel;
 using ArcCreate.Jklss.Model.ThumbInfoWindow;
-using ArcCreate.Jklss.Model.ThumbModel;
 using ArcCreate.Jklss.Model.ThumbModel.CommandModel;
 using ArcCreate.Jklss.Services;
 using System;
@@ -14,8 +13,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using static ArcCreate.Jklss.Model.SocketModel.SocketModel;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 {

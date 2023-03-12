@@ -57,6 +57,15 @@
     <Optimize>False</Optimize>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="img\vip\admin.png" />
+    <None Remove="img\vip\noraml.png" />
+    <None Remove="img\vip\vip1.png" />
+    <None Remove="img\vip\vip2.png" />
+    <None Remove="img\vip\vip3.png" />
+    <None Remove="img\vip\vip4.png" />
+    <None Remove="img\vip\vips.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="Microsoft.Build.Framework">
       <EmbedInteropTypes></EmbedInteropTypes>
     </Reference>
@@ -93,7 +102,30 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="img\vip\admin.png">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="img\vip\noraml.png">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="img\vip\vip1.png">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="img\vip\vip2.png">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="img\vip\vip3.png">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="img\title\normal.png" />
+    <Resource Include="img\vip\vip4.png">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="img\vip\vips.png">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />

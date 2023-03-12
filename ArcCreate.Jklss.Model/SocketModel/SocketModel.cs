@@ -71,6 +71,7 @@ namespace ArcCreate.Jklss.Model.SocketModel
         DeleteSaveData,
         AddGrammerModel,
         RemoveGrammerModel,
+        UsePath,
     }
 
     public class MessageModel
@@ -84,6 +85,8 @@ namespace ArcCreate.Jklss.Model.SocketModel
         public string Message { get; set; }
 
         public string Other { get; set; }
+
+        public string Path { get; set; }
     }
 
     public class config

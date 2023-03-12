@@ -41,7 +41,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="1" Grid.Row="0"  MouseMove="Move_MouseMove" Background="#FF4C4C4C">
-                <Button Command="{Binding CloseCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryDarkButton}" ToolTip="关闭" Width="35" Height="25" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#DDFFFFFF">
+                <Button Command="{Binding CloseCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryDarkButton}" ToolTip="关闭" Width="35" Height="25" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#DDFFFFFF" Cursor="Hand">
                     <materialDesign:PackIcon Kind="WindowClose" Height="20" Width="20" Foreground="#DDFFFFFF" />
                 </Button>
                 <Button Command="{Binding NarrowCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Margin="0,0,90,0" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryDarkButton}" ToolTip="隐藏" Width="35" Height="25" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#DDFFA400">
@@ -64,21 +64,7 @@
                 <Button Width="130" Height="30" materialDesign:ButtonAssist.CornerRadius="0" Margin="1 0 0 0"
                     VerticalAlignment="Center" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignPaperSecondaryButton}"
                     Command="{Binding ReadFilePathCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}"
-                    Content="读取任务" Foreground="White" Background="{x:Null}" BorderBrush="White" FontSize="12" Cursor="Hand"/>
-                <Button Width="130" Height="30" materialDesign:ButtonAssist.CornerRadius="0" Margin="130 0 0 0"
-                    VerticalAlignment="Center" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignPaperSecondaryButton}" 
-                    Command="{Binding ReadJsonCmd}" CommandParameter="{Binding ., RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                    Content="读取配置" Foreground="White" Background="{x:Null}" BorderBrush="White" FontSize="12" Cursor="Hand"/>
-                <Button Width="130" Height="30" materialDesign:ButtonAssist.CornerRadius="0" Margin="259,0,0,0"
-                    VerticalAlignment="Center" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignPaperSecondaryButton}" 
-                    Content="如何使用？" Foreground="White" Background="{x:Null}" BorderBrush="White" FontSize="12"/>
-
-                <Button Width="130" Height="30" materialDesign:ButtonAssist.CornerRadius="0" Margin="520 0 0 0"
-                    VerticalAlignment="Center" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignPaperSecondaryButton}" 
-                    Content="主题风格" Foreground="White" Background="{x:Null}" BorderBrush="White" FontSize="12"/>
-                <Button Width="130" Height="30" materialDesign:ButtonAssist.CornerRadius="0" Margin="650 0 0 0"
-                    VerticalAlignment="Center" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignPaperSecondaryButton}" 
-                    Content="卡片风格" Foreground="White" Background="{x:Null}" BorderBrush="White" FontSize="12"/>
+                    Content="打开市场" Foreground="White" Background="{x:Null}" BorderBrush="White" FontSize="12" Cursor="Hand"/>
 
                 <Button Width="130" Height="30" materialDesign:ButtonAssist.CornerRadius="0" Margin="0 0 1 0"
                     VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignPaperSecondaryButton}" 
@@ -88,6 +74,10 @@
                     VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignPaperSecondaryButton}"
                     Command="{Binding SaveYaml}" CommandParameter="{Binding ., RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                     Content="输出YAML" Foreground="White" Background="{x:Null}" BorderBrush="White" FontSize="12"/>
+                <Button Width="130" Height="30" materialDesign:ButtonAssist.CornerRadius="0" Margin="130,0,0,0"
+                    VerticalAlignment="Center" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignPaperSecondaryButton}"
+                    Command="{Binding ReadJsonCmd}" CommandParameter="{Binding ., RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                    Content="上传至市场" Foreground="White" Background="{x:Null}" BorderBrush="White" FontSize="12" Cursor="Hand"/>
             </Grid>
             <Grid Grid.Column="0" Grid.Row="2" Background="#7F000000">
                 <ScrollViewer>

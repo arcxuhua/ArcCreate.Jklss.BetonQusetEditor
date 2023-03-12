@@ -297,15 +297,19 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
                                 return;
                             }
 
-                            window.Tag = new GridData
+                            if(MessageBox.Show("注意：请求云端解析YML配置将会花费您一定的积分\n扣费如下：1.对话文件1个1积分\n2.NPC话语1个1积分\n3.玩家话语1个1积分\n" +
+                                "4.条件1个1积分\n5.事件1个1积分\n6.目标1个1积分\n7.日记1个1积分\n8.物品1个1积分\n如果您的积分不足且强行解析，照成的损失将由您自己负责","警告",MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                             {
-                                Code = -1,
-                                CreateDate = DateTime.Now,
-                                UpdateData = DateTime.Now,
-                                Name = CreateName,
-                                FilePath = FilePath
-                            };
-                            window.Close();
+                                window.Tag = new GridData
+                                {
+                                    Code = -1,
+                                    CreateDate = DateTime.Now,
+                                    UpdateData = DateTime.Now,
+                                    Name = CreateName,
+                                    FilePath = FilePath
+                                };
+                                window.Close();
+                            }
                         }
                         else
                         {
