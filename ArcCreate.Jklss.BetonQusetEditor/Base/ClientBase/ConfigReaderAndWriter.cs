@@ -1,106 +1,205 @@
 ﻿using ArcCreate.Jklss.BetonQusetEditor.ViewModel;
+using ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows;
 using ArcCreate.Jklss.Model;
-using ArcCreate.Jklss.Model.Data;
 using ArcCreate.Jklss.Model.MainWindow;
 using ArcCreate.Jklss.Model.SocketModel;
 using ArcCreate.Jklss.Model.ThumbModel;
-using ArcCreate.Jklss.Model.ThumbModel.CommandModel;
 using ArcCreate.Jklss.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Xml.Linq;
-using static ArcCreate.Jklss.Model.SocketModel.SocketModel;
 
-namespace ArcCreate.Jklss.BetonQusetEditor.Base
+namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
 {
-    [Obsolete]
-    public class SaveAndReadYamlBase
+    public class ConfigReaderAndWriter
     {
-        private string filePath = null;
+        private Dictionary<AnyCardViewModel, Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>> conditionSave;
 
-        private Dictionary<Thumb, Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>> saveInfo = null;
+        private Dictionary<AnyCardViewModel, Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>> eventSave;
 
-        private List<SaveChird> saveThumbs = null;
+        private Dictionary<AnyCardViewModel, Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>> objectiveSave;
 
-        private List<ContisionsCmdModel> contisionProp = null;//Contitions语法构造器模型
+        private Dictionary<AnyCardViewModel, Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>> conversationSave;
 
-        private List<EventCmdModel> eventProp = null;
+        private Dictionary<AnyCardViewModel, Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>> allSave = 
+            new Dictionary<AnyCardViewModel, Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>>();
 
-        private List<ObjectiveCmdModel> objectiveProp = null;
-
-        private Dictionary<Thumb, string> saveHelpTool;
+        private List<CardViewModel> allCard = new List<CardViewModel>();
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="filePath"></param>
-        /// <param name="objectiveProp"></param>
-        /// <param name="eventProp"></param>
-        /// <param name="contisionProp"></param>
-        /// <param name="saveThumbs"></param>
-        /// <param name="saveInfo"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public SaveAndReadYamlBase(string filePath, List<ObjectiveCmdModel> objectiveProp, 
-            List<EventCmdModel> eventProp, List<ContisionsCmdModel> contisionProp, List<SaveChird> saveThumbs,
-            Dictionary<Thumb, Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>> saveInfo, Dictionary<Thumb, string> saveHelpTool)
+        /// <param name="conditionSave"></param>
+        /// <param name="eventSave"></param>
+        /// <param name="objectiveSave"></param>
+        /// <param name="conversationSave"></param>
+        /// <param name="mainCard"></param>
+        public ConfigReaderAndWriter(Dictionary<AnyCardViewModel, Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>> conditionSave,
+            Dictionary<AnyCardViewModel, Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>> eventSave,
+            Dictionary<AnyCardViewModel, Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>> objectiveSave,
+            Dictionary<AnyCardViewModel, Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>> conversationSave,
+            ObservableCollection<CardViewModel> allCard)
         {
-            if (string.IsNullOrEmpty(filePath))
+            var delCondtion = new List<(AnyCardViewModel a, string b,string c,string d,string e)>();
+
+            foreach (var item in conditionSave)//审查有没有空的项，有就删除
             {
-                throw new ArgumentNullException("文件地址为空");
+                foreach (var i in item.Value)
+                {
+                    foreach (var j in i.Value)
+                    {
+                        foreach (var m in j.Value)
+                        {
+                            foreach (var n in m.Value)
+                            {
+                                if (string.IsNullOrWhiteSpace(n.Value))
+                                {
+                                    delCondtion.Add((item.Key, i.Key, j.Key, m.Key, n.Key));
+
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
-            if (objectiveProp == null)
+            foreach (var item in delCondtion)
             {
-                throw new ArgumentNullException("objective的语法构造器模型为null");
+                conditionSave[item.a][item.b][item.c][item.d].Remove(item.e);
             }
 
-            if (eventProp == null)
+            delCondtion.Clear();
+
+            foreach (var item in eventSave)//审查有没有空的项，有就删除
             {
-                throw new ArgumentNullException("evevt的语法构造器模型为null");
+                foreach (var i in item.Value)
+                {
+                    foreach (var j in i.Value)
+                    {
+                        foreach (var m in j.Value)
+                        {
+                            foreach (var n in m.Value)
+                            {
+                                if (string.IsNullOrWhiteSpace(n.Value))
+                                {
+                                    delCondtion.Add((item.Key, i.Key, j.Key, m.Key, n.Key));
+
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
-            if (contisionProp == null)
+            foreach (var item in delCondtion)
             {
-                throw new ArgumentNullException("conditions的语法构造器模型为null");
+                eventSave[item.a][item.b][item.c][item.d].Remove(item.e);
             }
 
-            if (saveThumbs == null)
+            delCondtion.Clear();
+
+            foreach (var item in objectiveSave)//审查有没有空的项，有就删除
             {
-                throw new ArgumentNullException("Thumb存储器为null");
+                foreach (var i in item.Value)
+                {
+                    foreach (var j in i.Value)
+                    {
+                        foreach (var m in j.Value)
+                        {
+                            foreach (var n in m.Value)
+                            {
+                                if (string.IsNullOrWhiteSpace(n.Value))
+                                {
+                                    delCondtion.Add((item.Key, i.Key, j.Key, m.Key, n.Key));
+
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
-            if (saveInfo == null)
+            foreach (var item in delCondtion)
             {
-                throw new ArgumentNullException("数据存储器为null");
+                objectiveSave[item.a][item.b][item.c][item.d].Remove(item.e);
             }
 
-            this.filePath = filePath;
+            delCondtion.Clear();
 
-            this.objectiveProp = objectiveProp;
+            foreach (var item in conversationSave)//审查有没有空的项，有就删除
+            {
+                foreach (var i in item.Value)
+                {
+                    foreach (var j in i.Value)
+                    {
+                        foreach (var m in j.Value)
+                        {
+                            foreach (var n in m.Value)
+                            {
+                                if (string.IsNullOrWhiteSpace(n.Value))
+                                {
+                                    delCondtion.Add((item.Key, i.Key, j.Key, m.Key, n.Key));
 
-            this.eventProp = eventProp;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
-            this.contisionProp = contisionProp;
+            foreach (var item in delCondtion)
+            {
+                conversationSave[item.a][item.b][item.c][item.d].Remove(item.e);
+            }
 
-            this.saveThumbs = saveThumbs;
+            delCondtion.Clear();
 
-            this.saveInfo = saveInfo;
+            foreach (var item in allCard)
+            {
+                this.allCard.Add(item);
+            }
 
-            this.saveHelpTool = saveHelpTool;
+            this.conversationSave = conversationSave;
+
+            this.objectiveSave = objectiveSave;
+
+            this.eventSave = eventSave;
+
+            this.conditionSave = conditionSave;
+
+            foreach (var item in this.conditionSave)
+            {
+                this.allSave.Add(item.Key,item.Value);
+            }
+
+            foreach (var item in this.eventSave)
+            {
+                this.allSave.Add(item.Key, item.Value);
+            }
+
+            foreach (var item in this.objectiveSave)
+            {
+                this.allSave.Add(item.Key, item.Value);
+            }
+
+            foreach (var item in this.conversationSave)
+            {
+                this.allSave.Add(item.Key, item.Value);
+            }
+
+            
         }
 
         /// <summary>
-        /// 保存为Json[不需要迁移]
+        /// 新版本的创建Json
         /// </summary>
         /// <returns></returns>
-        public async Task<ReturnModel> SaveToJson(string txt ,int id = -1,bool isShowMessage = false)
+        public async Task<ReturnModel> SaveToJson(string filePath, string txt, int id = -1, bool isShowMessage = false)
         {
             var result = new ReturnModel();
 
@@ -110,43 +209,35 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
             try
             {
-                if (MainWindowModels.saveThumbs.Where(t => t.thumbClass == ThumbClass.Subject).Any())
+                if (allCard.Where(t => t.Type == ThumbClass.Subject).Any())
                 {
-                    var getMainThumb = MainWindowModels.saveThumbs.Where(t => t.thumbClass == ThumbClass.Subject).ToList();
+                    var getMainThumb = allCard.Where(t => t.Type == ThumbClass.Subject).ToList();
 
                     await Task.Run(() =>
                     {
                         foreach (var item in getMainThumb)
                         {
-                            var getInfo = GetThumbInfoBase.GetThumbInfo(item);
+                            var getRealCard = item as SubjectCardViewModel;
 
-                            saveMainInfo.Add(getInfo);
+                            saveMainInfo.Add(new ThumbsModels(getRealCard.ConfigName, getRealCard.NPC_ID,getRealCard.ItemContent));
 
-                            var childInfo = new SaveChilds();
-
-                            GetControl<TextBox>("ShowNpcName_TBox", item.Saver).Dispatcher.Invoke(new Action(() =>
+                            var childInfo = new SaveChilds()
                             {
-                                childInfo.Saver = GetControl<TextBox>("ShowNpcName_TBox", item.Saver).Text;
-                                childInfo.Main = childInfo.Saver;
-                            }));
+                                Saver = getRealCard.ConfigName,
+                                Main = getRealCard.ConfigName,
+                            };
 
-                            childInfo.CanFather = item.CanFather;
-                            childInfo.thumbClass = item.thumbClass;
+                            childInfo.CanFather = false;
+                            childInfo.thumbClass = item.Type;
 
-                            foreach (var i in item.Children)
+                            foreach (var i in item.Right)
                             {
-                                i.Dispatcher.Invoke(new Action(() =>
-                                {
-                                    childInfo.Children.Add(GetControl<TextBox>("ConditionsConfig_TBox", i).Text);
-                                }));
+                                childInfo.Children.Add(i.ConfigName);
                             }
 
-                            foreach (var i in item.Fathers)
+                            foreach (var i in item.Left)
                             {
-                                i.Dispatcher.Invoke(new Action(() =>
-                                {
-                                    childInfo.Fathers.Add(GetControl<TextBox>("ConditionsConfig_TBox", i).Text);
-                                }));
+                                childInfo.Fathers.Add(i.ConfigName);
                             }
                             saveAllChildInfo.Add(childInfo);
                         }
@@ -159,7 +250,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
                 return result;
             }
-            
+
             var mainJson = FileService.SaveToJson(saveMainInfo);//转换为Json
 
             var allChildInfo = FileService.SaveToJson(saveAllChildInfo);//转换为Json
@@ -168,76 +259,53 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
             try
             {
-                await Task.Run(async () =>
+                await Task.Run(() =>
                 {
-                    foreach (var item in saveInfo)
+                    foreach (var item in allSave)
                     {
-                        var name = string.Empty;
+                        var name = item.Key.ConfigName;
 
-                        item.Key.Dispatcher.Invoke(new Action(() =>
-                        {
-                            name = GetControl<TextBox>("ConditionsConfig_TBox", item.Key).Text;
-                        }));
+                        var getMainName = item.Key.MainCard.ConfigName;
 
-                        var saver = await FindSaveThumbInfo(item.Key);
-
-                        var getMainName = string.Empty;
-
-                        item.Key.Dispatcher.Invoke(new Action(() =>
-                        {
-                            if (saver.Main == null)
-                            {
-                                return;
-                            }
-                            getMainName = (GetControl<TextBox>("MainName_TBox", saver.Main)).Text;
-                        }));
-
-                        saveNPCEOInfo.Add(new ThumbInfoModel() { Main = getMainName, Name = name,thumbClass = saver.thumbClass ,data = item.Value });
+                        saveNPCEOInfo.Add(new ThumbInfoModel() { Main = getMainName, Name = name, thumbClass = item.Key.Type, data = item.Value });
                     }
 
                     //将没有归类的也放入数据
-                    var getThumb = MainWindowModels.saveThumbs.Where(t => t.thumbClass != ThumbClass.Subject && t.thumbClass != ThumbClass.Journal && t.thumbClass != ThumbClass.Items).ToList();
+                    var getThumb = allCard.Where(t => t.Type != ThumbClass.Subject && t.Type != ThumbClass.Journal && t.Type != ThumbClass.Items).ToList();
 
                     foreach (var item in getThumb)
                     {
-                        if (!saveInfo.ContainsKey(item.Saver))
+                        if (!allSave.ContainsKey(item as AnyCardViewModel))
                         {
-                            var name = string.Empty;
+                            var name = item.ConfigName;
 
-                            item.Saver.Dispatcher.Invoke(new Action(() =>
-                            {
-                                name = GetControl<TextBox>("ConditionsConfig_TBox", item.Saver).Text;
-                            }));
-
-                            saveNPCEOInfo.Add(new ThumbInfoModel() { Name = name, thumbClass = item.thumbClass });
+                            saveNPCEOInfo.Add(new ThumbInfoModel() { Name = name, thumbClass = item.Type });
                         }
                     }
                 });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 result.SetError("构造器错误，错误码:JS002");
 
                 return result;
             }
-            
+
             var npceoJson = FileService.SaveToJson(saveNPCEOInfo);//转换为Json
 
             var saveJournalInfo = new List<ThumbsModels>();
 
             try
             {
-                if (MainWindowModels.saveThumbs.Where(t => t.thumbClass == ThumbClass.Journal).Any())
+                if (allCard.Where(t => t.Type == ThumbClass.Journal).Any())
                 {
-                    var getMainThumb = MainWindowModels.saveThumbs.Where(t => t.thumbClass == ThumbClass.Journal).ToList();
+                    var getMainThumb = allCard.Where(t => t.Type == ThumbClass.Journal).ToList();
 
                     await Task.Run(() =>
                     {
                         foreach (var item in getMainThumb)
                         {
-                            var getInfo = GetThumbInfoBase.GetThumbInfo(item);
-
-                            saveJournalInfo.Add(getInfo);
+                            saveJournalInfo.Add(new ThumbsModels(item.ConfigName,"",item.ItemContent));
                         }
                     });
                 }
@@ -255,17 +323,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
             try
             {
-                if (MainWindowModels.saveThumbs.Where(t => t.thumbClass == ThumbClass.Items).Any())
+                if (allCard.Where(t => t.Type == ThumbClass.Items).Any())
                 {
-                    var getMainThumb = MainWindowModels.saveThumbs.Where(t => t.thumbClass == ThumbClass.Items).ToList();
+                    var getMainThumb = allCard.Where(t => t.Type == ThumbClass.Items).ToList();
 
                     await Task.Run(() =>
                     {
                         foreach (var item in getMainThumb)
                         {
-                            var getInfo = GetThumbInfoBase.GetThumbInfo(item);
-
-                            saveItemsInfo.Add(getInfo);
+                            saveItemsInfo.Add(new ThumbsModels(item.ConfigName,"",item.ItemContent));
                         }
                     });
                 }
@@ -283,27 +349,13 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
             try
             {
-                foreach (var item in MainWindowModels.saveThumbs)
+                foreach (var item in allCard)
                 {
-                    var getX = Canvas.GetLeft(item.Saver);
+                    var getX = item.CvLeft;
 
-                    var getY = Canvas.GetTop(item.Saver);
+                    var getY = item.CvTop;
 
-                    switch (item.thumbClass)
-                    {
-                        case ThumbClass.Subject:
-                            dic.Add(new ThumbCoordinateModel() { Name = GetControl<TextBox>("ShowNpcName_TBox", item.Saver).Text, thumbClass = item.thumbClass ,X = getX,Y= getY});
-                            break;
-                        case ThumbClass.Journal:
-                            dic.Add(new ThumbCoordinateModel() { Name = GetControl<TextBox>("JournalConfig_TBox", item.Saver).Text ,thumbClass = item.thumbClass, X = getX, Y = getY });
-                            break;
-                        case ThumbClass.Items:
-                            dic.Add(new ThumbCoordinateModel() { Name = GetControl<TextBox>("ItemsConfig_TBox", item.Saver).Text ,thumbClass = item.thumbClass, X = getX, Y = getY });
-                            break;
-                        default:
-                            dic.Add(new ThumbCoordinateModel() { Name = GetControl<TextBox>("ConditionsConfig_TBox", item.Saver).Text ,thumbClass = item.thumbClass, X = getX, Y = getY });
-                            break;
-                    }
+                    dic.Add(new ThumbCoordinateModel() { Name = item.ConfigName, thumbClass = item.Type, X = getX, Y = getY });
                 }
             }
             catch
@@ -319,61 +371,26 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
             try
             {
-                await Task.Run(async () =>
+                await Task.Run(() =>
                 {
-                    foreach (var item in saveHelpTool)
+                    foreach (var item in allCard)
                     {
-                        var thumbInfo = await FindSaveThumbInfo(item.Key);
-
-                        if (thumbInfo == null)
+                        newToolList.Add(new HelpToolModel
                         {
-                            continue;
-                        }
-
-                        if (thumbInfo.thumbClass == ThumbClass.Subject)
-                        {
-                            GetControl<TextBox>("ShowNpcName_TBox", thumbInfo.Saver).Dispatcher.Invoke(new Action(() =>
-                            {
-                                newToolList.Add(new HelpToolModel
-                                {
-                                    Class = thumbInfo.thumbClass,
-                                    Name = GetControl<TextBox>("ShowNpcName_TBox", thumbInfo.Saver).Text,
-                                    Tool = item.Value,
-                                }) ;
-                            }));
-                        }
-                        else if(thumbInfo.thumbClass == ThumbClass.Items|| thumbInfo.thumbClass == ThumbClass.Journal)
-                        {
-                            var getInfo = GetThumbInfoBase.GetThumbInfo(await FindSaveThumbInfo(item.Key));
-
-                            newToolList.Add(new HelpToolModel
-                            {
-                                Class = thumbInfo.thumbClass,
-                                Name = getInfo.Config,
-                                Tool = item.Value,
-                            });
-
-                        }
-                        else
-                        {
-                            GetControl<TextBox>("ConditionsConfig_TBox", thumbInfo.Saver).Dispatcher.Invoke(new Action(() =>
-                            {
-                                newToolList.Add(new HelpToolModel
-                                {
-                                    Class = thumbInfo.thumbClass,
-                                    Name = GetControl<TextBox>("ConditionsConfig_TBox", thumbInfo.Saver).Text,
-                                    Tool = item.Value,
-                                });
-                            }));
-                        }
+                            Class = item.Type,
+                            Name = item.ConfigName,
+                            Tool = item.HelpInfo,
+                        });
                     }
                 });
 
-                
+
             }
             catch
             {
+                result.SetError("构造器错误，错误码:JS006");
 
+                return result;
             }
 
             var toolListJson = FileService.SaveToJson(newToolList);
@@ -396,7 +413,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
             {
                 var points = saveMainInfo.Count + saveNPCEOInfo.Count + saveJournalInfo.Count + saveItemsInfo.Count;
 
-                if (MessageBox.Show($"你确定要花费积分：{points} 来生成YML文件？\n如果是请选择是，这将是不可逆的操作！","警告",MessageBoxButton.YesNo) == MessageBoxResult.No)
+                if (MessageBox.Show($"你确定要花费积分：{points} 来生成YML文件？\n如果是请选择是，这将是不可逆的操作！", "警告", MessageBoxButton.YesNo) == MessageBoxResult.No)
                 {
                     result.SetError();
 
@@ -409,7 +426,6 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
             return result;
         }
 
-        
         /// <summary>
         /// Condition语法解析器
         /// </summary>
@@ -645,7 +661,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
         /// </summary>
         /// <param name="getBacks"></param>
         /// <returns></returns>
-        public async Task<ReturnModel> InputToYaml(YamlSaver getBacks)
+        public async Task<ReturnModel> InputToYaml(YamlSaver getBacks,string filePath)
         {
             var result = new ReturnModel();
 
@@ -681,55 +697,6 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
             }
 
             return result;
-        }
-        /// <summary>
-        /// 获取真实命令
-        /// </summary>
-        /// <param name="txt"></param>
-        /// <returns></returns>
-        protected static string GetRealCmd(string txt,string fg=": ")
-        {
-            var getSqlit = txt.Split(new string[] { fg }, StringSplitOptions.RemoveEmptyEntries);
-
-            if(getSqlit.Length == 3|| getSqlit.Length == 2)
-            {
-                return getSqlit[getSqlit.Length-1];
-            }
-            else
-            {
-                return txt;
-            }
-        }
-
-        /// <summary>
-        /// 从Thumb中获取控件
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="name"></param>
-        /// <param name="thumb"></param>
-        /// <returns></returns>
-        protected static T GetControl<T>(string name, Thumb thumb)
-        {
-            return (T)thumb.Template.FindName(name, thumb);
-        }
-
-        /// <summary>
-        /// 查询被存储在SaveChirld中的信息
-        /// </summary>
-        /// <returns></returns>
-        private async Task<SaveChird> FindSaveThumbInfo(Thumb thumb)
-        {
-            SaveChird save = null;
-
-            await Task.Run(() =>
-            {
-                if(saveThumbs.Where(t => t.Saver == thumb).Any())
-                {
-                    save = saveThumbs.Where(t => t.Saver == thumb).FirstOrDefault();
-                }
-            });
-
-            return save;
         }
     }
 
@@ -778,5 +745,4 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base
 
         public string Tool { get; set; }
     }
-
 }

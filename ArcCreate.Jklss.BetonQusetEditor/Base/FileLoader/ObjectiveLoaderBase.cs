@@ -35,12 +35,6 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
         private MainWindowModels mainWindowModels = null;
 
-        public ObjectiveLoaderBase(MainWindow mainWindow, MainWindowModels mainWindowModels)
-        {
-            this.mainWindow = mainWindow;
-            this.mainWindowModels = mainWindowModels;
-        }
-
         /// <summary>
         /// 初始化默认的Json文本
         /// </summary>
@@ -557,7 +551,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                         }
                     }
 
-                    switch ((cmdCoBox.SelectedItem as ComboBoxItem).Content.ToString())
+                    var cmdCoBoxSI = string.Empty;
+
+                    try
+                    {
+                        cmdCoBoxSI = (cmdCoBox.SelectedItem as ComboBoxItem).Content.ToString();
+                    }
+                    catch
+                    {
+                        cmdCoBoxSI = cmdCoBox.SelectedItem.ToString();
+                    }
+                    switch (cmdCoBoxSI)
                     {
                         case "condition":
                             (GetControl("Conditions_ComboBox", getThumb) as ComboBox).IsEnabled = false;

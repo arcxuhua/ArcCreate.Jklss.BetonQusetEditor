@@ -35,11 +35,6 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
 
         private MainWindowModels mainWindowModels = null;
 
-        public EventLoaderBase(MainWindow mainWindow, MainWindowModels mainWindowModels)
-        {
-            this.mainWindow = mainWindow;
-            this.mainWindowModels = mainWindowModels;
-        }
         /// <summary>
         /// 初始化默认的Json文本
         /// </summary>

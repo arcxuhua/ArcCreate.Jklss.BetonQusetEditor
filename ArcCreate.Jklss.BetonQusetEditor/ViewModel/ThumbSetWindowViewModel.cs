@@ -170,14 +170,14 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                             return;
                         }
 
-                        MainWindowViewModel.saveResult = new MainWindowViewModel.SaveResult()
-                        {
-                            One = ClassificationsSeleted,
-                            Two = TermsSeleted,
-                            Three = IsNegate,
-                            Four = itemNums
-                        };
-
+                        //MainWindowViewModel.saveResult = new MainWindowViewModel.SaveResult()
+                        //{
+                        //    One = ClassificationsSeleted,
+                        //    Two = TermsSeleted,
+                        //    Three = IsNegate,
+                        //    Four = itemNums
+                        //};
+                        (obj as Window).Tag = true;
                         (obj as Window).Close();
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }

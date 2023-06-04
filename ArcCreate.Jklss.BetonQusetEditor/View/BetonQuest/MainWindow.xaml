@@ -63,13 +63,13 @@
 
                 <Button Width="130" Height="30" materialDesign:ButtonAssist.CornerRadius="0" Margin="1 0 0 0"
                     VerticalAlignment="Center" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignPaperSecondaryButton}"
-                    Command="{Binding ReadFilePathCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}"
+                    Command="{Binding OpenMarketCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}"
                     Content="打开市场" Foreground="White" Background="{x:Null}" BorderBrush="White" FontSize="12" Cursor="Hand"/>
 
                 <Button Width="130" Height="30" materialDesign:ButtonAssist.CornerRadius="0" Margin="0 0 1 0"
                     VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignPaperSecondaryButton}" 
-                    Command="{Binding SaveJson}" CommandParameter="{Binding ., RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                    Content="保存配置" Foreground="White" Background="{x:Null}" BorderBrush="White" FontSize="12"/>
+                    Command="{Binding SaveJsonCommand}" CommandParameter="{Binding ., RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                    Content="保存配置" Foreground="White" Background="{x:Null}" BorderBrush="White" FontSize="12" Cursor="Hand"/>
                 <Button Width="130" Height="30" materialDesign:ButtonAssist.CornerRadius="0" Margin="0 0 130 0"
                     VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignPaperSecondaryButton}"
                     Command="{Binding SaveYaml}" CommandParameter="{Binding ., RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
@@ -83,7 +83,7 @@
                 <ScrollViewer>
                     <Grid>
                         <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 10 1 0">
-                            <Button Command="{Binding CreateNewTalkCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="#FF5307B3" BorderBrush="#FF5307B3" MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" Cursor="Hand">
+                            <Button Command="{Binding CreateNewTalkCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="#FF5307B3" BorderBrush="#FF5307B3" MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" Cursor="Hand">
                                 <Button.Content>
                                     <materialDesign:PackIcon Kind="Book" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" />
                                 </Button.Content>
@@ -92,7 +92,7 @@
                         </Grid>
 
                         <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 120 1 0">
-                            <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateNpcTalkCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" BorderBrush="#FF5307B3" Background="#FF5307B3">
+                            <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateNpcTalkCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" BorderBrush="#FF5307B3" Background="#FF5307B3">
                                 <Button.Content>
                                     <materialDesign:PackIcon Kind="BookEdit" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" />
                                 </Button.Content>
@@ -101,7 +101,7 @@
                         </Grid>
 
                         <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 230 1 0">
-                            <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreatePlayerTalkCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="#FF5307B3" BorderBrush="#FF5307B3">
+                            <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreatePlayerTalkCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="#FF5307B3" BorderBrush="#FF5307B3">
                                 <Button.Content>
                                     <materialDesign:PackIcon Kind="BookEducation" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" />
                                 </Button.Content>
@@ -110,7 +110,7 @@
                         </Grid>
 
                         <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 340 1 0">
-                            <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateConditionsCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="Black" BorderBrush="Black">
+                            <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateConditionsCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="Black" BorderBrush="Black">
                                 <Button.Content>
                                     <materialDesign:PackIcon Kind="BookmarkMultiple" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" />
                                 </Button.Content>
@@ -119,7 +119,7 @@
                         </Grid>
 
                         <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 450 1 0">
-                            <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateEventsCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="Black" BorderBrush="Black">
+                            <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateEventsCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="Black" BorderBrush="Black">
                                 <Button.Content>
                                     <materialDesign:PackIcon Kind="BookmarkPlus" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" />
                                 </Button.Content>
@@ -128,7 +128,7 @@
                         </Grid>
 
                         <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 560 1 0">
-                            <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateObjectivesCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="Black" BorderBrush="Black">
+                            <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateObjectivesCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="Black" BorderBrush="Black">
                                 <Button.Content>
                                     <materialDesign:PackIcon Kind="BookmarkCheck" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" />
                                 </Button.Content>
@@ -137,7 +137,7 @@
                         </Grid>
 
                         <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 670 1 0">
-                            <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateJournalCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="White" BorderBrush="White">
+                            <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateJournalCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="White" BorderBrush="White">
                                 <Button.Content>
                                     <materialDesign:PackIcon Kind="BookmarkBoxMultipleOutline" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" Foreground="#DD000000" />
                                 </Button.Content>
@@ -146,7 +146,7 @@
                         </Grid>
 
                         <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 780 1 0">
-                            <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateItemsCmd}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="White" BorderBrush="White" Margin="0,0,0,0">
+                            <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" IsEnabled="{Binding isHaveSubjcet}" Command="{Binding CreateItemsCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="White" BorderBrush="White" Margin="0,0,0,0">
                                 <Button.Content>
                                     <materialDesign:PackIcon Kind="Boombox" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" Foreground="#DD000000" />
                                 </Button.Content>
@@ -229,14 +229,1064 @@
 
                     <Grid>
                         <Grid>
-                            <Border x:Name="outsaid" ClipToBounds="True" BorderThickness="1" Background="White" Margin="0,0,0,0" PreviewMouseWheel="outside_PreviewMouseWheel" PreviewMouseDown="Scrollviewer_MouseDown" PreviewMouseUp="Scrollviewer_MouseUp">
-                                <Grid>
-                                    <Canvas x:Name="cvmenu" HorizontalAlignment="Left" Height="509800" VerticalAlignment="Top" Width="1277400" Background="#33000000">
-                                        <Canvas.RenderTransform>
-                                            <TransformGroup />
-                                        </Canvas.RenderTransform>
+                            <Border x:Name="outsaid" ClipToBounds="True" BorderThickness="1" Background="White" Margin="0,0,0,0">
+                                <binding:Interaction.Triggers>
+                                    <binding:EventTrigger EventName="Loaded">
+                                        <binding:InvokeCommandAction Command="{Binding BordOutSideLoadedCommand}" CommandParameter="{Binding ElementName=outsaid}">
+                                        </binding:InvokeCommandAction>
+                                    </binding:EventTrigger>
+                                </binding:Interaction.Triggers>
+                                <Grid x:Name="cvmenu_Grid">
+                                    <ItemsControl x:Name="cvmenuItems" ItemsSource="{Binding CardItems,Mode=TwoWay}" Foreground="Black">
+                                        
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <Canvas x:Name="cvmenu" HorizontalAlignment="Left" Height="509800" VerticalAlignment="Top" Width="1277400" Background="#33000000">
+                                                    <Canvas.RenderTransform>
+                                                        <TransformGroup>
+                                                            <TranslateTransform X="{Binding TranslateXProp}" Y="{Binding TranslateYProp}"></TranslateTransform>
+                                                            <RotateTransform CenterX="{Binding RotateXProp}" CenterY="{Binding RotateYProp}"></RotateTransform>
+                                                            <ScaleTransform ScaleX="{Binding ScaleTransform_ScaleXProp}" ScaleY="{Binding ScaleTransform_ScaleYProp}" CenterY="{Binding ScaleTransform_CenterYProp}" CenterX="{Binding ScaleTransform_CenterXProp}"></ScaleTransform>
+                                                        </TransformGroup>
+                                                    </Canvas.RenderTransform>
+                                                    <binding:Interaction.Triggers>
+                                                        <binding:EventTrigger EventName="Loaded">
+                                                            <binding:InvokeCommandAction Command="{Binding CvMenuLoadedCommand}" CommandParameter="{Binding ElementName=cvmenu}">
+                                                            </binding:InvokeCommandAction>
+                                                        </binding:EventTrigger>
+                                                    </binding:Interaction.Triggers>
+                                                </Canvas>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
 
-                                    </Canvas>
+                                        <ItemsControl.ItemContainerStyle>
+                                            <Style>
+                                                <Setter Property="Canvas.Top" Value="{Binding CvTop}"/>
+                                                <Setter Property="Canvas.Left" Value="{Binding CvLeft}"/>
+                                                <Setter Property="Canvas.ZIndex" Value="{Binding CvZIndex}"/>
+                                            </Style>
+                                        </ItemsControl.ItemContainerStyle>
+
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Thumb x:Name="ctrl" Width="{Binding Path=ThumbWidth}" Height="{Binding Path=ThumbHeight}">
+                                                    <binding:Interaction.Triggers>
+                                                        <binding:EventTrigger EventName="Loaded">
+                                                            <binding:InvokeCommandAction Command="{Binding Path=ThumbLoadedCommand}" CommandParameter="{Binding ElementName=ctrl}">
+                                                            </binding:InvokeCommandAction>
+                                                        </binding:EventTrigger>
+                                                    </binding:Interaction.Triggers>
+                                                </Thumb>
+                                                <DataTemplate.Triggers>
+                                                    <DataTrigger Binding="{Binding Path=Type}" Value="Subject">
+                                                        <Setter Property="Template" TargetName="ctrl">
+                                                            <Setter.Value>
+                                                                <ControlTemplate>
+                                                                    <materialDesign:Flipper materialDesign:ShadowAssist.ShadowDepth="Depth0" Width="400" Height="148">
+                                                                        <materialDesign:Flipper.Effect>
+                                                                            <DropShadowEffect x:Name="ColorModel" Color="{Binding Path=ShadowColor}" ShadowDepth="0" Direction="0" BlurRadius="25"/>
+                                                                        </materialDesign:Flipper.Effect>
+                                                                        <materialDesign:Flipper.FrontContent>
+                                                                            <Grid Height="148" Width="400" Background="AliceBlue" TextBlock.Foreground="Black">
+                                                                                <Grid.RowDefinitions>
+                                                                                    <RowDefinition Height="70" />
+                                                                                    <RowDefinition Height="*" />
+                                                                                </Grid.RowDefinitions>
+                                                                                <materialDesign:ColorZone Mode="PrimaryDark" VerticalAlignment="Stretch">
+                                                                                    <materialDesign:PackIcon Kind="Book" Height="64" Width="64" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                                                                </materialDesign:ColorZone>
+                                                                                <Button x:Name="HelpTool_Btn" Command="{Binding Path=HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" Background="White" BorderBrush="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
+                                                                                    <materialDesign:PackIcon  Kind="Help" />
+                                                                                </Button>
+                                                                                <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                                    <TextBlock HorizontalAlignment="Center" Margin="0 5 0 0" FontSize="18" FontWeight="Bold" Text="对话主体" />
+                                                                                    <Grid >
+                                                                                        <TextBlock Grid.Row="1" Text="配置名称："  Margin="10 5 0 0" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                        <TextBox Text="{Binding Path=ConfigName}" Grid.Row="1" Width="130" Height="25" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" />
+                                                                                    </Grid>
+                                                                                    <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
+                                                                                </StackPanel>
+                                                                            </Grid>
+                                                                        </materialDesign:Flipper.FrontContent>
+                                                                        <materialDesign:Flipper.BackContent>
+                                                                            <Grid Height="128" Width="410" Background="AliceBlue">
+                                                                                <Grid.RowDefinitions>
+                                                                                    <RowDefinition Height="Auto" />
+                                                                                    <RowDefinition Height="*" />
+                                                                                </Grid.RowDefinitions>
+                                                                                <materialDesign:ColorZone Mode="PrimaryDark" Padding="6">
+                                                                                    <StackPanel Orientation="Horizontal">
+                                                                                        <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" HorizontalAlignment="Left">
+                                                                                            <materialDesign:PackIcon Kind="ArrowLeft" HorizontalAlignment="Right" />
+                                                                                        </Button>
+                                                                                        <TextBlock Margin="0 0 0 0" VerticalAlignment="Center" Text="编辑页" />
+                                                                                    </StackPanel>
+                                                                                </materialDesign:ColorZone>
+                                                                                <Grid Grid.Row="1" Margin="0 0 0 0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="400">
+                                                                                    <Grid.RowDefinitions>
+                                                                                        <RowDefinition Height="30" />
+                                                                                        <RowDefinition Height="*" />
+                                                                                    </Grid.RowDefinitions>
+                                                                                    <TextBlock Text="绑定NPC：" Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                    <TextBox x:Name="NpcName_TBox" Text="{Binding Path=NPC_ID}" Width="300" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                                                                                    <TextBlock Text="显示名称：" Grid.Row="1" Margin="10 10 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                    <TextBox x:Name="ShowNpcName_TBox" Text="{Binding Path=ItemContent}" Grid.Row="1" Width="300" Height="30" Margin="70 10 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                                                                                </Grid>
+                                                                            </Grid>
+                                                                        </materialDesign:Flipper.BackContent>
+                                                                    </materialDesign:Flipper>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+
+                                                    <DataTrigger Binding="{Binding Path=Type}" Value="NPC">
+                                                        <Setter Property="Template" TargetName="ctrl">
+                                                            <Setter.Value>
+                                                                <ControlTemplate>
+                                                                    <materialDesign:Flipper materialDesign:ShadowAssist.ShadowDepth="Depth0" Width="400">
+                                                                        <materialDesign:Flipper.Effect>
+                                                                            <DropShadowEffect x:Name="ColorModel" Color="{Binding Path=ShadowColor}" ShadowDepth="0" Direction="0" BlurRadius="25"/>
+                                                                        </materialDesign:Flipper.Effect>
+                                                                        <materialDesign:Flipper.FrontContent>
+                                                                            <Grid Height="148" Width="400" Background="AliceBlue"  TextBlock.Foreground="Black">
+                                                                                <Grid.RowDefinitions>
+                                                                                    <RowDefinition Height="70" />
+                                                                                    <RowDefinition Height="*" />
+                                                                                </Grid.RowDefinitions>
+                                                                                <materialDesign:ColorZone Mode="PrimaryDark" VerticalAlignment="Stretch">
+                                                                                    <materialDesign:PackIcon Kind="BookEdit" Height="64" Width="64" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                                                                </materialDesign:ColorZone>
+                                                                                <Button x:Name="HelpTool_Btn" Command="{Binding Path=HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" Background="White" BorderBrush="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
+                                                                                    <materialDesign:PackIcon  Kind="Help" />
+                                                                                </Button>
+                                                                                <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                                    <TextBlock HorizontalAlignment="Center" Margin="0 5 0 0" FontSize="18" FontWeight="Bold" Text="NPC对话" />
+                                                                                    <Grid>
+                                                                                        <TextBlock Text="配置名称："  Margin="10 5 0 0" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                        <TextBox x:Name="ConditionsConfig_TBox" Text="{Binding Path=ConfigName}" Width="150" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False"/>
+                                                                                    </Grid>
+                                                                                    <Button x:Name="BackBtn" Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑">
+                                                                                        
+                                                                                    </Button>
+                                                                                </StackPanel>
+                                                                            </Grid>
+                                                                        </materialDesign:Flipper.FrontContent>
+                                                                        <materialDesign:Flipper.BackContent>
+                                                                            <Grid Height="350" Width="410" Background="AliceBlue" TextBlock.Foreground="Black">
+                                                                                <Grid.RowDefinitions>
+                                                                                    <RowDefinition Height="Auto" />
+                                                                                    <RowDefinition Height="*" />
+                                                                                </Grid.RowDefinitions>
+                                                                                <materialDesign:ColorZone Mode="Dark" Padding="6">
+                                                                                    <StackPanel Orientation="Horizontal">
+                                                                                        <Button x:Name="FrontBtn" Style="{StaticResource MaterialDesignToolForegroundButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" HorizontalAlignment="Left">
+                                                                                            <materialDesign:PackIcon Kind="ArrowLeft" HorizontalAlignment="Right" />
+                                                                                            
+                                                                                        </Button>
+                                                                                        <TextBlock Margin="0 0 0 0" VerticalAlignment="Center" Text="编辑页" />
+                                                                                    </StackPanel>
+                                                                                </materialDesign:ColorZone>
+                                                                                <Grid Grid.Row="1" Margin="0 0 0 0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="400">
+                                                                                    <Grid.RowDefinitions>
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+                                                                                    </Grid.RowDefinitions>
+
+                                                                                    <Grid Grid.Row="0">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 1 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="2">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 2 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="4">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 3 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="6">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 4 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="8">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 5 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="10">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 6 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="1">
+                                                                                        <TextBlock Text="编辑类型：" Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+
+                                                                                        <ComboBox x:Name="Conditions_CBox" SelectedItem="{Binding Path=SelectType}" ItemsSource="{Binding Path=AllType}" Width="300" ToolTip="除了文案外其他选项不建议您以手动输入的方式添加！" Height="25" Grid.Row="0" materialDesign:HintAssist.Hint="请选择需要编辑的类型" HorizontalAlignment="Left" Margin="70,0,0,0">
+                                                                                            
+                                                                                            <binding:Interaction.Triggers>
+                                                                                                <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:InvokeCommandAction Command="{Binding Path=TypeLoadedCommand}" CommandParameter="{Binding ElementName=Conditions_CBox}">
+                                                                                                    </binding:InvokeCommandAction>
+                                                                                                </binding:EventTrigger>
+                                                                                            </binding:Interaction.Triggers>
+                                                                                        </ComboBox>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="3">
+                                                                                        <TextBlock Grid.Row="1" Text="编辑命令："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+
+                                                                                        <ComboBox SelectedItem="{Binding Path=SelectCmd}" ItemsSource="{Binding Path=AllCmd}" x:Name="ConditionsCmdEdit_CBox" materialDesign:HintAssist.Hint="请选择需要编辑的命令" Width="300" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                                                                            <binding:Interaction.Triggers>
+                                                                                                <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:InvokeCommandAction Command="{Binding Path=CmdLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdEdit_CBox}">
+                                                                                                    </binding:InvokeCommandAction>
+                                                                                                </binding:EventTrigger>
+                                                                                            </binding:Interaction.Triggers>
+                                                                                        </ComboBox>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="5">
+                                                                                        <TextBlock Grid.Row="1" Text="参数：" Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+
+                                                                                        <ComboBox SelectedItem="{Binding Path=SelectParameter}" ItemsSource="{Binding Path=AllParameter}" x:Name="ConditionsCmdparameterEdit_CBox" materialDesign:HintAssist.Hint="请选择需要编辑的参数" Width="300" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                                                                            <binding:Interaction.Triggers>
+                                                                                                <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:InvokeCommandAction Command="{Binding Path=ParameterLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdparameterEdit_CBox}">
+                                                                                                    </binding:InvokeCommandAction>
+                                                                                                </binding:EventTrigger>
+                                                                                            </binding:Interaction.Triggers>
+                                                                                        </ComboBox>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="7">
+                                                                                        <TextBlock Grid.Row="1" Text="项："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+
+                                                                                        <ComboBox x:Name="ConditionsCmdProjectEdit_CBox" SelectedItem="{Binding Path=SelectItem}" ItemsSource="{Binding Path=AllItem}" materialDesign:HintAssist.Hint="请选择需要编辑的项" Width="235" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                                                                            <binding:Interaction.Triggers>
+                                                                                                <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:InvokeCommandAction Command="{Binding Path=ItemLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdProjectEdit_CBox}">
+                                                                                                    </binding:InvokeCommandAction>
+                                                                                                </binding:EventTrigger>
+                                                                                            </binding:Interaction.Triggers>
+                                                                                        </ComboBox>
+
+                                                                                        <Button x:Name="ConditionsAdd_Btn" Command="{Binding Path=ItemAddCommand}" CommandParameter="{Binding ElementName=ConditionsCmdProjectEdit_CBox}" IsEnabled="{Binding Path=ItemAddIsEnable}" Width="20" Height="20" Margin="280 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                                                            <materialDesign:PackIcon Kind="Plus" />
+                                                                                        </Button>
+                                                                                        <Button x:Name="ConditionsRemove_Btn" Command="{Binding Path=ItemRemoveCommand}" CommandParameter="{Binding ElementName=ConditionsCmdProjectEdit_CBox}" IsEnabled="{Binding Path=ItemRemoveIsEnable}" Grid.Row="1" Width="20" Height="20" Margin="330 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                                                            <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                                                        </Button>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="9">
+                                                                                        <TextBlock Grid.Row="2" Text="内容："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                        <TextBox x:Name="Conditions_TBox" Text="{Binding Path=ItemContent}" materialDesign:HintAssist.Hint="请填写项的内容" Width="300"  FontSize="11" Height="25" Margin="40 0 0 0"></TextBox>
+                                                                                        <ComboBox x:Name="Conditions_ComboBox" SelectedItem="{Binding Path=ItemSelectContent}" ItemsSource="{Binding Path=Item_Items}" IsEnabled="{Binding Path=ItemCoBoxIsEnable}" Visibility="{Binding Path=ItemCoBoxVisibility}" Width="300" FontSize="11" Height="25" Margin="70 0 0 0"></ComboBox>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="11">
+                                                                                        <Button x:Name="ConditionsSave_Btn" Width="300" Height="30" Margin="0 0 0 0" Command="{Binding Path=SaveCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}">
+                                                                                            保存
+                                                                                        </Button>
+                                                                                    </Grid>
+                                                                                </Grid>
+                                                                            </Grid>
+                                                                        </materialDesign:Flipper.BackContent>
+                                                                    </materialDesign:Flipper>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+
+                                                    <DataTrigger Binding="{Binding Path=Type}" Value="Player">
+                                                        <Setter Property="Template" TargetName="ctrl">
+                                                            <Setter.Value>
+                                                                <ControlTemplate>
+                                                                    <materialDesign:Flipper materialDesign:ShadowAssist.ShadowDepth="Depth0" Width="400">
+                                                                        <materialDesign:Flipper.Effect>
+                                                                            <DropShadowEffect x:Name="ColorModel" Color="{Binding Path=ShadowColor}" ShadowDepth="0" Direction="0" BlurRadius="25"/>
+                                                                        </materialDesign:Flipper.Effect>
+                                                                        <materialDesign:Flipper.FrontContent>
+                                                                            <Grid Height="148" Width="400" Background="AliceBlue"  TextBlock.Foreground="Black">
+                                                                                <Grid.RowDefinitions>
+                                                                                    <RowDefinition Height="70" />
+                                                                                    <RowDefinition Height="*" />
+                                                                                </Grid.RowDefinitions>
+                                                                                <materialDesign:ColorZone Mode="PrimaryDark" VerticalAlignment="Stretch">
+                                                                                    <materialDesign:PackIcon Kind="BookEducation" Height="64" Width="64" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                                                                </materialDesign:ColorZone>
+                                                                                <Button x:Name="HelpTool_Btn" Command="{Binding Path=HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" Background="White" BorderBrush="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
+                                                                                    <materialDesign:PackIcon  Kind="Help" />
+                                                                                </Button>
+                                                                                <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                                    <TextBlock HorizontalAlignment="Center" Margin="0 5 0 0" FontSize="18" FontWeight="Bold" Text="玩家对话" />
+                                                                                    <Grid>
+                                                                                        <TextBlock Text="配置名称："  Margin="10 5 0 0" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                        <TextBox x:Name="ConditionsConfig_TBox" Text="{Binding Path=ConfigName}" Width="150" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False"/>
+                                                                                    </Grid>
+                                                                                    <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
+                                                                                </StackPanel>
+                                                                            </Grid>
+                                                                        </materialDesign:Flipper.FrontContent>
+                                                                        <materialDesign:Flipper.BackContent>
+                                                                            <Grid Height="350" Width="410" Background="AliceBlue"  TextBlock.Foreground="Black">
+                                                                                <Grid.RowDefinitions>
+                                                                                    <RowDefinition Height="Auto" />
+                                                                                    <RowDefinition Height="*" />
+                                                                                </Grid.RowDefinitions>
+                                                                                <materialDesign:ColorZone Mode="Dark" Padding="6">
+                                                                                    <StackPanel Orientation="Horizontal">
+                                                                                        <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" HorizontalAlignment="Left">
+                                                                                            <materialDesign:PackIcon Kind="ArrowLeft" HorizontalAlignment="Right" />
+                                                                                        </Button>
+                                                                                        <TextBlock Margin="0 0 0 0" VerticalAlignment="Center" Text="编辑页" />
+                                                                                    </StackPanel>
+                                                                                </materialDesign:ColorZone>
+                                                                                <Grid Grid.Row="1" Margin="0 0 0 0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="400">
+                                                                                    <Grid.RowDefinitions>
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+                                                                                    </Grid.RowDefinitions>
+
+                                                                                    <Grid Grid.Row="0">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 1 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="2">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 2 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="4">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 3 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="6">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 4 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="8">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 5 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="10">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 6 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="1">
+                                                                                        <TextBlock Text="编辑类型：" Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+
+                                                                                        <ComboBox x:Name="Conditions_CBox" SelectedItem="{Binding Path=SelectType}" ItemsSource="{Binding Path=AllType}" Width="300" ToolTip="除了文案外其他选项不建议您以手动输入的方式添加！" Height="25" Grid.Row="0" materialDesign:HintAssist.Hint="请选择需要编辑的类型" HorizontalAlignment="Left" Margin="70,0,0,0">
+                                                                                            
+                                                                                            <binding:Interaction.Triggers>
+                                                                                                <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:InvokeCommandAction Command="{Binding Path=TypeLoadedCommand}" CommandParameter="{Binding ElementName=Conditions_CBox}">
+                                                                                                    </binding:InvokeCommandAction>
+                                                                                                </binding:EventTrigger>
+                                                                                            </binding:Interaction.Triggers>
+                                                                                        </ComboBox>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="3">
+                                                                                        <TextBlock Grid.Row="1" Text="编辑命令："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+
+                                                                                        <ComboBox SelectedItem="{Binding Path=SelectCmd}" ItemsSource="{Binding Path=AllCmd}" x:Name="ConditionsCmdEdit_CBox" materialDesign:HintAssist.Hint="请选择需要编辑的命令" Width="300" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                                                                            <binding:Interaction.Triggers>
+                                                                                                <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:InvokeCommandAction Command="{Binding Path=CmdLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdEdit_CBox}">
+                                                                                                    </binding:InvokeCommandAction>
+                                                                                                </binding:EventTrigger>
+                                                                                            </binding:Interaction.Triggers>
+                                                                                        </ComboBox>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="5">
+                                                                                        <TextBlock Grid.Row="1" Text="参数：" Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+
+                                                                                        <ComboBox SelectedItem="{Binding Path=SelectParameter}" ItemsSource="{Binding Path=AllParameter}" x:Name="ConditionsCmdparameterEdit_CBox" materialDesign:HintAssist.Hint="请选择需要编辑的参数" Width="300" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                                                                            <binding:Interaction.Triggers>
+                                                                                                <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:InvokeCommandAction Command="{Binding Path=ParameterLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdparameterEdit_CBox}">
+                                                                                                    </binding:InvokeCommandAction>
+                                                                                                </binding:EventTrigger>
+                                                                                            </binding:Interaction.Triggers>
+                                                                                        </ComboBox>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="7">
+                                                                                        <TextBlock Grid.Row="1" Text="项："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+
+                                                                                        <ComboBox x:Name="ConditionsCmdProjectEdit_CBox" SelectedItem="{Binding Path=SelectItem}" ItemsSource="{Binding Path=AllItem}" materialDesign:HintAssist.Hint="请选择需要编辑的项" Width="235" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                                                                            <binding:Interaction.Triggers>
+                                                                                                <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:InvokeCommandAction Command="{Binding Path=ItemLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdProjectEdit_CBox}">
+                                                                                                    </binding:InvokeCommandAction>
+                                                                                                </binding:EventTrigger>
+                                                                                            </binding:Interaction.Triggers>
+                                                                                        </ComboBox>
+
+                                                                                        <Button x:Name="ConditionsAdd_Btn" Command="{Binding Path=ItemAddCommand}" CommandParameter="{Binding ElementName=ConditionsCmdProjectEdit_CBox}" IsEnabled="{Binding Path=ItemAddIsEnable}" Width="20" Height="20" Margin="280 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                                                            <materialDesign:PackIcon Kind="Plus" />
+                                                                                        </Button>
+                                                                                        <Button x:Name="ConditionsRemove_Btn" Command="{Binding Path=ItemRemoveCommand}" CommandParameter="{Binding ElementName=ConditionsCmdProjectEdit_CBox}" IsEnabled="{Binding Path=ItemRemoveIsEnable}" Grid.Row="1" Width="20" Height="20" Margin="330 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                                                            <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                                                        </Button>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="9">
+                                                                                        <TextBlock Grid.Row="2" Text="内容："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                        <TextBox x:Name="Conditions_TBox" Text="{Binding Path=ItemContent}" materialDesign:HintAssist.Hint="请填写项的内容" Width="300"  FontSize="11" Height="25" Margin="40 0 0 0"></TextBox>
+                                                                                        <ComboBox x:Name="Conditions_ComboBox" SelectedItem="{Binding Path=ItemSelectContent}" ItemsSource="{Binding Path=Item_Items}" IsEnabled="{Binding Path=ItemCoBoxIsEnable}" Visibility="{Binding Path=ItemCoBoxVisibility}" Width="300" FontSize="11" Height="25" Margin="70 0 0 0"></ComboBox>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="11">
+                                                                                        <Button x:Name="ConditionsSave_Btn" Width="300" Height="30" Margin="0 0 0 0" Command="{Binding Path=SaveCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}">
+                                                                                            保存
+                                                                                        </Button>
+                                                                                    </Grid>
+                                                                                </Grid>
+                                                                            </Grid>
+                                                                        </materialDesign:Flipper.BackContent>
+                                                                    </materialDesign:Flipper>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+
+                                                    <DataTrigger Binding="{Binding Path=Type}" Value="Conditions">
+                                                        <Setter Property="Template" TargetName="ctrl">
+                                                            <Setter.Value>
+                                                                <ControlTemplate>
+                                                                    <materialDesign:Flipper materialDesign:ShadowAssist.ShadowDepth="Depth0" Width="400">
+                                                                        <materialDesign:Flipper.Effect>
+                                                                            <DropShadowEffect x:Name="ColorModel" Color="{Binding Path=ShadowColor}" ShadowDepth="0" Direction="0" BlurRadius="25"/>
+                                                                        </materialDesign:Flipper.Effect>
+                                                                        <materialDesign:Flipper.FrontContent>
+                                                                            <Grid Height="148" Width="400" Background="AliceBlue">
+                                                                                <Grid.RowDefinitions>
+                                                                                    <RowDefinition Height="70" />
+                                                                                    <RowDefinition Height="*" />
+                                                                                </Grid.RowDefinitions>
+                                                                                <materialDesign:ColorZone Mode="Dark" VerticalAlignment="Stretch">
+                                                                                    <materialDesign:PackIcon Kind="BookmarkMultiple" Height="64" Width="64" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                                                                </materialDesign:ColorZone>
+                                                                                <Button  x:Name="HelpTool_Btn" Command="{Binding Path=HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" BorderBrush="White" Background="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
+                                                                                    <materialDesign:PackIcon  Kind="Help" />
+                                                                                </Button>
+                                                                                <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                                    <TextBlock HorizontalAlignment="Center" Margin="0 5 0 0" FontSize="22" FontWeight="Bold" Text="条件" />
+                                                                                    <Grid>
+                                                                                        <TextBlock Text="配置名称："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                        <TextBox x:Name="ConditionsConfig_TBox" Text="{Binding Path=ConfigName}" Width="100" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False"/>
+
+                                                                                        <TextBlock Grid.Row="0" Text="条件类型："  Margin="210 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                        <ComboBox SelectedItem="{Binding Path=SelectType}" ItemsSource="{Binding Path=AllType}" x:Name="Conditions_CBox"  Width="110" Height="30" Grid.Row="0" materialDesign:HintAssist.Hint="请选择" HorizontalAlignment="Left" Margin="270,0,0,0">
+                                                                                            
+                                                                                            <binding:Interaction.Triggers>
+                                                                                                <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:InvokeCommandAction Command="{Binding Path=TypeLoadedCommand}" CommandParameter="{Binding ElementName=Conditions_CBox}">
+                                                                                                    </binding:InvokeCommandAction>
+                                                                                                </binding:EventTrigger>
+                                                                                            </binding:Interaction.Triggers>
+                                                                                        </ComboBox>
+                                                                                    </Grid>
+                                                                                    <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
+                                                                                </StackPanel>
+                                                                            </Grid>
+                                                                        </materialDesign:Flipper.FrontContent>
+                                                                        <materialDesign:Flipper.BackContent>
+                                                                            <Grid Height="300" Width="410" Background="AliceBlue">
+                                                                                <Grid.RowDefinitions>
+                                                                                    <RowDefinition Height="Auto" />
+                                                                                    <RowDefinition Height="*" />
+                                                                                </Grid.RowDefinitions>
+                                                                                <materialDesign:ColorZone Mode="Dark" Padding="6">
+                                                                                    <StackPanel Orientation="Horizontal">
+                                                                                        <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" HorizontalAlignment="Left">
+                                                                                            <materialDesign:PackIcon Kind="ArrowLeft" HorizontalAlignment="Right" />
+                                                                                        </Button>
+                                                                                        <TextBlock Margin="0 0 0 0" VerticalAlignment="Center" Text="编辑页" />
+                                                                                    </StackPanel>
+                                                                                </materialDesign:ColorZone>
+                                                                                <Grid Grid.Row="1" Margin="0 0 0 0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="400">
+                                                                                    <Grid.RowDefinitions>
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+                                                                                    </Grid.RowDefinitions>
+
+                                                                                    <Grid Grid.Row="0">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 1 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="2">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 2 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="4">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 3 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="6">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 4 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="8">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 5 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="1">
+                                                                                        <TextBlock Text="编辑命令："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                        <ComboBox SelectedItem="{Binding Path=SelectCmd}" ItemsSource="{Binding Path=AllCmd}" x:Name="ConditionsCmdEdit_CBox" Width="300" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left">
+                                                                                            <binding:Interaction.Triggers>
+                                                                                                <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:InvokeCommandAction Command="{Binding Path=CmdLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdEdit_CBox}">
+                                                                                                    </binding:InvokeCommandAction>
+                                                                                                </binding:EventTrigger>
+                                                                                            </binding:Interaction.Triggers>
+                                                                                        </ComboBox>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="3">
+                                                                                        <TextBlock Text="参数："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                        <ComboBox SelectedItem="{Binding Path=SelectParameter}" ItemsSource="{Binding Path=AllParameter}" x:Name="ConditionsCmdparameterEdit_CBox" Width="300" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left">
+                                                                                            <binding:Interaction.Triggers>
+                                                                                                <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:InvokeCommandAction Command="{Binding Path=ParameterLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdparameterEdit_CBox}">
+                                                                                                    </binding:InvokeCommandAction>
+                                                                                                </binding:EventTrigger>
+                                                                                            </binding:Interaction.Triggers>
+                                                                                        </ComboBox>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="5">
+                                                                                        <TextBlock Text="项："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                        <ComboBox SelectedItem="{Binding Path=SelectItem}" ItemsSource="{Binding Path=AllItem}" x:Name="ConditionsCmdProjectEdit_CBox" Width="235" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left">
+                                                                                            <binding:Interaction.Triggers>
+                                                                                                <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:InvokeCommandAction Command="{Binding Path=ItemLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdProjectEdit_CBox}">
+                                                                                                    </binding:InvokeCommandAction>
+                                                                                                </binding:EventTrigger>
+                                                                                            </binding:Interaction.Triggers>
+                                                                                        </ComboBox>
+                                                                                        <Button x:Name="ConditionsAdd_Btn" Command="{Binding Path=ItemAddCommand}" CommandParameter="{Binding ElementName=ConditionsCmdProjectEdit_CBox}" IsEnabled="{Binding Path=ItemAddIsEnable}" Width="20" Height="20" Margin="280 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                                                            <materialDesign:PackIcon Kind="Plus" />
+                                                                                        </Button>
+                                                                                        <Button x:Name="ConditionsRemove_Btn" Command="{Binding Path=ItemRemoveCommand}" CommandParameter="{Binding ElementName=ConditionsCmdProjectEdit_CBox}" IsEnabled="{Binding Path=ItemRemoveIsEnable}" Width="20" Height="20" Margin="330 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                                                            <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                                                        </Button>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="7">
+                                                                                        <TextBlock Grid.Row="2" Text="内容："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                        <TextBox Text="{Binding Path=ItemContent}" x:Name="Conditions_TBox" Width="300" Margin="40 0 0 0" FontSize="11" Height="30"></TextBox>
+                                                                                        <ComboBox SelectedItem="{Binding Path=ItemSelectContent}" ItemsSource="{Binding Path=Item_Items}" IsEnabled="{Binding Path=ItemCoBoxIsEnable}" Visibility="{Binding Path=ItemCoBoxVisibility}" x:Name="Conditions_ComboBox" Width="275" Margin="40 0 0 0" FontSize="11" Height="30"></ComboBox>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="9">
+                                                                                        <Button x:Name="ConditionsSave_Btn" Width="300" Height="25" Margin="0 0 0 0" Command="{Binding Path=SaveCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}">
+                                                                                            保存
+                                                                                        </Button>
+                                                                                    </Grid>
+                                                                                </Grid>
+                                                                            </Grid>
+                                                                        </materialDesign:Flipper.BackContent>
+                                                                    </materialDesign:Flipper>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+
+                                                    <DataTrigger Binding="{Binding Path=Type}" Value="Events">
+                                                        <Setter Property="Template" TargetName="ctrl">
+                                                            <Setter.Value>
+                                                                <ControlTemplate>
+                                                                    <materialDesign:Flipper materialDesign:ShadowAssist.ShadowDepth="Depth0" Width="400">
+                                                                        <materialDesign:Flipper.Effect>
+                                                                            <DropShadowEffect x:Name="ColorModel" Color="{Binding Path=ShadowColor}" ShadowDepth="0" Direction="0" BlurRadius="25"/>
+                                                                        </materialDesign:Flipper.Effect>
+                                                                        <materialDesign:Flipper.FrontContent>
+                                                                            <Grid Height="148" Width="400" Background="AliceBlue">
+                                                                                <Grid.RowDefinitions>
+                                                                                    <RowDefinition Height="70" />
+                                                                                    <RowDefinition Height="*" />
+                                                                                </Grid.RowDefinitions>
+                                                                                <materialDesign:ColorZone Mode="Dark" VerticalAlignment="Stretch">
+                                                                                    <materialDesign:PackIcon Kind="BookmarkPlus" Height="64" Width="64" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                                                                </materialDesign:ColorZone>
+                                                                                <Button  x:Name="HelpTool_Btn" Command="{Binding Path=HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" BorderBrush="White" Background="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
+                                                                                    <materialDesign:PackIcon  Kind="Help" />
+                                                                                </Button>
+                                                                                <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                                    <TextBlock HorizontalAlignment="Center" Margin="0 5 0 0" FontSize="22" FontWeight="Bold" Text="事件" />
+                                                                                    <Grid>
+                                                                                        <TextBlock Text="配置名称："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                        <TextBox x:Name="ConditionsConfig_TBox" Text="{Binding Path=ConfigName}" Width="100" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False"/>
+
+                                                                                        <TextBlock Grid.Row="0" Text="事件类型："  Margin="210 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                        <ComboBox SelectedItem="{Binding Path=SelectType}" ItemsSource="{Binding Path=AllType}" x:Name="Conditions_CBox"  Width="110" Height="30" Grid.Row="0" materialDesign:HintAssist.Hint="请选择" HorizontalAlignment="Left" Margin="270,0,0,0">
+                                                                                            
+                                                                                            <binding:Interaction.Triggers>
+                                                                                                <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:InvokeCommandAction Command="{Binding Path=TypeLoadedCommand}" CommandParameter="{Binding ElementName=Conditions_CBox}">
+                                                                                                    </binding:InvokeCommandAction>
+                                                                                                </binding:EventTrigger>
+                                                                                            </binding:Interaction.Triggers>
+                                                                                        </ComboBox>
+                                                                                    </Grid>
+                                                                                    <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
+                                                                                </StackPanel>
+                                                                            </Grid>
+                                                                        </materialDesign:Flipper.FrontContent>
+                                                                        <materialDesign:Flipper.BackContent>
+                                                                            <Grid Height="300" Width="410" Background="AliceBlue">
+                                                                                <Grid.RowDefinitions>
+                                                                                    <RowDefinition Height="Auto" />
+                                                                                    <RowDefinition Height="*" />
+                                                                                </Grid.RowDefinitions>
+                                                                                <materialDesign:ColorZone Mode="Dark" Padding="6">
+                                                                                    <StackPanel Orientation="Horizontal">
+                                                                                        <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" HorizontalAlignment="Left">
+                                                                                            <materialDesign:PackIcon Kind="ArrowLeft" HorizontalAlignment="Right" />
+                                                                                        </Button>
+                                                                                        <TextBlock Margin="0 0 0 0" VerticalAlignment="Center" Text="编辑页" />
+                                                                                    </StackPanel>
+                                                                                </materialDesign:ColorZone>
+                                                                                <Grid Grid.Row="1" Margin="0 0 0 0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="400">
+                                                                                    <Grid.RowDefinitions>
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+                                                                                    </Grid.RowDefinitions>
+
+                                                                                    <Grid Grid.Row="0">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 1 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="2">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 2 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="4">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 3 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="6">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 4 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="8">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 5 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="1">
+                                                                                        <TextBlock Text="编辑命令："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                        <ComboBox SelectedItem="{Binding Path=SelectCmd}" ItemsSource="{Binding Path=AllCmd}" x:Name="ConditionsCmdEdit_CBox" Width="300" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left">
+                                                                                            <binding:Interaction.Triggers>
+                                                                                                <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:InvokeCommandAction Command="{Binding Path=CmdLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdEdit_CBox}">
+                                                                                                    </binding:InvokeCommandAction>
+                                                                                                </binding:EventTrigger>
+                                                                                            </binding:Interaction.Triggers>
+                                                                                        </ComboBox>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="3">
+                                                                                        <TextBlock Text="参数："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                        <ComboBox SelectedItem="{Binding Path=SelectParameter}" ItemsSource="{Binding Path=AllParameter}" x:Name="ConditionsCmdparameterEdit_CBox" Width="300" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left">
+                                                                                            <binding:Interaction.Triggers>
+                                                                                                <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:InvokeCommandAction Command="{Binding Path=ParameterLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdparameterEdit_CBox}">
+                                                                                                    </binding:InvokeCommandAction>
+                                                                                                </binding:EventTrigger>
+                                                                                            </binding:Interaction.Triggers>
+                                                                                        </ComboBox>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="5">
+                                                                                        <TextBlock Text="项："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                        <ComboBox SelectedItem="{Binding Path=SelectItem}" ItemsSource="{Binding Path=AllItem}" x:Name="ConditionsCmdProjectEdit_CBox" Width="235" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left">
+                                                                                            <binding:Interaction.Triggers>
+                                                                                                <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:InvokeCommandAction Command="{Binding Path=ItemLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdProjectEdit_CBox}">
+                                                                                                    </binding:InvokeCommandAction>
+                                                                                                </binding:EventTrigger>
+                                                                                            </binding:Interaction.Triggers>
+                                                                                        </ComboBox>
+                                                                                        <Button x:Name="ConditionsAdd_Btn" Command="{Binding Path=ItemAddCommand}" CommandParameter="{Binding ElementName=ConditionsCmdProjectEdit_CBox}" IsEnabled="{Binding Path=ItemAddIsEnable}" Width="20" Height="20" Margin="280 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                                                            <materialDesign:PackIcon Kind="Plus" />
+                                                                                        </Button>
+                                                                                        <Button x:Name="ConditionsRemove_Btn" Command="{Binding Path=ItemRemoveCommand}" CommandParameter="{Binding ElementName=ConditionsCmdProjectEdit_CBox}" IsEnabled="{Binding Path=ItemRemoveIsEnable}" Width="20" Height="20" Margin="330 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                                                            <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                                                        </Button>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="7">
+                                                                                        <TextBlock Grid.Row="2" Text="内容："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                        <TextBox Text="{Binding Path=ItemContent}" x:Name="Conditions_TBox" Width="300" Margin="40 0 0 0" FontSize="11" Height="30"></TextBox>
+                                                                                        <ComboBox SelectedItem="{Binding Path=ItemSelectContent}" ItemsSource="{Binding Path=Item_Items}" IsEnabled="{Binding Path=ItemCoBoxIsEnable}" Visibility="{Binding Path=ItemCoBoxVisibility}" x:Name="Conditions_ComboBox" Width="275" Margin="40 0 0 0" FontSize="11" Height="30"></ComboBox>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="9">
+                                                                                        <Button x:Name="ConditionsSave_Btn" Width="300" Height="25" Margin="0 0 0 0" Command="{Binding Path=SaveCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}">
+                                                                                            保存
+                                                                                        </Button>
+                                                                                    </Grid>
+                                                                                </Grid>
+                                                                            </Grid>
+                                                                        </materialDesign:Flipper.BackContent>
+                                                                    </materialDesign:Flipper>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+
+                                                    <DataTrigger Binding="{Binding Path=Type}" Value="Objectives">
+                                                        <Setter Property="Template" TargetName="ctrl">
+                                                            <Setter.Value>
+                                                                <ControlTemplate>
+                                                                    <materialDesign:Flipper materialDesign:ShadowAssist.ShadowDepth="Depth0" Width="400">
+                                                                        <materialDesign:Flipper.Effect>
+                                                                            <DropShadowEffect x:Name="ColorModel" Color="{Binding Path=ShadowColor}" ShadowDepth="0" Direction="0" BlurRadius="25"/>
+                                                                        </materialDesign:Flipper.Effect>
+                                                                        <materialDesign:Flipper.FrontContent>
+                                                                            <Grid Height="148" Width="400" Background="AliceBlue">
+                                                                                <Grid.RowDefinitions>
+                                                                                    <RowDefinition Height="70" />
+                                                                                    <RowDefinition Height="*" />
+                                                                                </Grid.RowDefinitions>
+                                                                                <materialDesign:ColorZone Mode="Dark" VerticalAlignment="Stretch">
+                                                                                    <materialDesign:PackIcon Kind="BookmarkCheck" Height="64" Width="64" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                                                                </materialDesign:ColorZone>
+                                                                                <Button  x:Name="HelpTool_Btn" Command="{Binding Path=HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" BorderBrush="White" Background="White" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="Black" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
+                                                                                    <materialDesign:PackIcon  Kind="Help" />
+                                                                                </Button>
+                                                                                <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                                    <TextBlock HorizontalAlignment="Center" Margin="0 5 0 0" FontSize="22" FontWeight="Bold" Text="目标" />
+                                                                                    <Grid>
+                                                                                        <TextBlock Text="配置名称："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                        <TextBox x:Name="ConditionsConfig_TBox" Text="{Binding Path=ConfigName}" Width="100" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False"/>
+
+                                                                                        <TextBlock Grid.Row="0" Text="目标类型："  Margin="210 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                        <ComboBox SelectedItem="{Binding Path=SelectType}" ItemsSource="{Binding Path=AllType}" x:Name="Conditions_CBox"  Width="110" Height="30" Grid.Row="0" materialDesign:HintAssist.Hint="请选择" HorizontalAlignment="Left" Margin="270,0,0,0">
+                                                                                            
+                                                                                            <binding:Interaction.Triggers>
+                                                                                                <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:InvokeCommandAction Command="{Binding Path=TypeLoadedCommand}" CommandParameter="{Binding ElementName=Conditions_CBox}">
+                                                                                                    </binding:InvokeCommandAction>
+                                                                                                </binding:EventTrigger>
+                                                                                            </binding:Interaction.Triggers>
+                                                                                        </ComboBox>
+                                                                                    </Grid>
+                                                                                    <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
+                                                                                </StackPanel>
+                                                                            </Grid>
+                                                                        </materialDesign:Flipper.FrontContent>
+                                                                        <materialDesign:Flipper.BackContent>
+                                                                            <Grid Height="300" Width="410" Background="AliceBlue">
+                                                                                <Grid.RowDefinitions>
+                                                                                    <RowDefinition Height="Auto" />
+                                                                                    <RowDefinition Height="*" />
+                                                                                </Grid.RowDefinitions>
+                                                                                <materialDesign:ColorZone Mode="Dark" Padding="6">
+                                                                                    <StackPanel Orientation="Horizontal">
+                                                                                        <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" HorizontalAlignment="Left">
+                                                                                            <materialDesign:PackIcon Kind="ArrowLeft" HorizontalAlignment="Right" />
+                                                                                        </Button>
+                                                                                        <TextBlock Margin="0 0 0 0" VerticalAlignment="Center" Text="编辑页" />
+                                                                                    </StackPanel>
+                                                                                </materialDesign:ColorZone>
+                                                                                <Grid Grid.Row="1" Margin="0 0 0 0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="400">
+                                                                                    <Grid.RowDefinitions>
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+
+                                                                                        <RowDefinition Height="20" />
+                                                                                        <RowDefinition Height="30" />
+                                                                                    </Grid.RowDefinitions>
+
+                                                                                    <Grid Grid.Row="0">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 1 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="2">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 2 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="4">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 3 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="6">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 4 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="8">
+                                                                                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF4C4235" FontSize="12" Text="----------》 第 5 步 《----------"></TextBlock>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="1">
+                                                                                        <TextBlock Text="编辑命令："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                        <ComboBox SelectedItem="{Binding Path=SelectCmd}" ItemsSource="{Binding Path=AllCmd}" x:Name="ConditionsCmdEdit_CBox" Width="300" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left">
+                                                                                            <binding:Interaction.Triggers>
+                                                                                                <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:InvokeCommandAction Command="{Binding Path=CmdLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdEdit_CBox}">
+                                                                                                    </binding:InvokeCommandAction>
+                                                                                                </binding:EventTrigger>
+                                                                                            </binding:Interaction.Triggers>
+                                                                                        </ComboBox>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="3">
+                                                                                        <TextBlock Text="参数："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                        <ComboBox SelectedItem="{Binding Path=SelectParameter}" ItemsSource="{Binding Path=AllParameter}" x:Name="ConditionsCmdparameterEdit_CBox" Width="300" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left">
+                                                                                            <binding:Interaction.Triggers>
+                                                                                                <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:InvokeCommandAction Command="{Binding Path=ParameterLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdparameterEdit_CBox}">
+                                                                                                    </binding:InvokeCommandAction>
+                                                                                                </binding:EventTrigger>
+                                                                                            </binding:Interaction.Triggers>
+                                                                                        </ComboBox>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="5">
+                                                                                        <TextBlock Text="项："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                        <ComboBox SelectedItem="{Binding Path=SelectItem}" ItemsSource="{Binding Path=AllItem}" x:Name="ConditionsCmdProjectEdit_CBox" Width="235" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left">
+                                                                                            <binding:Interaction.Triggers>
+                                                                                                <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:InvokeCommandAction Command="{Binding Path=ItemLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdProjectEdit_CBox}">
+                                                                                                    </binding:InvokeCommandAction>
+                                                                                                </binding:EventTrigger>
+                                                                                            </binding:Interaction.Triggers>
+                                                                                        </ComboBox>
+                                                                                        <Button x:Name="ConditionsAdd_Btn" Command="{Binding Path=ItemAddCommand}" CommandParameter="{Binding ElementName=ConditionsCmdProjectEdit_CBox}" IsEnabled="{Binding Path=ItemAddIsEnable}" Width="20" Height="20" Margin="280 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                                                            <materialDesign:PackIcon Kind="Plus" />
+                                                                                        </Button>
+                                                                                        <Button x:Name="ConditionsRemove_Btn" Command="{Binding Path=ItemRemoveCommand}" CommandParameter="{Binding ElementName=ConditionsCmdProjectEdit_CBox}" IsEnabled="{Binding Path=ItemRemoveIsEnable}" Width="20" Height="20" Margin="330 0 0 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                                                            <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                                                        </Button>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="7">
+                                                                                        <TextBlock Grid.Row="2" Text="内容："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                        <TextBox Text="{Binding Path=ItemContent}" x:Name="Conditions_TBox" Width="300" Margin="40 0 0 0" FontSize="11" Height="30"></TextBox>
+                                                                                        <ComboBox SelectedItem="{Binding Path=ItemSelectContent}" ItemsSource="{Binding Path=Item_Items}" IsEnabled="{Binding Path=ItemCoBoxIsEnable}" Visibility="{Binding Path=ItemCoBoxVisibility}" x:Name="Conditions_ComboBox" Width="275" Margin="40 0 0 0" FontSize="11" Height="30"></ComboBox>
+                                                                                    </Grid>
+
+                                                                                    <Grid Grid.Row="9">
+                                                                                        <Button x:Name="ConditionsSave_Btn" Width="300" Height="25" Margin="0 0 0 0" Command="{Binding Path=SaveCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}">
+                                                                                            保存
+                                                                                        </Button>
+                                                                                    </Grid>
+                                                                                </Grid>
+                                                                            </Grid>
+                                                                        </materialDesign:Flipper.BackContent>
+                                                                    </materialDesign:Flipper>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+
+                                                    <DataTrigger Binding="{Binding Path=Type}" Value="Journal">
+                                                        <Setter Property="Template" TargetName="ctrl">
+                                                            <Setter.Value>
+                                                                <ControlTemplate>
+                                                                    <materialDesign:Flipper materialDesign:ShadowAssist.ShadowDepth="Depth0" Width="400">
+                                                                        <materialDesign:Flipper.Effect>
+                                                                            <DropShadowEffect x:Name="ColorModel" Color="{Binding Path=ShadowColor}" ShadowDepth="0" Direction="0" BlurRadius="25"/>
+                                                                        </materialDesign:Flipper.Effect>
+                                                                        <materialDesign:Flipper.FrontContent>
+                                                                            <Grid Height="158" Width="400" Background="AliceBlue">
+                                                                                <Grid.RowDefinitions>
+                                                                                    <RowDefinition Height="70" />
+                                                                                    <RowDefinition Height="*" />
+                                                                                </Grid.RowDefinitions>
+                                                                                <materialDesign:ColorZone Mode="Light" VerticalAlignment="Stretch">
+                                                                                    <materialDesign:PackIcon Kind="BookmarkBoxMultipleOutline" Height="64" Width="64" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                                                                </materialDesign:ColorZone>
+                                                                                <Button  x:Name="HelpTool_Btn" Command="{Binding HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" Background="Black" BorderBrush="Black" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="White" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
+                                                                                    <materialDesign:PackIcon  Kind="Help" />
+                                                                                </Button>
+
+                                                                                <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                                    <TextBlock HorizontalAlignment="Center" Margin="0 0 0 0" FontSize="22" FontWeight="Bold" Text="任务笔记" />
+                                                                                    <Grid>
+                                                                                        <TextBlock Text="配置名称："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                        <TextBox Text="{Binding Path=ConfigName}" x:Name="JournalConfig_TBox" Width="130" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False"/>
+                                                                                    </Grid>
+                                                                                    <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
+                                                                                </StackPanel>
+                                                                            </Grid>
+                                                                        </materialDesign:Flipper.FrontContent>
+                                                                        <materialDesign:Flipper.BackContent>
+                                                                            <Grid Height="148" Width="400">
+                                                                                <Grid.RowDefinitions>
+                                                                                    <RowDefinition Height="Auto" />
+                                                                                    <RowDefinition Height="*" />
+                                                                                </Grid.RowDefinitions>
+                                                                                <materialDesign:ColorZone Mode="Light" Padding="6">
+                                                                                    <StackPanel Orientation="Horizontal">
+                                                                                        <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" HorizontalAlignment="Left">
+                                                                                            <materialDesign:PackIcon Kind="ArrowLeft" HorizontalAlignment="Right" />
+                                                                                        </Button>
+                                                                                        <TextBlock Margin="0 0 0 0" VerticalAlignment="Center" Text="编辑页" />
+                                                                                    </StackPanel>
+                                                                                </materialDesign:ColorZone>
+                                                                                <Grid Background="White" Height="50" Grid.Row="1" Margin="0 0 0 0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="400">
+                                                                                    <TextBlock Text="文案内容："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                    <TextBox Text="{Binding Path=ItemContent}" x:Name="Journal_TBox" Width="300" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                                                                                </Grid>
+                                                                            </Grid>
+                                                                        </materialDesign:Flipper.BackContent>
+                                                                    </materialDesign:Flipper>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+
+                                                    <DataTrigger Binding="{Binding Path=Type}" Value="Items">
+                                                        <Setter Property="Template" TargetName="ctrl">
+                                                            <Setter.Value>
+                                                                <ControlTemplate>
+                                                                    <materialDesign:Flipper materialDesign:ShadowAssist.ShadowDepth="Depth0" Width="400">
+                                                                        <materialDesign:Flipper.Effect>
+                                                                            <DropShadowEffect x:Name="ColorModel" Color="{Binding Path=ShadowColor}" ShadowDepth="0" Direction="0" BlurRadius="25"/>
+                                                                        </materialDesign:Flipper.Effect>
+                                                                        <materialDesign:Flipper.FrontContent>
+                                                                            <Grid Height="158" Width="400" Background="AliceBlue">
+                                                                                <Grid.RowDefinitions>
+                                                                                    <RowDefinition Height="70" />
+                                                                                    <RowDefinition Height="*" />
+                                                                                </Grid.RowDefinitions>
+                                                                                <materialDesign:ColorZone Mode="Light" VerticalAlignment="Stretch">
+                                                                                    <materialDesign:PackIcon Kind="Boombox" Height="64" Width="64" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                                                                </materialDesign:ColorZone>
+                                                                                <Button  x:Name="HelpTool_Btn" Command="{Binding HelpToolCommand}" CommandParameter="{Binding ElementName=HelpTool_Btn}" ToolTip="该卡片还没有相关帮助" BorderBrush="Black" Background="Black" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Foreground="White" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 5 0">
+                                                                                    <materialDesign:PackIcon  Kind="Help" />
+                                                                                </Button>
+
+                                                                                <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                                    <TextBlock HorizontalAlignment="Center" Margin="0 0 0 0" FontSize="22" FontWeight="Bold" Text="任务物品" />
+                                                                                    <Grid>
+                                                                                        <TextBlock Text="配置名称："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                        <TextBox Text="{Binding Path=ConfigName}" x:Name="ItemsConfig_TBox" Width="130" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False"/>
+                                                                                    </Grid>
+                                                                                    <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
+                                                                                </StackPanel>
+                                                                            </Grid>
+                                                                        </materialDesign:Flipper.FrontContent>
+                                                                        <materialDesign:Flipper.BackContent>
+                                                                            <Grid Width="400" Background="White">
+                                                                                <Grid.RowDefinitions>
+                                                                                    <RowDefinition Height="Auto" />
+                                                                                    <RowDefinition Height="*" />
+                                                                                </Grid.RowDefinitions>
+                                                                                <materialDesign:ColorZone Mode="Light" Padding="6">
+                                                                                    <StackPanel Orientation="Horizontal">
+                                                                                        <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" HorizontalAlignment="Left">
+                                                                                            <materialDesign:PackIcon Kind="ArrowLeft" HorizontalAlignment="Right" />
+                                                                                        </Button>
+                                                                                        <TextBlock Margin="0 0 0 0" VerticalAlignment="Center" Text="编辑页" />
+                                                                                    </StackPanel>
+                                                                                </materialDesign:ColorZone>
+                                                                                <Grid Grid.Row="1" Margin="0 0 0 0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="400" Height="50">
+                                                                                    <TextBlock Text="物品内容："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                                                                                    <TextBox Text="{Binding Path=ItemContent}" x:Name="Items_TBox" Width="320" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                                                                                </Grid>
+                                                                            </Grid>
+                                                                        </materialDesign:Flipper.BackContent>
+                                                                    </materialDesign:Flipper>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+
+                                                    <DataTrigger Binding="{Binding Path=IsDraw}" Value="true">
+                                                        <Setter  Property="Template" TargetName="ctrl">
+                                                            <Setter.Value>
+                                                                <ControlTemplate>
+                                                                    <Border Width="{Binding Bord_Width}" Height="{Binding Bord_Height}" Visibility="{Binding Bord_Visibility}" Opacity ="0.4" BorderThickness="1" Background="#7F5307B3" BorderBrush="#FF430B8A">
+                                                                        
+                                                                    </Border>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+
+                                                    <DataTrigger Binding="{Binding Path=IsLine}" Value="true">
+                                                        <Setter  Property="Template" TargetName="ctrl">
+                                                            <Setter.Value>
+                                                                <ControlTemplate>
+                                                                    <Line X1="0" Y1="0" X2="{Binding X}" Y2="{Binding Y}" Stroke="#FFA000FF" StrokeThickness="2"></Line>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+
+                                                </DataTemplate.Triggers>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                        
+                                    </ItemsControl>
                                 </Grid>
                             </Border>
                         </Grid>
@@ -262,6 +1312,8 @@
                     </Grid>
                 </Border>
             </Grid>
+            
+            <!--这是2.0的界面代码-->
             <!--<Border BorderThickness="1" HorizontalAlignment="Left" Height="78" VerticalAlignment="Top" Width="1372" Background="White" CornerRadius="10" Margin="168,862,0,0" Grid.Column="1" Grid.Row="1">
             <Grid>
                 <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="文件地址：" VerticalAlignment="Top" FontSize="16" FontWeight="Bold"/>
@@ -316,6 +1368,8 @@
                 <TextBlock Text="{Binding Message}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" Height="25" Foreground="White" FontWeight="Bold" TextDecorations="Underline"/>
             </Grid>
         </Border>-->
+            <!--这是2.0的界面代码-->
+            
         </Grid>
         <Grid Visibility="{Binding LoadingShow}" Background="#B2000000" VerticalAlignment="Center" HorizontalAlignment="Center" Width="500" Height="200">
             <TextBlock Text="{Binding LoadingMessage}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25" FontWeight="Bold" Foreground="White"></TextBlock>

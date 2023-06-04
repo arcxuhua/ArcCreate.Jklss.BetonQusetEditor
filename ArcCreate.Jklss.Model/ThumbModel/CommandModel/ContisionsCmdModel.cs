@@ -1,10 +1,6 @@
 ﻿using ArcCreate.Jklss.Model.MainWindow;
 using ArcCreate.Jklss.Model.ThumbModel.TextAbstractModel;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ArcCreate.Jklss.Model.ThumbModel.CommandModel
 {
