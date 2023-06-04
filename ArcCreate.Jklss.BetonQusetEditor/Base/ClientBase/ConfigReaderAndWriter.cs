@@ -211,7 +211,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
             {
                 if (allCard.Where(t => t.Type == ThumbClass.Subject).Any())
                 {
-                    var getMainThumb = allCard.Where(t => t.Type == ThumbClass.Subject).ToList();
+                    var getMainThumb = allCard.Where(t => t.Type == ThumbClass.Subject&&!t.IsLine&&!t.IsDraw).ToList();
 
                     await Task.Run(() =>
                     {
@@ -349,7 +349,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
 
             try
             {
-                foreach (var item in allCard)
+                foreach (var item in allCard.Where(t=>!t.IsDraw&&!t.IsLine).ToList())
                 {
                     var getX = item.CvLeft;
 
@@ -373,7 +373,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
             {
                 await Task.Run(() =>
                 {
-                    foreach (var item in allCard)
+                    foreach (var item in allCard.Where(t => !t.IsDraw && !t.IsLine).ToList())
                     {
                         newToolList.Add(new HelpToolModel
                         {

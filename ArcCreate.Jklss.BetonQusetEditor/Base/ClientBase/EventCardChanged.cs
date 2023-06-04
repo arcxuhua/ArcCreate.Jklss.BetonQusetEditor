@@ -677,9 +677,6 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
                 }
             }
 
-            result.SetSuccese();
-
-            return result;
         }
 
         public async Task<ReturnModel> ItemRemove()

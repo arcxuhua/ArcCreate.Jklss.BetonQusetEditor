@@ -9,33 +9,30 @@ using ArcCreate.Jklss.Model;
 using ArcCreate.Jklss.Model.Data;
 using ArcCreate.Jklss.Model.MainWindow;
 using ArcCreate.Jklss.Model.SocketModel;
-using ArcCreate.Jklss.Model.ThumbInfoWindow;
 using ArcCreate.Jklss.Model.ThumbModel;
 using ArcCreate.Jklss.Model.ThumbModel.CommandModel;
 using ArcCreate.Jklss.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Dynamic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
-using YamlDotNet.Core.Tokens;
 using static ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows.ClientWindowViewModel;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
+using Button = System.Windows.Controls.Button;
+using ComboBox = System.Windows.Controls.ComboBox;
 using HelpToolModel = ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase.HelpToolModel;
+using MessageBox = System.Windows.MessageBox;
+using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 using SaveChilds = ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase.SaveChilds;
 using Thumb = System.Windows.Controls.Primitives.Thumb;
 using ThumbCoordinateModel = ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase.ThumbCoordinateModel;
@@ -73,9 +70,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
             ShowMessageDel = new _ShowMessageDel(ShowMessage);
 
+            GetSelecteCardDel = new _GetSelecteCardDel(GetSelectCard);
+
             ThumbInfoWindow window = new ThumbInfoWindow();
 
             thumbInfoWindow = window;
+
+            thumbInfoWindow.Left = window.ActualWidth + window.Left;
+
+            thumbInfoWindow.Top = window.Top;
+
+            thumbInfoWindow.Height = window.Height;
 
             window.WindowStartupLocation = WindowStartupLocation.Manual;
 
@@ -108,6 +113,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         #endregion
 
         #region 字段与属性
+
+        private List<CardViewModel> selectCard = new List<CardViewModel>();
+
         public GridData SelectData = null;
 
         public static List<ContisionsCmdModel> contisionProp = new List<ContisionsCmdModel>();//Contitions语法构造器模型
@@ -202,10 +210,6 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
         #region 委托与事件定义
 
-        /// <summary>
-        /// 将所有卡片改变颜色
-        /// </summary>
-        /// <returns></returns>
         public delegate ObservableCollection<CardViewModel> _GetAllCardDel();
 
         public static _GetAllCardDel GetAllCardDel;
@@ -213,6 +217,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         public delegate void _ShowMessageDel(string txt);
 
         public static _ShowMessageDel ShowMessageDel;
+
+        public delegate List<CardViewModel> _GetSelecteCardDel();
+
+        public static _GetSelecteCardDel GetSelecteCardDel;
 
         #endregion
 
@@ -645,11 +653,23 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
             LoadingShow = Visibility.Visible;
 
             LoadingMessage = "正在处理~";
+
+            if (string.IsNullOrEmpty(MainFilePath))
+            {
+                window.IsEnabled = true;
+                LoadingShow = Visibility.Hidden;
+                ShowMessage("main入口文件不存在请重新指定Main.yml文件");
+
+                return;
+            }
+
             if (!FileService.IsHaveFile(MainFilePath))
             {
                 window.IsEnabled = true;
                 LoadingShow = Visibility.Hidden;
                 ShowMessage("main入口文件不存在请重新指定Main.yml文件");
+
+                return;
             }
 
             var saveBase = new ConfigReaderAndWriter(ConditionsCardChanged.saveAllValue,EventCardChanged.saveAllValue,ObjectiveCardChanged.saveAllValue,ConversationCardChanged.saveAllValue, CardItems);
@@ -748,6 +768,162 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
             mWindow.ShowDialog();
         }
+
+        [RelayCommand()]
+        private async Task LocationChanged(Window window)
+        {
+            thumbInfoWindow.Left = window.ActualWidth + window.Left;
+            thumbInfoWindow.Top = window.Top;
+            thumbInfoWindow.Height = window.Height;
+        }
+
+        [RelayCommand()]
+        private async Task SaveYaml(Window window)
+        {
+            window.IsEnabled = false;
+            LoadingShow = Visibility.Visible;
+
+            LoadingMessage = "正在处理~";
+            if (!FileService.IsHaveFile(MainFilePath))
+            {
+                window.IsEnabled = true;
+                LoadingShow = Visibility.Hidden;
+                ShowMessage("main入口文件不存在请重新指定Main.yml文件");
+            }
+
+            var saveBase = new ConfigReaderAndWriter(ConditionsCardChanged.saveAllValue, EventCardChanged.saveAllValue, ObjectiveCardChanged.saveAllValue, ConversationCardChanged.saveAllValue, CardItems);
+
+            var back = await saveBase.SaveToJson(MainFilePath,SelectData.Name, SelectData.Code, true);
+
+            if (!back.Succese)
+            {
+                window.IsEnabled = true;
+                LoadingShow = Visibility.Hidden;
+                ShowMessage(back.Text);
+                return;
+            }
+
+            var message = new MessageModel()
+            {
+                IsLogin = SocketModel.isLogin,
+                JsonInfo = JsonInfo.SaveToYaml,
+                UserName = SocketModel.userName,
+                Message = FileService.SaveToJson(back.Backs),
+            };
+
+            var jsonMessage = FileService.SaveToJson(message);
+
+            var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessage,
+    SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), SocketModel.token, true);
+
+            if (getMessage == null || !getMessage.Succese)
+            {
+                window.IsEnabled = true;
+                LoadingShow = Visibility.Hidden;
+                ShowMessage("保存失败，请尝试重新保存");
+                return;
+            }
+
+            var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
+
+            if (getModel.Token != SocketModel.token)
+            {
+                window.IsEnabled = true;
+                LoadingShow = Visibility.Hidden;
+                ShowMessage("您的Token异常请重新登录后保存");
+                return;
+            }
+
+            var getRealMessage = FileService.JsonToProp<MessageModel>(Encoding.UTF8.GetString(getModel.Message));
+
+            if (getRealMessage == null || getRealMessage.JsonInfo != JsonInfo.SaveToYaml || !getRealMessage.IsLogin)
+            {
+                if (getRealMessage != null)
+                {
+                    window.IsEnabled = true;
+                    LoadingShow = Visibility.Hidden;
+                    ShowMessage(getRealMessage.Message);
+                    return;
+                }
+                else
+                {
+                    window.IsEnabled = true;
+                    LoadingShow = Visibility.Hidden;
+                    ShowMessage("服务器异常");
+                    return;
+                }
+
+            }
+            if (this.SelectData.Code == -1)
+            {
+                this.SelectData.Code = Convert.ToInt32(getRealMessage.Other);
+            }
+
+            ShowMessage("配置保存至云端成功，正在输出YML至本地");
+
+            await Task.Run(() =>
+            {
+                Thread.Sleep(2000);
+            });
+
+            var result = await saveBase.InputToYaml(FileService.JsonToProp<YamlSaver>(getRealMessage.Message),MainFilePath);
+            window.IsEnabled = true;
+            LoadingShow = Visibility.Hidden;
+            ShowMessage(result.Text);
+
+            return;
+        }
+
+        [RelayCommand()]
+        private async Task UpDateDataToMarket(Window window)
+        {
+
+        }
+
+        [RelayCommand()]
+        private async Task SelectMainFile(Border border)
+        {
+            var getBacks = await SelectFilePath();
+
+            if (!getBacks.Succese)
+            {
+                return;
+            }
+
+            MainFilePath = getBacks.Text;
+        }
+
+        [RelayCommand()]
+        private async Task OpenInfoWindow(Window window)
+        {
+            if (thumbInfoWindow.Visibility == Visibility.Hidden)
+            {
+                thumbInfoWindow.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                thumbInfoWindow.Visibility = Visibility.Hidden;
+            }
+        }
+
+        [RelayCommand()]
+        private async Task SelectSearch(Window window)
+        {
+            if (!CardItems.Where(t => t.Type == SearchType && t.ConfigName.Contains(SearchText)).Any())
+            {
+                ShowMessage("未找到该卡片");
+                return;
+            }
+
+            var getCard = CardItems.Where(t=>t.Type == SearchType&&t.ConfigName.Contains(SearchText)).FirstOrDefault();
+
+            var y = -getCard.CvTop + ((window as MainWindow).outsaid.ActualHeight / 2) - ((double)getCard.ThumbHeight / 2);
+            var x = -getCard.CvLeft + ((window as MainWindow).outsaid.ActualWidth / 2) - ((double)getCard.ThumbWidth / 2);
+
+            TranslateXProp = x;
+            TranslateYProp = y;
+        }
+
         #endregion
 
         #region 具体方法
@@ -849,7 +1025,36 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         {
             var cvmenu = (Canvas)sender;
 
+            selectCard.Clear();
 
+            Point tempEndPoint = e.GetPosition(cvmenu);
+
+            var getStart = tempStartPoint;
+
+            foreach (var item in CardItems.Where(t=>!t.IsDraw&&!t.IsLine).ToList())
+            {
+                var num = false;
+
+                var getCoor = GetCardPoint(item);
+
+                for (int i = 0; i < getCoor.Count; i++)
+                {
+                    if (getCoor[i].X > getStart.X && getCoor[i].Y > getStart.Y && getCoor[i].X < tempEndPoint.X && getCoor[i].Y < tempEndPoint.Y)
+                    {
+                        num = true;
+                    }
+                    if (getCoor[i].X < getStart.X && getCoor[i].Y < getStart.Y && getCoor[i].X > tempEndPoint.X && getCoor[i].Y > tempEndPoint.Y)
+                    {
+                        num = true;
+                    }
+                }
+
+                if(num)
+                {
+                    item.ShadowColor = Brushes.DarkOrange.Color;
+                    selectCard.Add(item);
+                }
+            }
 
             bordCardViewModel.Bord_Visibility = Visibility.Hidden;
             bordCardViewModel.Bord_Height = 0;
@@ -857,6 +1062,21 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
             isCanMove = !isCanMove;
             cvmenu.MouseMove -= Canvas_MouseMove;
 
+        }
+
+        private List<Point> GetCardPoint(CardViewModel nowCard)
+        {
+            var points = new List<Point>();
+
+            points.Add(new Point(nowCard.CvLeft, nowCard.CvTop));
+
+            points.Add(new Point(nowCard.CvLeft + (double)nowCard.ThumbWidth, nowCard.CvTop));
+
+            points.Add(new Point(nowCard.CvLeft, nowCard.CvTop + (double)nowCard.ThumbHeight));
+
+            points.Add(new Point(nowCard.CvLeft + (double)nowCard.ThumbWidth, nowCard.CvTop + (double)nowCard.ThumbHeight));
+
+            return points;
         }
 
         private void Canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -919,6 +1139,43 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
         #endregion
 
+        private static async Task<ReturnModel> SelectFilePath()
+        {
+            var result = new ReturnModel();
+
+            var path = string.Empty;
+
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Multiselect = false;//该值确定是否可以选择多个文件
+            dialog.Title = "请选择Main.yml";
+            dialog.Filter = "入口文件|main.yml";
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                string file = dialog.FileName;
+
+                path = file;
+            }
+            else
+            {
+                path = string.Empty;
+            }
+
+            result = await Task.Run(() =>
+            {
+                if (string.IsNullOrEmpty(path))
+                {
+                    result.SetError();
+                    return result;
+                }
+                else
+                {
+                    result.SetSuccese(path);
+                    return result;
+                }
+            });
+
+            return result;
+        }
 
         /// <summary>
         /// 用于自定义的扣费
@@ -1004,6 +1261,11 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         public ObservableCollection<CardViewModel> GetAllCard()
         {
             return CardItems;
+        }
+
+        public List<CardViewModel> GetSelectCard()
+        {
+            return selectCard;
         }
 
         private async void LoadWindow()
@@ -1280,7 +1542,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
             foreach (var item in saveMainInfo)
             {
-                var getCoor = dic.Where(t => t.thumbClass == ThumbClass.Subject && t.Name == item.Text).FirstOrDefault();
+                var getCoor = dic.Where(t => t.thumbClass == ThumbClass.Subject && t.Name == item.Config).FirstOrDefault();
 
                 var cardView = new SubjectCardViewModel()
                 {
@@ -1753,7 +2015,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
                 foreach (var item in getMainThumb)
                 {
-                    var getMainInfo = saveAllChildInfo.Where(t=>t.Saver == item.ItemContent).FirstOrDefault();
+                    var getMainInfo = saveAllChildInfo.Where(t=>t.Saver == item.ConfigName).FirstOrDefault();
 
                     if(getMainInfo == null)
                     {
@@ -3815,8 +4077,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 return txt;
             }
         }
-        #endregion
 
+        #endregion
 
     }
 
@@ -3906,6 +4168,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         {
             if (!IsDraw && !IsLine)
             {
+                thumb.PreviewMouseLeftButtonUp += Thumb_PreviewMouseLeftButtonUp;
                 thumb.PreviewMouseLeftButtonDown += Thumb_PreviewMouseLeftButtonDown;
                 thumb.DragCompleted += Thumb_DragCompleted;
                 thumb.DragDelta += Thumb_DragDelta;
@@ -3927,8 +4190,6 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
             thumbLestPoint.Y = nowThumbContent.CvTop;
         }
 
-        private int time = 0;
-
         /// <summary>
         /// 控件拖拽过程中
         /// </summary>
@@ -3936,79 +4197,144 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         /// <param name="e"></param>
         private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
-            var nowThumb = (Thumb)sender;
-
-            var nowThumbContent = ((Thumb)sender).DataContext as CardViewModel;
-
-            double nTop = nowThumbContent.CvTop + e.VerticalChange;
-
-            double nLeft = nowThumbContent.CvLeft + e.HorizontalChange;
-
-            if (nTop <= 0)
-                nTop = 0;
-            if (nTop >= (504400 - nowThumb.ActualHeight))
-                nTop = 504400 - nowThumb.ActualHeight;
-            if (nLeft <= 0)
-                nLeft = 0;
-            if (nLeft >= (1267800 - nowThumb.ActualWidth))
-                nLeft = 1267800 - nowThumb.ActualWidth;
-
-            nowThumbContent.CvLeft = nLeft;
-
-            nowThumbContent.CvTop = nTop;
-
-            if(time < 50)
+            var getSelectCard = GetSelecteCardDel();
+            if (getSelectCard.Count > 0)
             {
-                time++;
+                foreach (var i in getSelectCard)
+                {
+                    double nTop = i.CvTop + e.VerticalChange;
 
-                return;
+                    double nLeft = i.CvLeft + e.HorizontalChange;
+
+                    if (nTop <= 0)
+                        nTop = 0;
+                    if (nTop >= (504400 - (double)i.ThumbHeight))
+                        nTop = 504400 - (double)i.ThumbHeight;
+                    if (nLeft <= 0)
+                        nLeft = 0;
+                    if (nLeft >= (1267800 - (double)i.ThumbWidth))
+                        nLeft = 1267800 - (double)i.ThumbWidth;
+
+                    i.CvLeft = nLeft;
+
+                    i.CvTop = nTop;
+
+                    var nowThumbContent = i;
+
+                    //链接线的处理
+                    try
+                    {
+                        var getCardInfo = ClientWindowViewModel.GetAllCardDel().Where(t => t.IsLine == true).ToList();
+
+                        var realCardIndo = new List<LineCardViewModel>();
+
+                        foreach (var card in getCardInfo)
+                        {
+                            realCardIndo.Add(card as LineCardViewModel);
+                        }
+
+                        var getNeedChangeLeftLine = realCardIndo.Where(t => t.LineLeft == nowThumbContent).ToList();
+
+                        var getNeedChangeRightLine = realCardIndo.Where(t => t.LineRight == nowThumbContent).ToList();
+
+                        foreach (var item in getNeedChangeLeftLine)
+                        {
+                            item.CvLeft = item.LineLeft.CvLeft + (double)item.LineLeft.ThumbWidth / 2;
+
+                            item.CvTop = item.LineLeft.CvTop + (double)item.LineLeft.ThumbHeight / 2;
+
+                            item.X = -(nowThumbContent.CvLeft - item.LineRight.CvLeft);
+
+                            item.Y = -(nowThumbContent.CvTop - item.LineRight.CvTop - (double)item.LineRight.ThumbHeight / 4);
+
+                        }
+
+                        foreach (var item in getNeedChangeRightLine)
+                        {
+                            item.CvLeft = item.LineLeft.CvLeft + (double)item.LineLeft.ThumbWidth / 2;
+
+                            item.CvTop = item.LineLeft.CvTop + (double)item.LineLeft.ThumbHeight / 2;
+
+                            item.X = -(item.LineLeft.CvLeft - item.LineRight.CvLeft);
+
+                            item.Y = -(item.LineLeft.CvTop - item.LineRight.CvTop - (double)item.LineRight.ThumbHeight / 4);
+
+                        }
+                    }
+                    catch
+                    {
+
+                    }
+                }
             }
-
-            try
+            else
             {
-                var getCardInfo = ClientWindowViewModel.GetAllCardDel().Where(t => t.IsLine == true).ToList();
+                var nowThumb = (Thumb)sender;
 
-                var realCardIndo = new List<LineCardViewModel>();
+                var nowThumbContent = ((Thumb)sender).DataContext as CardViewModel;
 
-                foreach (var card in getCardInfo)
+                double nTop = nowThumbContent.CvTop + e.VerticalChange;
+
+                double nLeft = nowThumbContent.CvLeft + e.HorizontalChange;
+
+                if (nTop <= 0)
+                    nTop = 0;
+                if (nTop >= (504400 - nowThumb.ActualHeight))
+                    nTop = 504400 - nowThumb.ActualHeight;
+                if (nLeft <= 0)
+                    nLeft = 0;
+                if (nLeft >= (1267800 - nowThumb.ActualWidth))
+                    nLeft = 1267800 - nowThumb.ActualWidth;
+
+                nowThumbContent.CvLeft = nLeft;
+
+                nowThumbContent.CvTop = nTop;
+
+                //链接线的处理
+                try
                 {
-                    realCardIndo.Add(card as LineCardViewModel);
+                    var getCardInfo = ClientWindowViewModel.GetAllCardDel().Where(t => t.IsLine == true).ToList();
+
+                    var realCardIndo = new List<LineCardViewModel>();
+
+                    foreach (var card in getCardInfo)
+                    {
+                        realCardIndo.Add(card as LineCardViewModel);
+                    }
+
+                    var getNeedChangeLeftLine = realCardIndo.Where(t => t.LineLeft == nowThumbContent).ToList();
+
+                    var getNeedChangeRightLine = realCardIndo.Where(t => t.LineRight == nowThumbContent).ToList();
+
+                    foreach (var item in getNeedChangeLeftLine)
+                    {
+                        item.CvLeft = item.LineLeft.CvLeft + (double)item.LineLeft.ThumbWidth / 2;
+
+                        item.CvTop = item.LineLeft.CvTop + (double)item.LineLeft.ThumbHeight / 2;
+
+                        item.X = -(nowThumbContent.CvLeft - item.LineRight.CvLeft);
+
+                        item.Y = -(nowThumbContent.CvTop - item.LineRight.CvTop - (double)item.LineRight.ThumbHeight / 4);
+
+                    }
+
+                    foreach (var item in getNeedChangeRightLine)
+                    {
+                        item.CvLeft = item.LineLeft.CvLeft + (double)item.LineLeft.ThumbWidth / 2;
+
+                        item.CvTop = item.LineLeft.CvTop + (double)item.LineLeft.ThumbHeight / 2;
+
+                        item.X = -(item.LineLeft.CvLeft - item.LineRight.CvLeft);
+
+                        item.Y = -(item.LineLeft.CvTop - item.LineRight.CvTop - (double)item.LineRight.ThumbHeight / 4);
+
+                    }
                 }
-
-                var getNeedChangeLeftLine = realCardIndo.Where(t => t.LineLeft == nowThumbContent).ToList();
-
-                var getNeedChangeRightLine = realCardIndo.Where(t => t.LineRight == nowThumbContent).ToList();
-
-                foreach (var item in getNeedChangeLeftLine)
+                catch
                 {
-                    item.CvLeft = item.LineLeft.CvLeft + (double)item.LineLeft.ThumbWidth / 2;
-
-                    item.CvTop = item.LineLeft.CvTop + (double)item.LineLeft.ThumbHeight / 2;
-
-                    item.X = -(nowThumbContent.CvLeft - item.LineRight.CvLeft );
-
-                    item.Y = -(nowThumbContent.CvTop - item.LineRight.CvTop - (double)item.LineRight.ThumbHeight / 4);
-
-                }
-
-                foreach (var item in getNeedChangeRightLine)
-                {
-                    item.CvLeft = item.LineLeft.CvLeft + (double)item.LineLeft.ThumbWidth / 2;
-
-                    item.CvTop = item.LineLeft.CvTop + (double)item.LineLeft.ThumbHeight / 2;
-
-                    item.X = -(item.LineLeft.CvLeft - item.LineRight.CvLeft);
-
-                    item.Y = -(item.LineLeft.CvTop - item.LineRight.CvTop - (double)item.LineRight.ThumbHeight / 4);
 
                 }
             }
-            catch
-            {
-
-            }
-
-            time = 0;
         }
 
         /// <summary>
@@ -4018,6 +4344,13 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         /// <param name="e"></param>
         private async void Thumb_DragCompleted(object sender, DragCompletedEventArgs e)
         {
+            var getSelectCard = GetSelecteCardDel();
+
+            if (getSelectCard.Count > 0)
+            {
+                return;
+            }
+
             var nowThumb = (Thumb)sender;
             var nowThumbContent = ((Thumb)sender).DataContext as CardViewModel;
 
@@ -5973,12 +6306,16 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         }
 
         /// <summary>
-        /// 控件左键单击
+        /// 控件左键单击后
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void Thumb_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private async void Thumb_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            var getSelectCard = GetSelecteCardDel();
+
+            getSelectCard.Clear();//清空框选的卡片集合
+
             var getAllCardInfo = ClientWindowViewModel.GetAllCardDel();
 
             await Task.Run(() =>
@@ -5993,6 +6330,26 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
             var nowThumbContent = nowThumb.DataContext as CardViewModel;
 
             nowThumbContent.ShadowColor = Brushes.Red.Color;
+
+            foreach (var item in nowThumbContent.Right)
+            {
+                item.ShadowColor = Brushes.GreenYellow.Color;
+            }
+
+            foreach (var item in nowThumbContent.Left)
+            {
+                item.ShadowColor = Brushes.Yellow.Color;
+            }
+        }
+
+        /// <summary>
+        /// 控件左键单击
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void Thumb_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            
         }
 
         /// <summary>

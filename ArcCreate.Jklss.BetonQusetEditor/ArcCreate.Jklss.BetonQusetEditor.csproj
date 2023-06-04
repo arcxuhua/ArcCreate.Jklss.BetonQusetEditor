@@ -71,14 +71,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ArcCreate.Jklss.Model\ArcCreate.Jklss.Model.csproj">
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </ProjectReference>
-    <ProjectReference Include="..\ArcCreate.Jklss.Services\ArcCreate.Jklss.Services.csproj">
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="arccreate.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -139,5 +131,9 @@
     <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.4.410601">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ArcCreate.Jklss.Model\ArcCreate.Jklss.Model.csproj" />
+    <ProjectReference Include="..\ArcCreate.Jklss.Services\ArcCreate.Jklss.Services.csproj" />
   </ItemGroup>
 </Project>
