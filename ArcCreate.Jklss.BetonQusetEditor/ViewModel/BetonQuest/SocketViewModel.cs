@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using static ArcCreate.Jklss.Model.SocketModel.SocketModel;
 using System.Net.Sockets;
 using System.Windows;
-using ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow;
 using Newtonsoft.Json.Linq;
 using ArcCreate.Jklss.BetonQusetEditor.Windows;
 using System.Collections.Generic;
@@ -18,8 +17,10 @@ using System.Linq;
 using System.Threading;
 using ArcCreate.Jklss.BetonQusetEditor.View;
 using Org.BouncyCastle.Asn1.Esf;
+using ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest.ClientWindow;
+using ArcCreate.Jklss.BetonQusetEditor.View.ShowTool;
 
-namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
+namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest
 {
     public class SocketViewModel
     {
@@ -27,7 +28,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
         public static ScoketService socketService = new ScoketService();
 
-        public static string version = "3.2.20";
+        public static string version = "4.0.1.7";
 
         /// <summary>
         /// 开启Socket通讯
@@ -49,7 +50,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             return result;
         }
 
-        private async void ScoketService_GetMessage(MessageMode message,string token="")
+        private async void ScoketService_GetMessage(MessageMode message, string token = "")
         {
             if (message == null)
             {
@@ -75,49 +76,50 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     return;
                 }
 
-                if(model.JsonInfo == JsonInfo.Login)
+                if (model.JsonInfo == JsonInfo.Login)
                 {
                     if (!model.IsLogin)
                     {
 
                         if (model.Other == "1")
                         {
-                            LoginWindowViewModel.ShowWorryMessage(model.Message,true);
+                            LoginWindowViewModel.ShowWorryMessage(model.Message, true);
                         }
                         else
                         {
                             LoginWindowViewModel.ShowWorryMessage(model.Message);
                         }
-                        
+
 
                         return;
                     }
 
                     SocketModel.token = token;
-                    SocketModel.isLogin = model.IsLogin;
-                    SocketModel.userName = model.UserName;
+                    isLogin = model.IsLogin;
+                    userName = model.UserName;
 
                     if (!string.IsNullOrEmpty(model.Other))
                     {
                         MessageBox.Show($"今日的赠送已经到账哦~\n今日获得: {model.Other} 点积分");
                     }
-                    
 
-                    LoginWindowViewModel.window.Dispatcher.Invoke(new System.Action(() =>
+
+                    LoginWindowViewModel.window.Dispatcher.Invoke(new Action(() =>
                     {
-                        MainWindow window = new MainWindow();
+                        ShowToolMainWindow window = new ShowToolMainWindow();
                         window.Show();
+                        
                         LoginWindowViewModel.window.Close();
                     }));
-                    
+
                 }
 
-                if(model.JsonInfo == JsonInfo.Register)
+                if (model.JsonInfo == JsonInfo.Register)
                 {
                     if (model.IsLogin)
                     {
                         MessageBox.Show(model.Message);
-                        LoginWindowViewModel.window.Dispatcher.Invoke(new System.Action(() =>
+                        LoginWindowViewModel.window.Dispatcher.Invoke(new Action(() =>
                         {
                             var window = new EmailWindow();
                             window.Show();
@@ -129,10 +131,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     {
                         RegisterWindowViewModel.ShowWorryMessage(model.Message);
                     }
-                    
+
                 }
 
-                
+
             }
             else if (message.Class == MessageClass.File)
             {
@@ -146,9 +148,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             {
 
             }
-            else if(message.Class == MessageClass.SendKey)
+            else if (message.Class == MessageClass.SendKey)
             {
-                var clientKeys = FileService.CreateKey(KeyType.XML,KeySize.BIG);
+                var clientKeys = FileService.CreateKey(KeyType.XML, KeySize.BIG);
 
                 if (ClientKeys.ContainsKey(message.Ip))
                 {
@@ -170,35 +172,35 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         ClientSendKey = clientKeys
                     });
                 }
-                await SendRESMessage(MessageClass.SendKey, clientKeys.PublicKey, socket.LocalEndPoint.ToString(),message.Ip);
+                await SendRESMessage(MessageClass.SendKey, clientKeys.PublicKey, socket.LocalEndPoint.ToString(), message.Ip);
             }
-            else if(message.Class == MessageClass.Version)
+            else if (message.Class == MessageClass.Version)
             {
-                //var getMessage = FileService.JsonToProp<config>(Encoding.UTF8.GetString(message.Message));
+                var getMessage = FileService.JsonToProp<config>(Encoding.UTF8.GetString(message.Message));
 
-                //if (getMessage.version == version)
-                //{
-                //    return;
-                //}
+                if (getMessage.version == version)
+                {
+                    return;
+                }
 
-                //var updateExePath = Directory.GetCurrentDirectory()+@"\update.exe";
+                var updateExePath = Directory.GetCurrentDirectory() + @"\update.exe";
 
-                //try
-                //{
-                //    ProcessStartInfo versionUpdatePrp = new ProcessStartInfo(updateExePath, getMessage.update_path);
+                try
+                {
+                    ProcessStartInfo versionUpdatePrp = new ProcessStartInfo(updateExePath, getMessage.update_path);
 
-                //    Process newProcess = new Process();
-                //    newProcess.StartInfo = versionUpdatePrp;
-                //    newProcess.Start();
+                    Process newProcess = new Process();
+                    newProcess.StartInfo = versionUpdatePrp;
+                    newProcess.Start();
 
-                //    Environment.Exit(0);
-                //}
-                //catch
-                //{
-                //    MessageBox.Show("更新程序损坏,请重新下载客户端！","错误");
-                //    Environment.Exit(0);
-                //}
-                
+                    Environment.Exit(0);
+                }
+                catch
+                {
+                    MessageBox.Show("更新程序损坏,请重新下载客户端！", "错误");
+                    Environment.Exit(0);
+                }
+
             }
             else
             {
@@ -219,7 +221,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             }
         }
 
-        
+
         /// <summary>
         /// 向客户端发送消息（不加密）仅心跳包使用
         /// </summary>
@@ -248,7 +250,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
         /// <param name="message"></param>
         /// <param name="ip"></param>
         /// <returns></returns>
-        public static async Task<ReturnModel> SendRESMessage(MessageClass messageClass,string message, string sendip,string keyIp,string token="",bool waitBack = false)
+        public static async Task<ReturnModel> SendRESMessage(MessageClass messageClass, string message, string sendip, string keyIp, string token = "", bool waitBack = false)
         {
             var result = new ReturnModel();
 
@@ -279,7 +281,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             var getJM = FileService.PublicKeyEncrypt(publicKey, send);
 
             socketService.AsyncSend(saveSocketClient[keyIp], getJM);
-            
+
             if (waitBack)
             {
                 if (waitBackDic.ContainsKey(messageClass))
@@ -293,7 +295,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                     {id,string.Empty }
                 });
                 }
-                
+
 
                 var value = await WaitBack(messageClass, id);
 
@@ -311,7 +313,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
 
         private static async Task<string> WaitBack(MessageClass messageClass, int id)
         {
-            
+
             await Task.Run(() =>
             {
                 while (true)

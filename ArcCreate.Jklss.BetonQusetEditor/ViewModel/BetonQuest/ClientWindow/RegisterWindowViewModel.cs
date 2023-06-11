@@ -1,4 +1,5 @@
 ﻿using ArcCreate.Jklss.BetonQusetEditor.Base;
+using ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest;
 using ArcCreate.Jklss.BetonQusetEditor.Windows;
 using ArcCreate.Jklss.Model.ClientModel;
 using ArcCreate.Jklss.Model.SocketModel;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
+namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest.ClientWindow
 {
     public class RegisterWindowViewModel : NotifyBase
     {
@@ -29,7 +30,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             set
             {
                 model.UserName = value;
-                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+                NotifyChanged();//当view的值发生改变时通知model值发生了改变
             }
         }
 
@@ -42,7 +43,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             set
             {
                 model.PassWord = value;
-                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+                NotifyChanged();//当view的值发生改变时通知model值发生了改变
             }
         }
 
@@ -55,7 +56,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             set
             {
                 model.Activation = value;
-                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+                NotifyChanged();//当view的值发生改变时通知model值发生了改变
             }
         }
 
@@ -68,7 +69,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             set
             {
                 model.RegisterEnabled = value;
-                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+                NotifyChanged();//当view的值发生改变时通知model值发生了改变
             }
         }
 
@@ -81,7 +82,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             set
             {
                 model.UserNameCheckIco = value;
-                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+                NotifyChanged();//当view的值发生改变时通知model值发生了改变
             }
         }
 
@@ -94,7 +95,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             set
             {
                 model.UserNameChecked = value;
-                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+                NotifyChanged();//当view的值发生改变时通知model值发生了改变
             }
         }
 
@@ -107,7 +108,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             set
             {
                 model.UserNameWorry = value;
-                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+                NotifyChanged();//当view的值发生改变时通知model值发生了改变
             }
         }
 
@@ -120,7 +121,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             set
             {
                 model.PasswordCheckIco = value;
-                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+                NotifyChanged();//当view的值发生改变时通知model值发生了改变
             }
         }
 
@@ -133,7 +134,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             set
             {
                 model.PasswordChecked = value;
-                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+                NotifyChanged();//当view的值发生改变时通知model值发生了改变
             }
         }
 
@@ -146,7 +147,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             set
             {
                 model.PasswordWorry = value;
-                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+                NotifyChanged();//当view的值发生改变时通知model值发生了改变
             }
         }
 
@@ -159,7 +160,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             set
             {
                 model.ActivationCheckIco = value;
-                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+                NotifyChanged();//当view的值发生改变时通知model值发生了改变
             }
         }
 
@@ -172,7 +173,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             set
             {
                 model.ActivationChecked = value;
-                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+                NotifyChanged();//当view的值发生改变时通知model值发生了改变
             }
         }
 
@@ -185,7 +186,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             set
             {
                 model.ActivationWorry = value;
-                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+                NotifyChanged();//当view的值发生改变时通知model值发生了改变
             }
         }
 
@@ -198,7 +199,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             set
             {
                 model.WorryMessage = value;
-                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+                NotifyChanged();//当view的值发生改变时通知model值发生了改变
             }
         }
 
@@ -243,7 +244,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
 
                         var window = new LoginWindow();
 
-                        AnimationBase.Appear(window,duration:1);
+                        AnimationBase.Appear(window, duration: 1);
 
                         (obj as Window).Close();
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
@@ -399,7 +400,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             {
                 if (_UserNameTboxLoadedCommand == null)
                 {
-                    _UserNameTboxLoadedCommand = new RelayCommand<TextBox>((tBox) => {
+                    _UserNameTboxLoadedCommand = new RelayCommand<TextBox>((tBox) =>
+                    {
 
                         tBox.TextChanged += TBox_TextChanged;
                     });
@@ -434,7 +436,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             {
                 if (_PasswordTboxLoadedCommand == null)
                 {
-                    _PasswordTboxLoadedCommand = new RelayCommand<TextBox>((tBox) => {
+                    _PasswordTboxLoadedCommand = new RelayCommand<TextBox>((tBox) =>
+                    {
 
                         tBox.TextChanged += TBox_TextChanged1;
                     });
@@ -469,7 +472,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             {
                 if (_ActivationTboxLoadedCommand == null)
                 {
-                    _ActivationTboxLoadedCommand = new RelayCommand<TextBox>((tBox) => {
+                    _ActivationTboxLoadedCommand = new RelayCommand<TextBox>((tBox) =>
+                    {
 
                         tBox.TextChanged += TBox_TextChanged2;
                     });
@@ -505,8 +509,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             {
                 if (_LoadedCommand == null)
                 {
-                    _LoadedCommand = new RelayCommand<Window>((wd) => {
-                        
+                    _LoadedCommand = new RelayCommand<Window>((wd) =>
+                    {
+
                         window = wd as RegisterWindow;
 
                         ShowWorryMessage = new _ShowWorryMessage(SendWorryMessage);
@@ -562,7 +567,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             {
                 window.First.IsEnabled = true;
             }));
-            
+
         }
     }
 }

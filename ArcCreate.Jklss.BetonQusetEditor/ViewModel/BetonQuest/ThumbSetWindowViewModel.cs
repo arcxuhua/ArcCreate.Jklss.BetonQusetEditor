@@ -10,9 +10,9 @@ using System.Windows.Controls;
 using System.Windows;
 using System.Text.RegularExpressions;
 
-namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
+namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest
 {
-    public class ThumbSetWindowViewModel:NotifyBase
+    public class ThumbSetWindowViewModel : NotifyBase
     {
         public ThumbSetWindowModel model = new ThumbSetWindowModel();
 
@@ -26,7 +26,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             {
                 model.UseItem = value;
 
-                this.NotifyChanged();
+                NotifyChanged();
             }
         }
 
@@ -40,7 +40,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             {
                 model.IsNegate = value;
 
-                this.NotifyChanged();
+                NotifyChanged();
             }
         }
 
@@ -54,7 +54,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             {
                 model.IsEnabel = value;
 
-                this.NotifyChanged();
+                NotifyChanged();
             }
         }
 
@@ -68,7 +68,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             {
                 model.ClassificationsSeleted = value;
 
-                this.NotifyChanged();
+                NotifyChanged();
             }
         }
 
@@ -82,7 +82,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             {
                 model.TermsSeleted = value;
 
-                this.NotifyChanged();
+                NotifyChanged();
             }
         }
 
@@ -96,7 +96,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             {
                 model.ItemNum = value;
 
-                this.NotifyChanged();
+                NotifyChanged();
             }
         }
 
@@ -110,7 +110,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             {
                 model.Classifications = value;
 
-                this.NotifyChanged();
+                NotifyChanged();
             }
         }
 
@@ -124,7 +124,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             {
                 model.Terms = value;
 
-                this.NotifyChanged();
+                NotifyChanged();
             }
         }
 

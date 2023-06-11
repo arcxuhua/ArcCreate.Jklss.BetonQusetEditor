@@ -1,4 +1,5 @@
 ﻿using ArcCreate.Jklss.BetonQusetEditor.Base;
+using ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest;
 using ArcCreate.Jklss.BetonQusetEditor.Windows;
 using ArcCreate.Jklss.BetonQusetEditor.Windows.Data;
 using ArcCreate.Jklss.Model.Data;
@@ -17,9 +18,9 @@ using System.Windows.Forms;
 using static ArcCreate.Jklss.Model.SocketModel.SocketModel;
 using MessageBox = System.Windows.MessageBox;
 
-namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
+namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest.Data
 {
-    public class SelectDataWindowViewModel:NotifyBase
+    public class SelectDataWindowViewModel : NotifyBase
     {
         private SelectDataWindowModel model = new SelectDataWindowModel();
 
@@ -34,7 +35,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
             set
             {
                 model.FilePath = value;
-                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+                NotifyChanged();//当view的值发生改变时通知model值发生了改变
             }
         }
 
@@ -47,7 +48,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
             set
             {
                 model.CreateName = value;
-                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+                NotifyChanged();//当view的值发生改变时通知model值发生了改变
             }
         }
 
@@ -60,7 +61,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
             set
             {
                 model.SearchText = value;
-                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+                NotifyChanged();//当view的值发生改变时通知model值发生了改变
             }
         }
 
@@ -73,7 +74,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
             set
             {
                 model.Data = value;
-                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+                NotifyChanged();//当view的值发生改变时通知model值发生了改变
             }
         }
 
@@ -85,23 +86,24 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
             {
                 if (_LoadedCommand == null)
                 {
-                    _LoadedCommand = new RelayCommand<Window>(async (wd) => {
+                    _LoadedCommand = new RelayCommand<Window>(async (wd) =>
+                    {
                         (wd as SelectDataWindow).data.SelectedCellsChanged += Data_SelectedCellsChangedAsync;
                         window = wd as SelectDataWindow;
                         wd.IsEnabled = false;
 
                         var message = new MessageModel()
                         {
-                            IsLogin = SocketModel.isLogin,
+                            IsLogin = isLogin,
                             JsonInfo = JsonInfo.GetSaveData,
-                            UserName = SocketModel.userName,
+                            UserName = userName,
                             Message = "",
                         };
 
                         var jsonMessage = FileService.SaveToJson(message);
 
                         var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessage,
-                            SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), SocketModel.token, true);
+                            SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), token, true);
 
                         if (getMessage == null || !getMessage.Succese)
                         {
@@ -110,7 +112,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
 
                         var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
 
-                        if (getModel.Token != SocketModel.token)
+                        if (getModel.Token != token)
                         {
                             return;
                         }
@@ -124,7 +126,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
 
                         var getData = FileService.JsonToProp<List<GridData>>(getRealMessage.Message);
 
-                        if(getData == null)
+                        if (getData == null)
                         {
                             return;
                         }
@@ -148,29 +150,29 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
                 return;
             }
 
-            var res = MessageBox.Show("导入请选择 [是]\n删除请选择 [否]\n取消操作请 [取消]", "操作指导",MessageBoxButton.YesNoCancel);
+            var res = MessageBox.Show("导入请选择 [是]\n删除请选择 [否]\n取消操作请 [取消]", "操作指导", MessageBoxButton.YesNoCancel);
 
-            if(res == MessageBoxResult.Yes)
+            if (res == MessageBoxResult.Yes)
             {
                 window.Tag = dg.SelectedItem as GridData;
 
                 window.Close();
             }
-            else if(res == MessageBoxResult.No)
+            else if (res == MessageBoxResult.No)
             {
 
                 var message = new MessageModel()
                 {
-                    IsLogin = SocketModel.isLogin,
+                    IsLogin = isLogin,
                     JsonInfo = JsonInfo.DeleteSaveData,
-                    UserName = SocketModel.userName,
+                    UserName = userName,
                     Message = dataItem.Code.ToString(),
                 };
 
                 var jsonMessage = FileService.SaveToJson(message);
 
                 var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessage,
-                    SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), SocketModel.token, true);
+                    SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), token, true);
 
                 if (getMessage == null || !getMessage.Succese)
                 {
@@ -180,7 +182,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
 
                 var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
 
-                if (getModel.Token != SocketModel.token)
+                if (getModel.Token != token)
                 {
                     return;
                 }
@@ -213,7 +215,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
                     _SearchCommand = new CommandBase();
                     _SearchCommand.DoExecute = new Action<object>(obj =>//回调函数
                     {
-                        
+
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }
                 return _SearchCommand;
@@ -230,9 +232,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
                     _CreateCommand = new CommandBase();
                     _CreateCommand.DoExecute = new Action<object>(obj =>//回调函数
                     {
-                        Grid.SetZIndex(window.CreateNewPage, 1);
-                        Grid.SetZIndex(window.CreatePage, 2);
-                        Grid.SetZIndex(window.First, 1);
+                        System.Windows.Controls.Panel.SetZIndex(window.CreateNewPage, 1);
+                        System.Windows.Controls.Panel.SetZIndex(window.CreatePage, 2);
+                        System.Windows.Controls.Panel.SetZIndex(window.First, 1);
                         AnimationBase.Appear(window.CreatePage, 1);
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }
@@ -250,9 +252,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
                     _ReadCommand = new CommandBase();
                     _ReadCommand.DoExecute = new Action<object>(obj =>//回调函数
                     {
-                        Grid.SetZIndex(window.CreateNewPage, 2);
-                        Grid.SetZIndex(window.CreatePage, 1);
-                        Grid.SetZIndex(window.First, 1);
+                        System.Windows.Controls.Panel.SetZIndex(window.CreateNewPage, 2);
+                        System.Windows.Controls.Panel.SetZIndex(window.CreatePage, 1);
+                        System.Windows.Controls.Panel.SetZIndex(window.First, 1);
                         AnimationBase.Appear(window.CreateNewPage, 1);
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }
@@ -270,9 +272,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
                     _MainCommand = new CommandBase();
                     _MainCommand.DoExecute = new Action<object>(obj =>//回调函数
                     {
-                        Grid.SetZIndex(window.CreateNewPage, 1);
-                        Grid.SetZIndex(window.CreatePage, 1);
-                        Grid.SetZIndex(window.First, 2);
+                        System.Windows.Controls.Panel.SetZIndex(window.CreateNewPage, 1);
+                        System.Windows.Controls.Panel.SetZIndex(window.CreatePage, 1);
+                        System.Windows.Controls.Panel.SetZIndex(window.First, 2);
                         AnimationBase.Appear(window.First, 1);
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }
@@ -290,15 +292,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
                     _CreateNewCommand = new CommandBase();
                     _CreateNewCommand.DoExecute = new Action<object>(obj =>//回调函数
                     {
-                        if (Grid.GetZIndex(window.CreatePage)==2)
+                        if (System.Windows.Controls.Panel.GetZIndex(window.CreatePage) == 2)
                         {
                             if (string.IsNullOrWhiteSpace(FilePath) || string.IsNullOrWhiteSpace(CreateName))
                             {
                                 return;
                             }
 
-                            if(MessageBox.Show("注意：请求云端解析YML配置将会花费您一定的积分\n扣费如下：1.对话文件1个1积分\n2.NPC话语1个1积分\n3.玩家话语1个1积分\n" +
-                                "4.条件1个1积分\n5.事件1个1积分\n6.目标1个1积分\n7.日记1个1积分\n8.物品1个1积分\n如果您的积分不足且强行解析，照成的损失将由您自己负责","警告",MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                            if (MessageBox.Show("注意：请求云端解析YML配置将会花费您一定的积分\n扣费如下：1.对话文件1个1积分\n2.NPC话语1个1积分\n3.玩家话语1个1积分\n" +
+                                "4.条件1个1积分\n5.事件1个1积分\n6.目标1个1积分\n7.日记1个1积分\n8.物品1个1积分\n如果您的积分不足且强行解析，照成的损失将由您自己负责", "警告", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                             {
                                 window.Tag = new GridData
                                 {
@@ -323,7 +325,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
                             window.Close();
                         }
 
-                        
+
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }
                 return _CreateNewCommand;
@@ -340,7 +342,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data
                     _SelectFilePathCommand = new CommandBase();
                     _SelectFilePathCommand.DoExecute = new Action<object>(obj =>//回调函数
                     {
-                        System.Windows.Forms.OpenFileDialog dialog = new System.Windows.Forms.OpenFileDialog();
+                        OpenFileDialog dialog = new OpenFileDialog();
                         dialog.Multiselect = false;//该值确定是否可以选择多个文件
                         dialog.Title = "请选择Main.yml";
                         dialog.Filter = "入口文件|main.yml";

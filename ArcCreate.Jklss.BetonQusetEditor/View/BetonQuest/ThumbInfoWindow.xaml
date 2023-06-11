@@ -18,6 +18,7 @@
                 <TextBlock Grid.Row="1" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold"> 当前进度</TextBlock>
                 <TreeView x:Name="TreeView_Tv" Grid.Row="2" Height="890" Background="#FF797979" Width="190" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TreeView.ItemTemplate>
+                        
                         <HierarchicalDataTemplate ItemsSource="{Binding Children}">
                             <TextBlock FontSize="15" Text="{Binding Name}" FontWeight="Bold" Foreground="{Binding FontColor}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </HierarchicalDataTemplate>
@@ -27,7 +28,7 @@
                         <Style TargetType="TreeViewItem" BasedOn="{StaticResource MaterialDesignTreeViewItem}">
                             <Setter Property="IsExpanded" Value="True"></Setter>
                             <Setter Property="Foreground" Value="White"></Setter>
-                            <Setter Property="materialDesign:TreeViewAssist.ExpanderSize" Value="15" />
+                            <Setter Property="materialDesign:TreeViewAssist.ExpanderSize" Value="5" />
                             <Setter Property="materialDesign:TreeViewAssist.ShowSelection" Value="false" />
                         </Style>
                     </TreeView.Resources>

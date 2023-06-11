@@ -3,13 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcCreate.Jklss.BetonQusetEditor", "ArcCreate.Jklss.BetonQusetEditor\ArcCreate.Jklss.BetonQusetEditor.csproj", "{E1BD6C18-1B07-48CE-B01E-3A657A1C1F40}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArcCreate.Jklss.BetonQusetEditor", "ArcCreate.Jklss.BetonQusetEditor\ArcCreate.Jklss.BetonQusetEditor.csproj", "{E1BD6C18-1B07-48CE-B01E-3A657A1C1F40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcCreate.Jklss.Model", "ArcCreate.Jklss.Model\ArcCreate.Jklss.Model.csproj", "{E1D6265C-513A-478F-A2C4-5B914CB78F96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArcCreate.Jklss.Model", "ArcCreate.Jklss.Model\ArcCreate.Jklss.Model.csproj", "{E1D6265C-513A-478F-A2C4-5B914CB78F96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcCreate.Jklss.Services", "ArcCreate.Jklss.Services\ArcCreate.Jklss.Services.csproj", "{FBF4720C-39AF-4D56-B9D0-596A7C95EABB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcCreate.Jklss.Update", "ArcCreate.Jklss.Update\ArcCreate.Jklss.Update.csproj", "{80D22C84-16F6-4E65-AA9B-C75538B843C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArcCreate.Jklss.Services", "ArcCreate.Jklss.Services\ArcCreate.Jklss.Services.csproj", "{FBF4720C-39AF-4D56-B9D0-596A7C95EABB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +27,6 @@ Global
 		{FBF4720C-39AF-4D56-B9D0-596A7C95EABB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FBF4720C-39AF-4D56-B9D0-596A7C95EABB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FBF4720C-39AF-4D56-B9D0-596A7C95EABB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{80D22C84-16F6-4E65-AA9B-C75538B843C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{80D22C84-16F6-4E65-AA9B-C75538B843C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{80D22C84-16F6-4E65-AA9B-C75538B843C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{80D22C84-16F6-4E65-AA9B-C75538B843C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

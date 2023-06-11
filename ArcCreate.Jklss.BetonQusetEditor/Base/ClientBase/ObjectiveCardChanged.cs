@@ -47,11 +47,11 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
                 return result;
             }
 
+            var getModel = savecmdModels.Where(t => t.MainClass == getRealCmd).FirstOrDefault();
+
             //相关参数的添加
             await Task.Run(() =>
             {
-                var getModel = savecmdModels.Where(t => t.MainClass == getRealCmd).FirstOrDefault();
-
                 //主命令的添加
                 saveAllValue[cardInfo].Add(cardInfo.SelectType,
                     new Dictionary<string, Dictionary<string, Dictionary<string, string>>>()
@@ -198,6 +198,12 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
                 }
             }
 
+            #region 帮助提示
+
+            cardInfo.TypeHelp = getModel.MainToolTip;
+
+            #endregion
+
             result.SetSuccese();
 
             return result;
@@ -250,6 +256,26 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
                 cardInfo.ItemCoBoxIsEnable = false;
 
                 cardInfo.ItemContent = string.Empty;
+
+                #region 帮助提示
+
+                var getRealCmd = GetRealCmd(cardInfo.SelectType);
+
+                if (!savecmdModels.Where(t => t.MainClass == getRealCmd).Any())
+                {
+                    result.SetError($"错误：您的语法模型中没有该命令[{getRealCmd}]！你可以自定义该语法或购买他人的语法");
+
+                    return result;
+                }
+                var getModel = savecmdModels.Where(t => t.MainClass == getRealCmd).FirstOrDefault();
+
+                var getSelecteCmdNum = cardInfo.AllCmd.IndexOf(cardInfo.SelectCmd);
+
+                if (getModel.CmdToolTip.Count > getSelecteCmdNum)
+                {
+                    cardInfo.CmdHelp = getModel.CmdToolTip[getSelecteCmdNum];
+                }
+                #endregion
 
                 result.SetSuccese();
 
@@ -378,6 +404,32 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
 
                 cardInfo.ItemContent = string.Empty;
 
+                #region 帮助提示
+
+                var getRealCmd = GetRealCmd(cardInfo.SelectType);
+
+                if (!savecmdModels.Where(t => t.MainClass == getRealCmd).Any())
+                {
+                    result.SetError($"错误：您的语法模型中没有该命令[{getRealCmd}]！你可以自定义该语法或购买他人的语法");
+
+                    return result;
+                }
+                var getModel = savecmdModels.Where(t => t.MainClass == getRealCmd).FirstOrDefault();
+
+                var getSelecteCmdNum = cardInfo.AllCmd.IndexOf(cardInfo.SelectCmd);
+
+                var getSelecteParNum = cardInfo.AllParameter.IndexOf(cardInfo.SelectParameter);
+
+                try
+                {
+                    cardInfo.ParameterHelp = getModel.ParameterToolTip[getSelecteCmdNum][getSelecteParNum];
+                }
+                catch
+                {
+
+                }
+                #endregion
+
                 result.SetSuccese();
 
                 return result;
@@ -499,6 +551,24 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
                 {
                     cardInfo.ItemContent = getItemInfo;
                 }
+
+                #region 帮助提示
+
+                var getSelecteCmdNum = cardInfo.AllCmd.IndexOf(cardInfo.SelectCmd);
+
+                var getSelecteParNum = cardInfo.AllParameter.IndexOf(cardInfo.SelectParameter);
+
+                var getSelecteItemNum = cardInfo.AllItem.IndexOf(cardInfo.SelectItem);
+
+                try
+                {
+                    cardInfo.ItemHelp = getModel.TermToolTip[getSelecteCmdNum][getSelecteParNum][getSelecteItemNum];
+                }
+                catch
+                {
+
+                }
+                #endregion
 
                 result.SetSuccese();
 

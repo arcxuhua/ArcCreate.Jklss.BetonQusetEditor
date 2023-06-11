@@ -1,4 +1,4 @@
-﻿using ArcCreate.Jklss.BetonQusetEditor.ViewModel;
+﻿using ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest;
 using ArcCreate.Jklss.Model;
 using ArcCreate.Jklss.Model.Data;
 using ArcCreate.Jklss.Model.MainWindow;

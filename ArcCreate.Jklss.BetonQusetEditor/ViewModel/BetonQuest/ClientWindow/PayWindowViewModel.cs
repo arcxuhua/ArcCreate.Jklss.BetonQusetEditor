@@ -9,35 +9,35 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
+namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest.ClientWindow
 {
-    public class PayWindowViewModel:NotifyBase
+    public class PayWindowViewModel : NotifyBase
     {
         private static PayModel model = new PayModel();
         public string ImageFile
         {
             get
             {
-                if(string.IsNullOrEmpty(model.ImageFile)) 
-                { 
+                if (string.IsNullOrEmpty(model.ImageFile))
+                {
                     return "/img/pay/99.jpg";
                 }
                 return model.ImageFile;
             }
             set
             {
-                if(string.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                 {
                     model.ImageFile = "/img/pay/99.jpg";
                 }
                 model.ImageFile = value;
-                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+                NotifyChanged();//当view的值发生改变时通知model值发生了改变
             }
         }
 
-        private RelayCommand<System.Windows.Controls.ComboBox> _SelectionChanged;
+        private RelayCommand<ComboBox> _SelectionChanged;
 
-        public RelayCommand<System.Windows.Controls.ComboBox> SelectionChanged
+        public RelayCommand<ComboBox> SelectionChanged
         {
             get
             {

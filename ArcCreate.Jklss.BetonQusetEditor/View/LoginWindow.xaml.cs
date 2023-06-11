@@ -1,4 +1,4 @@
-﻿using ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow;
+﻿using ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest.ClientWindow;
 using System;
 using System.Collections.Generic;
 using System.Linq;

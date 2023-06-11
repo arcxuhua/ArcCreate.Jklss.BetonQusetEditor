@@ -49,11 +49,11 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
                 return result;
             }
 
+            var getModel = savecmdModels.Where(t => t.MainClass == getRealCmd).FirstOrDefault();
+
             //相关参数的添加
             await Task.Run(() =>
             {
-                var getModel = savecmdModels.Where(t => t.MainClass == getRealCmd).FirstOrDefault();
-
                 this.getModel = getModel;
 
                 //主命令的添加
@@ -170,6 +170,12 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
 
             }
 
+            #region 帮助提示
+
+            cardInfo.TypeHelp = getModel.MainToolTip;
+
+            #endregion
+
             result.SetSuccese();
 
             return result;
@@ -223,6 +229,16 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
 
                 cardInfo.ItemContent = string.Empty;
 
+                #region 帮助提示
+
+                var getSelecteCmdNum = cardInfo.AllCmd.IndexOf(cardInfo.SelectCmd);
+
+                if (getModel.CmdToolTip.Count> getSelecteCmdNum)
+                {
+                    cardInfo.CmdHelp = getModel.CmdToolTip[getSelecteCmdNum];
+                }
+                #endregion
+
                 result.SetSuccese();
 
                 return result;
@@ -233,7 +249,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
 
                 return result;
             }
+
             
+
         }
 
         public async Task<ReturnModel> ParameterChanged()
@@ -341,6 +359,22 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
 
                 cardInfo.ItemContent = string.Empty;
 
+                #region 帮助提示
+
+                var getSelecteCmdNum = cardInfo.AllCmd.IndexOf(cardInfo.SelectCmd);
+
+                var getSelecteParNum = cardInfo.AllParameter.IndexOf(cardInfo.SelectParameter);
+
+                try
+                {
+                    cardInfo.ParameterHelp = getModel.ParameterToolTip[getSelecteCmdNum][getSelecteParNum];
+                }
+                catch
+                {
+
+                }
+                #endregion
+
                 result.SetSuccese();
 
                 return result;
@@ -424,6 +458,24 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
 
                 //    }
                 //}
+
+                #region 帮助提示
+
+                var getSelecteCmdNum = cardInfo.AllCmd.IndexOf(cardInfo.SelectCmd);
+
+                var getSelecteParNum = cardInfo.AllParameter.IndexOf(cardInfo.SelectParameter);
+
+                var getSelecteItemNum = cardInfo.AllItem.IndexOf(cardInfo.SelectItem);
+
+                try
+                {
+                    cardInfo.ItemHelp = getModel.TermToolTip[getSelecteCmdNum][getSelecteParNum][getSelecteItemNum];
+                }
+                catch
+                {
+
+                }
+                #endregion
 
                 result.SetSuccese();
 

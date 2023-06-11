@@ -1,6 +1,8 @@
 ﻿using ArcCreate.Jklss.BetonQusetEditor.Base;
 using ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase;
 using ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader;
+using ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest;
+using ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest.Data;
 using ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data;
 using ArcCreate.Jklss.BetonQusetEditor.Windows;
 using ArcCreate.Jklss.BetonQusetEditor.Windows.Data;
@@ -9,6 +11,7 @@ using ArcCreate.Jklss.Model;
 using ArcCreate.Jklss.Model.Data;
 using ArcCreate.Jklss.Model.MainWindow;
 using ArcCreate.Jklss.Model.SocketModel;
+using ArcCreate.Jklss.Model.ThumbInfoWindow;
 using ArcCreate.Jklss.Model.ThumbModel;
 using ArcCreate.Jklss.Model.ThumbModel.CommandModel;
 using ArcCreate.Jklss.Services;
@@ -72,9 +75,13 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
             GetSelecteCardDel = new _GetSelecteCardDel(GetSelectCard);
 
+            SetSelectCardInfoDel = new _SetSelectCardInfoDel(SetSelectCardInfo);
+
             ThumbInfoWindow window = new ThumbInfoWindow();
 
             thumbInfoWindow = window;
+
+            thumbInfoWindow.DataContext = new ThumbInfoWindowViewModel();
 
             thumbInfoWindow.Left = window.ActualWidth + window.Left;
 
@@ -114,6 +121,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
         #region 字段与属性
 
+        public CardViewModel selectCardInfo = null;
+
+        private UserActivityBase ActBase = new UserActivityBase();//按键
+
         private List<CardViewModel> selectCard = new List<CardViewModel>();
 
         public GridData SelectData = null;
@@ -124,7 +135,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
         public static List<ObjectiveCmdModel> objectiveProp = new List<ObjectiveCmdModel>();
 
-        private ThumbInfoWindow thumbInfoWindow;
+        public static ThumbInfoWindow thumbInfoWindow;
 
         private BordCardViewModel bordCardViewModel = new BordCardViewModel() { CvZIndex = 2,IsDraw=true};
 
@@ -221,6 +232,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         public delegate List<CardViewModel> _GetSelecteCardDel();
 
         public static _GetSelecteCardDel GetSelecteCardDel;
+
+        public delegate void _SetSelectCardInfoDel(CardViewModel card);
+
+        public static _SetSelectCardInfoDel SetSelectCardInfoDel;
 
         #endregion
 
@@ -1401,6 +1416,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                         }
                     }
                 }
+
+                ActBase.KeyDown += ActBase_KeyDown;
+
                 window.IsEnabled = true;
                 LoadingShow = Visibility.Hidden;
             }));
@@ -4059,6 +4077,11 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
             return result;
         }
 
+        public void SetSelectCardInfo(CardViewModel card)
+        {
+            selectCardInfo = card;
+        }
+
         /// <summary>
         /// 获取真实命令
         /// </summary>
@@ -4075,6 +4098,168 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
             else
             {
                 return txt;
+            }
+        }
+
+        /// <summary>
+        /// 删除卡片
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ActBase_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)//键盘的Enter，子自行设定。
+            {
+                if (window == null )
+                {
+                    return;
+                }
+
+                if (selectCardInfo == null)
+                {
+                    return;
+                }
+
+                if (System.Windows.MessageBox.Show("你确定将其删除，这将是不可逆的操作？", "删除", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                {
+                    ShowMessage("取消了删除~");
+                }
+
+                if (!CardItems.Contains(selectCardInfo))
+                {
+                    ShowMessage("不存在该卡片！");
+                }
+
+                var getLeftHave = CardItems.Where(t => t.Left.Contains(selectCardInfo)).ToList();
+
+                var getRightHave = CardItems.Where(t => t.Right.Contains(selectCardInfo)).ToList();
+
+                var getLine = CardItems.Where(t => t.IsLine).ToList();
+
+                var getRealLine = new List<LineCardViewModel>();
+
+                foreach (var item in getLine)
+                {
+                    getRealLine.Add(item as LineCardViewModel);
+                }
+
+                var getLineHave = getRealLine.Where(t => t.LineLeft == selectCardInfo || t.LineRight == selectCardInfo).ToList();
+
+                foreach (var item in getLineHave)
+                {
+                    CardItems.Remove(item);
+                }//删除链接线
+
+                foreach (var item in getRightHave)
+                {
+                    if(item.Type == ThumbClass.NPC|| item.Type == ThumbClass.Player)
+                    {
+                        if(!ConversationCardChanged.saveAllValue.ContainsKey(item as AnyCardViewModel))
+                        {
+                            break;
+                        }
+
+                        foreach(var i in ConversationCardChanged.saveAllValue[item as AnyCardViewModel])
+                        {
+                            foreach (var j in i.Value)
+                            {
+                                foreach (var m in j.Value)
+                                {
+                                    foreach (var n in m.Value)
+                                    {
+                                        if(n.Value == selectCardInfo.ConfigName)
+                                        {
+                                            ConversationCardChanged.saveAllValue[item as AnyCardViewModel][i.Key][j.Key][m.Key][n.Key] = string.Empty;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if(item.Type == ThumbClass.Conditions)
+                    {
+                        if (!ConditionsCardChanged.saveAllValue.ContainsKey(item as AnyCardViewModel))
+                        {
+                            break;
+                        }
+
+                        foreach (var i in ConditionsCardChanged.saveAllValue[item as AnyCardViewModel])
+                        {
+                            foreach (var j in i.Value)
+                            {
+                                foreach (var m in j.Value)
+                                {
+                                    foreach (var n in m.Value)
+                                    {
+                                        if (n.Value == selectCardInfo.ConfigName)
+                                        {
+                                            ConditionsCardChanged.saveAllValue[item as AnyCardViewModel][i.Key][j.Key][m.Key][n.Key] = string.Empty;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if(item.Type == ThumbClass.Events)
+                    {
+                        if (!EventCardChanged.saveAllValue.ContainsKey(item as AnyCardViewModel))
+                        {
+                            break;
+                        }
+
+                        foreach (var i in EventCardChanged.saveAllValue[item as AnyCardViewModel])
+                        {
+                            foreach (var j in i.Value)
+                            {
+                                foreach (var m in j.Value)
+                                {
+                                    foreach (var n in m.Value)
+                                    {
+                                        if (n.Value == selectCardInfo.ConfigName)
+                                        {
+                                            EventCardChanged.saveAllValue[item as AnyCardViewModel][i.Key][j.Key][m.Key][n.Key] = string.Empty;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if(item.Type == ThumbClass.Objectives)
+                    {
+                        if (!ObjectiveCardChanged.saveAllValue.ContainsKey(item as AnyCardViewModel))
+                        {
+                            break;
+                        }
+
+                        foreach (var i in ObjectiveCardChanged.saveAllValue[item as AnyCardViewModel])
+                        {
+                            foreach (var j in i.Value)
+                            {
+                                foreach (var m in j.Value)
+                                {
+                                    foreach (var n in m.Value)
+                                    {
+                                        if (n.Value == selectCardInfo.ConfigName)
+                                        {
+                                            ObjectiveCardChanged.saveAllValue[item as AnyCardViewModel][i.Key][j.Key][m.Key][n.Key] = string.Empty;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    item.Right.Remove(selectCardInfo);
+                }//删除此卡片子级的数据
+
+                foreach (var item in getLeftHave)
+                {
+                    item.Left.Remove(selectCardInfo);
+                }//删除此卡片父级的数据
+
+                CardItems.Remove(selectCardInfo);//卡片删除
+
+                ShowMessage("删除成功！");
             }
         }
 
@@ -4370,8 +4555,233 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
             {
                 if (MessageBox.Show("确定要将其取消归类？", "提示", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
-                    ClientWindowViewModel.ShowMessageDel("终止操作");
-                    
+                    var allCard = GetAllCardDel();
+
+                    var getLines = allCard.Where(t => t.IsLine).ToList();
+
+                    var getRealLine = new List<LineCardViewModel>();
+
+                    foreach (var item in getLines)
+                    {
+                        getRealLine.Add(item as LineCardViewModel);
+                    }
+
+                    var getNeedLine = getRealLine.Where(t => (t.LineRight == nowThumbContent || t.LineLeft == nowThumbContent)
+                    && (t.LineRight == fatherCard || t.LineLeft == fatherCard)).FirstOrDefault();
+
+                    if(getNeedLine != null)
+                    {
+                        allCard.Remove(getNeedLine);
+                    }
+
+                    nowThumbContent.Left.Remove(fatherCard);
+                    nowThumbContent.Right.Remove(fatherCard);
+
+                    fatherCard.Left.Remove(nowThumbContent);
+                    fatherCard.Right.Remove(nowThumbContent);
+
+                    #region 信息清空
+                    {
+                        if (nowThumbContent.Type == ThumbClass.NPC || nowThumbContent.Type == ThumbClass.Player)
+                        {
+                            if (!ConversationCardChanged.saveAllValue.ContainsKey(nowThumbContent as AnyCardViewModel))
+                            {
+                                return;
+                            }
+
+                            foreach (var i in ConversationCardChanged.saveAllValue[nowThumbContent as AnyCardViewModel])
+                            {
+                                foreach (var j in i.Value)
+                                {
+                                    foreach (var m in j.Value)
+                                    {
+                                        foreach (var n in m.Value)
+                                        {
+                                            if (n.Value == fatherCard.ConfigName)
+                                            {
+                                                ConversationCardChanged.saveAllValue[nowThumbContent as AnyCardViewModel][i.Key][j.Key][m.Key][n.Key] = string.Empty;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else if (nowThumbContent.Type == ThumbClass.Conditions)
+                        {
+                            if (!ConditionsCardChanged.saveAllValue.ContainsKey(nowThumbContent as AnyCardViewModel))
+                            {
+                                return;
+                            }
+
+                            foreach (var i in ConditionsCardChanged.saveAllValue[nowThumbContent as AnyCardViewModel])
+                            {
+                                foreach (var j in i.Value)
+                                {
+                                    foreach (var m in j.Value)
+                                    {
+                                        foreach (var n in m.Value)
+                                        {
+                                            if (n.Value == fatherCard.ConfigName)
+                                            {
+                                                ConditionsCardChanged.saveAllValue[nowThumbContent as AnyCardViewModel][i.Key][j.Key][m.Key][n.Key] = string.Empty;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else if (nowThumbContent.Type == ThumbClass.Events)
+                        {
+                            if (!EventCardChanged.saveAllValue.ContainsKey(nowThumbContent as AnyCardViewModel))
+                            {
+                                return;
+                            }
+
+                            foreach (var i in EventCardChanged.saveAllValue[nowThumbContent as AnyCardViewModel])
+                            {
+                                foreach (var j in i.Value)
+                                {
+                                    foreach (var m in j.Value)
+                                    {
+                                        foreach (var n in m.Value)
+                                        {
+                                            if (n.Value == fatherCard.ConfigName)
+                                            {
+                                                EventCardChanged.saveAllValue[nowThumbContent as AnyCardViewModel][i.Key][j.Key][m.Key][n.Key] = string.Empty;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else if (nowThumbContent.Type == ThumbClass.Objectives)
+                        {
+                            if (!ObjectiveCardChanged.saveAllValue.ContainsKey(nowThumbContent as AnyCardViewModel))
+                            {
+                                return;
+                            }
+
+                            foreach (var i in ObjectiveCardChanged.saveAllValue[nowThumbContent as AnyCardViewModel])
+                            {
+                                foreach (var j in i.Value)
+                                {
+                                    foreach (var m in j.Value)
+                                    {
+                                        foreach (var n in m.Value)
+                                        {
+                                            if (n.Value == fatherCard.ConfigName)
+                                            {
+                                                ObjectiveCardChanged.saveAllValue[nowThumbContent as AnyCardViewModel][i.Key][j.Key][m.Key][n.Key] = string.Empty;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    {
+                        if (fatherCard.Type == ThumbClass.NPC || fatherCard.Type == ThumbClass.Player)
+                        {
+                            if (!ConversationCardChanged.saveAllValue.ContainsKey(fatherCard as AnyCardViewModel))
+                            {
+                                return;
+                            }
+
+                            foreach (var i in ConversationCardChanged.saveAllValue[fatherCard as AnyCardViewModel])
+                            {
+                                foreach (var j in i.Value)
+                                {
+                                    foreach (var m in j.Value)
+                                    {
+                                        foreach (var n in m.Value)
+                                        {
+                                            if (n.Value == nowThumbContent.ConfigName)
+                                            {
+                                                ConversationCardChanged.saveAllValue[fatherCard as AnyCardViewModel][i.Key][j.Key][m.Key][n.Key] = string.Empty;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else if (fatherCard.Type == ThumbClass.Conditions)
+                        {
+                            if (!ConditionsCardChanged.saveAllValue.ContainsKey(fatherCard as AnyCardViewModel))
+                            {
+                                return;
+                            }
+
+                            foreach (var i in ConditionsCardChanged.saveAllValue[fatherCard as AnyCardViewModel])
+                            {
+                                foreach (var j in i.Value)
+                                {
+                                    foreach (var m in j.Value)
+                                    {
+                                        foreach (var n in m.Value)
+                                        {
+                                            if (n.Value == nowThumbContent.ConfigName)
+                                            {
+                                                ConditionsCardChanged.saveAllValue[fatherCard as AnyCardViewModel][i.Key][j.Key][m.Key][n.Key] = string.Empty;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else if (fatherCard.Type == ThumbClass.Events)
+                        {
+                            if (!EventCardChanged.saveAllValue.ContainsKey(fatherCard as AnyCardViewModel))
+                            {
+                                return;
+                            }
+
+                            foreach (var i in EventCardChanged.saveAllValue[fatherCard as AnyCardViewModel])
+                            {
+                                foreach (var j in i.Value)
+                                {
+                                    foreach (var m in j.Value)
+                                    {
+                                        foreach (var n in m.Value)
+                                        {
+                                            if (n.Value == nowThumbContent.ConfigName)
+                                            {
+                                                EventCardChanged.saveAllValue[fatherCard as AnyCardViewModel][i.Key][j.Key][m.Key][n.Key] = string.Empty;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else if (fatherCard.Type == ThumbClass.Objectives)
+                        {
+                            if (!ObjectiveCardChanged.saveAllValue.ContainsKey(fatherCard as AnyCardViewModel))
+                            {
+                                return;
+                            }
+
+                            foreach (var i in ObjectiveCardChanged.saveAllValue[fatherCard as AnyCardViewModel])
+                            {
+                                foreach (var j in i.Value)
+                                {
+                                    foreach (var m in j.Value)
+                                    {
+                                        foreach (var n in m.Value)
+                                        {
+                                            if (n.Value == nowThumbContent.ConfigName)
+                                            {
+                                                ObjectiveCardChanged.saveAllValue[fatherCard as AnyCardViewModel][i.Key][j.Key][m.Key][n.Key] = string.Empty;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    #endregion
+
+
                 }
                 else
                 {
@@ -6349,7 +6759,44 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         /// <param name="e"></param>
         private async void Thumb_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            
+            var nowThumb = (Thumb)sender;
+            var nowThumbContent = nowThumb.DataContext as CardViewModel;
+
+            ClientWindowViewModel.SetSelectCardInfoDel(nowThumbContent);//委托将选中的Card传回
+
+            if(nowThumbContent.Type == ThumbClass.Subject|| nowThumbContent.Type == ThumbClass.Journal|| nowThumbContent.Type == ThumbClass.Items)
+            {
+                return;
+            }
+
+            if(nowThumbContent.Type == ThumbClass.Conditions)
+            {
+                if(ConditionsCardChanged.saveAllValue.TryGetValue(nowThumbContent as AnyCardViewModel,out var vl))
+                {
+                    await ChangeTheTreeView(vl);
+                }
+            }
+            else if(nowThumbContent.Type == ThumbClass.Events)
+            {
+                if (EventCardChanged.saveAllValue.TryGetValue(nowThumbContent as AnyCardViewModel, out var vl))
+                {
+                    await ChangeTheTreeView(vl);
+                }
+            }
+            else if(nowThumbContent.Type == ThumbClass.Objectives)
+            {
+                if (ObjectiveCardChanged.saveAllValue.TryGetValue(nowThumbContent as AnyCardViewModel, out var vl))
+                {
+                    await ChangeTheTreeView(vl);
+                }
+            }
+            else
+            {
+                if (ConversationCardChanged.saveAllValue.TryGetValue(nowThumbContent as AnyCardViewModel, out var vl))
+                {
+                    await ChangeTheTreeView(vl);
+                }
+            }
         }
 
         /// <summary>
@@ -6587,6 +7034,67 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 }
             }
         }
+
+        public async Task<ReturnModel> ChangeTheTreeView(Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>> saveValue)
+        {
+            var result = new ReturnModel();
+
+            var getTreeController = ClientWindowViewModel.thumbInfoWindow.TreeView_Tv;
+
+            var nodes = new List<DefinitionNode>();
+
+            await Task.Run(() =>
+            {
+                foreach (var item in saveValue)
+                {
+                    foreach (var i in item.Value)
+                    {
+                        var two = new DefinitionNode
+                        {
+                            Name = i.Key,
+                            FontColor = "White"
+                        };
+
+                        nodes.Add(two);
+
+                        foreach (var j in i.Value)
+                        {
+                            var three = new DefinitionNode
+                            {
+                                Name = j.Key,
+                                FontColor = "White"
+                            };
+
+                            two.Children.Add(three);
+
+                            foreach (var m in j.Value)
+                            {
+                                var four = new DefinitionNode() { };
+
+                                if (!string.IsNullOrEmpty(m.Value))
+                                {
+                                    four.Name = m.Key + " ------ 已保存";
+                                    four.FontColor = "#1f640a";
+                                }
+                                else
+                                {
+                                    four.Name = m.Key + " ------ 未保存";
+                                    four.FontColor = "#f6003c";
+                                }
+
+                                three.Children.Add(four);
+                            }
+                        }
+                    }
+                }
+            });
+
+            getTreeController.ItemsSource = nodes;
+
+            result.SetSuccese();
+
+            return result;
+        }
         
         /// <summary>
         /// 文本分割
@@ -6668,6 +7176,18 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         public EventCardChanged eventCardChanged;
 
         public ObjectiveCardChanged objectiveCardChanged;
+
+        [ObservableProperty]
+        private string _TypeHelp = string.Empty;
+
+        [ObservableProperty]
+        private string _CmdHelp = string.Empty;
+
+        [ObservableProperty]
+        private string _ParameterHelp = string.Empty;
+
+        [ObservableProperty]
+        private string _ItemHelp = string.Empty;
 
         [ObservableProperty]
         private string _SelectType = string.Empty;

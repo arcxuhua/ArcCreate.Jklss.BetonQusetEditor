@@ -11,7 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using static ArcCreate.Jklss.Model.MainWindow.MainWindowModels;
 
-namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
+namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest
 {
     public class ThumbInfoWindowViewModel : NotifyBase
     {
@@ -26,7 +26,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
             {
                 model.ThumbInfo = value;
 
-                this.NotifyChanged();
+                NotifyChanged();
             }
         }
     }

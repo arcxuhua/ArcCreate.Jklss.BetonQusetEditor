@@ -52,11 +52,14 @@
     <Product>ArcCreate</Product>
     <Description>我的世界Betonquest任务编辑器</Description>
     <Copyright>Copyright © 2020 jklss Rights Reserved.</Copyright>
+    <StartupObject></StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <Optimize>False</Optimize>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="img\app\1.jpg" />
+    <None Remove="img\app\2.jpg" />
     <None Remove="img\vip\admin.png" />
     <None Remove="img\vip\noraml.png" />
     <None Remove="img\vip\vip1.png" />
@@ -75,6 +78,8 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="ArcCreate.png" />
+    <Resource Include="img\app\1.jpg" />
+    <Resource Include="img\app\2.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="img\pay\199.jpg" />
@@ -133,7 +138,14 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ArcCreate.Jklss.Model\ArcCreate.Jklss.Model.csproj" />
-    <ProjectReference Include="..\ArcCreate.Jklss.Services\ArcCreate.Jklss.Services.csproj" />
+    <ProjectReference Include="..\ArcCreate.Jklss.Model\ArcCreate.Jklss.Model.csproj">
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\ArcCreate.Jklss.Services\ArcCreate.Jklss.Services.csproj">
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewModel\SkillApi\" />
   </ItemGroup>
 </Project>

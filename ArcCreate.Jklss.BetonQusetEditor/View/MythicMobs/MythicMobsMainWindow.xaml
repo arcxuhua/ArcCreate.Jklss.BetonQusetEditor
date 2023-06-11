@@ -1,0 +1,669 @@
+﻿<Window x:Class="ArcCreate.Jklss.BetonQusetEditor.View.MythicMobs.MythicMobsMainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:binding="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:ArcCreate.Jklss.BetonQusetEditor.View.MythicMobs" xmlns:betonquseteditor="clr-namespace:ArcCreate.Jklss.BetonQusetEditor"
+        mc:Ignorable="d"
+        Title="ArcCreate MythicMobs编辑器" Height="980" Width="1740" MaxHeight="1040" MaxWidth="1920" MinHeight="705" MinWidth="1275" WindowStyle="None" AllowsTransparency="True" Foreground="{x:Null}" Background="{x:Null}" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="235"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Row="0" Grid.Column="0" Background="#FF4C4C4C">
+            <Image HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" Margin="10,0,0,0" Source="/ArcCreate.png"/>
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="12" FontWeight="Bold" Foreground="#7FFFFFFF"><Run Text="ArcCreate"/></TextBlock>
+        </Grid>
+
+        <Grid Grid.Row="0" Grid.Column="1" Background="#FF4C4C4C">
+            <Button Command="{Binding CloseCommand}" CommandParameter="{Binding ., RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Margin="1470,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryDarkButton}" ToolTip="关闭" Width="35" Height="25" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#DDFFFFFF" Cursor="Hand">
+                <materialDesign:PackIcon Kind="WindowClose" Height="20" Width="20" Foreground="#DDFFFFFF" />
+            </Button>
+            <Button Command="{Binding MinimizeCommand}" CommandParameter="{Binding ., RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Margin="1425,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryDarkButton}" ToolTip="最大/最小化" Width="35" Height="25" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#DD00A7FF">
+                <materialDesign:PackIcon Kind="WindowRestore" Height="20" Width="20" Foreground="#DDFFFFFF" />
+            </Button>
+            <Button Command="{Binding NarrowCommand}" CommandParameter="{Binding ., RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Margin="1380,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryDarkButton}" ToolTip="隐藏" Width="35" Height="25" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#DDFFA400">
+                <materialDesign:PackIcon Kind="WindowMinimize" Height="20" Width="20" Foreground="#DDFFFFFF" />
+            </Button>
+            <TextBlock Text="MythicMobs编辑页" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="12" FontWeight="Bold" Foreground="White"></TextBlock>
+        </Grid>
+
+        <Grid Grid.Row="1" Grid.Column="0" Background="#FF4C4C4C">
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Foreground="White"><Run Text="目录栏"/></TextBlock>
+
+        </Grid>
+
+        <Grid Grid.Row="2" Background="#FF656565">
+            <ListBox>
+                <TreeView>
+                    
+                </TreeView>
+            </ListBox>
+        </Grid>
+
+        <Grid Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Background="#FFC5C5C5">
+
+            <materialDesign:Card Background="#FFD8D8D8">
+                <TabControl materialDesign:ColorZoneAssist.Mode="Light" materialDesign:ColorZoneAssist.Background="#FF4C4C4C" >
+                    <TabItem Header="配置页" Width="100" Background="White"  BorderBrush="Black" HorizontalAlignment="Right">
+                        <Grid>
+                            <ScrollViewer>
+                                <StackPanel>
+                                    <Grid Margin=" 20 10 20 5" Background="#FF757575" TextBlock.FontSize="12" TextBlock.Foreground="White">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Margin="10 10 0 10" Height="17" >当前配置文件版本(Version):</TextBlock>
+                                            <TextBox Margin="10 10 0 10" Width="300" IsEnabled="False" SelectionBrush="Black" CaretBrush="White" materialDesign:TextFieldAssist.UnderlineBrush="White"></TextBox>
+                                        </StackPanel>
+                                    </Grid>
+                                    
+                                    <Grid Margin=" 20 10 20 5" Background="#FF757575" TextBlock.FontSize="12" TextBlock.Foreground="White">
+                                        <StackPanel>
+                                            <Border VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10 10 0 10" Background="#FF5F5F5F" Width="118">
+                                                <TextBlock Margin="5 5 5 5" FontSize="14" FontWeight="Bold">基本项(General)</TextBlock>
+                                            </Border>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >发送度量数据给开发者(AllowMetrics):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >自动检测插件最新版本(CheckForUpdates):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >开启插件兼容模式(CompatibilityMode):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20" Foreground="#DDFFFFFF" />
+                                                <TextBlock Margin="0 10 0 10" Height="17" >若和其他插件有冲突的话启用此模式或许能解决插件冲突问题</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >调试等级(DebugLevel):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White">
+                                                </ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20" Foreground="#DDFFFFFF" />
+                                                <TextBlock Margin="0 10 0 10" Height="17" >启用的话会关闭妨碍调试的功能, 如实体生成事件, 和其他随机的功能(范围：0 ~ 4)</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >保存插件报错日志(ErrorLogging):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White">
+                                                </ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20" Foreground="#DDFFFFFF" />
+                                                <TextBlock Margin="0 10 0 10" Height="17" >保存路径：plugins/MythicMobs/ErrorLogs/</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >插件语言(Language):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White">
+                                                </ComboBox>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >使用易变特性(UseVolatileFeatures):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White">
+                                                </ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20" Foreground="#DDFFFFFF" />
+                                                <TextBlock Margin="0 10 0 10" Height="17" >如果使用的是不支持的Bukkit或奇怪的Spigot版本，可尝试禁用此项</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >发送物品给予信息(SendItemFeedback):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White">
+                                                </ComboBox>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <Grid Margin=" 20 10 20 5" Background="#FF757575" TextBlock.FontSize="12" TextBlock.Foreground="White">
+                                        <StackPanel>
+                                            <Border VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10 10 0 10" Background="#FF5F5F5F" Width="90">
+                                                <TextBlock Margin="5 5 5 5" FontSize="14" FontWeight="Bold">时钟(Clock)</TextBlock>
+                                            </Border>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >技能所允许的最低发动间隔(ClockInterval):</TextBlock>
+                                                <TextBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White" Foreground="White"></TextBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >设置技能所允许的最低发动间隔，修改此项后必须重启插件(只适用于“~onTimer:xx”。单位：刻)</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >保存插件数据的时间间隔(SaveInterval):</TextBlock>
+                                                <TextBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White" Foreground="White"></TextBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >(单位：分钟)</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >生成间隔(SpawnsInterval):</TextBlock>
+                                                <TextBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White" Foreground="White"></TextBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >生成间隔(单位：秒)</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >检测区块和清除位于未加载区块内的实体的间隔(ScannerInterval):</TextBlock>
+                                                <TextBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White" Foreground="White"></TextBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >(单位：秒)</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >清除间隔(CleanupInterval):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White">
+                                                </ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20" Foreground="#DDFFFFFF" />
+                                                <TextBlock Margin="0 10 0 10" Height="17" >清除间隔(单位：秒)</TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <Grid Margin=" 20 10 20 5" Background="#FF757575" TextBlock.FontSize="12" TextBlock.Foreground="White">
+                                        <StackPanel>
+                                            <Border VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10 10 0 10" Background="#FF5F5F5F" Width="140">
+                                                <TextBlock Margin="5 5 5 5" FontSize="14" FontWeight="Bold">分支(Components)</TextBlock>
+                                            </Border>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >启用此插件怪物的生成(CustomSpawners):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >是否启用此插件怪物的生成</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >启用此插件怪物的随机生成(RandomSpawning):</TextBlock>
+                                                <TextBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White" Foreground="White"></TextBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >RandomSpawning</TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <Grid Margin=" 20 10 20 5" Background="#FF757575" TextBlock.FontSize="12" TextBlock.Foreground="White">
+                                        <StackPanel>
+                                            <Border VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10 10 0 10" Background="#FF5F5F5F" Width="180">
+                                                <TextBlock Margin="5 5 5 5" FontSize="14" FontWeight="Bold">物品更新(ItemUpdating)</TextBlock>
+                                            </Border>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >启用物品更新(ItemUpdating):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >若物品拥有NBT: Mythic_ITEM 是否不将其读取为Mythic物品库内的物品</TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <Grid Margin=" 20 10 20 5" Background="#FF757575" TextBlock.FontSize="12" TextBlock.Foreground="White">
+                                        <StackPanel>
+                                            <Border VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10 10 0 10" Background="#FF5F5F5F" Width="260">
+                                                <TextBlock Margin="5 5 5 5" FontSize="14" FontWeight="Bold">默认文件加载(LoadExampleConfigs)</TextBlock>
+                                            </Border>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >启用默认文件加载(Load Example Configs):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >若ExampleMobs.yml等文件不存在, 是否再次生成</TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <Grid Margin=" 20 10 20 5" Background="#FF757575" TextBlock.FontSize="12" TextBlock.Foreground="White">
+                                        <StackPanel>
+                                            <Border VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10 10 0 10" Background="#FF5F5F5F" Width="300">
+                                                <TextBlock Margin="5 5 5 5" FontSize="14" FontWeight="Bold">默认目标选择过滤器(Target Filters [4.14.2])</TextBlock>
+                                            </Border>
+
+                                            <TextBlock Margin="10 10 0 10">注意：开启或关闭选项将引起全局玩家与NPC的目标选择器正常使用</TextBlock>
+                                            
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >不过滤自身(TargetSelf):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >是否不过滤自身</TextBlock>
+                                            </StackPanel>
+                                            
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >不过滤玩家(TargetPlayers):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >是否不过滤玩家</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >不过滤盔甲架(TargetArmorStands):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >是否不过滤盔甲架</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >不过滤Marker(TargetMarkers):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >是否不过滤Marker</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >不过滤处在创造模式下的玩家(TargetCreativeMode):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >是否不过滤处在创造模式下的玩家</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >不过滤处在观察者模式下的玩家(TargetSpectatorMode):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >是否不过滤处在观察者模式下的玩家</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >不过滤Citizens的NPC实体(TargetCitizensNPCs):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >是否不过滤Citizens的NPC实体</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >不过滤动物(TargetAnimals):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >是否不过滤动物</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >不过滤生物(TargetCreatures):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >是否不过滤生物</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >不过滤怪物(TargetMonsters):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >是否不过滤怪物</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >不过滤水生实体(TargetWaterMobs):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >是否不过滤水生实体</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >不过滤飞行实体(TargetFlyingMobs):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >是否不过滤飞行实体</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >不过滤与施法者处在同一阵营内的实体(TargetSameFaction):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >是否不过滤与施法者处在同一阵营内的实体</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >不过滤施法者的主人(TargetOwner):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >是否不过滤施法者的主人</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >不过滤非Mythic实体(TargetNonMythic):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >是否不过滤非Mythic实体</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >不过滤村民(TargetVillagers):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >是否不过滤村民</TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <Grid Margin=" 20 10 20 5" Background="#FF757575" TextBlock.FontSize="12" TextBlock.Foreground="White">
+                                        <StackPanel>
+                                            <Border VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10 10 0 10" Background="#FF5F5F5F" Width="90">
+                                                <TextBlock Margin="5 5 5 5" FontSize="14" FontWeight="Bold">实体(Mobs)</TextBlock>
+                                            </Border>
+
+                                            <TextBlock Margin="10 10 0 10">在4.11+,整体等级调整值的优先度高于独立等级调整值（优先度=优先计算）。</TextBlock>
+                                            
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >清除Mythic实体机制是否与原版一致(DespawnByDefault):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >（就是离玩家太远地图刷新把生物清理掉）</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >自定义AI功能(EnableAIModifiers):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >（是否启用 自定义AI 功能）</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >计时技能(EnableTimerSkills):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >（是否启用计时技能）</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >威胁度(EnableThreatTables):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >（是否启用威胁度）</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >player为可用派别(EnablePlayerFactions):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >（是否启用player为可用派别）</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >识别旧版技能格式(EnableLegacySkills):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >（是否识别旧版MythicMobs（2.0版本之前）插件的技能格式）</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal" >
+                                                <TextBlock Margin="10 10 0 10" Height="17" >实体杀死玩家时显示的信息前缀(KillMessagePrefix):</TextBlock>
+                                                <TextBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></TextBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >（设置MythicMobs实体杀死玩家时显示的信息前缀）</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >掉落原版掉落物(PreventOtherDropsByDefault):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >（MythicMobs实体死亡时是否掉落原版掉落物）</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal" Background="#FF5F5F5F">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >缩放？？？(Scaling):</TextBlock>
+                                                <DataGrid Margin="10 10 0 10" Height="200">
+                                                    <DataGrid.Columns>
+                                                        <DataGridTextColumn Header="地图名称" Width="300" Binding="{Binding HelpInfo,Mode=TwoWay}"  ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False"></DataGridTextColumn>
+                                                        <DataGridTextColumn Header="是否启用(Enabled)" Binding="{Binding HelpInfo,Mode=TwoWay}"  ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False"></DataGridTextColumn>
+                                                        <DataGridTextColumn Header="距离(PerBlocksFromSpawn)" Binding="{Binding HelpInfo,Mode=TwoWay}"  ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False"></DataGridTextColumn>
+                                                    </DataGrid.Columns>
+                                                </DataGrid>
+                                                <StackPanel Margin="10 10 0 10" Orientation="Vertical">
+                                                    <Button Command="{Binding }" CommandParameter="{Binding ElementName=data}" Width="20" Height="20" Margin="0 10 0 10" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="添加" BorderBrush="#FF3AB78A" Background="#FF3AB78A">
+                                                        <materialDesign:PackIcon Kind="Plus" />
+                                                    </Button>
+                                                    <Button Command="{Binding }" CommandParameter="{Binding ElementName=data}" Width="20" Height="20" Margin="0 10 0 10" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" ToolTip="删除" Background="#FFB73A3A" BorderBrush="#FFB73A3A">
+                                                        <materialDesign:PackIcon Kind="ElectricSwitchClosed" />
+                                                    </Button>
+                                                </StackPanel>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >目前不清楚是干嘛的，WIKI中也没有提示</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >缩放方程(ScalingEquations):</TextBlock>
+                                                <StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="10 10 0 10" Height="17" >血量(Health):</TextBlock>
+                                                        <TextBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></TextBox>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="10 10 0 10" Height="17" >伤害(Damage):</TextBlock>
+                                                        <TextBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></TextBox>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                                
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >（MythicMobs实体死亡时是否掉落原版掉落物）</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal" Background="#FF5F5F5F">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >整体等级调整值(DefaultLevelModifiers):</TextBlock>
+                                                <StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="10 10 0 10" Height="17" >血量(Health):</TextBlock>
+                                                        <TextBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></TextBox>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="10 10 0 10" Height="17" >护甲(Armor):</TextBlock>
+                                                        <TextBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></TextBox>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="10 10 0 10" Height="17" >伤害(Damage):</TextBlock>
+                                                        <TextBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></TextBox>
+                                                    </StackPanel>
+
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="10 10 0 10" Height="17" >抗击退(KnockbackResistance):</TextBlock>
+                                                        <TextBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></TextBox>
+                                                    </StackPanel>
+
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="10 10 0 10" Height="17" >法力值？(Power):</TextBlock>
+                                                        <TextBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></TextBox>
+                                                    </StackPanel>
+                                                </StackPanel>
+
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17">整体等级调整值,默认每提升1级的各项上升数值,在4.11+,整体等级调整值的优先度高于独立等级调整值（优先度=优先计算）</TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <Grid Margin=" 20 10 20 5" Background="#FF757575" TextBlock.FontSize="12" TextBlock.Foreground="White">
+                                        <StackPanel>
+                                            <Border VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10 10 0 10" Background="#FF5F5F5F" Width="220">
+                                                <TextBlock Margin="5 5 5 5" FontSize="14" FontWeight="Bold">随机生成项(RandomSpawning)</TextBlock>
+                                            </Border>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >禁止刷新原版实体(DisableVanillaSpawns):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >是否禁止刷新原版实体</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >启用生成点(GenerateSpawnPoints):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >是否启用生成点,若随机生成模式为ADD请设置为true</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >,超过该数值停止生成实体(MaxMobsPerChunk):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >每个区块最多可以存在多少实体,超过该数值将停止生成实体</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >半径随机生成(SpawnRadiusPerPlayer):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >以玩家为中心,"数值"为半径随机生成</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >半径垂直随机生成(SpawnRadiusPerPlayerY):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >以玩家为中心,"数值"为半径垂直随机生成</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >清除不积极的实体(DespawnLazyRandomMobs):</TextBlock>
+                                                <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >清除"不积极的"由随机生成所生成的实体</TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal" >
+                                                <TextBlock Margin="10 10 0 10" Height="17" >最大刷新间隔(MaxGenerationTime):</TextBlock>
+                                                <TextBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></TextBox>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal" Background="#FF5F5F5F">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >刷新间隔配置(PointsPerSecond):</TextBlock>
+
+                                                <StackPanel Margin="10 10 0 10" Orientation="Vertical">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="10 10 0 10" Height="17" >类型:</TextBlock>
+                                                        <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="10 10 0 10" Height="17" >数值(刻):</TextBlock>
+                                                        <TextBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></TextBox>
+                                                    </StackPanel>
+                                                </StackPanel>
+
+                                                <Button>保存</Button>
+
+                                                <materialDesign:PackIcon Margin="20 10 0 10" Kind="AlertCircle" Height="20" Width="20"/>
+                                                <TextBlock Margin="0 10 0 10" Height="17" >生成点不同类型的刷新间隔配置</TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <Grid Margin=" 20 10 20 5" Background="#FF757575" TextBlock.FontSize="12" TextBlock.Foreground="White">
+                                        <StackPanel>
+                                            <Border VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10 10 0 10" Background="#FF5F5F5F" Width="160">
+                                                <TextBlock Margin="5 5 5 5" FontSize="14" FontWeight="Bold">兼容项(Compatibility)</TextBlock>
+                                            </Border>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >插件名(Heroes):</TextBlock>
+
+                                                <StackPanel Margin="10 10 0 10" Orientation="Vertical">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="10 10 0 10" Height="17" >启用:</TextBlock>
+                                                        <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="10 10 0 10" Height="17" >是否显示经验信息(ShowXPMessage):</TextBlock>
+                                                        <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="10 10 0 10" Height="17" >显示经验信息的格式，可使用占位符和变量(XPMessageFormat):</TextBlock>
+                                                        <TextBox Margin="10 10 0 10" Width="400" materialDesign:TextFieldAssist.UnderlineBrush="White"></TextBox>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal" Background="#FF5F5F5F">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >插件名(McMMO):</TextBlock>
+
+                                                <StackPanel Margin="10 10 0 10" Orientation="Vertical">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="10 10 0 10" Height="17" >启用:</TextBlock>
+                                                        <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="10 10 0 10" Height="17" >是否显示经验信息(ShowXPMessage):</TextBlock>
+                                                        <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="10 10 0 10" Height="17" >显示经验信息的格式，可使用占位符和变量(XPMessageFormat):</TextBlock>
+                                                        <TextBox Margin="10 10 0 10" Width="400" materialDesign:TextFieldAssist.UnderlineBrush="White"></TextBox>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >插件名(SkillAPI):</TextBlock>
+
+                                                <StackPanel Margin="10 10 0 10" Orientation="Vertical">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="10 10 0 10" Height="17" >启用:</TextBlock>
+                                                        <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="10 10 0 10" Height="17" >是否显示经验信息(ShowXPMessage):</TextBlock>
+                                                        <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="10 10 0 10" Height="17" >显示经验信息的格式，可使用占位符和变量(XPMessageFormat):</TextBlock>
+                                                        <TextBox Margin="10 10 0 10" Width="400" materialDesign:TextFieldAssist.UnderlineBrush="White"></TextBox>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal" Background="#FF5F5F5F">
+                                                <TextBlock Margin="10 10 0 10" Height="17" >插件名(Vault):</TextBlock>
+
+                                                <StackPanel Margin="10 10 0 10" Orientation="Vertical">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="10 10 0 10" Height="17" >启用:</TextBlock>
+                                                        <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="10 10 0 10" Height="17" >是否显示金钱信息(ShowMoneyMessage):</TextBlock>
+                                                        <ComboBox Margin="10 10 0 10" Width="300" materialDesign:TextFieldAssist.UnderlineBrush="White"></ComboBox>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="10 10 0 10" Height="17" >显示经验金钱的格式，可使用占位符和变量(MoneyMessageFormat):</TextBlock>
+                                                        <TextBox Margin="10 10 0 10" Width="400" materialDesign:TextFieldAssist.UnderlineBrush="White"></TextBox>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <Grid Margin=" 20 10 20 5" Background="#FF757575" TextBlock.FontSize="12" TextBlock.Foreground="White">
+                                        <StackPanel>
+                                            <Border VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10 10 0 10" Background="#FF5F5F5F" Width="110">
+                                                <TextBlock Margin="5 5 5 5" FontSize="14" FontWeight="Bold">配置保存(Save)</TextBlock>
+                                            </Border>
+
+                                            <Button materialDesign:ButtonAssist.CornerRadius="5" Margin="80 10">保存全部Config配置，并输出</Button>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="编辑页" Width="100" Background="White" BorderBrush="Black" HorizontalAlignment="Left">
+                        <Grid>
+                            
+                        </Grid>
+                    </TabItem>
+                </TabControl>
+            </materialDesign:Card>
+        </Grid>
+
+        <Grid Grid.Row="3" Grid.ColumnSpan="2" Background="#FF4C4C4C">
+
+        </Grid>
+
+    </Grid>
+</Window>

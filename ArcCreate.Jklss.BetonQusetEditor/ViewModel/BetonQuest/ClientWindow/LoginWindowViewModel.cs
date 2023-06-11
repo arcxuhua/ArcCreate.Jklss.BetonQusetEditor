@@ -1,5 +1,6 @@
 ﻿using ArcCreate.Jklss.BetonQusetEditor.Base;
 using ArcCreate.Jklss.BetonQusetEditor.View;
+using ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest;
 using ArcCreate.Jklss.BetonQusetEditor.Windows;
 using ArcCreate.Jklss.Model.ClientModel;
 using ArcCreate.Jklss.Model.MainWindow;
@@ -19,7 +20,7 @@ using System.Windows;
 using System.Windows.Controls;
 using static ArcCreate.Jklss.Model.SocketModel.SocketModel;
 
-namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
+namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest.ClientWindow
 {
     public class LoginWindowViewModel : NotifyBase
     {
@@ -47,7 +48,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
                     _EyeCommand = new CommandBase();
                     _EyeCommand.DoExecute = new Action<object>(obj =>//回调函数
                     {
-                        if(Eyes == "Eye")
+                        if (Eyes == "Eye")
                         {
                             Eyes = "EyeOff";
                             passwordBox.Visibility = Visibility.Hidden;
@@ -144,10 +145,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             set
             {
                 model.UserName = value;
-                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+                NotifyChanged();//当view的值发生改变时通知model值发生了改变
             }
         }
-         
+
         public string PassWord
         {
             get
@@ -157,7 +158,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             set
             {
                 model.PassWord = value;
-                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+                NotifyChanged();//当view的值发生改变时通知model值发生了改变
             }
         }
 
@@ -170,7 +171,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             set
             {
                 model.WorryMessage = value;
-                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+                NotifyChanged();//当view的值发生改变时通知model值发生了改变
             }
         }
 
@@ -183,7 +184,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             set
             {
                 model.Eyes = value;
-                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+                NotifyChanged();//当view的值发生改变时通知model值发生了改变
             }
         }
 
@@ -196,7 +197,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             set
             {
                 model.RememberPassword = value;
-                this.NotifyChanged();//当view的值发生改变时通知model值发生了改变
+                NotifyChanged();//当view的值发生改变时通知model值发生了改变
             }
         }
 
@@ -223,7 +224,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
                             return;
                         }
 
-                        if(!Regex.IsMatch(UserName, @"^(\w)+(\.\w+)*@(\w)+((\.\w{2,3}){1,3})$"))
+                        if (!Regex.IsMatch(UserName, @"^(\w)+(\.\w+)*@(\w)+((\.\w{2,3}){1,3})$"))
                         {
                             SendWorryMessage("错误的账号格式，请输入您的邮箱地址");
                             return;
@@ -235,7 +236,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
                             return;
                         }
 
-                        SocketModel.userName = UserName;
+                        userName = UserName;
 
                         var loginMessage = new UserLoginModel()
                         {
@@ -260,17 +261,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
                             {
                                 await socketViewModel.StarSocketTCP();
                             }
-                            
-                            await Task.Run(async() =>
+
+                            await Task.Run(async () =>
                             {
                                 Thread.Sleep(3000);
                                 while (true)
                                 {
-                                    if (SocketModel.ClientKeys.ContainsKey(SocketViewModel.socket.RemoteEndPoint.ToString()))
+                                    if (ClientKeys.ContainsKey(SocketViewModel.socket.RemoteEndPoint.ToString()))
                                     {
-                                        if (!string.IsNullOrEmpty(SocketModel.ClientKeys[SocketViewModel.socket.RemoteEndPoint.ToString()].ServerSendKey.PublicKey))
+                                        if (!string.IsNullOrEmpty(ClientKeys[SocketViewModel.socket.RemoteEndPoint.ToString()].ServerSendKey.PublicKey))
                                         {
-                                            if (!string.IsNullOrEmpty(SocketModel.ClientKeys[SocketViewModel.socket.RemoteEndPoint.ToString()].ClientSendKey.PrivetKey))
+                                            if (!string.IsNullOrEmpty(ClientKeys[SocketViewModel.socket.RemoteEndPoint.ToString()].ClientSendKey.PrivetKey))
                                             {
                                                 break;
                                             }
@@ -301,18 +302,18 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
                                 FileService.ChangeFile(getFilePath + @"\config.json", FileService.SaveToJson(rememberPassword));
                             });
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             SendWorryMessage(ex.Message);
                         }
-                        
+
                     });//obj是窗口CommandParameter参数传递的值，此处传递为窗口本体
                 }
                 return _LoginCommand;
             }
         }
 
-        public delegate void _ShowWorryMessage(string txt,bool showBtn = false);
+        public delegate void _ShowWorryMessage(string txt, bool showBtn = false);
 
         public static _ShowWorryMessage ShowWorryMessage;
 
@@ -324,7 +325,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             {
                 if (_LoadedCommand == null)
                 {
-                    _LoadedCommand = new RelayCommand<Window>(async (wd) => {
+                    _LoadedCommand = new RelayCommand<Window>(async (wd) =>
+                    {
                         Eyes = "Eye";
                         window = wd as LoginWindow;
                         ShowWorryMessage = new _ShowWorryMessage(SendWorryMessage);
@@ -397,7 +399,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             {
                 if (_PswLoadedCommand == null)
                 {
-                    _PswLoadedCommand = new RelayCommand<PasswordBox>(async (pswBox) => {
+                    _PswLoadedCommand = new RelayCommand<PasswordBox>(async (pswBox) =>
+                    {
 
                         pswBox.PasswordChanged += PswBox_PasswordChanged;
                         passwordBox = pswBox;
@@ -408,7 +411,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
                             {
                                 Thread.Sleep(100);
                             }
-                            
+
                         });
                         pswBox.Password = rememberPassword.Password;
                         RememberPassword = rememberPassword.AutoLogin;
@@ -421,7 +424,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
 
         private void PswBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            
+
             var pswBox = sender as PasswordBox;
 
             if (pswBox.Visibility == Visibility.Visible)
@@ -439,7 +442,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
             {
                 if (_PswTboxLoadedCommand == null)
                 {
-                    _PswTboxLoadedCommand = new RelayCommand<TextBox>((pswBox) => {
+                    _PswTboxLoadedCommand = new RelayCommand<TextBox>((pswBox) =>
+                    {
 
                         pswBox.TextChanged += PswBox_PasswordChanged1;
 
@@ -455,15 +459,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
         {
             var pswBox = sender as TextBox;
 
-            if(pswBox.Visibility == Visibility.Visible)
+            if (pswBox.Visibility == Visibility.Visible)
             {
-               PassWord = pswBox.Text;
-               passwordBox.Password = PassWord;
+                PassWord = pswBox.Text;
+                passwordBox.Password = PassWord;
             }
         }
 
 
-        public void SendWorryMessage(string txt,bool showBtn =false)
+        public void SendWorryMessage(string txt, bool showBtn = false)
         {
             ShowPage(2);
 
@@ -479,7 +483,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
 
                     window.Close();
                 }));
-                
+
             }
         }
 

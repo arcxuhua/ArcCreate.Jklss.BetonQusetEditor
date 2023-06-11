@@ -1,4 +1,5 @@
 ﻿using ArcCreate.Jklss.BetonQusetEditor.Base;
+using ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest;
 using ArcCreate.Jklss.BetonQusetEditor.Windows;
 using ArcCreate.Jklss.BetonQusetEditor.Windows.Market;
 using ArcCreate.Jklss.Model;
