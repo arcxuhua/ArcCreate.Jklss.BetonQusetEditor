@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:binding="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:local="clr-namespace:ArcCreate.Jklss.BetonQusetEditor.View.MythicMobs" xmlns:betonquseteditor="clr-namespace:ArcCreate.Jklss.BetonQusetEditor"
+        xmlns:extToolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:local="clr-namespace:ArcCreate.Jklss.BetonQusetEditor.View.MythicMobs"
         mc:Ignorable="d"
         Title="ArcCreate MythicMobs编辑器" Height="980" Width="1740" MaxHeight="1040" MaxWidth="1920" MinHeight="705" MinWidth="1275" WindowStyle="None" AllowsTransparency="True" Foreground="{x:Null}" Background="{x:Null}" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip">
     <Grid>
@@ -654,7 +655,9 @@
                     </TabItem>
                     <TabItem Header="编辑页" Width="100" Background="White" BorderBrush="Black" HorizontalAlignment="Left">
                         <Grid>
-                            
+                            <extToolkit:WindowContainer >
+                                
+                            </extToolkit:WindowContainer>
                         </Grid>
                     </TabItem>
                 </TabControl>

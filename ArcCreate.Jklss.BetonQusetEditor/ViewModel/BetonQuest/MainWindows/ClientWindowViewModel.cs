@@ -142,6 +142,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         public MainWindow window = null;
 
         [ObservableProperty]
+        private bool _IsProtectName = false;
+
+        [ObservableProperty]
         private string _PageName = string.Empty;
 
         [ObservableProperty]
@@ -241,6 +244,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
         #region 操作层方法
 
+        [RelayCommand()]
+        private void ProtectNameClick(System.Windows.Controls.CheckBox checkBox)
+        {
+            foreach (var item in CardItems)
+            {
+                item.IsProtectName = IsProtectName;
+            }
+        }
+
         /// <summary>
         /// 创建新的对话主体
         /// </summary>
@@ -284,9 +296,16 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         [RelayCommand()]
         private async Task CreateNpcTalk(Window window)
         {
+            var name = "NPC_" + GetRandomString(5);
+
+            while(CardItems.Where(t => t.ConfigName == name).Any())
+            {
+                name = "NPC_" + GetRandomString(5);
+            }
+
             var cardView = new AnyCardViewModel(true)
             {
-                ConfigName = "NPC_"+ GetRandomString(5),
+                ConfigName = name,
                 CvLeft = this.window.outsaid.ActualWidth / 2 - 400 / 2 - this.TranslateXProp,
                 CvTop = this.window.outsaid.ActualHeight / 2 - 148 / 2 - this.TranslateYProp,
                 Type = ThumbClass.NPC,
@@ -326,9 +345,16 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         [RelayCommand()]
         private async Task CreatePlayerTalk(Window window)
         {
+            var name = "Player_" + GetRandomString(5);
+
+            while (CardItems.Where(t => t.ConfigName == name).Any())
+            {
+                name = "Player_" + GetRandomString(5);
+            }
+
             var cardView = new AnyCardViewModel(true)
             {
-                ConfigName = "Player_" + GetRandomString(5),
+                ConfigName = name,
                 CvLeft = this.window.outsaid.ActualWidth / 2 - 400 / 2 - this.TranslateXProp,
                 CvTop = this.window.outsaid.ActualHeight / 2 - 148 / 2 - this.TranslateYProp,
                 Type = ThumbClass.Player,
@@ -368,9 +394,16 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         [RelayCommand()]
         private async Task CreateConditions(Window window)
         {
+            var name = "Condition_" + GetRandomString(5);
+
+            while (CardItems.Where(t => t.ConfigName == name).Any())
+            {
+                name = "Condition_" + GetRandomString(5);
+            }
+
             var cardView = new AnyCardViewModel(contisionProp)
             {
-                ConfigName = "Condition_" + GetRandomString(5),
+                ConfigName = name,
                 CvLeft = this.window.outsaid.ActualWidth / 2 - 400 / 2 - this.TranslateXProp,
                 CvTop = this.window.outsaid.ActualHeight / 2 - 148 / 2 - this.TranslateYProp,
                 Type = ThumbClass.Conditions,
@@ -443,9 +476,16 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         [RelayCommand()]
         private async Task CreateEvents(Window window)
         {
+            var name = "Event_" + GetRandomString(5);
+
+            while (CardItems.Where(t => t.ConfigName == name).Any())
+            {
+                name = "Event_" + GetRandomString(5);
+            }
+
             var cardView = new AnyCardViewModel(eventProp)
             {
-                ConfigName = "Event_" + GetRandomString(5),
+                ConfigName = name,
                 CvLeft = this.window.outsaid.ActualWidth / 2 - 400 / 2 - this.TranslateXProp,
                 CvTop = this.window.outsaid.ActualHeight / 2 - 148 / 2 - this.TranslateYProp,
                 Type = ThumbClass.Events,
@@ -519,9 +559,16 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         [RelayCommand()]
         private async Task CreateObjectives(Window window)
         {
+            var name = "Objective_" + GetRandomString(5);
+
+            while (CardItems.Where(t => t.ConfigName == name).Any())
+            {
+                name = "Objective_" + GetRandomString(5);
+            }
+
             var cardView = new AnyCardViewModel(objectiveProp)
             {
-                ConfigName = "Objective_" + GetRandomString(5),
+                ConfigName = name,
                 CvLeft = this.window.outsaid.ActualWidth / 2 - 400 / 2 - this.TranslateXProp,
                 CvTop = this.window.outsaid.ActualHeight / 2 - 148 / 2 - this.TranslateYProp,
                 Type = ThumbClass.Objectives,
@@ -580,9 +627,16 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         [RelayCommand()]
         private async Task CreateJournal(Window window)
         {
+            var name = "Journal_" + GetRandomString(5);
+
+            while (CardItems.Where(t => t.ConfigName == name).Any())
+            {
+                name = "Journal_" + GetRandomString(5);
+            }
+
             var cardView = new CardViewModel()
             {
-                ConfigName = "Journal_" + GetRandomString(5),
+                ConfigName = name,
                 CvLeft = this.window.outsaid.ActualWidth / 2 - 400 / 2 - this.TranslateXProp,
                 CvTop = this.window.outsaid.ActualHeight / 2 - 148 / 2 - this.TranslateYProp,
                 Type = ThumbClass.Journal,
@@ -617,9 +671,16 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         [RelayCommand()]
         private async Task CreateItems(Window window)
         {
+            var name = "Item_" + GetRandomString(5);
+
+            while (CardItems.Where(t => t.ConfigName == name).Any())
+            {
+                name = "Item_" + GetRandomString(5);
+            }
+
             var cardView = new CardViewModel()
             {
-                ConfigName = "Item_" + GetRandomString(5),
+                ConfigName = name,
                 CvLeft = this.window.outsaid.ActualWidth / 2 - 400 / 2 - this.TranslateXProp,
                 CvTop = this.window.outsaid.ActualHeight / 2 - 148 / 2 - this.TranslateYProp,
                 Type = ThumbClass.Items,
@@ -2049,44 +2110,56 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                             ShowMessage($"未找到卡片[{i}]的信息");
                         }
 
-                        CardItems.Add(new LineCardViewModel()
+                        var newLine = new LineCardViewModel()
                         {
                             LineLeft = item,
                             LineRight = findChild,
+                        };
 
-                            CvLeft = item.CvLeft + (double)item.ThumbHeight / 2,
-                            CvTop = item.CvTop + (double)item.ThumbWidth / 2,
+                        CardItems.Add(newLine);
 
-                            X = -((item.CvLeft + (double)item.ThumbHeight / 2) - (findChild.CvLeft + (double)findChild.ThumbHeight / 2)),
+                        ChangeTheLine(newLine);
 
-                            Y = -((item.CvTop + (double)item.ThumbWidth / 2) - (findChild.CvTop + (double)findChild.ThumbWidth / 2)),
-
-                        });
-                    }
-
-                    foreach (var i in getMainInfo.Fathers)
-                    {
-                        var findFather = CardItems.Where(t => t.ConfigName == i&&t.Type == ThumbClass.Events).FirstOrDefault();
-
-                        if (findFather == null)
+                        if (!item.Right.Contains(findChild))
                         {
-                            ShowMessage($"未找到卡片[{i}]的信息");
+                            item.Right.Add(findChild);
                         }
 
-                        CardItems.Add(new LineCardViewModel()
+                        if (!findChild.Left.Contains(item))
                         {
-                            LineLeft = findFather,
-                            LineRight = item,
-                            MainCard = findFather,
-                            CvLeft = findFather.CvLeft + (double)findFather.ThumbHeight / 2,
-                            CvTop = findFather.CvTop + (double)findFather.ThumbWidth / 2,
-
-                            X = -((findFather.CvLeft + (double)findFather.ThumbHeight / 2) - (item.CvLeft + (double)item.ThumbHeight / 2)),
-
-                            Y = -((findFather.CvTop + (double)findFather.ThumbWidth / 2) - (item.CvTop + (double)item.ThumbWidth / 2)),
-
-                        });
+                            findChild.Left.Add(item);
+                        }
                     }
+
+                    //foreach (var i in getMainInfo.Fathers)
+                    //{
+                    //    var findFather = CardItems.Where(t => t.ConfigName == i && t.Type == ThumbClass.Events).FirstOrDefault();
+
+                    //    if (findFather == null)
+                    //    {
+                    //        ShowMessage($"未找到卡片[{i}]的信息");
+                    //    }
+
+                    //    var newLine = new LineCardViewModel()
+                    //    {
+                    //        LineLeft = findFather,
+                    //        LineRight = item,
+                    //    };
+
+                    //    CardItems.Add(newLine);
+
+                    //    ChangeTheLine(newLine);
+
+                    //    if (!findFather.Right.Contains(item))
+                    //    {
+                    //        findFather.Right.Add(findChild);
+                    //    }
+
+                    //    if (!findChild.Left.Contains(item))
+                    //    {
+                    //        findChild.Left.Add(item);
+                    //    }
+                    //}
                 }
             }
             catch
@@ -2124,19 +2197,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
                                         if (classoverBack.Succese)
                                         {
-                                            CardItems.Add(new LineCardViewModel()
+                                            var newLine = new LineCardViewModel()
                                             {
                                                 LineLeft = item,
                                                 LineRight = getinfo,
+                                            };
 
-                                                CvLeft = item.CvLeft + (double)item.ThumbHeight / 2,
-                                                CvTop = item.CvTop + (double)item.ThumbWidth / 2,
+                                            CardItems.Add(newLine);
 
-                                                X = -((item.CvLeft + (double)item.ThumbHeight / 2) - (getinfo.CvLeft + (double)getinfo.ThumbHeight / 2)),
-
-                                                Y = -((item.CvTop + (double)item.ThumbWidth / 2) - (getinfo.CvTop + (double)getinfo.ThumbWidth / 2)),
-
-                                            });
+                                            ChangeTheLine(newLine);
 
                                             if (!item.Right.Contains(getinfo))
                                             {
@@ -2176,19 +2245,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
                                         if (classoverBack.Succese)
                                         {
-                                            CardItems.Add(new LineCardViewModel()
+                                            var newLine = new LineCardViewModel()
                                             {
                                                 LineLeft = item,
                                                 LineRight = getinfo,
+                                            };
 
-                                                CvLeft = item.CvLeft + (double)item.ThumbHeight / 2,
-                                                CvTop = item.CvTop + (double)item.ThumbWidth / 2,
+                                            CardItems.Add(newLine);
 
-                                                X = -((item.CvLeft + (double)item.ThumbHeight / 2) - (getinfo.CvLeft + (double)getinfo.ThumbHeight / 2)),
-
-                                                Y = -((item.CvTop + (double)item.ThumbWidth / 2) - (getinfo.CvTop + (double)getinfo.ThumbWidth / 2)),
-
-                                            });
+                                            ChangeTheLine(newLine);
 
                                             if (!item.Right.Contains(getinfo))
                                             {
@@ -2230,19 +2295,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
                                             if (classoverBack.Succese)
                                             {
-                                                CardItems.Add(new LineCardViewModel()
+                                                var newLine = new LineCardViewModel()
                                                 {
                                                     LineLeft = item,
                                                     LineRight = getinfo,
+                                                };
 
-                                                    CvLeft = item.CvLeft + (double)item.ThumbHeight / 2,
-                                                    CvTop = item.CvTop + (double)item.ThumbWidth / 2,
+                                                CardItems.Add(newLine);
 
-                                                    X = -((item.CvLeft + (double)item.ThumbHeight / 2) - (getinfo.CvLeft + (double)getinfo.ThumbHeight / 2)),
-
-                                                    Y = -((item.CvTop + (double)item.ThumbWidth / 2) - (getinfo.CvTop + (double)getinfo.ThumbWidth / 2)),
-
-                                                });
+                                                ChangeTheLine(newLine);
 
                                                 if (!item.Right.Contains(getinfo))
                                                 {
@@ -2283,19 +2344,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
                                             if (classoverBack.Succese)
                                             {
-                                                CardItems.Add(new LineCardViewModel()
+                                                var newLine = new LineCardViewModel()
                                                 {
                                                     LineLeft = item,
                                                     LineRight = getinfo,
+                                                };
 
-                                                    CvLeft = item.CvLeft + (double)item.ThumbHeight / 2,
-                                                    CvTop = item.CvTop + (double)item.ThumbWidth / 2,
+                                                CardItems.Add(newLine);
 
-                                                    X = -((item.CvLeft + (double)item.ThumbHeight / 2) - (getinfo.CvLeft + (double)getinfo.ThumbHeight / 2)),
-
-                                                    Y = -((item.CvTop + (double)item.ThumbWidth / 2) - (getinfo.CvTop + (double)getinfo.ThumbWidth / 2)),
-
-                                                });
+                                                ChangeTheLine(newLine);
 
                                                 if (!item.Right.Contains(getinfo))
                                                 {
@@ -2391,19 +2448,16 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
                                                     if (classoverBack.Succese)
                                                     {
-                                                        CardItems.Add(new LineCardViewModel()
+                                                        var newLine = new LineCardViewModel()
                                                         {
                                                             LineLeft = item,
                                                             LineRight = getinfo,
+                                                        };
 
-                                                            CvLeft = item.CvLeft + (double)item.ThumbHeight / 2,
-                                                            CvTop = item.CvTop + (double)item.ThumbWidth / 2,
+                                                        CardItems.Add(newLine);
 
-                                                            X = -((item.CvLeft + (double)item.ThumbHeight / 2) - (getinfo.CvLeft + (double)getinfo.ThumbHeight / 2)),
+                                                        ChangeTheLine(newLine);
 
-                                                            Y = -((item.CvTop + (double)item.ThumbWidth / 2) - (getinfo.CvTop + (double)getinfo.ThumbWidth / 2)),
-
-                                                        });
 
                                                         if (!item.Right.Contains(getinfo))
                                                         {
@@ -2499,19 +2553,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
                                                     if (classoverBack.Succese)
                                                     {
-                                                        CardItems.Add(new LineCardViewModel()
+                                                        var newLine = new LineCardViewModel()
                                                         {
                                                             LineLeft = item,
                                                             LineRight = getinfo,
+                                                        };
 
-                                                            CvLeft = item.CvLeft + (double)item.ThumbHeight / 2,
-                                                            CvTop = item.CvTop + (double)item.ThumbWidth / 2,
+                                                        CardItems.Add(newLine);
 
-                                                            X = -((item.CvLeft + (double)item.ThumbHeight / 2) - (getinfo.CvLeft + (double)getinfo.ThumbHeight / 2)),
-
-                                                            Y = -((item.CvTop + (double)item.ThumbWidth / 2) - (getinfo.CvTop + (double)getinfo.ThumbWidth / 2)),
-
-                                                        });
+                                                        ChangeTheLine(newLine);
 
                                                         if (!item.Right.Contains(getinfo))
                                                         {
@@ -2612,19 +2662,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
                                                     if (classoverBack.Succese)
                                                     {
-                                                        CardItems.Add(new LineCardViewModel()
+                                                        var newLine = new LineCardViewModel()
                                                         {
                                                             LineLeft = item,
                                                             LineRight = getinfo,
+                                                        };
 
-                                                            CvLeft = item.CvLeft + (double)item.ThumbHeight / 2,
-                                                            CvTop = item.CvTop + (double)item.ThumbWidth / 2,
+                                                        CardItems.Add(newLine);
 
-                                                            X = -((item.CvLeft + (double)item.ThumbHeight / 2) - (getinfo.CvLeft + (double)getinfo.ThumbHeight / 2)),
-
-                                                            Y = -((item.CvTop + (double)item.ThumbWidth / 2) - (getinfo.CvTop + (double)getinfo.ThumbWidth / 2)),
-
-                                                        });
+                                                        ChangeTheLine(newLine);
 
                                                         if (!item.Right.Contains(getinfo))
                                                         {
@@ -3480,19 +3526,26 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                             ShowMessage($"未找到卡片[{i}]的信息");
                         }
 
-                        CardItems.Add(new LineCardViewModel()
+                        var newLine = new LineCardViewModel()
                         {
                             LineLeft = item,
                             LineRight = findChild,
+                        };
 
-                            CvLeft = item.CvLeft + (double)item.ThumbHeight / 2,
-                            CvTop = item.CvTop + (double)item.ThumbWidth / 2,
+                        CardItems.Add(newLine);
 
-                            X = -((item.CvLeft + (double)item.ThumbHeight / 2) - (findChild.CvLeft + (double)findChild.ThumbHeight / 2)),
+                        ChangeTheLine(newLine);
 
-                            Y = -((item.CvTop + (double)item.ThumbWidth / 2) - (findChild.CvTop + (double)findChild.ThumbWidth / 2)),
+                        if (!item.Right.Contains(findChild))
+                        {
+                            item.Right.Add(findChild);
+                        }
 
-                        });
+                        if (!findChild.Left.Contains(item))
+                        {
+                            findChild.Left.Add(item);
+                        }
+
                     }
                 }
             }
@@ -3531,19 +3584,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
                                         if (classoverBack.Succese)
                                         {
-                                            CardItems.Add(new LineCardViewModel()
+                                            var newLine = new LineCardViewModel()
                                             {
                                                 LineLeft = item,
                                                 LineRight = getinfo,
+                                            };
 
-                                                CvLeft = item.CvLeft + (double)item.ThumbHeight / 2,
-                                                CvTop = item.CvTop + (double)item.ThumbWidth / 2,
+                                            CardItems.Add(newLine);
 
-                                                X = -((item.CvLeft + (double)item.ThumbHeight / 2) - (getinfo.CvLeft + (double)getinfo.ThumbHeight / 2)),
-
-                                                Y = -((item.CvTop + (double)item.ThumbWidth / 2) - (getinfo.CvTop + (double)getinfo.ThumbWidth / 2)),
-
-                                            });
+                                            ChangeTheLine(newLine);
 
                                             if (!item.Right.Contains(getinfo))
                                             {
@@ -3583,19 +3632,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
                                         if (classoverBack.Succese)
                                         {
-                                            CardItems.Add(new LineCardViewModel()
+                                            var newLine = new LineCardViewModel()
                                             {
                                                 LineLeft = item,
                                                 LineRight = getinfo,
+                                            };
 
-                                                CvLeft = item.CvLeft + (double)item.ThumbHeight / 2,
-                                                CvTop = item.CvTop + (double)item.ThumbWidth / 2,
+                                            CardItems.Add(newLine);
 
-                                                X = -((item.CvLeft + (double)item.ThumbHeight / 2) - (getinfo.CvLeft + (double)getinfo.ThumbHeight / 2)),
-
-                                                Y = -((item.CvTop + (double)item.ThumbWidth / 2) - (getinfo.CvTop + (double)getinfo.ThumbWidth / 2)),
-
-                                            });
+                                            ChangeTheLine(newLine);
 
                                             if (!item.Right.Contains(getinfo))
                                             {
@@ -3637,19 +3682,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
                                             if (classoverBack.Succese)
                                             {
-                                                CardItems.Add(new LineCardViewModel()
+                                                var newLine = new LineCardViewModel()
                                                 {
                                                     LineLeft = item,
                                                     LineRight = getinfo,
+                                                };
 
-                                                    CvLeft = item.CvLeft + (double)item.ThumbHeight / 2,
-                                                    CvTop = item.CvTop + (double)item.ThumbWidth / 2,
+                                                CardItems.Add(newLine);
 
-                                                    X = -((item.CvLeft + (double)item.ThumbHeight / 2) - (getinfo.CvLeft + (double)getinfo.ThumbHeight / 2)),
-
-                                                    Y = -((item.CvTop + (double)item.ThumbWidth / 2) - (getinfo.CvTop + (double)getinfo.ThumbWidth / 2)),
-
-                                                });
+                                                ChangeTheLine(newLine);
 
                                                 if (!item.Right.Contains(getinfo))
                                                 {
@@ -3690,19 +3731,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
                                             if (classoverBack.Succese)
                                             {
-                                                CardItems.Add(new LineCardViewModel()
+                                                var newLine = new LineCardViewModel()
                                                 {
                                                     LineLeft = item,
                                                     LineRight = getinfo,
+                                                };
 
-                                                    CvLeft = item.CvLeft + (double)item.ThumbHeight / 2,
-                                                    CvTop = item.CvTop + (double)item.ThumbWidth / 2,
+                                                CardItems.Add(newLine);
 
-                                                    X = -((item.CvLeft + (double)item.ThumbHeight / 2) - (getinfo.CvLeft + (double)getinfo.ThumbHeight / 2)),
-
-                                                    Y = -((item.CvTop + (double)item.ThumbWidth / 2) - (getinfo.CvTop + (double)getinfo.ThumbWidth / 2)),
-
-                                                });
+                                                ChangeTheLine(newLine);
 
                                                 if (!item.Right.Contains(getinfo))
                                                 {
@@ -3798,20 +3835,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
                                                     if (classoverBack.Succese)
                                                     {
-                                                        CardItems.Add(new LineCardViewModel()
+                                                        var newLine = new LineCardViewModel()
                                                         {
                                                             LineLeft = item,
                                                             LineRight = getinfo,
+                                                        };
 
-                                                            CvLeft = item.CvLeft + (double)item.ThumbHeight / 2,
-                                                            CvTop = item.CvTop + (double)item.ThumbWidth / 2,
+                                                        CardItems.Add(newLine);
 
-                                                            X = -((item.CvLeft + (double)item.ThumbHeight / 2) - (getinfo.CvLeft + (double)getinfo.ThumbHeight / 2)),
-
-                                                            Y = -((item.CvTop + (double)item.ThumbWidth / 2) - (getinfo.CvTop + (double)getinfo.ThumbWidth / 2)),
-
-                                                        });
-
+                                                        ChangeTheLine(newLine);
                                                         if (!item.Right.Contains(getinfo))
                                                         {
                                                             item.Right.Add(getinfo);
@@ -3910,15 +3942,11 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                                                         {
                                                             LineLeft = item,
                                                             LineRight = getinfo,
-
-                                                            CvLeft = item.CvLeft + (double)item.ThumbHeight / 2,
-                                                            CvTop = item.CvTop + (double)item.ThumbWidth / 2,
-
-                                                            X = -((item.CvLeft + (double)item.ThumbHeight / 2) - (getinfo.CvLeft + (double)getinfo.ThumbHeight / 2)),
-
-                                                            Y = -((item.CvTop + (double)item.ThumbWidth / 2) - (getinfo.CvTop + (double)getinfo.ThumbWidth / 2)),
-
                                                         };
+
+                                                        CardItems.Add(newLine);
+
+                                                        ChangeTheLine(newLine);
 
                                                         CardItems.Add(newLine);
 
@@ -4021,19 +4049,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
                                                     if (classoverBack.Succese)
                                                     {
-                                                        CardItems.Add(new LineCardViewModel()
+                                                        var newLine = new LineCardViewModel()
                                                         {
                                                             LineLeft = item,
                                                             LineRight = getinfo,
+                                                        };
 
-                                                            CvLeft = item.CvLeft + (double)item.ThumbHeight / 2,
-                                                            CvTop = item.CvTop + (double)item.ThumbWidth / 2,
+                                                        CardItems.Add(newLine);
 
-                                                            X = -((item.CvLeft + (double)item.ThumbHeight / 2) - (getinfo.CvLeft + (double)getinfo.ThumbHeight / 2)),
-
-                                                            Y = -((item.CvTop + (double)item.ThumbWidth / 2) - (getinfo.CvTop + (double)getinfo.ThumbWidth / 2)),
-
-                                                        });
+                                                        ChangeTheLine(newLine);
 
                                                         if (!item.Right.Contains(getinfo))
                                                         {
@@ -4263,6 +4287,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
             }
         }
 
+        private void ChangeTheLine(LineCardViewModel item)
+        {
+            item.CvLeft = item.LineLeft.CvLeft + (double)item.LineLeft.ThumbWidth / 2;
+
+            item.CvTop = item.LineLeft.CvTop + (double)item.LineLeft.ThumbHeight / 2;
+
+            item.X = -((item.LineLeft.CvLeft - item.LineRight.CvLeft) - Math.Abs((double)item.LineLeft.ThumbWidth - (double)item.LineRight.ThumbWidth) / 2);
+
+            item.Y = -((item.LineLeft.CvTop - item.LineRight.CvTop) - Math.Abs((double)item.LineLeft.ThumbHeight - (double)item.LineRight.ThumbHeight) / 2);
+        }
+
         #endregion
 
     }
@@ -4272,6 +4307,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
     /// </summary>
     public partial class CardViewModel : ObservableObject
     {
+        [ObservableProperty]
+        private bool _IsProtectName = false;
+
         [ObservableProperty]
         private bool _IsDraw = false;
 
@@ -4428,9 +4466,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
                             item.CvTop = item.LineLeft.CvTop + (double)item.LineLeft.ThumbHeight / 2;
 
-                            item.X = -(nowThumbContent.CvLeft - item.LineRight.CvLeft);
+                            item.X = -((nowThumbContent.CvLeft - item.LineRight.CvLeft) - Math.Abs((double)item.LineLeft.ThumbWidth - (double)item.LineRight.ThumbWidth) / 2);
 
-                            item.Y = -(nowThumbContent.CvTop - item.LineRight.CvTop - (double)item.LineRight.ThumbHeight / 4);
+                            item.Y = -((nowThumbContent.CvTop - item.LineRight.CvTop) - Math.Abs((double)item.LineLeft.ThumbHeight - (double)item.LineRight.ThumbHeight) / 2);
 
                         }
 
@@ -4440,9 +4478,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
                             item.CvTop = item.LineLeft.CvTop + (double)item.LineLeft.ThumbHeight / 2;
 
-                            item.X = -(item.LineLeft.CvLeft - item.LineRight.CvLeft);
+                            item.X = -((item.LineLeft.CvLeft - item.LineRight.CvLeft) - Math.Abs((double)item.LineLeft.ThumbWidth - (double)item.LineRight.ThumbWidth) / 2);
 
-                            item.Y = -(item.LineLeft.CvTop - item.LineRight.CvTop - (double)item.LineRight.ThumbHeight / 4);
+                            item.Y = -((item.LineLeft.CvTop - item.LineRight.CvTop) - Math.Abs((double)item.LineLeft.ThumbHeight - (double)item.LineRight.ThumbHeight) / 2);
 
                         }
                     }
@@ -4497,9 +4535,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
                         item.CvTop = item.LineLeft.CvTop + (double)item.LineLeft.ThumbHeight / 2;
 
-                        item.X = -(nowThumbContent.CvLeft - item.LineRight.CvLeft);
+                        item.X = -((nowThumbContent.CvLeft - item.LineRight.CvLeft) - Math.Abs((double)item.LineLeft.ThumbWidth - (double)item.LineRight.ThumbWidth) / 2);
 
-                        item.Y = -(nowThumbContent.CvTop - item.LineRight.CvTop - (double)item.LineRight.ThumbHeight / 4);
+                        item.Y = -((nowThumbContent.CvTop - item.LineRight.CvTop) - Math.Abs((double)item.LineLeft.ThumbHeight - (double)item.LineRight.ThumbHeight) / 2);
 
                     }
 
@@ -4509,9 +4547,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
                         item.CvTop = item.LineLeft.CvTop + (double)item.LineLeft.ThumbHeight / 2;
 
-                        item.X = -(item.LineLeft.CvLeft - item.LineRight.CvLeft);
+                        item.X = -((item.LineLeft.CvLeft - item.LineRight.CvLeft) - Math.Abs((double)item.LineLeft.ThumbWidth - (double)item.LineRight.ThumbWidth) / 2);
 
-                        item.Y = -(item.LineLeft.CvTop - item.LineRight.CvTop - (double)item.LineRight.ThumbHeight / 4);
+                        item.Y = -((item.LineLeft.CvTop - item.LineRight.CvTop)-Math.Abs((double)item.LineLeft.ThumbHeight - (double)item.LineRight.ThumbHeight) /2);
 
                     }
                 }
@@ -7030,6 +7068,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
             {
                 foreach (var item in nowCard.Right)
                 {
+                    if(item.Type == ThumbClass.Player|| item.Type == ThumbClass.NPC)
+
                     GiveMainCard(item, mainCard);
                 }
             }

@@ -188,6 +188,16 @@
                                 </Grid>
                             </Border>
 
+                            <StackPanel HorizontalAlignment="Left" Margin="10" VerticalAlignment="Center">
+                                <CheckBox x:Name="ProtectName_CheckBox" Style="{StaticResource MaterialDesignFilterChipOutlineCheckBox}" IsChecked="{Binding IsProtectName}" Content="关闭命名保护" >
+                                    <binding:Interaction.Triggers>
+                                        <binding:EventTrigger EventName="Click">
+                                            <binding:InvokeCommandAction Command="{Binding Path= ProtectNameClickCommand}" CommandParameter="{Binding ElementName=ProtectName_CheckBox}">
+                                            </binding:InvokeCommandAction>
+                                        </binding:EventTrigger>
+                                    </binding:Interaction.Triggers>
+                                </CheckBox>
+                            </StackPanel>
                         </Grid>
                     </materialDesign:DrawerHost.TopDrawerContent>
                     <materialDesign:DrawerHost.RightDrawerContent>
@@ -356,7 +366,7 @@
                                                                                     <TextBlock HorizontalAlignment="Center" Margin="0 5 0 0" FontSize="18" FontWeight="Bold" Text="NPC对话" />
                                                                                     <Grid>
                                                                                         <TextBlock Text="配置名称："  Margin="10 5 0 0" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                                                                        <TextBox x:Name="ConditionsConfig_TBox" Text="{Binding Path=ConfigName}" Width="150" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False"/>
+                                                                                        <TextBox x:Name="ConditionsConfig_TBox" Text="{Binding Path=ConfigName}" Width="150" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="{Binding Path=IsProtectName}"/>
                                                                                     </Grid>
                                                                                     <Button x:Name="BackBtn" Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑">
                                                                                         
@@ -528,7 +538,7 @@
                                                                                     <TextBlock HorizontalAlignment="Center" Margin="0 5 0 0" FontSize="18" FontWeight="Bold" Text="玩家对话" />
                                                                                     <Grid>
                                                                                         <TextBlock Text="配置名称："  Margin="10 5 0 0" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                                                                        <TextBox x:Name="ConditionsConfig_TBox" Text="{Binding Path=ConfigName}" Width="150" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False"/>
+                                                                                        <TextBox x:Name="ConditionsConfig_TBox" Text="{Binding Path=ConfigName}" Width="150" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="{Binding Path=IsProtectName}"/>
                                                                                     </Grid>
                                                                                     <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
                                                                                 </StackPanel>
@@ -697,7 +707,7 @@
                                                                                     <TextBlock HorizontalAlignment="Center" Margin="0 5 0 0" FontSize="22" FontWeight="Bold" Text="条件" />
                                                                                     <Grid>
                                                                                         <TextBlock Text="配置名称："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                                                                        <TextBox x:Name="ConditionsConfig_TBox" Text="{Binding Path=ConfigName}" Width="100" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False"/>
+                                                                                        <TextBox x:Name="ConditionsConfig_TBox" Text="{Binding Path=ConfigName}" Width="100" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="{Binding Path=IsProtectName}"/>
 
                                                                                         <TextBlock Grid.Row="0" Text="条件类型："  Margin="210 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                                                                         <ComboBox SelectedItem="{Binding Path=SelectType}" ItemsSource="{Binding Path=AllType}" ToolTip="{Binding Path= TypeHelp}" x:Name="Conditions_CBox"  Width="110" Height="30" Grid.Row="0" materialDesign:HintAssist.Hint="请选择" HorizontalAlignment="Left" Margin="270,0,0,0">
@@ -852,7 +862,7 @@
                                                                                     <TextBlock HorizontalAlignment="Center" Margin="0 5 0 0" FontSize="22" FontWeight="Bold" Text="事件" />
                                                                                     <Grid>
                                                                                         <TextBlock Text="配置名称："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                                                                        <TextBox x:Name="ConditionsConfig_TBox" Text="{Binding Path=ConfigName}" Width="100" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False"/>
+                                                                                        <TextBox x:Name="ConditionsConfig_TBox" Text="{Binding Path=ConfigName}" Width="100" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="{Binding Path=IsProtectName}"/>
 
                                                                                         <TextBlock Grid.Row="0" Text="事件类型："  Margin="210 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                                                                         <ComboBox SelectedItem="{Binding Path=SelectType}" ItemsSource="{Binding Path=AllType}" ToolTip="{Binding Path= TypeHelp}" x:Name="Conditions_CBox"  Width="110" Height="30" Grid.Row="0" materialDesign:HintAssist.Hint="请选择" HorizontalAlignment="Left" Margin="270,0,0,0">
@@ -1007,7 +1017,7 @@
                                                                                     <TextBlock HorizontalAlignment="Center" Margin="0 5 0 0" FontSize="22" FontWeight="Bold" Text="目标" />
                                                                                     <Grid>
                                                                                         <TextBlock Text="配置名称："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                                                                        <TextBox x:Name="ConditionsConfig_TBox" Text="{Binding Path=ConfigName}" Width="100" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False"/>
+                                                                                        <TextBox x:Name="ConditionsConfig_TBox" Text="{Binding Path=ConfigName}" Width="100" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="{Binding Path=IsProtectName}"/>
 
                                                                                         <TextBlock Grid.Row="0" Text="目标类型："  Margin="210 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                                                                         <ComboBox SelectedItem="{Binding Path=SelectType}" ItemsSource="{Binding Path=AllType}" ToolTip="{Binding Path= TypeHelp}" x:Name="Conditions_CBox"  Width="110" Height="30" Grid.Row="0" materialDesign:HintAssist.Hint="请选择" HorizontalAlignment="Left" Margin="270,0,0,0">
@@ -1163,7 +1173,7 @@
                                                                                     <TextBlock HorizontalAlignment="Center" Margin="0 0 0 0" FontSize="22" FontWeight="Bold" Text="任务笔记" />
                                                                                     <Grid>
                                                                                         <TextBlock Text="配置名称："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                                                                        <TextBox Text="{Binding Path=ConfigName}" x:Name="JournalConfig_TBox" Width="130" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False"/>
+                                                                                        <TextBox Text="{Binding Path=ConfigName}" x:Name="JournalConfig_TBox" Width="130" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="{Binding Path=IsProtectName}"/>
                                                                                     </Grid>
                                                                                     <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
                                                                                 </StackPanel>
@@ -1220,7 +1230,7 @@
                                                                                     <TextBlock HorizontalAlignment="Center" Margin="0 0 0 0" FontSize="22" FontWeight="Bold" Text="任务物品" />
                                                                                     <Grid>
                                                                                         <TextBlock Text="配置名称："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                                                                        <TextBox Text="{Binding Path=ConfigName}" x:Name="ItemsConfig_TBox" Width="130" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="False"/>
+                                                                                        <TextBox Text="{Binding Path=ConfigName}" x:Name="ItemsConfig_TBox" Width="130" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="{Binding Path=IsProtectName}"/>
                                                                                     </Grid>
                                                                                     <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
                                                                                 </StackPanel>

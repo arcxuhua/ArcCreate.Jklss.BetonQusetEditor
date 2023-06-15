@@ -246,7 +246,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
             }
             catch
             {
-                result.SetError("构造器错误，错误码:JS001");
+                result.SetError("构造器错误，错误码:SS001");
 
                 return result;
             }
@@ -265,7 +265,12 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
                     {
                         var name = item.Key.ConfigName;
 
-                        var getMainName = item.Key.MainCard.ConfigName;
+                        var getMainName = string.Empty;
+
+                        if (item.Key.MainCard != null)
+                        {
+                            getMainName = item.Key.MainCard.ConfigName;
+                        }
 
                         saveNPCEOInfo.Add(new ThumbInfoModel() { Main = getMainName, Name = name, thumbClass = item.Key.Type, data = item.Value });
                     }
@@ -284,9 +289,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
                     }
                 });
             }
-            catch (Exception ex)
+            catch
             {
-                result.SetError("构造器错误，错误码:JS002");
+                result.SetError("构造器错误，错误码:SS002,错误原因可能为：某个对话主体下没有归类相应的NPC对话");
 
                 return result;
             }
