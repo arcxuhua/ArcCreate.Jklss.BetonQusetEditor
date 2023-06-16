@@ -24,7 +24,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest.ClientWindow
 {
     public class LoginWindowViewModel : NotifyBase
     {
-        private static LoginModel model = new LoginModel();
+        private LoginModel model = new LoginModel();
 
         public static string computerInfo = MachineNumberService.GetComputerInfo();
 
@@ -330,13 +330,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest.ClientWindow
                         Eyes = "Eye";
                         window = wd as LoginWindow;
                         ShowWorryMessage = new _ShowWorryMessage(SendWorryMessage);
+                        var getFilePath = Directory.GetCurrentDirectory();
+
+                        if(FileService.IsHaveFile(getFilePath + @"\update.exe"))
+                        {
+                            File.Delete(getFilePath + @"\update.exe");
+                        }
 
                         if (SocketViewModel.socket == null)
                         {
                             await socketViewModel.StarSocketTCP();
                         }
-
-                        var getFilePath = Directory.GetCurrentDirectory();
 
                         if (FileService.IsHaveFile(getFilePath + @"\config.json"))
                         {

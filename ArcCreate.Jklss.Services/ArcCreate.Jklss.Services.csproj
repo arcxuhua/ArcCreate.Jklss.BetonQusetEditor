@@ -9,7 +9,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-    <PackageReference Include="System.Management" Version="7.0.0" />
     <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.4.410601">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -20,7 +19,11 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
-    <PackageReference Include="System.Management" Version="7.0.0" />
     <PackageReference Include="YamlDotNet" Version="12.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Downloader">
+      <HintPath>E:\极空工作区\编程开发项目\ArcMineCraft.jklss.cn.McStarter\ArcMineCraft.jklss.cn.McStarter\bin\Debug\Downloader.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

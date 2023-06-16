@@ -3,7 +3,6 @@ using ArcCreate.Jklss.Model;
 using ArcCreate.Jklss.Services;
 using System.Text;
 using System.Threading.Tasks;
-using static ArcCreate.Jklss.Model.SocketModel.SocketModel;
 using System.Net.Sockets;
 using System.Windows;
 using Newtonsoft.Json.Linq;
@@ -16,7 +15,6 @@ using System;
 using System.Linq;
 using System.Threading;
 using ArcCreate.Jklss.BetonQusetEditor.View;
-using Org.BouncyCastle.Asn1.Esf;
 using ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest.ClientWindow;
 using ArcCreate.Jklss.BetonQusetEditor.View.ShowTool;
 
@@ -95,8 +93,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest
                     }
 
                     SocketModel.token = token;
-                    isLogin = model.IsLogin;
-                    userName = model.UserName;
+                    SocketModel.isLogin = model.IsLogin;
+                    SocketModel.userName = model.UserName;
 
                     if (!string.IsNullOrEmpty(model.Other))
                     {
@@ -152,17 +150,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest
             {
                 var clientKeys = FileService.CreateKey(KeyType.XML, KeySize.BIG);
 
-                if (ClientKeys.ContainsKey(message.Ip))
+                if (SocketModel.ClientKeys.ContainsKey(message.Ip))
                 {
-                    ClientKeys[message.Ip].ServerSendKey = new RESKeysModel()
+                    SocketModel.ClientKeys[message.Ip].ServerSendKey = new RESKeysModel()
                     {
                         PublicKey = Encoding.UTF8.GetString(message.Message)
                     };
-                    ClientKeys[message.Ip].ClientSendKey = clientKeys;
+                    SocketModel.ClientKeys[message.Ip].ClientSendKey = clientKeys;
                 }
                 else
                 {
-                    ClientKeys.Add(message.Ip, new SaveClientKeys()
+                    SocketModel.ClientKeys.Add(message.Ip, new SaveClientKeys()
                     {
                         Ip = message.Ip,
                         ServerSendKey = new RESKeysModel()
@@ -197,7 +195,32 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest
                 }
                 catch
                 {
-                    MessageBox.Show("更新程序损坏,请重新下载客户端！", "错误");
+                    LoginWindowViewModel.ShowWorryMessage("正在准备更新程序");
+                    LoginWindowViewModel.window.Dispatcher.Invoke(new Action(() =>
+                    {
+                        LoginWindowViewModel.window.IsEnabled = false;
+                    }));
+                    
+
+                    var downloader = new DownLoadController();
+
+                    await Task.Run(async () =>
+                    {
+                        downloader.AddDownLoad(new DownloadInfo() { Url = "https://www.jklss.cn/BqEditer/update.exe", path = updateExePath });
+
+                        await downloader.DownloadProgress(1);
+
+                        while (!downloader.GetEndDownload()) Thread.Sleep(3000);
+
+                        Thread.Sleep(3000);
+                    });
+
+                    ProcessStartInfo versionUpdatePrp = new ProcessStartInfo(updateExePath, getMessage.update_path);
+
+                    Process newProcess = new Process();
+                    newProcess.StartInfo = versionUpdatePrp;
+                    newProcess.Start();
+
                     Environment.Exit(0);
                 }
 
@@ -208,15 +231,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest
             }
 
 
-            lock (cliendSend)
+            lock (SocketModel.cliendSend)
             {
-                if (cliendSend.ContainsKey(message.Ip))
+                if (SocketModel.cliendSend.ContainsKey(message.Ip))
                 {
-                    cliendSend[message.Ip] = message;
+                    SocketModel.cliendSend[message.Ip] = message;
                 }
                 else
                 {
-                    cliendSend.Add(message.Ip, message);
+                    SocketModel.cliendSend.Add(message.Ip, message);
                 }
             }
         }
@@ -234,7 +257,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest
 
             await Task.Run(() =>
             {
-                socketService.AsyncSend(saveSocketClient[ip], message);
+                socketService.AsyncSend(SocketModel.saveSocketClient[ip], message);
             });
 
             result.SetSuccese("");
@@ -269,7 +292,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest
 
             var send = FileService.SaveToJson(sendModel);
 
-            var publicKey = ClientKeys[keyIp].ServerSendKey.PublicKey;
+            var publicKey = SocketModel.ClientKeys[keyIp].ServerSendKey.PublicKey;
 
             if (string.IsNullOrEmpty(publicKey))
             {
@@ -280,17 +303,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest
 
             var getJM = FileService.PublicKeyEncrypt(publicKey, send);
 
-            socketService.AsyncSend(saveSocketClient[keyIp], getJM);
+            socketService.AsyncSend(SocketModel.saveSocketClient[keyIp], getJM);
 
             if (waitBack)
             {
-                if (waitBackDic.ContainsKey(messageClass))
+                if (SocketModel.waitBackDic.ContainsKey(messageClass))
                 {
-                    waitBackDic[messageClass].Add(id, string.Empty);
+                    SocketModel.waitBackDic[messageClass].Add(id, string.Empty);
                 }
                 else
                 {
-                    waitBackDic.Add(messageClass, new Dictionary<int, string>
+                    SocketModel.waitBackDic.Add(messageClass, new Dictionary<int, string>
                 {
                     {id,string.Empty }
                 });
@@ -319,14 +342,14 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest
                 while (true)
                 {
                     Thread.Sleep(50);//延迟50毫秒
-                    if (!string.IsNullOrEmpty(waitBackDic[messageClass][id]))
+                    if (!string.IsNullOrEmpty(SocketModel.waitBackDic[messageClass][id]))
                     {
                         break;
                     }
                 }
             });
 
-            return waitBackDic[messageClass][id];
+            return SocketModel.waitBackDic[messageClass][id];
         }
     }
 }

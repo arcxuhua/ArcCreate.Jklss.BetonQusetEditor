@@ -69,11 +69,6 @@
     <None Remove="img\vip\vips.png" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Build.Framework">
-      <EmbedInteropTypes></EmbedInteropTypes>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="arccreate.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -139,14 +134,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ArcCreate.Jklss.Model\ArcCreate.Jklss.Model.csproj">
-      <Private>True</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\ArcCreate.Jklss.Services\ArcCreate.Jklss.Services.csproj">
-      <Private>True</Private>
-    </ProjectReference>
+    <Folder Include="ViewModel\SkillApi\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ViewModel\SkillApi\" />
+    <ProjectReference Include="..\ArcCreate.Jklss.Model\ArcCreate.Jklss.Model.csproj" />
+    <ProjectReference Include="..\ArcCreate.Jklss.Services\ArcCreate.Jklss.Services.csproj" />
   </ItemGroup>
 </Project>

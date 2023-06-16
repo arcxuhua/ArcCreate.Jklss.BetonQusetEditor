@@ -121,6 +121,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
         #region 字段与属性
 
+        public ReturnModel returnModel = new ReturnModel(); 
+
         public CardViewModel selectCardInfo = null;
 
         private UserActivityBase ActBase = new UserActivityBase();//按键
