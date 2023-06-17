@@ -60,6 +60,8 @@
   <ItemGroup>
     <None Remove="img\app\1.jpg" />
     <None Remove="img\app\2.jpg" />
+    <None Remove="img\pay\10.jpg" />
+    <None Remove="img\pay\20.jpg" />
     <None Remove="img\vip\admin.png" />
     <None Remove="img\vip\noraml.png" />
     <None Remove="img\vip\vip1.png" />
@@ -75,9 +77,11 @@
     <Resource Include="ArcCreate.png" />
     <Resource Include="img\app\1.jpg" />
     <Resource Include="img\app\2.jpg" />
+    <Resource Include="img\pay\10.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="img\pay\199.jpg" />
+    <Resource Include="img\pay\20.jpg" />
     <Resource Include="img\pay\299.jpg" />
     <Resource Include="img\pay\99.jpg" />
   </ItemGroup>

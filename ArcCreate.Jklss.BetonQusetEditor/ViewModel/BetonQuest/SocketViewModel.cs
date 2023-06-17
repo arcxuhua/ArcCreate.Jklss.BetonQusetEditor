@@ -5,14 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Windows;
-using Newtonsoft.Json.Linq;
-using ArcCreate.Jklss.BetonQusetEditor.Windows;
 using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
-using System.Windows.Shapes;
 using System;
-using System.Linq;
 using System.Threading;
 using ArcCreate.Jklss.BetonQusetEditor.View;
 using ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest.ClientWindow;
@@ -26,7 +22,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest
 
         public static ScoketService socketService = new ScoketService();
 
-        public static string version = "4.0.2.0";
+        public static string version = "4.0.2.3";
 
         /// <summary>
         /// 开启Socket通讯

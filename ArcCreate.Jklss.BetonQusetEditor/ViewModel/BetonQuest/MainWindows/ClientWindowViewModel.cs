@@ -269,6 +269,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 CvLeft= this.window.outsaid.ActualWidth / 2 - 400 / 2 - this.TranslateXProp,
                 CvTop = this.window.outsaid.ActualHeight / 2 - 148 / 2 - this.TranslateYProp,
                 Type = ThumbClass.Subject,
+                IsProtectName = IsProtectName
             };
 
             try
@@ -311,6 +312,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 CvLeft = this.window.outsaid.ActualWidth / 2 - 400 / 2 - this.TranslateXProp,
                 CvTop = this.window.outsaid.ActualHeight / 2 - 148 / 2 - this.TranslateYProp,
                 Type = ThumbClass.NPC,
+                IsProtectName = IsProtectName,
                 AllType = new ObservableCollection<string>
                 {
                     "文案: text",
@@ -360,6 +362,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 CvLeft = this.window.outsaid.ActualWidth / 2 - 400 / 2 - this.TranslateXProp,
                 CvTop = this.window.outsaid.ActualHeight / 2 - 148 / 2 - this.TranslateYProp,
                 Type = ThumbClass.Player,
+                IsProtectName = IsProtectName,
                 AllType = new ObservableCollection<string>
                 {
                     "文案: text",
@@ -409,6 +412,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 CvLeft = this.window.outsaid.ActualWidth / 2 - 400 / 2 - this.TranslateXProp,
                 CvTop = this.window.outsaid.ActualHeight / 2 - 148 / 2 - this.TranslateYProp,
                 Type = ThumbClass.Conditions,
+                IsProtectName = IsProtectName,
                 AllType = new ObservableCollection<string>
                 {
                     "背包中的物品: item",
@@ -491,6 +495,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 CvLeft = this.window.outsaid.ActualWidth / 2 - 400 / 2 - this.TranslateXProp,
                 CvTop = this.window.outsaid.ActualHeight / 2 - 148 / 2 - this.TranslateYProp,
                 Type = ThumbClass.Events,
+                IsProtectName = IsProtectName,
                 AllType = new ObservableCollection<string>
                 {
                     "消息: message",
@@ -574,6 +579,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 CvLeft = this.window.outsaid.ActualWidth / 2 - 400 / 2 - this.TranslateXProp,
                 CvTop = this.window.outsaid.ActualHeight / 2 - 148 / 2 - this.TranslateYProp,
                 Type = ThumbClass.Objectives,
+                IsProtectName = IsProtectName,
                 AllType = new ObservableCollection<string>
                 {
                     "位置: location",
@@ -642,6 +648,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 CvLeft = this.window.outsaid.ActualWidth / 2 - 400 / 2 - this.TranslateXProp,
                 CvTop = this.window.outsaid.ActualHeight / 2 - 148 / 2 - this.TranslateYProp,
                 Type = ThumbClass.Journal,
+                IsProtectName = IsProtectName,
                 ThumbWidth = 400.00,
                 ThumbHeight = 148.00,
             };
@@ -686,6 +693,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 CvLeft = this.window.outsaid.ActualWidth / 2 - 400 / 2 - this.TranslateXProp,
                 CvTop = this.window.outsaid.ActualHeight / 2 - 148 / 2 - this.TranslateYProp,
                 Type = ThumbClass.Items,
+                IsProtectName = IsProtectName,
                 ThumbWidth = 400.00,
                 ThumbHeight = 148.00,
             };
@@ -1651,6 +1659,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                         {
                             ConfigName = item.Name,
                             Type = ThumbClass.NPC,
+                            IsProtectName = IsProtectName,
                             AllType = new ObservableCollection<string>
                             {
                                 "文案: text",
@@ -1701,6 +1710,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                         {
                             ConfigName = item.Name,
                             Type = ThumbClass.Player,
+                            IsProtectName = IsProtectName,
                             AllType = new ObservableCollection<string>
                             {
                                 "文案: text",
@@ -1757,6 +1767,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                             var cardView = new AnyCardViewModel(contisionProp)
                             {
                                 ConfigName = item.Name,
+                                IsProtectName = IsProtectName,
                                 Type = ThumbClass.Conditions,
                                 AllType = new ObservableCollection<string>
                                 {
@@ -1859,6 +1870,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                             cardView = new AnyCardViewModel(eventProp)
                             {
                                 ConfigName = item.Name,
+                                IsProtectName = IsProtectName,
                                 Type = ThumbClass.Events,
                                 AllType = new ObservableCollection<string>
                                 {
@@ -1962,6 +1974,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                             cardView = new AnyCardViewModel(objectiveProp)
                             {
                                 ConfigName = item.Name,
+                                IsProtectName = IsProtectName,
                                 Type = ThumbClass.Objectives,
                                 AllType = new ObservableCollection<string>
                                 {
@@ -2055,6 +2068,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 {
                     ConfigName = item.Config,
                     Type = ThumbClass.Journal,
+                    IsProtectName = IsProtectName,
                     ItemContent = item.Text,
                     ThumbWidth = 400.00,
                     ThumbHeight = 148.00,
@@ -2075,6 +2089,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 {
                     ConfigName = item.Config,
                     Type = ThumbClass.Items,
+                    IsProtectName = IsProtectName,
                     ItemContent = item.Text,
                     ThumbWidth = 400.00,
                     ThumbHeight = 148.00,
@@ -2803,6 +2818,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
             {
                 var subjectCardView = new SubjectCardViewModel()
                 {
+                    IsProtectName = IsProtectName,
                     ConfigName = FileService.GetFilePathToFileName(allConversationsFilePath[i]),
                     NPC_ID = getMain.npcs.Where(t => t.Value == FileService.GetFilePathToFileName(allConversationsFilePath[i])).First().Key,
                     ItemContent = allConversations[i].quester,
@@ -2823,6 +2839,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                         CvLeft = x+ npcnum * 500,
                         CvTop = y+200,
                         Type = ThumbClass.NPC,
+                        IsProtectName = IsProtectName,
                         AllType = new ObservableCollection<string>
                         {
                             "文案: text",
@@ -2965,6 +2982,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                     {
                         ConfigName = item.Key,
                         CvLeft = x + playernum * 500,
+                        IsProtectName = IsProtectName,
                         CvTop = y + 400,
                         Type = ThumbClass.Player,
                         AllType = new ObservableCollection<string>
@@ -3112,6 +3130,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                     ConfigName = getConditions[i].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[0],
                     CvLeft = x + i * 500,
                     CvTop = y + 600,
+                    IsProtectName = IsProtectName,
                     Type = ThumbClass.Conditions,
                     AllType = new ObservableCollection<string>
                     {
@@ -3234,6 +3253,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                     ConfigName = getEvents[i].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[0],
                     CvLeft = x + i * 500,
                     CvTop = y + 800,
+                    IsProtectName = IsProtectName,
                     Type = ThumbClass.Events,
                     AllType = new ObservableCollection<string>
                     {
@@ -3357,6 +3377,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                     ConfigName = getObjectives[i].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[0],
                     CvLeft = x + i * 500,
                     CvTop = y + 1000,
+                    IsProtectName = IsProtectName,
                     Type = ThumbClass.Objectives,
                     AllType = new ObservableCollection<string>
                     {
@@ -3465,6 +3486,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 var cardView = new CardViewModel()
                 {
                     ConfigName = item.Key,
+                    IsProtectName = IsProtectName,
                     CvLeft = x + jnum * 500,
                     CvTop = y + 1200,
                     ThumbWidth = 400.00,
@@ -3487,6 +3509,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 var cardView = new CardViewModel()
                 {
                     ConfigName = fg[0],
+                    IsProtectName = IsProtectName,
                     CvLeft = x + i * 500,
                     CvTop = y + 1400,
                     Type = ThumbClass.Items,
@@ -4310,6 +4333,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
     public partial class CardViewModel : ObservableObject
     {
         [ObservableProperty]
+        private Visibility _IsClassify = Visibility.Hidden;
+
+        [ObservableProperty]
         private bool _IsProtectName = false;
 
         [ObservableProperty]
@@ -4413,6 +4439,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
             thumbLestPoint.X = nowThumbContent.CvLeft;
             thumbLestPoint.Y = nowThumbContent.CvTop;
+
+            var getSelectCard = GetSelecteCardDel();
+
+            if (getSelectCard.Count > 0)
+            {
+                return;
+            }
+
+            IsClassify = Visibility.Visible;
         }
 
         /// <summary>
@@ -4420,7 +4455,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
+        private async void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
             var getSelectCard = GetSelecteCardDel();
             if (getSelectCard.Count > 0)
@@ -4559,7 +4594,20 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 {
 
                 }
+
+                var getBack = await ThumbClassification(nowThumbContent);
+
+                if (!getBack.Succese)
+                {
+                    return;
+                }
+
+                var getChange = getBack.Backs as CardViewModel;
+
+                getChange.IsClassify = Visibility.Visible;
             }
+
+            
         }
 
         /// <summary>
@@ -4579,6 +4627,57 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
             var nowThumb = (Thumb)sender;
             var nowThumbContent = ((Thumb)sender).DataContext as CardViewModel;
 
+            try
+            {
+                var getCardInfo = ClientWindowViewModel.GetAllCardDel().Where(t => t.IsLine == true).ToList();
+
+                var realCardIndo = new List<LineCardViewModel>();
+
+                foreach (var card in getCardInfo)
+                {
+                    realCardIndo.Add(card as LineCardViewModel);
+                }
+
+                var getNeedChangeLeftLine = realCardIndo.Where(t => t.LineLeft == nowThumbContent).ToList();
+
+                var getNeedChangeRightLine = realCardIndo.Where(t => t.LineRight == nowThumbContent).ToList();
+
+                foreach (var item in getNeedChangeLeftLine)
+                {
+                    item.CvLeft = item.LineLeft.CvLeft + (double)item.LineLeft.ThumbWidth / 2;
+
+                    item.CvTop = item.LineLeft.CvTop + (double)item.LineLeft.ThumbHeight / 2;
+
+                    item.X = -((nowThumbContent.CvLeft - item.LineRight.CvLeft) - Math.Abs((double)item.LineLeft.ThumbWidth - (double)item.LineRight.ThumbWidth) / 2);
+
+                    item.Y = -((nowThumbContent.CvTop - item.LineRight.CvTop) - Math.Abs((double)item.LineLeft.ThumbHeight - (double)item.LineRight.ThumbHeight) / 2);
+
+                }
+
+                foreach (var item in getNeedChangeRightLine)
+                {
+                    item.CvLeft = item.LineLeft.CvLeft + (double)item.LineLeft.ThumbWidth / 2;
+
+                    item.CvTop = item.LineLeft.CvTop + (double)item.LineLeft.ThumbHeight / 2;
+
+                    item.X = -((item.LineLeft.CvLeft - item.LineRight.CvLeft) - Math.Abs((double)item.LineLeft.ThumbWidth - (double)item.LineRight.ThumbWidth) / 2);
+
+                    item.Y = -((item.LineLeft.CvTop - item.LineRight.CvTop) - Math.Abs((double)item.LineLeft.ThumbHeight - (double)item.LineRight.ThumbHeight) / 2);
+
+                }
+
+                var getNeedCardInfo = ClientWindowViewModel.GetAllCardDel().Where(t => !t.IsLine && !t.IsDraw && t.IsClassify == Visibility.Visible).ToList();
+
+                foreach (var item in getNeedCardInfo)
+                {
+                    item.IsClassify = Visibility.Hidden;
+                }
+            }
+            catch
+            {
+
+            }
+
             var getBack = await ThumbClassification(nowThumbContent);
 
             if (!getBack.Succese)
@@ -4591,7 +4690,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
             var fatherCard = getBack.Backs as CardViewModel;
 
-            if(fatherCard.Right.Contains(nowThumbContent)|| nowThumbContent.Left.Contains(fatherCard))
+            if (fatherCard.Right.Contains(nowThumbContent)|| nowThumbContent.Left.Contains(fatherCard))
             {
                 if (MessageBox.Show("确定要将其取消归类？", "提示", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
@@ -6708,50 +6807,6 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
             else
             {
                 ClientWindowViewModel.ShowMessageDel("终止操作");
-            }
-
-            try
-            {
-                var getCardInfo = ClientWindowViewModel.GetAllCardDel().Where(t => t.IsLine == true).ToList();
-
-                var realCardIndo = new List<LineCardViewModel>();
-
-                foreach (var card in getCardInfo)
-                {
-                    realCardIndo.Add(card as LineCardViewModel);
-                }
-
-                var getNeedChangeLeftLine = realCardIndo.Where(t => t.LineLeft == nowThumbContent).ToList();
-
-                var getNeedChangeRightLine = realCardIndo.Where(t => t.LineRight == nowThumbContent).ToList();
-
-                foreach (var item in getNeedChangeLeftLine)
-                {
-                    item.CvLeft = item.LineLeft.CvLeft + (double)item.LineLeft.ThumbWidth / 2;
-
-                    item.CvTop = item.LineLeft.CvTop + (double)item.LineLeft.ThumbHeight / 2;
-
-                    item.X = -(nowThumbContent.CvLeft - item.LineRight.CvLeft);
-
-                    item.Y = -(nowThumbContent.CvTop - item.LineRight.CvTop - (double)item.LineRight.ThumbHeight / 4);
-
-                }
-
-                foreach (var item in getNeedChangeRightLine)
-                {
-                    item.CvLeft = item.LineLeft.CvLeft + (double)item.LineLeft.ThumbWidth / 2;
-
-                    item.CvTop = item.LineLeft.CvTop + (double)item.LineLeft.ThumbHeight / 2;
-
-                    item.X = -(item.LineLeft.CvLeft - item.LineRight.CvLeft);
-
-                    item.Y = -(item.LineLeft.CvTop - item.LineRight.CvTop - (double)item.LineRight.ThumbHeight / 4);
-
-                }
-            }
-            catch
-            {
-
             }
         }
 

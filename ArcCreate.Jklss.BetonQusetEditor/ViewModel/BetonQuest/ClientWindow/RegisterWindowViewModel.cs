@@ -1,5 +1,4 @@
 ﻿using ArcCreate.Jklss.BetonQusetEditor.Base;
-using ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest;
 using ArcCreate.Jklss.BetonQusetEditor.Windows;
 using ArcCreate.Jklss.Model.ClientModel;
 using ArcCreate.Jklss.Model.SocketModel;

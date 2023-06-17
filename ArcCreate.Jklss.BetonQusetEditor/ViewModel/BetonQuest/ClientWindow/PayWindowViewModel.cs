@@ -50,10 +50,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest.ClientWindow
                         switch (getSel)
                         {
                             case 0:
-                                ImageFile = "/img/pay/99.jpg";
+                                ImageFile = "/img/pay/10.jpg";
                                 break;
                             case 1:
-                                ImageFile = "/img/pay/199.jpg";
+                                ImageFile = "/img/pay/20.jpg";
                                 break;
                             case 2:
                                 ImageFile = "/img/pay/99.jpg";
@@ -62,6 +62,12 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest.ClientWindow
                                 ImageFile = "/img/pay/199.jpg";
                                 break;
                             case 4:
+                                ImageFile = "/img/pay/99.jpg";
+                                break;
+                            case 5:
+                                ImageFile = "/img/pay/199.jpg";
+                                break;
+                            case 6:
                                 ImageFile = "/img/pay/299.jpg";
                                 break;
                         }
