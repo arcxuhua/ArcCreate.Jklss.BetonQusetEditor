@@ -77,6 +77,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
             SetSelectCardInfoDel = new _SetSelectCardInfoDel(SetSelectCardInfo);
 
+            GetClienteViewModelDel = new _GetClienteViewModelDel(GetClienteViewModel);
+
             ThumbInfoWindow window = new ThumbInfoWindow();
 
             thumbInfoWindow = window;
@@ -230,17 +232,28 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
         public static _GetAllCardDel GetAllCardDel;
 
+
+
         public delegate void _ShowMessageDel(string txt);
 
         public static _ShowMessageDel ShowMessageDel;
+
+
 
         public delegate List<CardViewModel> _GetSelecteCardDel();
 
         public static _GetSelecteCardDel GetSelecteCardDel;
 
+
+
         public delegate void _SetSelectCardInfoDel(CardViewModel card);
 
         public static _SetSelectCardInfoDel SetSelectCardInfoDel;
+
+
+
+        public delegate ClientWindowViewModel _GetClienteViewModelDel();
+        public static _GetClienteViewModelDel GetClienteViewModelDel;
 
         #endregion
 
@@ -263,32 +276,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         [RelayCommand()]
         private async Task CreateNewTalk(Window window)
         {
-            var cardView = new SubjectCardViewModel()
-            {
-                ConfigName = "",
-                CvLeft= this.window.outsaid.ActualWidth / 2 - 400 / 2 - this.TranslateXProp,
-                CvTop = this.window.outsaid.ActualHeight / 2 - 148 / 2 - this.TranslateYProp,
-                Type = ThumbClass.Subject,
-                IsProtectName = IsProtectName
-            };
-
-            try
-            {
-                var success = await PayPoint(1);
-
-                ShowMessage(success.Text);
-
-                if (!success.Succese)
-                {
-                    return;
-                }
-
-                CardItems.Add(cardView);
-            }
-            catch
-            {
-                ShowMessage("创建卡片失败！");
-            }
+            await CreateCard<SubjectCardViewModel>(ThumbClass.Subject);
         }
 
         /// <summary>
@@ -299,46 +287,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         [RelayCommand()]
         private async Task CreateNpcTalk(Window window)
         {
-            var name = "NPC_" + GetRandomString(5);
-
-            while(CardItems.Where(t => t.ConfigName == name).Any())
-            {
-                name = "NPC_" + GetRandomString(5);
-            }
-
-            var cardView = new AnyCardViewModel(true)
-            {
-                ConfigName = name,
-                CvLeft = this.window.outsaid.ActualWidth / 2 - 400 / 2 - this.TranslateXProp,
-                CvTop = this.window.outsaid.ActualHeight / 2 - 148 / 2 - this.TranslateYProp,
-                Type = ThumbClass.NPC,
-                IsProtectName = IsProtectName,
-                AllType = new ObservableCollection<string>
-                {
-                    "文案: text",
-                    "触发条件: conditions",
-                    "触发事件: events",
-                    "存储对话: pointer",
-                }
-            };
-
-            try
-            {
-                var success = await PayPoint(1);
-
-                ShowMessage(success.Text);
-
-                if (!success.Succese)
-                {
-                    return;
-                }
-
-                CardItems.Add(cardView);
-            }
-            catch
-            {
-                ShowMessage("创建卡片失败！");
-            }
+            await CreateCard<AnyCardViewModel>(ThumbClass.NPC);
         }
 
         /// <summary>
@@ -349,46 +298,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         [RelayCommand()]
         private async Task CreatePlayerTalk(Window window)
         {
-            var name = "Player_" + GetRandomString(5);
-
-            while (CardItems.Where(t => t.ConfigName == name).Any())
-            {
-                name = "Player_" + GetRandomString(5);
-            }
-
-            var cardView = new AnyCardViewModel(true)
-            {
-                ConfigName = name,
-                CvLeft = this.window.outsaid.ActualWidth / 2 - 400 / 2 - this.TranslateXProp,
-                CvTop = this.window.outsaid.ActualHeight / 2 - 148 / 2 - this.TranslateYProp,
-                Type = ThumbClass.Player,
-                IsProtectName = IsProtectName,
-                AllType = new ObservableCollection<string>
-                {
-                    "文案: text",
-                    "触发条件: conditions",
-                    "触发事件: events",
-                    "存储对话: pointer",
-                }
-            };
-
-            try
-            {
-                var success = await PayPoint(1);
-
-                ShowMessage(success.Text);
-
-                if (!success.Succese)
-                {
-                    return;
-                }
-
-                CardItems.Add(cardView);
-            }
-            catch
-            {
-                ShowMessage("创建卡片失败！");
-            }
+            await CreateCard<AnyCardViewModel>(ThumbClass.Player);
         }
 
         /// <summary>
@@ -399,79 +309,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         [RelayCommand()]
         private async Task CreateConditions(Window window)
         {
-            var name = "Condition_" + GetRandomString(5);
-
-            while (CardItems.Where(t => t.ConfigName == name).Any())
-            {
-                name = "Condition_" + GetRandomString(5);
-            }
-
-            var cardView = new AnyCardViewModel(contisionProp)
-            {
-                ConfigName = name,
-                CvLeft = this.window.outsaid.ActualWidth / 2 - 400 / 2 - this.TranslateXProp,
-                CvTop = this.window.outsaid.ActualHeight / 2 - 148 / 2 - this.TranslateYProp,
-                Type = ThumbClass.Conditions,
-                IsProtectName = IsProtectName,
-                AllType = new ObservableCollection<string>
-                {
-                    "背包中的物品: item",
-                    "手持物品: hand",
-                    "或门: or",
-                    "与门: and",
-                    "地点: location",
-                    "生命值: health",
-                    "经验: experience",
-                    "权限: permission",
-                    "点数: point",
-                    "标签: tag",
-                    "防具: armor",
-                    "药水效果: effect",
-                    "时间: time",
-                    "天气: weather",
-                    "高度: height",
-                    "护甲值: rating",
-                    "随机: random",
-                    "潜行: sneak",
-                    "日记条目: journal",
-                    "方块状态检测: testforblock",
-                    "空余背包格: empty",
-                    "队伍: party",
-                    "区域内怪物: monsters",
-                    "目标: objective",
-                    "检查条件: check",
-                    "箱子物品: chestitem",
-                    "计分板: score",
-                    "资金(Vault): money",
-                    "McMMO等级: mcmmolevel",
-                    "WorldGuard区域: score",
-                    "PlayerPoints点券: playerpoints",
-                    "Heroes阶等: heroesclass",
-                    "Heroes技能: heroesskill",
-                    "魔杖（Magic）: wand",
-                    "类别|职业(SkillApi): skillapiclass",
-                    "等级(SkillApi): skillapilevel",
-                    "任务(Quest): quest",
-                }
-            };
-
-            try
-            {
-                var success = await PayPoint(1);
-
-                ShowMessage(success.Text);
-
-                if (!success.Succese)
-                {
-                    return;
-                }
-
-                CardItems.Add(cardView);
-            }
-            catch
-            {
-                ShowMessage("创建卡片失败！");
-            }
+            await CreateCard<AnyCardViewModel>(ThumbClass.Conditions);
         }
 
         /// <summary>
@@ -482,80 +320,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         [RelayCommand()]
         private async Task CreateEvents(Window window)
         {
-            var name = "Event_" + GetRandomString(5);
-
-            while (CardItems.Where(t => t.ConfigName == name).Any())
-            {
-                name = "Event_" + GetRandomString(5);
-            }
-
-            var cardView = new AnyCardViewModel(eventProp)
-            {
-                ConfigName = name,
-                CvLeft = this.window.outsaid.ActualWidth / 2 - 400 / 2 - this.TranslateXProp,
-                CvTop = this.window.outsaid.ActualHeight / 2 - 148 / 2 - this.TranslateYProp,
-                Type = ThumbClass.Events,
-                IsProtectName = IsProtectName,
-                AllType = new ObservableCollection<string>
-                {
-                    "消息: message",
-                    "命令: command",
-                    "传送: teleport",
-                    "点数: point",
-                    "标签: tag",
-                    "目标: objective",
-                    "日记: journal",
-                    "闪电: lightning",
-                    "爆炸: explosion",
-                    "给予物品: give",
-                    "移除物品: take",
-                    "药水效果: effect",
-                    "对话: conversation",
-                    "杀死玩家: kill",
-                    "召唤怪物: spawn",
-                    "时间: time",
-                    "天气: weather",
-                    "多事件组: folder",
-                    "放置方块: setblock",
-                    "伤害玩家: damage",
-                    "组队: party",
-                    "清除怪物: clear",
-                    "运行事件: run",
-                    "给予日记: givejournal",
-                    "代发指令: sudo",
-                    "箱中放置: chestgive",
-                    "箱中移除: chesttake",
-                    "清理箱子: chestclear",
-                    "目标点: compass",
-                    "删除任务: cancel",
-                    "计分板: score",
-                    "权限(Vault): permission",
-                    "资金(Vault): money",
-                    "生成神话生物(MythicMobs): mspawnmob",
-                    "McMMO经验值: mcmmoexp",
-                    "PlayerPoints点券: playerpoints",
-                    "Heroes经验值: heroesexp",
-                    "任务（Quest）: quest",
-                }
-            };
-
-            try
-            {
-                var success = await PayPoint(1);
-
-                ShowMessage(success.Text);
-
-                if (!success.Succese)
-                {
-                    return;
-                }
-
-                CardItems.Add(cardView);
-            }
-            catch
-            {
-                ShowMessage("创建卡片失败！");
-            }
+            await CreateCard<AnyCardViewModel>(ThumbClass.Events);
         }
 
         /// <summary>
@@ -566,65 +331,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         [RelayCommand()]
         private async Task CreateObjectives(Window window)
         {
-            var name = "Objective_" + GetRandomString(5);
-
-            while (CardItems.Where(t => t.ConfigName == name).Any())
-            {
-                name = "Objective_" + GetRandomString(5);
-            }
-
-            var cardView = new AnyCardViewModel(objectiveProp)
-            {
-                ConfigName = name,
-                CvLeft = this.window.outsaid.ActualWidth / 2 - 400 / 2 - this.TranslateXProp,
-                CvTop = this.window.outsaid.ActualHeight / 2 - 148 / 2 - this.TranslateYProp,
-                Type = ThumbClass.Objectives,
-                IsProtectName = IsProtectName,
-                AllType = new ObservableCollection<string>
-                {
-                    "位置: location",
-                    "方块: block",
-                    "击杀生物: mobkill",
-                    "动作: action",
-                    "死亡: die",
-                    "合成: craft",
-                    "熔炼: smelt",
-                    "驯服: tame",
-                    "等待: delay",
-                    "射箭: arrow",
-                    "经验值: experience",
-                    "踩上压力板: step",
-                    "注销: logout",
-                    "输入密码: password",
-                    "垂钓: fish",
-                    "剪羊毛: shear",
-                    "附魔: enchant",
-                    "装箱: chestput",
-                    "炼药: potion",
-                    "击杀NPC（Citizens）: npckill",
-                    "与NPC互动（Citizens）: npcInteract",
-                    "击杀神话生物(MythicMobs): mmobkill",
-                    "WorldGuard区域: region",
-                }
-            };
-
-            try
-            {
-                var success = await PayPoint(1);
-
-                ShowMessage(success.Text);
-
-                if (!success.Succese)
-                {
-                    return;
-                }
-
-                CardItems.Add(cardView);
-            }
-            catch
-            {
-                ShowMessage("创建卡片失败！");
-            }
+            await CreateCard<AnyCardViewModel>(ThumbClass.Objectives);
         }
 
         /// <summary>
@@ -635,41 +342,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         [RelayCommand()]
         private async Task CreateJournal(Window window)
         {
-            var name = "Journal_" + GetRandomString(5);
-
-            while (CardItems.Where(t => t.ConfigName == name).Any())
-            {
-                name = "Journal_" + GetRandomString(5);
-            }
-
-            var cardView = new CardViewModel()
-            {
-                ConfigName = name,
-                CvLeft = this.window.outsaid.ActualWidth / 2 - 400 / 2 - this.TranslateXProp,
-                CvTop = this.window.outsaid.ActualHeight / 2 - 148 / 2 - this.TranslateYProp,
-                Type = ThumbClass.Journal,
-                IsProtectName = IsProtectName,
-                ThumbWidth = 400.00,
-                ThumbHeight = 148.00,
-            };
-
-            try
-            {
-                var success = await PayPoint(1);
-
-                ShowMessage(success.Text);
-
-                if (!success.Succese)
-                {
-                    return;
-                }
-
-                CardItems.Add(cardView);
-            }
-            catch
-            {
-                ShowMessage("创建卡片失败！");
-            }
+            await CreateCard<CardViewModel>(ThumbClass.Journal);
         }
 
         /// <summary>
@@ -680,41 +353,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         [RelayCommand()]
         private async Task CreateItems(Window window)
         {
-            var name = "Item_" + GetRandomString(5);
-
-            while (CardItems.Where(t => t.ConfigName == name).Any())
-            {
-                name = "Item_" + GetRandomString(5);
-            }
-
-            var cardView = new CardViewModel()
-            {
-                ConfigName = name,
-                CvLeft = this.window.outsaid.ActualWidth / 2 - 400 / 2 - this.TranslateXProp,
-                CvTop = this.window.outsaid.ActualHeight / 2 - 148 / 2 - this.TranslateYProp,
-                Type = ThumbClass.Items,
-                IsProtectName = IsProtectName,
-                ThumbWidth = 400.00,
-                ThumbHeight = 148.00,
-            };
-
-            try
-            {
-                var success = await PayPoint(1);
-
-                ShowMessage(success.Text);
-
-                if (!success.Succese)
-                {
-                    return;
-                }
-
-                CardItems.Add(cardView);
-            }
-            catch
-            {
-                ShowMessage("创建卡片失败！");
-            }
+            await CreateCard<CardViewModel>(ThumbClass.Items);
         }
 
         [RelayCommand()]
@@ -875,6 +514,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 window.IsEnabled = true;
                 LoadingShow = Visibility.Hidden;
                 ShowMessage("main入口文件不存在请重新指定Main.yml文件");
+
+                return;
             }
 
             var saveBase = new ConfigReaderAndWriter(ConditionsCardChanged.saveAllValue, EventCardChanged.saveAllValue, ObjectiveCardChanged.saveAllValue, ConversationCardChanged.saveAllValue, CardItems);
@@ -1008,6 +649,18 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
             TranslateXProp = x;
             TranslateYProp = y;
+        }
+
+        [RelayCommand()]
+        private void PointBuy(Window window)
+        {
+            window.IsEnabled = false;
+
+            PayWindow payWindow = new PayWindow();
+
+            payWindow.ShowDialog();
+
+            window.IsEnabled = true;
         }
 
         #endregion
@@ -1522,19 +1175,6 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         {
             var result = new ReturnModel();
 
-            if (string.IsNullOrEmpty(MainFilePath))
-            {
-                ShowMessage("请选择正确的文件");
-                result.SetError();
-                return result;
-            }
-
-            if (!FileService.IsHaveFile(MainFilePath))
-            {
-                ShowMessage("main入口文件不存在请重新指定Main.yml文件");
-                result.SetError();
-                return result;
-            }
             window.IsEnabled = false;
 
             var message = new MessageModel()
@@ -1633,17 +1273,11 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
             {
                 var getCoor = dic.Where(t => t.thumbClass == ThumbClass.Subject && t.Name == item.Config).FirstOrDefault();
 
-                var cardView = new SubjectCardViewModel()
-                {
-                    Type = ThumbClass.Subject,
-                    NPC_ID = item.Type,
-                    ConfigName = item.Config,
-                    ItemContent = item.Text,
-                    CvLeft = getCoor.X,
-                    CvTop = getCoor.Y,
-                };
+                var cardView = await CreateCard<SubjectCardViewModel>(ThumbClass.Subject, false, item.Config, getCoor.X, getCoor.Y);
 
-                CardItems.Add(cardView);
+                cardView.NPC_ID = item.Type;
+
+                cardView.ItemContent = item.Text;
 
                 ThumbNums = CardItems.Count.ToString();
             }
@@ -1655,23 +1289,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 {
                     if (item.thumbClass == ThumbClass.NPC)
                     {
-                        var cardView = new AnyCardViewModel(true)
-                        {
-                            ConfigName = item.Name,
-                            Type = ThumbClass.NPC,
-                            IsProtectName = IsProtectName,
-                            AllType = new ObservableCollection<string>
-                            {
-                                "文案: text",
-                                "触发条件: conditions",
-                                "触发事件: events",
-                                "存储对话: pointer",
-                            },
-                            CvLeft = getCoor.X,
-                            CvTop = getCoor.Y,
-                        };
-
-                        CardItems.Add(cardView);
+                        var cardView = await CreateCard<AnyCardViewModel>(ThumbClass.NPC, false, item.Name, getCoor.X, getCoor.Y);
 
                         var getSaveInfo = ConversationCardChanged.saveAllValue[cardView];
 
@@ -1706,23 +1324,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                     }
                     else if (item.thumbClass == ThumbClass.Player)
                     {
-                        var cardView = new AnyCardViewModel(true)
-                        {
-                            ConfigName = item.Name,
-                            Type = ThumbClass.Player,
-                            IsProtectName = IsProtectName,
-                            AllType = new ObservableCollection<string>
-                            {
-                                "文案: text",
-                                "触发条件: conditions",
-                                "触发事件: events",
-                                "存储对话: pointer",
-                            },
-                            CvLeft = getCoor.X,
-                            CvTop = getCoor.Y,
-                        };
-
-                        CardItems.Add(cardView);
+                        var cardView = await CreateCard<AnyCardViewModel>(ThumbClass.Player, false, item.Name, getCoor.X, getCoor.Y);
 
                         var getSaveInfo = ConversationCardChanged.saveAllValue[cardView];
 
@@ -1764,71 +1366,33 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                     {
                         case ThumbClass.Conditions:
 
-                            var cardView = new AnyCardViewModel(contisionProp)
-                            {
-                                ConfigName = item.Name,
-                                IsProtectName = IsProtectName,
-                                Type = ThumbClass.Conditions,
-                                AllType = new ObservableCollection<string>
-                                {
-                                    "背包中的物品: item",
-                                    "手持物品: hand",
-                                    "或门: or",
-                                    "与门: and",
-                                    "地点: location",
-                                    "生命值: health",
-                                    "经验: experience",
-                                    "权限: permission",
-                                    "点数: point",
-                                    "标签: tag",
-                                    "防具: armor",
-                                    "药水效果: effect",
-                                    "时间: time",
-                                    "天气: weather",
-                                    "高度: height",
-                                    "护甲值: rating",
-                                    "随机: random",
-                                    "潜行: sneak",
-                                    "日记条目: journal",
-                                    "方块状态检测: testforblock",
-                                    "空余背包格: empty",
-                                    "队伍: party",
-                                    "区域内怪物: monsters",
-                                    "目标: objective",
-                                    "检查条件: check",
-                                    "箱子物品: chestitem",
-                                    "计分板: score",
-                                    "资金(Vault): money",
-                                    "McMMO等级: mcmmolevel",
-                                    "WorldGuard区域: score",
-                                    "PlayerPoints点券: playerpoints",
-                                    "Heroes阶等: heroesclass",
-                                    "Heroes技能: heroesskill",
-                                    "魔杖（Magic）: wand",
-                                    "类别|职业(SkillApi): skillapiclass",
-                                    "等级(SkillApi): skillapilevel",
-                                    "任务(Quest): quest",
-                                },
-                                CvLeft = getCoor.X,
-                                CvTop = getCoor.Y,
-                            };
+                            var cardView = await CreateCard<AnyCardViewModel>(ThumbClass.Conditions, false, item.Name, getCoor.X, getCoor.Y);
 
-                            if (item.data != null)
+                            if (item.data == null)
                             {
-                                var getCmd = item.data.Keys.First();
+                                ShowMessage($"该卡片没有相关数据哦[{item.Name}]");
 
-                                try
-                                {
-                                    cardView.SelectType = getCmd;
-                                    await cardView.conditionsCardChanged.TypeChanged();
-                                }
-                                catch
-                                {
-                                    ShowMessage($"您的语法模型中不存在相关模型[{item.Name}]");
-                                }
+                                break;
                             }
 
-                            CardItems.Add(cardView);
+                            var getCmd = item.data.Keys.First();
+
+                            try
+                            {
+                                cardView.SelectType = getCmd;
+                                await cardView.conditionsCardChanged.TypeChanged();
+                            }
+                            catch
+                            {
+                                ShowMessage($"您的语法模型中不存在相关模型[{item.Name}]");
+                            }
+
+                            if (!ConditionsCardChanged.saveAllValue.ContainsKey(cardView)|| ConditionsCardChanged.saveAllValue[cardView].Count<=0)
+                            {
+                                ShowMessage($"该卡片没有相关数据哦[{item.Name}]");
+
+                                break;
+                            }
 
                             var getSaveInfo = ConditionsCardChanged.saveAllValue[cardView];
 
@@ -1867,72 +1431,33 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
                         case ThumbClass.Events:
 
-                            cardView = new AnyCardViewModel(eventProp)
-                            {
-                                ConfigName = item.Name,
-                                IsProtectName = IsProtectName,
-                                Type = ThumbClass.Events,
-                                AllType = new ObservableCollection<string>
-                                {
-                                    "消息: message",
-                                    "命令: command",
-                                    "传送: teleport",
-                                    "点数: point",
-                                    "标签: tag",
-                                    "目标: objective",
-                                    "日记: journal",
-                                    "闪电: lightning",
-                                    "爆炸: explosion",
-                                    "给予物品: give",
-                                    "移除物品: take",
-                                    "药水效果: effect",
-                                    "对话: conversation",
-                                    "杀死玩家: kill",
-                                    "召唤怪物: spawn",
-                                    "时间: time",
-                                    "天气: weather",
-                                    "多事件组: folder",
-                                    "放置方块: setblock",
-                                    "伤害玩家: damage",
-                                    "组队: party",
-                                    "清除怪物: clear",
-                                    "运行事件: run",
-                                    "给予日记: givejournal",
-                                    "代发指令: sudo",
-                                    "箱中放置: chestgive",
-                                    "箱中移除: chesttake",
-                                    "清理箱子: chestclear",
-                                    "目标点: compass",
-                                    "删除任务: cancel",
-                                    "计分板: score",
-                                    "权限(Vault): permission",
-                                    "资金(Vault): money",
-                                    "生成神话生物(MythicMobs): mspawnmob",
-                                    "McMMO经验值: mcmmoexp",
-                                    "PlayerPoints点券: playerpoints",
-                                    "Heroes经验值: heroesexp",
-                                    "任务（Quest）: quest",
-                                },
-                                CvLeft = getCoor.X,
-                                CvTop = getCoor.Y,
-                            };
+                            cardView = await CreateCard<AnyCardViewModel>(ThumbClass.Events, false, item.Name, getCoor.X, getCoor.Y);
 
-                            if (item.data != null)
+                            if (item.data == null)
                             {
-                                var getCmd = item.data.Keys.First();
+                                ShowMessage($"该卡片没有相关数据哦[{item.Name}]");
 
-                                try
-                                {
-                                    cardView.SelectType = getCmd;
-                                    await cardView.eventCardChanged.TypeChanged();
-                                }
-                                catch
-                                {
-                                    ShowMessage($"您的语法模型中不存在相关模型[{item.Name}]");
-                                }
+                                break;
                             }
 
-                            CardItems.Add(cardView);
+                            getCmd = item.data.Keys.First();
+
+                            try
+                            {
+                                cardView.SelectType = getCmd;
+                                await cardView.eventCardChanged.TypeChanged();
+                            }
+                            catch
+                            {
+                                ShowMessage($"您的语法模型中不存在相关模型[{item.Name}]");
+                            }
+
+                            if (!EventCardChanged.saveAllValue.ContainsKey(cardView) || EventCardChanged.saveAllValue[cardView].Count <= 0)
+                            {
+                                ShowMessage($"该卡片没有相关数据哦[{item.Name}]");
+
+                                break;
+                            }
 
                             getSaveInfo = EventCardChanged.saveAllValue[cardView];
 
@@ -1971,57 +1496,33 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
                         case ThumbClass.Objectives:
 
-                            cardView = new AnyCardViewModel(objectiveProp)
-                            {
-                                ConfigName = item.Name,
-                                IsProtectName = IsProtectName,
-                                Type = ThumbClass.Objectives,
-                                AllType = new ObservableCollection<string>
-                                {
-                                    "位置: location",
-                                    "方块: block",
-                                    "击杀生物: mobkill",
-                                    "动作: action",
-                                    "死亡: die",
-                                    "合成: craft",
-                                    "熔炼: smelt",
-                                    "驯服: tame",
-                                    "等待: delay",
-                                    "射箭: arrow",
-                                    "经验值: experience",
-                                    "踩上压力板: step",
-                                    "注销: logout",
-                                    "输入密码: password",
-                                    "垂钓: fish",
-                                    "剪羊毛: shear",
-                                    "附魔: enchant",
-                                    "装箱: chestput",
-                                    "炼药: potion",
-                                    "击杀NPC（Citizens）: npckill",
-                                    "与NPC互动（Citizens）: npcInteract",
-                                    "击杀神话生物(MythicMobs): mmobkill",
-                                    "WorldGuard区域: region",
-                                },
-                                CvLeft = getCoor.X,
-                                CvTop = getCoor.Y,
-                            };
+                            cardView = await CreateCard<AnyCardViewModel>(ThumbClass.Objectives, false, item.Name, getCoor.X, getCoor.Y);
 
-                            if (item.data != null)
+                            if (item.data == null)
                             {
-                                var getCmd = item.data.Keys.First();
+                                ShowMessage($"该卡片没有相关数据哦[{item.Name}]");
 
-                                try
-                                {
-                                    cardView.SelectType = getCmd;
-                                    await cardView.objectiveCardChanged.TypeChanged();
-                                }
-                                catch
-                                {
-                                    ShowMessage($"您的语法模型中不存在相关模型[{item.Name}]");
-                                }
+                                break;
                             }
 
-                            CardItems.Add(cardView);
+                            getCmd = item.data.Keys.First();
+
+                            try
+                            {
+                                cardView.SelectType = getCmd;
+                                await cardView.objectiveCardChanged.TypeChanged();
+                            }
+                            catch
+                            {
+                                ShowMessage($"您的语法模型中不存在相关模型[{item.Name}]");
+                            }
+
+                            if (!ObjectiveCardChanged.saveAllValue.ContainsKey(cardView) || ObjectiveCardChanged.saveAllValue[cardView].Count <= 0)
+                            {
+                                ShowMessage($"该卡片没有相关数据哦[{item.Name}]");
+
+                                break;
+                            }
 
                             getSaveInfo = ObjectiveCardChanged.saveAllValue[cardView];
 
@@ -2064,19 +1565,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
             {
                 var getCoor = dic.Where(t => t.thumbClass == ThumbClass.Journal && t.Name == item.Config).FirstOrDefault();
 
-                var cardView = new CardViewModel()
-                {
-                    ConfigName = item.Config,
-                    Type = ThumbClass.Journal,
-                    IsProtectName = IsProtectName,
-                    ItemContent = item.Text,
-                    ThumbWidth = 400.00,
-                    ThumbHeight = 148.00,
-                    CvLeft = getCoor.X,
-                    CvTop = getCoor.Y,
-                };
+                var cardView = await CreateCard<CardViewModel>(ThumbClass.Journal, false, item.Config, getCoor.X, getCoor.Y);
 
-                CardItems.Add(cardView);
+                cardView.ItemContent = item.Text;
 
                 ThumbNums = CardItems.Count.ToString();
             }
@@ -2085,19 +1576,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
             {
                 var getCoor = dic.Where(t => t.thumbClass == ThumbClass.Items && t.Name == item.Config).FirstOrDefault();
 
-                var cardView = new CardViewModel()
-                {
-                    ConfigName = item.Config,
-                    Type = ThumbClass.Items,
-                    IsProtectName = IsProtectName,
-                    ItemContent = item.Text,
-                    ThumbWidth = 400.00,
-                    ThumbHeight = 148.00,
-                    CvLeft = getCoor.X,
-                    CvTop = getCoor.Y,
-                };
+                var cardView = await CreateCard<CardViewModel>(ThumbClass.Items, false, item.Config, getCoor.X, getCoor.Y);
 
-                CardItems.Add(cardView);
+                cardView.ItemContent = item.Text;
 
                 ThumbNums = CardItems.Count.ToString();
             }
@@ -2816,40 +2297,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
             for (int i = 0; i < allConversations.Count; i++)
             {
-                var subjectCardView = new SubjectCardViewModel()
-                {
-                    IsProtectName = IsProtectName,
-                    ConfigName = FileService.GetFilePathToFileName(allConversationsFilePath[i]),
-                    NPC_ID = getMain.npcs.Where(t => t.Value == FileService.GetFilePathToFileName(allConversationsFilePath[i])).First().Key,
-                    ItemContent = allConversations[i].quester,
-                    CvLeft = x + i * 500,
-                    CvTop = y,
-                    Type = ThumbClass.Subject,
-                };
+                var subjectCardView = await CreateCard<SubjectCardViewModel>(ThumbClass.Subject, false, FileService.GetFilePathToFileName(allConversationsFilePath[i]), x + i * 500, y);
 
-                CardItems.Add(subjectCardView);
+                subjectCardView.NPC_ID = getMain.npcs.Where(t => t.Value == FileService.GetFilePathToFileName(allConversationsFilePath[i])).First().Key;
+
+                subjectCardView.ItemContent = allConversations[i].quester;
 
                 ThumbNums = CardItems.Count.ToString();
 
                 foreach (var item in allConversations[i].NPC_options)
                 {
-                    var cardView = new AnyCardViewModel(true)
-                    {
-                        ConfigName = item.Key,
-                        CvLeft = x+ npcnum * 500,
-                        CvTop = y+200,
-                        Type = ThumbClass.NPC,
-                        IsProtectName = IsProtectName,
-                        AllType = new ObservableCollection<string>
-                        {
-                            "文案: text",
-                            "触发条件: conditions",
-                            "触发事件: events",
-                            "存储对话: pointer",
-                        }
-                    };
-
-                    CardItems.Add(cardView);
+                    var cardView = await CreateCard<AnyCardViewModel>(ThumbClass.NPC, false, item.Key, x + npcnum * 500, y + 200);
 
                     ThumbNums = CardItems.Count.ToString();
 
@@ -2978,23 +2436,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
                 foreach (var item in allConversations[i].player_options)
                 {
-                    var cardView = new AnyCardViewModel(true)
-                    {
-                        ConfigName = item.Key,
-                        CvLeft = x + playernum * 500,
-                        IsProtectName = IsProtectName,
-                        CvTop = y + 400,
-                        Type = ThumbClass.Player,
-                        AllType = new ObservableCollection<string>
-                        {
-                            "文案: text",
-                            "触发条件: conditions",
-                            "触发事件: events",
-                            "存储对话: pointer",
-                        }
-                    };
-
-                    CardItems.Add(cardView);
+                    var cardView = await CreateCard<AnyCardViewModel>(ThumbClass.Player, false, item.Key, x + playernum * 500, y + 400);
 
                     ThumbNums = CardItems.Count.ToString();
 
@@ -3125,56 +2567,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
             for (int i = 0; i < getConditions.Count; i++)
             {
-                var cardView = new AnyCardViewModel(contisionProp)
-                {
-                    ConfigName = getConditions[i].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[0],
-                    CvLeft = x + i * 500,
-                    CvTop = y + 600,
-                    IsProtectName = IsProtectName,
-                    Type = ThumbClass.Conditions,
-                    AllType = new ObservableCollection<string>
-                    {
-                        "背包中的物品: item",
-                        "手持物品: hand",
-                        "或门: or",
-                        "与门: and",
-                        "地点: location",
-                        "生命值: health",
-                        "经验: experience",
-                        "权限: permission",
-                        "点数: point",
-                        "标签: tag",
-                        "防具: armor",
-                        "药水效果: effect",
-                        "时间: time",
-                        "天气: weather",
-                        "高度: height",
-                        "护甲值: rating",
-                        "随机: random",
-                        "潜行: sneak",
-                        "日记条目: journal",
-                        "方块状态检测: testforblock",
-                        "空余背包格: empty",
-                        "队伍: party",
-                        "区域内怪物: monsters",
-                        "目标: objective",
-                        "检查条件: check",
-                        "箱子物品: chestitem",
-                        "计分板: score",
-                        "资金(Vault): money",
-                        "McMMO等级: mcmmolevel",
-                        "WorldGuard区域: score",
-                        "PlayerPoints点券: playerpoints",
-                        "Heroes阶等: heroesclass",
-                        "Heroes技能: heroesskill",
-                        "魔杖（Magic）: wand",
-                        "类别|职业(SkillApi): skillapiclass",
-                        "等级(SkillApi): skillapilevel",
-                        "任务(Quest): quest",
-                    }
-                };
-
-                CardItems.Add(cardView);
+                var cardView = await CreateCard<AnyCardViewModel>(ThumbClass.Conditions, false, getConditions[i].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[0], x + i * 500, y + 600);
 
                 ThumbNums = CardItems.Count.ToString();
 
@@ -3248,57 +2641,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
             for (int i = 0; i < getEvents.Count; i++)
             {
-                var cardView = new AnyCardViewModel(eventProp)
-                {
-                    ConfigName = getEvents[i].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[0],
-                    CvLeft = x + i * 500,
-                    CvTop = y + 800,
-                    IsProtectName = IsProtectName,
-                    Type = ThumbClass.Events,
-                    AllType = new ObservableCollection<string>
-                    {
-                        "消息: message",
-                        "命令: command",
-                        "传送: teleport",
-                        "点数: point",
-                        "标签: tag",
-                        "目标: objective",
-                        "日记: journal",
-                        "闪电: lightning",
-                        "爆炸: explosion",
-                        "给予物品: give",
-                        "移除物品: take",
-                        "药水效果: effect",
-                        "对话: conversation",
-                        "杀死玩家: kill",
-                        "召唤怪物: spawn",
-                        "时间: time",
-                        "天气: weather",
-                        "多事件组: folder",
-                        "放置方块: setblock",
-                        "伤害玩家: damage",
-                        "组队: party",
-                        "清除怪物: clear",
-                        "运行事件: run",
-                        "给予日记: givejournal",
-                        "代发指令: sudo",
-                        "箱中放置: chestgive",
-                        "箱中移除: chesttake",
-                        "清理箱子: chestclear",
-                        "目标点: compass",
-                        "删除任务: cancel",
-                        "计分板: score",
-                        "权限(Vault): permission",
-                        "资金(Vault): money",
-                        "生成神话生物(MythicMobs): mspawnmob",
-                        "McMMO经验值: mcmmoexp",
-                        "PlayerPoints点券: playerpoints",
-                        "Heroes经验值: heroesexp",
-                        "任务（Quest）: quest",
-                    }
-                };
-
-                CardItems.Add(cardView);
+                var cardView = await CreateCard<AnyCardViewModel>(ThumbClass.Events, false, getEvents[i].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[0], x + i * 500, y + 800);
 
                 ThumbNums = CardItems.Count.ToString();
 
@@ -3372,42 +2715,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
             for (int i = 0; i < getObjectives.Count; i++)
             {
-                var cardView = new AnyCardViewModel(objectiveProp)
-                {
-                    ConfigName = getObjectives[i].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[0],
-                    CvLeft = x + i * 500,
-                    CvTop = y + 1000,
-                    IsProtectName = IsProtectName,
-                    Type = ThumbClass.Objectives,
-                    AllType = new ObservableCollection<string>
-                    {
-                        "位置: location",
-                        "方块: block",
-                        "击杀生物: mobkill",
-                        "动作: action",
-                        "死亡: die",
-                        "合成: craft",
-                        "熔炼: smelt",
-                        "驯服: tame",
-                        "等待: delay",
-                        "射箭: arrow",
-                        "经验值: experience",
-                        "踩上压力板: step",
-                        "注销: logout",
-                        "输入密码: password",
-                        "垂钓: fish",
-                        "剪羊毛: shear",
-                        "附魔: enchant",
-                        "装箱: chestput",
-                        "炼药: potion",
-                        "击杀NPC（Citizens）: npckill",
-                        "与NPC互动（Citizens）: npcInteract",
-                        "击杀神话生物(MythicMobs): mmobkill",
-                        "WorldGuard区域: region",
-                    }
-                };
-
-                CardItems.Add(cardView);
+                var cardView = await CreateCard<AnyCardViewModel>(ThumbClass.Objectives, false, getObjectives[i].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[0], x + i * 500, y + 1000);
 
                 ThumbNums = CardItems.Count.ToString();
 
@@ -3483,19 +2791,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
             foreach (var item in getJournal)
             {
-                var cardView = new CardViewModel()
-                {
-                    ConfigName = item.Key,
-                    IsProtectName = IsProtectName,
-                    CvLeft = x + jnum * 500,
-                    CvTop = y + 1200,
-                    ThumbWidth = 400.00,
-                    ThumbHeight = 148.00,
-                    Type = ThumbClass.Journal,
-                    ItemContent = item.Value,
-                };
+                var cardView = await CreateCard<CardViewModel>(ThumbClass.Journal, false, item.Key, x + jnum * 500, y + 1200);
 
-                CardItems.Add(cardView);
+                cardView.ItemContent = item.Value;
 
                 ThumbNums = CardItems.Count.ToString();
 
@@ -3506,19 +2804,11 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
             {
                 var fg = getItems[i].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries);
 
-                var cardView = new CardViewModel()
-                {
-                    ConfigName = fg[0],
-                    IsProtectName = IsProtectName,
-                    CvLeft = x + i * 500,
-                    CvTop = y + 1400,
-                    Type = ThumbClass.Items,
-                    ThumbWidth = 400.00,
-                    ThumbHeight = 148.00,
-                    ItemContent = fg[1].TrimStart('\'').TrimEnd('\''),
-                };
+                var getLest = getItems[i].Split(fg[0], StringSplitOptions.RemoveEmptyEntries);
 
-                CardItems.Add(cardView);
+                var cardView = await CreateCard<CardViewModel>(ThumbClass.Items, false, fg[0], x + i * 500, y + 1400);
+
+                cardView.ItemContent = getLest[0].TrimStart('\'').TrimEnd('\'');
 
                 ThumbNums = CardItems.Count.ToString();
             }
@@ -4323,6 +3613,646 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
             item.Y = -((item.LineLeft.CvTop - item.LineRight.CvTop) - Math.Abs((double)item.LineLeft.ThumbHeight - (double)item.LineRight.ThumbHeight) / 2);
         }
 
+        /// <summary>
+        /// 创建卡片
+        /// </summary>
+        /// <typeparam name="T">卡片类型</typeparam>
+        /// <param name="thumbClass">卡片类型</param>
+        /// <param name="isPay">是否扣除积分</param>
+        /// <param name="configName">卡片名称（仅对主卡片有用）</param>
+        /// <param name="cvLeft">X轴坐标</param>
+        /// <param name="cvTop">Y轴坐标</param>
+        /// <returns></returns>
+        public async Task<T> CreateCard<T>(ThumbClass thumbClass,bool isPay = true,string configName = ""
+            ,double cvLeft= 0.00,double cvTop = 0.00) where T:CardViewModel
+        {
+            CardViewModel cardView = null;
+
+            var reCvLeft = 0.00;
+
+            var reCvTop = 0.00;
+
+            var reConfigName = string.Empty;
+
+            #region 修正坐标
+
+            if (cvLeft == 0.00)
+            {
+                reCvLeft = this.window.outsaid.ActualWidth / 2 - 400 / 2 - this.TranslateXProp;
+            }
+            else
+            {
+                reCvLeft = cvLeft;
+            }
+
+            if(cvTop == 0.00)
+            {
+                reCvTop = this.window.outsaid.ActualHeight / 2 - 148 / 2 - this.TranslateYProp;
+            }
+            else
+            {
+                reCvTop = cvTop;
+            }
+
+            #endregion
+            switch (thumbClass)
+            {
+                case ThumbClass.Subject:
+
+                    cardView = new SubjectCardViewModel()
+                    {
+                        ConfigName = configName,
+                        CvLeft = reCvLeft,
+                        CvTop = reCvTop,
+                        Type = ThumbClass.Subject,
+                        IsProtectName = IsProtectName,
+
+                        ShurtcutIdea = new ObservableCollection<ShurtcutIdeaBtnViewModel>
+                        {
+                            new ShurtcutIdeaBtnViewModel
+                            {
+                                CardName = "创建NPC对话卡片",
+                                ThumbClassName = ThumbClass.NPC,
+                            },
+
+                        }
+                    };
+
+                    if (!isPay)
+                    {
+                        CardItems.Add(cardView);
+                        break;
+                    }
+
+                    try
+                    {
+                        var success = await PayPoint(1);
+
+                        ShowMessage(success.Text);
+
+                        if (!success.Succese)
+                        {
+                            break;
+                        }
+
+                        CardItems.Add(cardView);
+                    }
+                    catch
+                    {
+                        ShowMessage("创建卡片失败！");
+                    }
+
+                    break;
+
+                case ThumbClass.NPC:
+
+                    var name = string.Empty;
+
+                    if (string.IsNullOrEmpty(configName))
+                    {
+                        name = "NPC_" + GetRandomString(5);
+
+                        while (CardItems.Where(t => t.ConfigName == name).Any())
+                        {
+                            name = "NPC_" + GetRandomString(5);
+                        }
+                    }
+                    else
+                    {
+                        name = configName;
+                    }
+
+                    cardView = new AnyCardViewModel(true)
+                    {
+                        ConfigName = name,
+                        CvLeft = reCvLeft,
+                        CvTop = reCvTop,
+                        Type = ThumbClass.NPC,
+                        IsProtectName = IsProtectName,
+                        AllType = new ObservableCollection<string>
+                        {
+                            "文案: text",
+                            "触发条件: conditions",
+                            "触发事件: events",
+                            "存储对话: pointer",
+                        },
+
+                        ShurtcutIdea = new ObservableCollection<ShurtcutIdeaBtnViewModel>
+                        {
+                            new ShurtcutIdeaBtnViewModel
+                            {
+                                CardName = "创建玩家对话卡片",
+                                ThumbClassName = ThumbClass.Player,
+                            },
+
+                            new ShurtcutIdeaBtnViewModel
+                            {
+                                CardName = "创建条件卡片",
+                                ThumbClassName = ThumbClass.Conditions,
+                            },
+
+                            new ShurtcutIdeaBtnViewModel
+                            {
+                                CardName = "创建事件卡片",
+                                ThumbClassName = ThumbClass.Events,
+                            },
+
+                        }
+                    };
+
+                    if (!isPay)
+                    {
+                        CardItems.Add(cardView);
+                        break;
+                    }
+
+                    try
+                    {
+                        var success = await PayPoint(1);
+
+                        ShowMessage(success.Text);
+
+                        if (!success.Succese)
+                        {
+                            break;
+                        }
+
+                        CardItems.Add(cardView);
+                    }
+                    catch
+                    {
+                        ShowMessage("创建卡片失败！");
+                    }
+
+                    break;
+
+                case ThumbClass.Player:
+
+                    name = string.Empty;
+
+                    if (string.IsNullOrEmpty(configName))
+                    {
+                        name = "Player_" + GetRandomString(5);
+
+                        while (CardItems.Where(t => t.ConfigName == name).Any())
+                        {
+                            name = "Player_" + GetRandomString(5);
+                        }
+                    }
+                    else
+                    {
+                        name = configName;
+                    }
+
+                    cardView = new AnyCardViewModel(true)
+                    {
+                        ConfigName = name,
+                        CvLeft = reCvLeft,
+                        CvTop = reCvTop,
+                        Type = ThumbClass.Player,
+                        IsProtectName = IsProtectName,
+                        AllType = new ObservableCollection<string>
+                        {
+                            "文案: text",
+                            "触发条件: conditions",
+                            "触发事件: events",
+                            "存储对话: pointer",
+                        },
+
+                        ShurtcutIdea = new ObservableCollection<ShurtcutIdeaBtnViewModel>
+                        {
+                            new ShurtcutIdeaBtnViewModel
+                            {
+                                CardName = "创建NPC对话卡片",
+                                ThumbClassName = ThumbClass.NPC,
+                            },
+
+                            new ShurtcutIdeaBtnViewModel
+                            {
+                                CardName = "创建条件卡片",
+                                ThumbClassName = ThumbClass.Conditions,
+                            },
+
+                            new ShurtcutIdeaBtnViewModel
+                            {
+                                CardName = "创建事件卡片",
+                                ThumbClassName = ThumbClass.Events,
+                            },
+
+                        }
+                    }; 
+                    
+                    if (!isPay)
+                    {
+                        CardItems.Add(cardView);
+                        break;
+                    }
+
+                    try
+                    {
+                        var success = await PayPoint(1);
+
+                        ShowMessage(success.Text);
+
+                        if (!success.Succese)
+                        {
+                            break;
+                        }
+
+                        CardItems.Add(cardView);
+                    }
+                    catch
+                    {
+                        ShowMessage("创建卡片失败！");
+                    }
+
+                    break;
+
+                case ThumbClass.Conditions:
+
+                    name = string.Empty;
+
+                    if (string.IsNullOrEmpty(configName))
+                    {
+                        name = "Condition_" + GetRandomString(5);
+
+                        while (CardItems.Where(t => t.ConfigName == name).Any())
+                        {
+                            name = "Condition_" + GetRandomString(5);
+                        }
+                    }
+                    else
+                    {
+                        name = configName;
+                    }
+
+                    cardView = new AnyCardViewModel(contisionProp)
+                    {
+                        ConfigName = name,
+                        CvLeft = reCvLeft,
+                        CvTop = reCvTop,
+                        Type = ThumbClass.Conditions,
+                        IsProtectName = IsProtectName,
+                        AllType = new ObservableCollection<string>
+                        {
+                            "背包中的物品: item",
+                            "手持物品: hand",
+                            "或门: or",
+                            "与门: and",
+                            "地点: location",
+                            "生命值: health",
+                            "经验: experience",
+                            "权限: permission",
+                            "点数: point",
+                            "标签: tag",
+                            "防具: armor",
+                            "药水效果: effect",
+                            "时间: time",
+                            "天气: weather",
+                            "高度: height",
+                            "护甲值: rating",
+                            "随机: random",
+                            "潜行: sneak",
+                            "日记条目: journal",
+                            "方块状态检测: testforblock",
+                            "空余背包格: empty",
+                            "队伍: party",
+                            "区域内怪物: monsters",
+                            "目标: objective",
+                            "检查条件: check",
+                            "箱子物品: chestitem",
+                            "计分板: score",
+                            "资金(Vault): money",
+                            "McMMO等级: mcmmolevel",
+                            "WorldGuard区域: score",
+                            "PlayerPoints点券: playerpoints",
+                            "Heroes阶等: heroesclass",
+                            "Heroes技能: heroesskill",
+                            "魔杖（Magic）: wand",
+                            "类别|职业(SkillApi): skillapiclass",
+                            "等级(SkillApi): skillapilevel",
+                            "任务(Quest): quest",
+                        }
+                    };
+
+                    if (!isPay)
+                    {
+                        CardItems.Add(cardView);
+                        break;
+                    }
+
+                    try
+                    {
+                        var success = await PayPoint(1);
+
+                        ShowMessage(success.Text);
+
+                        if (!success.Succese)
+                        {
+                            break;
+                        }
+
+                        CardItems.Add(cardView);
+                    }
+                    catch
+                    {
+                        ShowMessage("创建卡片失败！");
+                    }
+
+                    break;
+
+                case ThumbClass.Events:
+
+                    name = string.Empty;
+
+                    if (string.IsNullOrEmpty(configName))
+                    {
+                        name = "Event_" + GetRandomString(5);
+
+                        while (CardItems.Where(t => t.ConfigName == name).Any())
+                        {
+                            name = "Event_" + GetRandomString(5);
+                        }
+                    }
+                    else
+                    {
+                        name = configName;
+                    }
+
+                    cardView = new AnyCardViewModel(eventProp)
+                    {
+                        ConfigName = name,
+                        CvLeft = reCvLeft,
+                        CvTop = reCvTop,
+                        Type = ThumbClass.Events,
+                        IsProtectName = IsProtectName,
+                        AllType = new ObservableCollection<string>
+                        {
+                            "消息: message",
+                            "命令: command",
+                            "传送: teleport",
+                            "点数: point",
+                            "标签: tag",
+                            "目标: objective",
+                            "日记: journal",
+                            "闪电: lightning",
+                            "爆炸: explosion",
+                            "给予物品: give",
+                            "移除物品: take",
+                            "药水效果: effect",
+                            "对话: conversation",
+                            "杀死玩家: kill",
+                            "召唤怪物: spawn",
+                            "时间: time",
+                            "天气: weather",
+                            "多事件组: folder",
+                            "放置方块: setblock",
+                            "伤害玩家: damage",
+                            "组队: party",
+                            "清除怪物: clear",
+                            "运行事件: run",
+                            "给予日记: givejournal",
+                            "代发指令: sudo",
+                            "箱中放置: chestgive",
+                            "箱中移除: chesttake",
+                            "清理箱子: chestclear",
+                            "目标点: compass",
+                            "删除任务: cancel",
+                            "计分板: score",
+                            "权限(Vault): permission",
+                            "资金(Vault): money",
+                            "生成神话生物(MythicMobs): mspawnmob",
+                            "McMMO经验值: mcmmoexp",
+                            "PlayerPoints点券: playerpoints",
+                            "Heroes经验值: heroesexp",
+                            "任务（Quest）: quest",
+                        }
+                    };
+
+                    if (!isPay)
+                    {
+                        CardItems.Add(cardView);
+                        break;
+                    }
+
+                    try
+                    {
+                        var success = await PayPoint(1);
+
+                        ShowMessage(success.Text);
+
+                        if (!success.Succese)
+                        {
+                            break;
+                        }
+
+                        CardItems.Add(cardView);
+                    }
+                    catch
+                    {
+                        ShowMessage("创建卡片失败！");
+                    }
+
+                    break;
+
+                case ThumbClass.Objectives:
+
+                    name = string.Empty;
+
+                    if (string.IsNullOrEmpty(configName))
+                    {
+                        name = "Objective_" + GetRandomString(5);
+
+                        while (CardItems.Where(t => t.ConfigName == name).Any())
+                        {
+                            name = "Objective_" + GetRandomString(5);
+                        }
+                    }
+                    else
+                    {
+                        name = configName;
+                    }
+
+                    cardView = new AnyCardViewModel(objectiveProp)
+                    {
+                        ConfigName = name,
+                        CvLeft = reCvLeft,
+                        CvTop = reCvTop,
+                        Type = ThumbClass.Objectives,
+                        IsProtectName = IsProtectName,
+                        AllType = new ObservableCollection<string>
+                        {
+                            "位置: location",
+                            "方块: block",
+                            "击杀生物: mobkill",
+                            "动作: action",
+                            "死亡: die",
+                            "合成: craft",
+                            "熔炼: smelt",
+                            "驯服: tame",
+                            "等待: delay",
+                            "射箭: arrow",
+                            "经验值: experience",
+                            "踩上压力板: step",
+                            "注销: logout",
+                            "输入密码: password",
+                            "垂钓: fish",
+                            "剪羊毛: shear",
+                            "附魔: enchant",
+                            "装箱: chestput",
+                            "炼药: potion",
+                            "击杀NPC（Citizens）: npckill",
+                            "与NPC互动（Citizens）: npcInteract",
+                            "击杀神话生物(MythicMobs): mmobkill",
+                            "WorldGuard区域: region",
+                        }
+                    };
+
+                    if (!isPay)
+                    {
+                        CardItems.Add(cardView);
+                        break;
+                    }
+
+                    try
+                    {
+                        var success = await PayPoint(1);
+
+                        ShowMessage(success.Text);
+
+                        if (!success.Succese)
+                        {
+                            break;
+                        }
+
+                        CardItems.Add(cardView);
+                    }
+                    catch
+                    {
+                        ShowMessage("创建卡片失败！");
+                    }
+
+                    break;
+
+                case ThumbClass.Journal:
+
+                    name = string.Empty;
+
+                    if (string.IsNullOrEmpty(configName))
+                    {
+                        name = "Journal_" + GetRandomString(5);
+
+                        while (CardItems.Where(t => t.ConfigName == name).Any())
+                        {
+                            name = "Journal_" + GetRandomString(5);
+                        }
+                    }
+                    else
+                    {
+                        name = configName;
+                    }
+
+                    cardView = new CardViewModel()
+                    {
+                        ConfigName = name,
+                        CvLeft = reCvLeft,
+                        CvTop = reCvTop,
+                        Type = ThumbClass.Journal,
+                        IsProtectName = IsProtectName,
+                        ThumbWidth = 400.00,
+                        ThumbHeight = 148.00,
+                    };
+
+                    if (!isPay)
+                    {
+                        CardItems.Add(cardView);
+                        break;
+                    }
+
+                    try
+                    {
+                        var success = await PayPoint(1);
+
+                        ShowMessage(success.Text);
+
+                        if (!success.Succese)
+                        {
+                            break;
+                        }
+
+                        CardItems.Add(cardView);
+                    }
+                    catch
+                    {
+                        ShowMessage("创建卡片失败！");
+                    }
+
+                    break;
+
+                case ThumbClass.Items:
+
+                    name = string.Empty;
+
+                    if (string.IsNullOrEmpty(configName))
+                    {
+                        name = "Item_" + GetRandomString(5);
+
+                        while (CardItems.Where(t => t.ConfigName == name).Any())
+                        {
+                            name = "Item_" + GetRandomString(5);
+                        }
+                    }
+                    else
+                    {
+                        name = configName;
+                    }
+
+                    cardView = new CardViewModel()
+                    {
+                        ConfigName = name,
+                        CvLeft = reCvLeft,
+                        CvTop = reCvTop,
+                        Type = ThumbClass.Items,
+                        IsProtectName = IsProtectName,
+                        ThumbWidth = 400.00,
+                        ThumbHeight = 148.00,
+                    };
+
+                    if (!isPay)
+                    {
+                        CardItems.Add(cardView);
+                        break;
+                    }
+
+                    try
+                    {
+                        var success = await PayPoint(1);
+
+                        ShowMessage(success.Text);
+
+                        if (!success.Succese)
+                        {
+                            break;
+                        }
+
+                        CardItems.Add(cardView);
+                    }
+                    catch
+                    {
+                        ShowMessage("创建卡片失败！");
+                    }
+
+                    break;
+            }
+
+            return (T)cardView;
+        }
+
+        public ClientWindowViewModel GetClienteViewModel()
+        {
+            return this;
+        }
+
         #endregion
 
     }
@@ -4332,6 +4262,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
     /// </summary>
     public partial class CardViewModel : ObservableObject
     {
+        [ObservableProperty]
+        private ObservableCollection<ShurtcutIdeaBtnViewModel> _ShurtcutIdea = new ObservableCollection<ShurtcutIdeaBtnViewModel>();
+
         [ObservableProperty]
         private Visibility _IsClassify = Visibility.Hidden;
 
@@ -7705,5 +7638,54 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         public CardViewModel LineRight { get; set; }
 
         public CardViewModel LineLeft { get; set; }
+    }
+
+    public partial class ShurtcutIdeaBtnViewModel: ObservableObject
+    {
+        [ObservableProperty]
+        private string _CardName = string.Empty;
+
+        [ObservableProperty]
+        private ThumbClass _ThumbClassName = ThumbClass.Subject;
+
+        [RelayCommand()]
+        private async void CreateIdea()
+        {
+            var getClientVM = ClientWindowViewModel.GetClienteViewModelDel();
+            switch (ThumbClassName)
+            {
+                case ThumbClass.Subject:
+                    await getClientVM.CreateCard<SubjectCardViewModel>(ThumbClassName);
+                    break;
+
+                case ThumbClass.NPC:
+                    await getClientVM.CreateCard<AnyCardViewModel>(ThumbClassName);
+                    break;
+
+                case ThumbClass.Player:
+                    await getClientVM.CreateCard<AnyCardViewModel>(ThumbClassName);
+                    break;
+
+                case ThumbClass.Conditions:
+                    await getClientVM.CreateCard<AnyCardViewModel>(ThumbClassName);
+                    break;
+
+                case ThumbClass.Events:
+                    await getClientVM.CreateCard<AnyCardViewModel>(ThumbClassName);
+                    break;
+
+                case ThumbClass.Objectives:
+                    await getClientVM.CreateCard<AnyCardViewModel>(ThumbClassName);
+                    break;
+
+                case ThumbClass.Journal:
+                    await getClientVM.CreateCard<CardViewModel>(ThumbClassName);
+                    break;
+
+                case ThumbClass.Items:
+                    await getClientVM.CreateCard<CardViewModel>(ThumbClassName);
+                    break;
+            }
+        }
     }
 }

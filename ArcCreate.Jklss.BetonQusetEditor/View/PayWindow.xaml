@@ -33,13 +33,13 @@
         <TextBlock Grid.Row="0" Width="180" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15 10 0 0" FontSize="18" FontWeight="Bold" Foreground="#7F000000">ArcCreate McSpace</TextBlock>
         <TextBlock Grid.Row="0" Height="30" Width="180" HorizontalAlignment="Center" FontSize="25" Margin="0 30 0 0" FontWeight="Bold" TextAlignment="Center" Foreground="#CCFFDC9E">选择一份Gift</TextBlock>
         <ComboBox x:Name="PayImage" materialDesign:TextFieldAssist.UnderlineBrush="#FFE09321" Grid.Row="0" Width="300" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 100 0 0">
-            <ComboBoxItem Content="积分充值  10RMB/1000点"></ComboBoxItem>
-            <ComboBoxItem Content="积分充值  20RMB/2000点"></ComboBoxItem>
-            <ComboBoxItem Content="积分充值  99RMB/11000点"></ComboBoxItem>
-            <ComboBoxItem Content="积分充值  199RMB/30000点"></ComboBoxItem>
-            <ComboBoxItem Content="VIP充值   99RMB/1年 VIP1级 每日赠送26点积分且市场价格9折"></ComboBoxItem>
-            <ComboBoxItem Content="VIP充值   199RMB/1年 VIP2级 每日赠送80点积分且市场价格8折"></ComboBoxItem>
-            <ComboBoxItem Content="VIP充值   299RMB/1年 VIPS级 每日赠送160点积分且市场价格7折"></ComboBoxItem>
+            <ComboBoxItem Content="积分充值  10RMB/1000点,享受私域QA问答5天"></ComboBoxItem>
+            <ComboBoxItem Content="积分充值  20RMB/2000点,享受私域QA问答10天"></ComboBoxItem>
+            <ComboBoxItem Content="积分充值  99RMB/11000点,享受私域QA问答99天"></ComboBoxItem>
+            <ComboBoxItem Content="积分充值  199RMB/30000点,享受私域QA问答199天"></ComboBoxItem>
+            <ComboBoxItem Content="VIP充值   99RMB/1年 VIP1级 每日赠送26点积分且市场价格9折,享受私域QA问答99天"></ComboBoxItem>
+            <ComboBoxItem Content="VIP充值   199RMB/1年 VIP2级 每日赠送80点积分且市场价格8折,享受私域QA问答199天"></ComboBoxItem>
+            <ComboBoxItem Content="VIP充值   299RMB/1年 VIPS级 每日赠送160点积分且市场价格7折,享受私域QA问答299天"></ComboBoxItem>
 
             <binding:Interaction.Triggers>
                 <binding:EventTrigger EventName="SelectionChanged">
@@ -49,7 +49,7 @@
             </binding:Interaction.Triggers>
         </ComboBox>
 
-        <TextBlock Grid.Row="1" Height="15" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 10" Foreground="Red">特别提醒：扫码付款时请备注好您的账号，二维码仅支持支付宝</TextBlock>
-        <Image Source="{Binding ImageFile}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Width="150" Height="150" Margin=" 0 0 0 20 "></Image>
+        <TextBlock Text="{Binding PayMessage}" Grid.Row="1" Height="15" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 10" Foreground="{Binding PayMessageColor}"></TextBlock>
+        <Image x:Name="bitmap_Img" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Width="150" Height="150" Margin=" 0 0 0 20 "></Image>
     </Grid>
 </Window>

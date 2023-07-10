@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -245,6 +246,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ShowTool
         {
             MainWindow window = new MainWindow();
             window.Show();
+
+            mainWindow.Close();
+        }
+
+        [RelayCommand()]
+        private void MyhicMobsOpen()
+        {
+            if (MessageBox.Show("本编辑器已经与MCBOX合作\n点击[是]将为您打开MCBOX\n如果您没有下载MCBOX，将自动为您下载", "提示", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+
+            }
 
             mainWindow.Close();
         }

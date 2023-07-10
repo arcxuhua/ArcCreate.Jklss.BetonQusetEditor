@@ -13,7 +13,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Windows
         {
             InitializeComponent();
 
-            this.DataContext = new PayWindowViewModel();
+            this.DataContext = new PayWindowViewModel(this);
         }
 
         private void Move_MouseMove(object sender, MouseEventArgs e)

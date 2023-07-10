@@ -220,10 +220,12 @@ namespace ArcCreate.Jklss.Services
                                         }
                                         catch
                                         {
-                                            getMessageModels.Ip = socket.RemoteEndPoint.ToString();
-
-                                            GetMessage(getMessageModels, getMessageModels.Token);
+                                            
                                         }
+
+                                        getMessageModels.Ip = socket.RemoteEndPoint.ToString();
+
+                                        GetMessage(getMessageModels, getMessageModels.Token);
                                     }
                                     catch
                                     {

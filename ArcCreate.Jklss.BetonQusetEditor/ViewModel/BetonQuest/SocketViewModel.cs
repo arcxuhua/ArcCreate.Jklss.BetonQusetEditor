@@ -22,7 +22,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest
 
         public static ScoketService socketService = new ScoketService();
 
-        public static string version = "4.0.2.3";
+        public static string version = "4.0.2.5";
 
         /// <summary>
         /// 开启Socket通讯
@@ -240,7 +240,6 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest
             }
         }
 
-
         /// <summary>
         /// 向客户端发送消息（不加密）仅心跳包使用
         /// </summary>
@@ -275,6 +274,22 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest
 
             var data = Encoding.UTF8.GetBytes(message);
 
+            if (SocketModel.waitBackDic.ContainsKey(messageClass))
+            {
+                while(!SocketModel.waitBackDic[messageClass].TryAdd(id, string.Empty))
+                {
+                    id++;
+                }
+
+            }
+            else
+            {
+                SocketModel.waitBackDic.Add(messageClass, new Dictionary<int, string>
+                {
+                    {id,string.Empty }
+                });
+            }
+
             var sendModel = new MessageMode()
             {
                 Key = id,
@@ -303,19 +318,6 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest
 
             if (waitBack)
             {
-                if (SocketModel.waitBackDic.ContainsKey(messageClass))
-                {
-                    SocketModel.waitBackDic[messageClass].Add(id, string.Empty);
-                }
-                else
-                {
-                    SocketModel.waitBackDic.Add(messageClass, new Dictionary<int, string>
-                {
-                    {id,string.Empty }
-                });
-                }
-
-
                 var value = await WaitBack(messageClass, id);
 
                 id++;

@@ -99,10 +99,17 @@
 
         <Grid Grid.Row="2" Grid.Column="0" x:Name="Grid_Two" Visibility="Hidden">
             <Border Background="#FFAFAFAF" BorderBrush="#FF797979" BorderThickness="2,2,2,2">
-                <Button Width="50" Height="50" BorderBrush="{x:Null}" ToolTip="myhicMobs怪物插件编辑器【正在编写，请等待开放】">
+                <Button Width="50" Height="50" BorderBrush="{x:Null}" ToolTip="myhicMobs怪物插件编辑器【MC百宝箱友链】">
                     <Button.Background>
                         <ImageBrush ImageSource="/img/app/2.jpg"/>
                     </Button.Background>
+
+                    <binding:Interaction.Triggers>
+                        <binding:EventTrigger EventName="Click">
+                            <binding:InvokeCommandAction Command="{Binding Path= MyhicMobsOpenCommand}">
+                            </binding:InvokeCommandAction>
+                        </binding:EventTrigger>
+                    </binding:Interaction.Triggers>
                 </Button>
             </Border>
         </Grid>

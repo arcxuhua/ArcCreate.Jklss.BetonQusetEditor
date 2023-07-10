@@ -71,6 +71,10 @@
                     VerticalAlignment="Center" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignPaperSecondaryButton}"
                     Command="{Binding UpDateDataToMarketCommand}" CommandParameter="{Binding ., RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                     Content="上传至市场" Foreground="White" Background="{x:Null}" BorderBrush="White" FontSize="12" Cursor="Hand"/>
+                <Button Width="130" Height="30" materialDesign:ButtonAssist.CornerRadius="0" Margin="260,0,0,0"
+                    VerticalAlignment="Center" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignPaperSecondaryButton}"
+                    Command="{Binding PointBuyCommand}" CommandParameter="{Binding ., RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                    Content="积分充值" Foreground="White" Background="{x:Null}" BorderBrush="White" FontSize="12" Cursor="Hand"/>
             </Grid>
             <Grid Grid.Column="0" Grid.Row="2" Background="#7F000000">
                 <ScrollViewer>
@@ -310,6 +314,24 @@
                                                                                         </Grid>
                                                                                         <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
                                                                                     </StackPanel>
+                                                                                    <Grid Grid.Row="1">
+                                                                                        <materialDesign:PopupBox StaysOpen="True" >
+                                                                                            <StackPanel>
+                                                                                                <ItemsControl ItemsSource="{Binding Path=ShurtcutIdea}">
+                                                                                                    <ItemsControl.ItemTemplate>
+                                                                                                        <DataTemplate>
+                                                                                                            <Button x:Name="btn_ctrl" Content="{Binding Path=CardName}" Command="{Binding Path=CreateIdeaCommand}" Tag="{Binding Path=ThumbClassName}">
+                                                                                                                <Button.ToolTip>
+                                                                                                                    点击此按钮可生成能于其归类的卡片
+                                                                                                                </Button.ToolTip>
+                                                                                                            </Button>
+                                                                                                        </DataTemplate>
+                                                                                                    </ItemsControl.ItemTemplate>
+                                                                                                </ItemsControl>
+                                                                                            </StackPanel>
+                                                                                        </materialDesign:PopupBox>
+                                                                                    </Grid>
+                                                                                    
                                                                                 </Grid>
                                                                             </materialDesign:Flipper.FrontContent>
                                                                             <materialDesign:Flipper.BackContent>
@@ -383,6 +405,23 @@
 
                                                                                         </Button>
                                                                                     </StackPanel>
+                                                                                    <Grid Grid.Row="1">
+                                                                                        <materialDesign:PopupBox StaysOpen="True" >
+                                                                                            <StackPanel>
+                                                                                                <ItemsControl ItemsSource="{Binding Path=ShurtcutIdea}">
+                                                                                                    <ItemsControl.ItemTemplate>
+                                                                                                        <DataTemplate>
+                                                                                                            <Button x:Name="btn_ctrl" Content="{Binding Path=CardName}" Command="{Binding Path=CreateIdeaCommand}" Tag="{Binding Path=ThumbClassName}">
+                                                                                                                <Button.ToolTip>
+                                                                                                                    点击此按钮可生成能于其归类的卡片
+                                                                                                                </Button.ToolTip>
+                                                                                                            </Button>
+                                                                                                        </DataTemplate>
+                                                                                                    </ItemsControl.ItemTemplate>
+                                                                                                </ItemsControl>
+                                                                                            </StackPanel>
+                                                                                        </materialDesign:PopupBox>
+                                                                                    </Grid>
                                                                                 </Grid>
                                                                             </materialDesign:Flipper.FrontContent>
                                                                             <materialDesign:Flipper.BackContent>
@@ -563,6 +602,24 @@
                                                                                         </Grid>
                                                                                         <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
                                                                                     </StackPanel>
+
+                                                                                    <Grid Grid.Row="1">
+                                                                                        <materialDesign:PopupBox StaysOpen="True" >
+                                                                                            <StackPanel>
+                                                                                                <ItemsControl ItemsSource="{Binding Path=ShurtcutIdea}">
+                                                                                                    <ItemsControl.ItemTemplate>
+                                                                                                        <DataTemplate>
+                                                                                                            <Button x:Name="btn_ctrl" Content="{Binding Path=CardName}" Command="{Binding Path=CreateIdeaCommand}" Tag="{Binding Path=ThumbClassName}">
+                                                                                                                <Button.ToolTip>
+                                                                                                                    点击此按钮可生成能于其归类的卡片
+                                                                                                                </Button.ToolTip>
+                                                                                                            </Button>
+                                                                                                        </DataTemplate>
+                                                                                                    </ItemsControl.ItemTemplate>
+                                                                                                </ItemsControl>
+                                                                                            </StackPanel>
+                                                                                        </materialDesign:PopupBox>
+                                                                                    </Grid>
                                                                                 </Grid>
                                                                             </materialDesign:Flipper.FrontContent>
                                                                             <materialDesign:Flipper.BackContent>
@@ -753,6 +810,24 @@
                                                                                         </Grid>
                                                                                         <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
                                                                                     </StackPanel>
+
+                                                                                    <Grid Grid.Row="1">
+                                                                                        <materialDesign:PopupBox StaysOpen="True" >
+                                                                                            <StackPanel>
+                                                                                                <ItemsControl ItemsSource="{Binding Path=ShurtcutIdea}">
+                                                                                                    <ItemsControl.ItemTemplate>
+                                                                                                        <DataTemplate>
+                                                                                                            <Button x:Name="btn_ctrl" Content="{Binding Path=CardName}" Command="{Binding Path=CreateIdeaCommand}" Tag="{Binding Path=ThumbClassName}">
+                                                                                                                <Button.ToolTip>
+                                                                                                                    点击此按钮可生成能于其归类的卡片
+                                                                                                                </Button.ToolTip>
+                                                                                                            </Button>
+                                                                                                        </DataTemplate>
+                                                                                                    </ItemsControl.ItemTemplate>
+                                                                                                </ItemsControl>
+                                                                                            </StackPanel>
+                                                                                        </materialDesign:PopupBox>
+                                                                                    </Grid>
                                                                                 </Grid>
                                                                             </materialDesign:Flipper.FrontContent>
                                                                             <materialDesign:Flipper.BackContent>
@@ -918,6 +993,24 @@
                                                                                         </Grid>
                                                                                         <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
                                                                                     </StackPanel>
+
+                                                                                    <Grid Grid.Row="1">
+                                                                                        <materialDesign:PopupBox StaysOpen="True" >
+                                                                                            <StackPanel>
+                                                                                                <ItemsControl ItemsSource="{Binding Path=ShurtcutIdea}">
+                                                                                                    <ItemsControl.ItemTemplate>
+                                                                                                        <DataTemplate>
+                                                                                                            <Button x:Name="btn_ctrl" Content="{Binding Path=CardName}" Command="{Binding Path=CreateIdeaCommand}" Tag="{Binding Path=ThumbClassName}">
+                                                                                                                <Button.ToolTip>
+                                                                                                                    点击此按钮可生成能于其归类的卡片
+                                                                                                                </Button.ToolTip>
+                                                                                                            </Button>
+                                                                                                        </DataTemplate>
+                                                                                                    </ItemsControl.ItemTemplate>
+                                                                                                </ItemsControl>
+                                                                                            </StackPanel>
+                                                                                        </materialDesign:PopupBox>
+                                                                                    </Grid>
                                                                                 </Grid>
                                                                             </materialDesign:Flipper.FrontContent>
                                                                             <materialDesign:Flipper.BackContent>
@@ -1082,6 +1175,24 @@
                                                                                         </Grid>
                                                                                         <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
                                                                                     </StackPanel>
+
+                                                                                    <Grid Grid.Row="1">
+                                                                                        <materialDesign:PopupBox StaysOpen="True" >
+                                                                                            <StackPanel>
+                                                                                                <ItemsControl ItemsSource="{Binding Path=ShurtcutIdea}">
+                                                                                                    <ItemsControl.ItemTemplate>
+                                                                                                        <DataTemplate>
+                                                                                                            <Button x:Name="btn_ctrl" Content="{Binding Path=CardName}" Command="{Binding Path=CreateIdeaCommand}" Tag="{Binding Path=ThumbClassName}">
+                                                                                                                <Button.ToolTip>
+                                                                                                                    点击此按钮可生成能于其归类的卡片
+                                                                                                                </Button.ToolTip>
+                                                                                                            </Button>
+                                                                                                        </DataTemplate>
+                                                                                                    </ItemsControl.ItemTemplate>
+                                                                                                </ItemsControl>
+                                                                                            </StackPanel>
+                                                                                        </materialDesign:PopupBox>
+                                                                                    </Grid>
                                                                                 </Grid>
                                                                             </materialDesign:Flipper.FrontContent>
                                                                             <materialDesign:Flipper.BackContent>
