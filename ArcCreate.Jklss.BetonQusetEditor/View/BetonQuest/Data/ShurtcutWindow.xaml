@@ -3,9 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ArcCreate.Jklss.BetonQusetEditor.View.BetonQuest.Data"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:binding="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local="clr-namespace:ArcCreate.Jklss.BetonQusetEditor.View.BetonQuest.Data" xmlns:data="clr-namespace:ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest.Data" d:DataContext="{d:DesignInstance Type=data:ShurtcutWindowViewModel}"
         mc:Ignorable="d"
-        Title="快捷创建" Height="530" Width="830" WindowStyle="None" AllowsTransparency="True" Foreground="{x:Null}" Background="{x:Null}" WindowStartupLocation="CenterScreen">
+        Title="快捷创建" Height="530" Width="830" WindowStyle="None" AllowsTransparency="True" Foreground="{x:Null}" Background="{x:Null}" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -18,6 +20,82 @@
         <Grid Background="#FF4C4C4C" Grid.ColumnSpan="2">
             <Image Source="/ArcCreate.png" HorizontalAlignment="Left" Width="20" Height="20" Margin="20 0 0 0"></Image>
             <TextBlock Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="12">快捷编辑页</TextBlock>
+            <Button Command="{Binding CloseCommand}" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryDarkButton}" ToolTip="关闭" Width="35" Height="25" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#DDFFFFFF" Cursor="Hand">
+                <materialDesign:PackIcon Kind="WindowClose" Height="20" Width="20" Foreground="#DDFFFFFF" />
+            </Button>
+        </Grid>
+
+        <Grid Background="#FF757575" Grid.ColumnSpan="1" Grid.Row="1">
+
+            <ScrollViewer>
+                <StackPanel CanVerticallyScroll="True">
+                    <ItemsControl ItemsSource="{Binding Items,Mode=TwoWay}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <ItemsControl x:Name="ctrl"></ItemsControl>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding Path=Type}" Value="NPC">
+                                        <Setter Property="ItemsControl.Template" TargetName="ctrl">
+                                            <Setter.Value>
+                                                <ControlTemplate>
+                                                    <StackPanel Margin="5" Background="#FF929292" Orientation="Vertical">
+                                                        <TextBlock Foreground="#FF4A4A4A" Margin="5" FontWeight="Bold">NPC对话</TextBlock>
+
+                                                        <TextBox Margin="5" FontSize="11" Text="{Binding RichText}" Foreground="Black" Block.LineHeight="2" materialDesign:HintAssist.Hint="文案编辑框" Style="{StaticResource MaterialDesignOutlinedTextBox}"  Height="70" Background="#7F757575" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" SelectionBrush="Black">
+
+                                                        </TextBox>
+
+                                                        <Button Margin="10" Height="20" FontSize="10" Background="{x:Null}" BorderBrush="White" Command="{Binding Path=EditerCommand}">删除</Button>
+                                                    </StackPanel>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding Path=Type}" Value="Player">
+                                        <Setter Property="ItemsControl.Template" TargetName="ctrl">
+                                            <Setter.Value>
+                                                <ControlTemplate>
+                                                    <StackPanel Margin="5" Background="#FF929292" Orientation="Vertical">
+                                                        <TextBlock Foreground="#FF4A4A4A" Margin="5" FontWeight="Bold">玩家对话</TextBlock>
+
+                                                        <TextBox Margin="5" FontSize="11" Text="{Binding RichText}" Foreground="Black" Block.LineHeight="2" materialDesign:HintAssist.Hint="文案编辑框" Style="{StaticResource MaterialDesignOutlinedTextBox}"  Height="70" Background="#7F757575" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" SelectionBrush="Black">
+
+                                                        </TextBox>
+
+                                                        <Button Margin="10" Height="20" FontSize="10" Background="{x:Null}" BorderBrush="White" Command="{Binding Path=EditerCommand}">删除</Button>
+                                                    </StackPanel>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+
+        <Grid Grid.Column="2" Grid.Row="1" Background="#FFC1C1C1">
+            <StackPanel Margin="10" TextBlock.Foreground="White" TextBlock.FontWeight="Bold" TextBlock.FontSize="15">
+
+                <TextBox FontSize="14" Text="{Binding RichText}" Foreground="Black" Block.LineHeight="2" materialDesign:HintAssist.Hint="文案编辑框" Style="{StaticResource MaterialDesignOutlinedTextBox}"  Height="370" Background="#7FFFFFFF" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" AcceptsTab="True" CaretBrush="Black" SelectionBrush="White" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                    
+                </TextBox>
+
+                <Button Margin="5" Command="{Binding AddTextCommand}" Background="{x:Null}" BorderBrush="Black">添加一条文案</Button>
+                <StackPanel Margin="0 5" Orientation="Horizontal">
+
+                    <CheckBox IsChecked="{Binding IsUseOnlyOne}" Content="是否启用单次对话"></CheckBox>
+
+                    <TextBlock Margin="200 0" Foreground="Red" Text="{Binding NeedPay}"></TextBlock>
+                    
+                </StackPanel>
+
+                <Button Margin="5" Command="{Binding CreateCommand}" IsEnabled="{Binding CanCreate}" BorderBrush="Black" Background="{x:Null}">生成对话链</Button>
+                
+            </StackPanel>
         </Grid>
     </Grid>
 </Window>

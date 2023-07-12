@@ -75,6 +75,10 @@
                     VerticalAlignment="Center" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignPaperSecondaryButton}"
                     Command="{Binding PointBuyCommand}" CommandParameter="{Binding ., RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                     Content="积分充值" Foreground="White" Background="{x:Null}" BorderBrush="White" FontSize="12" Cursor="Hand"/>
+                <Button Width="130" Height="30" materialDesign:ButtonAssist.CornerRadius="0" Margin="390,0,0,0"
+                    VerticalAlignment="Center" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignPaperSecondaryButton}"
+                    Command="{Binding ShurtcutCreateCommand}" CommandParameter="{Binding ., RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                    Content="快捷创建" Foreground="White" Background="{x:Null}" BorderBrush="White" FontSize="12" Cursor="Hand"/>
             </Grid>
             <Grid Grid.Column="0" Grid.Row="2" Background="#7F000000">
                 <ScrollViewer>
@@ -315,7 +319,7 @@
                                                                                         <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
                                                                                     </StackPanel>
                                                                                     <Grid Grid.Row="1">
-                                                                                        <materialDesign:PopupBox StaysOpen="True" >
+                                                                                        <materialDesign:PopupBox >
                                                                                             <StackPanel>
                                                                                                 <ItemsControl ItemsSource="{Binding Path=ShurtcutIdea}">
                                                                                                     <ItemsControl.ItemTemplate>
@@ -406,7 +410,7 @@
                                                                                         </Button>
                                                                                     </StackPanel>
                                                                                     <Grid Grid.Row="1">
-                                                                                        <materialDesign:PopupBox StaysOpen="True" >
+                                                                                        <materialDesign:PopupBox>
                                                                                             <StackPanel>
                                                                                                 <ItemsControl ItemsSource="{Binding Path=ShurtcutIdea}">
                                                                                                     <ItemsControl.ItemTemplate>
@@ -604,7 +608,7 @@
                                                                                     </StackPanel>
 
                                                                                     <Grid Grid.Row="1">
-                                                                                        <materialDesign:PopupBox StaysOpen="True" >
+                                                                                        <materialDesign:PopupBox>
                                                                                             <StackPanel>
                                                                                                 <ItemsControl ItemsSource="{Binding Path=ShurtcutIdea}">
                                                                                                     <ItemsControl.ItemTemplate>
@@ -812,7 +816,7 @@
                                                                                     </StackPanel>
 
                                                                                     <Grid Grid.Row="1">
-                                                                                        <materialDesign:PopupBox StaysOpen="True" >
+                                                                                        <materialDesign:PopupBox>
                                                                                             <StackPanel>
                                                                                                 <ItemsControl ItemsSource="{Binding Path=ShurtcutIdea}">
                                                                                                     <ItemsControl.ItemTemplate>
@@ -995,7 +999,7 @@
                                                                                     </StackPanel>
 
                                                                                     <Grid Grid.Row="1">
-                                                                                        <materialDesign:PopupBox StaysOpen="True" >
+                                                                                        <materialDesign:PopupBox>
                                                                                             <StackPanel>
                                                                                                 <ItemsControl ItemsSource="{Binding Path=ShurtcutIdea}">
                                                                                                     <ItemsControl.ItemTemplate>
@@ -1177,7 +1181,7 @@
                                                                                     </StackPanel>
 
                                                                                     <Grid Grid.Row="1">
-                                                                                        <materialDesign:PopupBox StaysOpen="True" >
+                                                                                        <materialDesign:PopupBox>
                                                                                             <StackPanel>
                                                                                                 <ItemsControl ItemsSource="{Binding Path=ShurtcutIdea}">
                                                                                                     <ItemsControl.ItemTemplate>

@@ -18,5 +18,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor
         {
 
         }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+            DispatcherUnhandledException += App_DispatcherUnhandledException;
+        }
+
+        private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            MessageBox.Show("报错啦！请将报错截图发送给苦逼程序员！\n"+e.Exception.ToString(), "异常");
+            e.Handled = true;
+        }
     }
 }

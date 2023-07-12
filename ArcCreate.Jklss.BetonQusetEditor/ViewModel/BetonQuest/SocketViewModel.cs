@@ -22,7 +22,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest
 
         public static ScoketService socketService = new ScoketService();
 
-        public static string version = "4.0.2.5";
+        public static string version = "4.0.3.1";
 
         /// <summary>
         /// 开启Socket通讯
@@ -321,9 +321,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest
                 var value = await WaitBack(messageClass, id);
 
                 id++;
-
-                result.SetSuccese("", value);
-                return result;
+                return value;
 
             }
 
@@ -332,22 +330,37 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest
             return result;
         }
 
-        private static async Task<string> WaitBack(MessageClass messageClass, int id)
+        private static async Task<ReturnModel> WaitBack(MessageClass messageClass, int id)
         {
+            var result = new ReturnModel();
 
             await Task.Run(() =>
             {
-                while (true)
+                var waitTimes = 0;
+
+                while (waitTimes<5)
                 {
-                    Thread.Sleep(50);//延迟50毫秒
+                    Thread.Sleep(200);//延迟50毫秒
                     if (!string.IsNullOrEmpty(SocketModel.waitBackDic[messageClass][id]))
                     {
                         break;
                     }
+
+                    waitTimes++;
                 }
             });
 
-            return SocketModel.waitBackDic[messageClass][id];
+            if (!string.IsNullOrEmpty(SocketModel.waitBackDic[messageClass][id]))
+            {
+                result.SetSuccese("ok", SocketModel.waitBackDic[messageClass][id]);
+            }
+            else
+            {
+                result.SetError("请求超时！请尝试重新发送请求");
+            }
+
+
+            return result;
         }
     }
 }

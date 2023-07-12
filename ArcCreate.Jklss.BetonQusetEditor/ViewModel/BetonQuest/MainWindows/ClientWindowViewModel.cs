@@ -1,6 +1,7 @@
 ﻿using ArcCreate.Jklss.BetonQusetEditor.Base;
 using ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase;
 using ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader;
+using ArcCreate.Jklss.BetonQusetEditor.View.BetonQuest.Data;
 using ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest;
 using ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest.Data;
 using ArcCreate.Jklss.BetonQusetEditor.ViewModel.Data;
@@ -20,7 +21,9 @@ using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,6 +34,7 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using static ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows.ClientWindowViewModel;
+using Application = System.Windows.Application;
 using Button = System.Windows.Controls.Button;
 using ComboBox = System.Windows.Controls.ComboBox;
 using HelpToolModel = ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase.HelpToolModel;
@@ -258,6 +262,321 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         #endregion
 
         #region 操作层方法
+
+        [RelayCommand()]
+        private async Task ShurtcutCreate(Window window)
+        {
+            
+
+            ShurtcutWindow shurtcutWindow = new ShurtcutWindow();
+
+            var viewModel = new ShurtcutWindowViewModel(shurtcutWindow);
+
+            shurtcutWindow.DataContext = viewModel;
+
+            shurtcutWindow.ShowDialog();
+
+            if (shurtcutWindow.Tag == null)
+            {
+                return;
+            }
+
+            var getBack = shurtcutWindow.Tag as ObservableCollection<EditerViewModel>;
+
+            window.Dispatcher.Invoke(new Action(() =>
+            {
+                window.IsEnabled = false;
+            }));
+
+            LoadingShow = Visibility.Visible;
+
+            LoadingMessage = "正在生成~";
+
+            var num = 0;
+
+            AnyCardViewModel getFirstModel = null;
+
+            AnyCardViewModel getLestModel = null;
+
+            AnyCardViewModel getNowModel = null;
+
+            foreach (var item in getBack)
+            {
+                AnyCardViewModel getModel = null;
+
+                if(item.Type == EditerEnum.NPC)
+                {
+                    getModel = await CreateCard<AnyCardViewModel>(ThumbClass.NPC, pyTop: num * 200);
+
+                    if (num == 0)
+                    {
+                        getFirstModel = getModel;//获取第一个NPC
+                    }
+                    else
+                    {
+                        var classoverBack = await getNowModel.CardCanBeClassify(getNowModel, getModel);
+
+                        if (!classoverBack.Succese)
+                        {
+                            continue;
+                        }
+
+                        var newLine = new LineCardViewModel()
+                        {
+                            LineLeft = getNowModel,
+                            LineRight = getModel,
+                        };
+
+                        CardItems.Add(newLine);
+
+                        ChangeTheLine(newLine);
+
+                        if (!getNowModel.Right.Contains(getModel))
+                        {
+                            getNowModel.Right.Add(getModel);
+                        }
+
+                        if (!getModel.Left.Contains(getNowModel))
+                        {
+                            getModel.Left.Add(getNowModel);
+                        }
+
+                        var getSaveValue = ConversationCardChanged.saveAllValue[getNowModel];
+
+                        if (getSaveValue["存储对话: pointer"]["pointer"]["第 1 条参数"].ContainsKey("第 1 项"))
+                        {
+                            getSaveValue["存储对话: pointer"]["pointer"]["第 1 条参数"]["第 1 项"] = getModel.ConfigName;
+                        }
+                        else
+                        {
+                            getSaveValue["存储对话: pointer"]["pointer"]["第 1 条参数"].Add("第 1 项",getModel.ConfigName);
+                        }
+                    }
+                }
+                else
+                {
+                    getModel = await CreateCard<AnyCardViewModel>(ThumbClass.Player, pyTop: num * 200);
+
+                    if(num == getBack.Count-1)
+                    {
+                        getLestModel = getModel;//获取最后一个Player
+                    }
+                    var classoverBack = await getNowModel.CardCanBeClassify(getNowModel, getModel);
+
+                    if (!classoverBack.Succese)
+                    {
+                        continue;
+                    }
+
+                    var newLine = new LineCardViewModel()
+                    {
+                        LineLeft = getNowModel,
+                        LineRight = getModel,
+                    };
+
+                    CardItems.Add(newLine);
+
+                    ChangeTheLine(newLine);
+
+                    if (!getNowModel.Right.Contains(getModel))
+                    {
+                        getNowModel.Right.Add(getModel);
+                    }
+
+                    if (!getModel.Left.Contains(getNowModel))
+                    {
+                        getModel.Left.Add(getNowModel);
+                    }
+
+                    var getSaveValue = ConversationCardChanged.saveAllValue[getNowModel];
+
+                    if (getSaveValue["存储对话: pointer"]["pointer"]["第 1 条参数"].ContainsKey("第 1 项"))
+                    {
+                        getSaveValue["存储对话: pointer"]["pointer"]["第 1 条参数"]["第 1 项"] = getModel.ConfigName;
+                    }
+                    else
+                    {
+                        getSaveValue["存储对话: pointer"]["pointer"]["第 1 条参数"].Add("第 1 项", getModel.ConfigName);
+                    }
+                }
+
+                var getSaveInfo = ConversationCardChanged.saveAllValue[getModel];
+
+                var getfgText = item.RichText.Split("\r\n");
+
+                for (int i = 0; i < getfgText.Length; i++)
+                {
+                    if(getSaveInfo["文案: text"]["text"]["第 1 条参数"].ContainsKey($"第 {i+1} 项"))
+                    {
+                        getSaveInfo["文案: text"]["text"]["第 1 条参数"][$"第 {i + 1} 项"] = getfgText[i];
+                    }
+                    else
+                    {
+                        getSaveInfo["文案: text"]["text"]["第 1 条参数"].Add($"第 {i + 1} 项", getfgText[i]);
+                    }
+                }
+
+                getNowModel = getModel;
+                await Task.Delay(1000);
+                num++;
+            }
+
+            if (viewModel.IsUseOnlyOne)
+            {
+                var createConditionCard = await CreateCard<AnyCardViewModel>(ThumbClass.Conditions, pyLeft: 600, pyTop: (num * 200)/3);
+
+                createConditionCard.SelectType = "标签: tag";
+
+                await createConditionCard.conditionsCardChanged.TypeChanged();
+
+                var createEventCard = await CreateCard<AnyCardViewModel>(ThumbClass.Events, pyLeft: 600, pyTop: ((num * 200) / 3)*2);
+
+                createEventCard.SelectType = "标签: tag";
+
+                await createEventCard.eventCardChanged.TypeChanged();
+
+
+                {
+                    var classoverBack = await getFirstModel.CardCanBeClassify(getFirstModel, createConditionCard);
+
+                    if (!classoverBack.Succese)
+                    {
+                        return;
+                    }
+
+                    var newLine = new LineCardViewModel()
+                    {
+                        LineLeft = getFirstModel,
+                        LineRight = createConditionCard,
+                    };
+
+                    CardItems.Add(newLine);
+
+                    ChangeTheLine(newLine);
+
+                    if (!getFirstModel.Right.Contains(createConditionCard))
+                    {
+                        getFirstModel.Right.Add(createConditionCard);
+                    }
+
+                    if (!createConditionCard.Left.Contains(getFirstModel))
+                    {
+                        createConditionCard.Left.Add(getFirstModel);
+                    }
+
+                    var getSaveValue = ConversationCardChanged.saveAllValue[getFirstModel];
+
+                    if (getSaveValue["触发条件: conditions"]["conditions"]["第 1 条参数"].ContainsKey("第 1 项"))
+                    {
+                        getSaveValue["触发条件: conditions"]["conditions"]["第 1 条参数"]["第 1 项"] = "!" + createConditionCard.ConfigName;
+                    }
+                    else
+                    {
+                        getSaveValue["触发条件: conditions"]["conditions"]["第 1 条参数"].Add("第 1 项", "!" + createConditionCard.ConfigName);
+                    }
+                }
+
+                {
+                    var classoverBack = await getFirstModel.CardCanBeClassify(getLestModel, createEventCard);
+
+                    if (!classoverBack.Succese)
+                    {
+                        return;
+                    }
+
+                    var newLine = new LineCardViewModel()
+                    {
+                        LineLeft = getLestModel,
+                        LineRight = createEventCard,
+                    };
+
+                    CardItems.Add(newLine);
+
+                    ChangeTheLine(newLine);
+
+                    if (!getLestModel.Right.Contains(createEventCard))
+                    {
+                        getLestModel.Right.Add(createEventCard);
+                    }
+
+                    if (!createEventCard.Left.Contains(getLestModel))
+                    {
+                        createEventCard.Left.Add(getLestModel);
+                    }
+
+                    var getSaveValue = ConversationCardChanged.saveAllValue[getLestModel];
+
+                    if (getSaveValue["触发事件: events"]["events"]["第 1 条参数"].ContainsKey("第 1 项"))
+                    {
+                        getSaveValue["触发事件: events"]["events"]["第 1 条参数"]["第 1 项"] = createEventCard.ConfigName;
+                    }
+                    else
+                    {
+                        getSaveValue["触发事件: events"]["events"]["第 1 条参数"].Add("第 1 项", createEventCard.ConfigName);
+                    }
+                }
+
+                {
+                    var classoverBack = await createEventCard.CardCanBeClassify(createEventCard, createConditionCard);
+
+                    if (!classoverBack.Succese)
+                    {
+                        return;
+                    }
+
+                    var newLine = new LineCardViewModel()
+                    {
+                        LineLeft = createEventCard,
+                        LineRight = createConditionCard,
+                    };
+
+                    CardItems.Add(newLine);
+
+                    ChangeTheLine(newLine);
+
+                    if (!createEventCard.Right.Contains(createConditionCard))
+                    {
+                        createEventCard.Right.Add(createConditionCard);
+                    }
+
+                    if (!createConditionCard.Left.Contains(createEventCard))
+                    {
+                        createConditionCard.Left.Add(createEventCard);
+                    }
+
+                    var getSaveValue = EventCardChanged.saveAllValue[createEventCard];
+
+                    if (getSaveValue["标签: tag"]["tag"]["第 2 条参数"].ContainsKey("第 1 项"))
+                    {
+                        getSaveValue["标签: tag"]["tag"]["第 2 条参数"]["第 1 项"] = createConditionCard.ConfigName;
+                    }
+                    else
+                    {
+                        getSaveValue["标签: tag"]["tag"]["第 2 条参数"].Add("第 1 项", createConditionCard.ConfigName);
+                    }
+
+                    if (getSaveValue["标签: tag"]["tag"]["第 1 条参数"].ContainsKey("第 1 项"))
+                    {
+                        getSaveValue["标签: tag"]["tag"]["第 1 条参数"]["第 1 项"] = "add";
+                    }
+                    else
+                    {
+                        getSaveValue["标签: tag"]["tag"]["第 1 条参数"].Add("第 1 项", "add");
+                    }
+                }
+            }
+
+            LoadingMessage = "生成成功~";
+
+            await Task.Delay(2000);
+
+            LoadingShow = Visibility.Hidden;
+
+            window.Dispatcher.Invoke(new Action(() =>
+            {
+                window.IsEnabled = true;
+            }));
+        }
 
         [RelayCommand()]
         private void ProtectNameClick(System.Windows.Controls.CheckBox checkBox)
@@ -801,6 +1120,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
             isCanMove = !isCanMove;
             cvmenu.MouseMove -= Canvas_MouseMove;
 
+            e.Handled = true;
+
         }
 
         private List<Point> GetCardPoint(CardViewModel nowCard)
@@ -829,7 +1150,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 bordCardViewModel.Bord_Visibility = Visibility.Visible;
                 cvmenu.MouseMove += Canvas_MouseMove;
             }
-
+            e.Handled = true;
         }
 
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
@@ -842,6 +1163,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 //绘制跟随鼠标移动的方框
                 DrawMultiselectBorder(tempEndPoint, tempStartPoint);
             }
+            e.Handled = true;
         }
 
         /// <summary>
@@ -3440,6 +3762,12 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
             }
         }
 
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
+        private static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
+
         /// <summary>
         /// 删除卡片
         /// </summary>
@@ -3447,6 +3775,24 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         /// <param name="e"></param>
         private void ActBase_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
         {
+            IntPtr mainWindowHandle = Process.GetCurrentProcess().MainWindowHandle;
+
+            // 获取当前处于前台的窗口句柄
+            IntPtr foregroundWindowHandle = GetForegroundWindow();
+
+            // 获取前台窗口所属的进程ID
+            GetWindowThreadProcessId(foregroundWindowHandle, out int foregroundProcessId);
+
+            // 获取当前进程的ID
+            int currentProcessId = Process.GetCurrentProcess().Id;
+
+            // 判断应用程序是否置于其他软件的顶层
+            if (!(foregroundWindowHandle == mainWindowHandle && foregroundProcessId == currentProcessId))
+            {
+                return;
+            }
+
+
             if (e.KeyCode == Keys.Delete)//键盘的Enter，子自行设定。
             {
                 if (window == null )
@@ -3462,11 +3808,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 if (System.Windows.MessageBox.Show("你确定将其删除，这将是不可逆的操作？", "删除", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
                 {
                     ShowMessage("取消了删除~");
+
+                    return;
                 }
 
                 if (!CardItems.Contains(selectCardInfo))
                 {
                     ShowMessage("不存在该卡片！");
+
+                    return;
                 }
 
                 var getLeftHave = CardItems.Where(t => t.Left.Contains(selectCardInfo)).ToList();
@@ -3624,7 +3974,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         /// <param name="cvTop">Y轴坐标</param>
         /// <returns></returns>
         public async Task<T> CreateCard<T>(ThumbClass thumbClass,bool isPay = true,string configName = ""
-            ,double cvLeft= 0.00,double cvTop = 0.00) where T:CardViewModel
+            ,double cvLeft= 0.00,double cvTop = 0.00,double pyLeft = 0.00,double pyTop = 0.00) where T:CardViewModel
         {
             CardViewModel cardView = null;
 
@@ -3638,23 +3988,24 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
             if (cvLeft == 0.00)
             {
-                reCvLeft = this.window.outsaid.ActualWidth / 2 - 400 / 2 - this.TranslateXProp;
+                reCvLeft = this.window.outsaid.ActualWidth / 2 - 400 / 2 - this.TranslateXProp + pyLeft;
             }
             else
             {
-                reCvLeft = cvLeft;
+                reCvLeft = cvLeft + pyLeft;
             }
 
             if(cvTop == 0.00)
             {
-                reCvTop = this.window.outsaid.ActualHeight / 2 - 148 / 2 - this.TranslateYProp;
+                reCvTop = this.window.outsaid.ActualHeight / 2 - 148 / 2 - this.TranslateYProp + pyTop;
             }
             else
             {
-                reCvTop = cvTop;
+                reCvTop = cvTop + pyTop;
             }
 
             #endregion
+
             switch (thumbClass)
             {
                 case ThumbClass.Subject:
@@ -7686,6 +8037,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                     await getClientVM.CreateCard<CardViewModel>(ThumbClassName);
                     break;
             }
+
         }
     }
 }

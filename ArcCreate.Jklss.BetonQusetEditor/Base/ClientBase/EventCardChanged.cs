@@ -166,95 +166,97 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
 
             cardInfo.ShurtcutIdea.Clear();
 
-            foreach (var item in getModel.NeedTpye)
+            if (getModel.NeedTpye != null)
             {
-                foreach (var i in item.Value)
+                foreach (var item in getModel.NeedTpye)
                 {
-                    switch (i.Value)
+                    foreach (var i in item.Value)
                     {
-                        case ThumbClass.Subject:
+                        switch (i.Value)
+                        {
+                            case ThumbClass.Subject:
 
-                            cardInfo.ShurtcutIdea.Add(new ShurtcutIdeaBtnViewModel
-                            {
-                                CardName = $"创建对话主体卡片[{item.Key} 中的第 {i.Key + 1} 条参数]",
-                                ThumbClassName = i.Value,
-                            });
+                                cardInfo.ShurtcutIdea.Add(new ShurtcutIdeaBtnViewModel
+                                {
+                                    CardName = $"创建对话主体卡片[{item.Key} 中的第 {i.Key + 1} 条参数]",
+                                    ThumbClassName = i.Value,
+                                });
 
-                            break;
+                                break;
 
-                        case ThumbClass.Player:
+                            case ThumbClass.Player:
 
-                            cardInfo.ShurtcutIdea.Add(new ShurtcutIdeaBtnViewModel
-                            {
-                                CardName = $"创建玩家对话卡片[{item.Key} 中的第 {i.Key + 1} 条参数]",
-                                ThumbClassName = i.Value,
-                            });
+                                cardInfo.ShurtcutIdea.Add(new ShurtcutIdeaBtnViewModel
+                                {
+                                    CardName = $"创建玩家对话卡片[{item.Key} 中的第 {i.Key + 1} 条参数]",
+                                    ThumbClassName = i.Value,
+                                });
 
-                            break;
+                                break;
 
-                        case ThumbClass.NPC:
+                            case ThumbClass.NPC:
 
-                            cardInfo.ShurtcutIdea.Add(new ShurtcutIdeaBtnViewModel
-                            {
-                                CardName = $"创建NPC对话卡片[{item.Key} 中的第 {i.Key + 1} 条参数]",
-                                ThumbClassName = i.Value,
-                            });
+                                cardInfo.ShurtcutIdea.Add(new ShurtcutIdeaBtnViewModel
+                                {
+                                    CardName = $"创建NPC对话卡片[{item.Key} 中的第 {i.Key + 1} 条参数]",
+                                    ThumbClassName = i.Value,
+                                });
 
-                            break;
+                                break;
 
-                        case ThumbClass.Conditions:
+                            case ThumbClass.Conditions:
 
-                            cardInfo.ShurtcutIdea.Add(new ShurtcutIdeaBtnViewModel
-                            {
-                                CardName = $"创建条件卡片[{item.Key} 中的第 {i.Key + 1} 条参数]",
-                                ThumbClassName = i.Value,
-                            });
+                                cardInfo.ShurtcutIdea.Add(new ShurtcutIdeaBtnViewModel
+                                {
+                                    CardName = $"创建条件卡片[{item.Key} 中的第 {i.Key + 1} 条参数]",
+                                    ThumbClassName = i.Value,
+                                });
 
-                            break;
+                                break;
 
-                        case ThumbClass.Events:
+                            case ThumbClass.Events:
 
-                            cardInfo.ShurtcutIdea.Add(new ShurtcutIdeaBtnViewModel
-                            {
-                                CardName = $"创建事件卡片[{item.Key} 中的第 {i.Key + 1} 条参数]",
-                                ThumbClassName = i.Value,
-                            });
+                                cardInfo.ShurtcutIdea.Add(new ShurtcutIdeaBtnViewModel
+                                {
+                                    CardName = $"创建事件卡片[{item.Key} 中的第 {i.Key + 1} 条参数]",
+                                    ThumbClassName = i.Value,
+                                });
 
-                            break;
+                                break;
 
-                        case ThumbClass.Objectives:
+                            case ThumbClass.Objectives:
 
-                            cardInfo.ShurtcutIdea.Add(new ShurtcutIdeaBtnViewModel
-                            {
-                                CardName = $"创建目标卡片[{item.Key} 中的第 {i.Key + 1} 条参数]",
-                                ThumbClassName = i.Value,
-                            });
+                                cardInfo.ShurtcutIdea.Add(new ShurtcutIdeaBtnViewModel
+                                {
+                                    CardName = $"创建目标卡片[{item.Key} 中的第 {i.Key + 1} 条参数]",
+                                    ThumbClassName = i.Value,
+                                });
 
-                            break;
+                                break;
 
-                        case ThumbClass.Journal:
+                            case ThumbClass.Journal:
 
-                            cardInfo.ShurtcutIdea.Add(new ShurtcutIdeaBtnViewModel
-                            {
-                                CardName = $"创建日记卡片[{item.Key} 中的第 {i.Key + 1} 条参数]",
-                                ThumbClassName = i.Value,
-                            });
+                                cardInfo.ShurtcutIdea.Add(new ShurtcutIdeaBtnViewModel
+                                {
+                                    CardName = $"创建日记卡片[{item.Key} 中的第 {i.Key + 1} 条参数]",
+                                    ThumbClassName = i.Value,
+                                });
 
-                            break;
+                                break;
 
-                        case ThumbClass.Items:
+                            case ThumbClass.Items:
 
-                            cardInfo.ShurtcutIdea.Add(new ShurtcutIdeaBtnViewModel
-                            {
-                                CardName = $"创建物品卡片[{item.Key} 中的第 {i.Key + 1} 条参数]",
-                                ThumbClassName = i.Value,
-                            });
+                                cardInfo.ShurtcutIdea.Add(new ShurtcutIdeaBtnViewModel
+                                {
+                                    CardName = $"创建物品卡片[{item.Key} 中的第 {i.Key + 1} 条参数]",
+                                    ThumbClassName = i.Value,
+                                });
 
-                            break;
+                                break;
+                        }
                     }
                 }
             }
-
             #endregion
 
             result.SetSuccese();

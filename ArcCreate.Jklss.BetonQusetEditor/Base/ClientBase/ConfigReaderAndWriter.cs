@@ -219,6 +219,11 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
                         {
                             var getRealCard = item as SubjectCardViewModel;
 
+                            if (string.IsNullOrEmpty(getRealCard.ConfigName)|| string.IsNullOrEmpty(getRealCard.NPC_ID) || string.IsNullOrEmpty(getRealCard.ItemContent))
+                            {
+                                result.SetError("请将对话主体卡片填写完整！");
+                            }
+
                             saveMainInfo.Add(new ThumbsModels(getRealCard.ConfigName, getRealCard.NPC_ID,getRealCard.ItemContent));
 
                             var childInfo = new SaveChilds()
@@ -242,6 +247,11 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
                             saveAllChildInfo.Add(childInfo);
                         }
                     });
+
+                    if (!result.Succese)
+                    {
+                        return result;
+                    }
                 }
             }
             catch
@@ -462,7 +472,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
 
             if (getMessage == null || !getMessage.Succese)
             {
-                result.SetError("");
+                result.SetError(getMessage.Backs.ToString());
 
                 return result;
             }
