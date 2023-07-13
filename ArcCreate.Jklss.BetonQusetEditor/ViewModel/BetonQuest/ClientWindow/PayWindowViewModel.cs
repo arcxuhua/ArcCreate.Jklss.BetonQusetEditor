@@ -103,26 +103,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest.ClientWindow
                             Path = "BuyPointVIPBuy"
                         };
 
-                        var jsonMessage = FileService.SaveToJson(message);
+                        var getResult = await SocketViewModel.EazySendRESMessage(message);
 
-                        var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessage,
-                            SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), SocketModel.token, true);
-
-                        if (getMessage == null || !getMessage.Succese)
-                        {
-                            return;
-                        }
-
-                        var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
-
-                        if (getModel.Token != SocketModel.token)
-                        {
-                            return;
-                        }
-
-                        var getRealMessage = FileService.JsonToProp<MessageModel>(Encoding.UTF8.GetString(getModel.Message));
-
-                        if (getRealMessage == null || getRealMessage.JsonInfo != JsonInfo.UsePath || !getRealMessage.IsLogin)
+                        if (!getResult.Succese)
                         {
                             return;
                         }
@@ -131,7 +114,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest.ClientWindow
 
                         try
                         {
-                            var fg = getRealMessage.Message.Split('|');
+                            var fg = (getResult.Backs as MessageModel).Message.Split('|');
 
                             var payaddress = fg[0];
 
@@ -234,35 +217,21 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest.ClientWindow
                         Path = "CheckPointVIPBuy"
                     };
 
-                    var jsonMessages = FileService.SaveToJson(newmessage);
+                    var getResult = await SocketViewModel.EazySendRESMessage(newmessage);
 
-                    var getMessages = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessages,
-                        SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), SocketModel.token, true);
-
-                    if (getMessages == null || !getMessages.Succese)
-                    {
-                        continue;
-                    }
-
-                    var getModels = FileService.JsonToProp<MessageMode>(getMessages.Backs as string);
-
-                    if (getModels.Token != SocketModel.token)
-                    {
-                        continue;
-                    }
-
-                    var getRealMessages = FileService.JsonToProp<MessageModel>(Encoding.UTF8.GetString(getModels.Message));
-
-                    if (getRealMessages == null || getRealMessages.JsonInfo != JsonInfo.UsePath || !getRealMessages.IsLogin)
+                    if (!getResult.Succese)
                     {
                         PayMessageColor = "Red";
-                        PayMessage = getRealMessages.Message;
+                        PayMessage = getResult.Text;
                         continue;
                     }
-                    PayMessageColor = "Green";
-                    PayMessage = getRealMessages.Message;
+                    else
+                    {
+                        PayMessageColor = "Green";
+                        PayMessage = (getResult.Backs as MessageModel).Message;
 
-                    isSuccess = true;
+                        isSuccess = true;
+                    }
                 }
             });
         }

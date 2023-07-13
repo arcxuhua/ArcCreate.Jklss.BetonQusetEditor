@@ -41,33 +41,13 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader
                 Message = "",
             };
 
-            var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, FileService.SaveToJson(message),
-                SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), SocketModel.token, true);
+            var getResult = await SocketViewModel.EazySendRESMessage(message);
 
-            if (getMessage== null || !getMessage.Succese)
+            if (getResult.Succese)
             {
-                return null;
+                return (getResult.Backs as MessageModel).Message;
             }
-
-            var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
-
-            if (getModel.Token != SocketModel.token)
-            {
-                return null;
-            }
-
-            var getRealMessage = FileService.JsonToProp<MessageModel>(Encoding.UTF8.GetString(getModel.Message));
-
-            if (getRealMessage == null || getRealMessage.JsonInfo != JsonInfo.GetEventModel || !getRealMessage.IsLogin)
-            {
-                return null;
-            }
-
-            try
-            {
-                return getRealMessage.Message;
-            }
-            catch
+            else
             {
                 return null;
             }

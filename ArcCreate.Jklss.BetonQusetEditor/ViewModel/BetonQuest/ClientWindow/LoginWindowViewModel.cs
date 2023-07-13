@@ -24,9 +24,22 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest.ClientWindow
 {
     public class LoginWindowViewModel : NotifyBase
     {
+        public LoginWindowViewModel()
+        {
+            try
+            {
+                computerInfo = MachineNumberService.GetComputerInfo();
+            }
+            catch
+            {
+                computerInfo = string.Empty;
+            }
+            
+        }
+
         private LoginModel model = new LoginModel();
 
-        public static string computerInfo = MachineNumberService.GetComputerInfo();
+        public static string computerInfo;
 
         public static SocketViewModel socketViewModel = new SocketViewModel();
 

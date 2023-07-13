@@ -736,48 +736,19 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 Message = FileService.SaveToJson(back.Backs),
             };
 
-            var jsonMessage = FileService.SaveToJson(message);
+            var getResult = await SocketViewModel.EazySendRESMessage(message);
 
-            var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessage,
-                SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), SocketModel.token, true);
-
-            if (getMessage == null || !getMessage.Succese)
+            if (getResult.Succese)
             {
-                window.IsEnabled = true;
-                LoadingShow = Visibility.Hidden;
-                ShowMessage("保存失败，请尝试重新保存");
-                return;
+                ShowMessage("配置保存至云端成功");
+            }
+            else
+            {
+                ShowMessage(getResult.Text);
             }
 
-            var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
-
-            if (getModel.Token != SocketModel.token)
-            {
-                window.IsEnabled = true;
-                LoadingShow = Visibility.Hidden;
-                ShowMessage("您的Token异常请重新登录后保存");
-                return;
-            }
-
-            var getRealMessage = FileService.JsonToProp<MessageModel>(Encoding.UTF8.GetString(getModel.Message));
-
-            if (getRealMessage == null || getRealMessage.JsonInfo != JsonInfo.SaveToJson || !getRealMessage.IsLogin)
-            {
-                window.IsEnabled = true;
-                LoadingShow = Visibility.Hidden;
-                ShowMessage("服务器异常");
-                return;
-            }
-
-            if (this.SelectData.Code == -1)
-            {
-                this.SelectData.Code = Convert.ToInt32(getRealMessage.Other);
-            }
             window.IsEnabled = true;
             LoadingShow = Visibility.Hidden;
-            ShowMessage("配置保存至云端成功");
-
-            return;
         }
 
         [RelayCommand()]
@@ -857,52 +828,19 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 Message = FileService.SaveToJson(back.Backs),
             };
 
-            var jsonMessage = FileService.SaveToJson(message);
+            var getResult = await SocketViewModel.EazySendRESMessage(message);
 
-            var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessage,
-    SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), SocketModel.token, true);
-
-            if (getMessage == null || !getMessage.Succese)
+            if (!getResult.Succese)
             {
                 window.IsEnabled = true;
                 LoadingShow = Visibility.Hidden;
-                ShowMessage("保存失败，请尝试重新保存");
+                ShowMessage($"保存失败，请尝试重新保存,{getResult.Text}");
                 return;
             }
 
-            var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
-
-            if (getModel.Token != SocketModel.token)
-            {
-                window.IsEnabled = true;
-                LoadingShow = Visibility.Hidden;
-                ShowMessage("您的Token异常请重新登录后保存");
-                return;
-            }
-
-            var getRealMessage = FileService.JsonToProp<MessageModel>(Encoding.UTF8.GetString(getModel.Message));
-
-            if (getRealMessage == null || getRealMessage.JsonInfo != JsonInfo.SaveToYaml || !getRealMessage.IsLogin)
-            {
-                if (getRealMessage != null)
-                {
-                    window.IsEnabled = true;
-                    LoadingShow = Visibility.Hidden;
-                    ShowMessage(getRealMessage.Message);
-                    return;
-                }
-                else
-                {
-                    window.IsEnabled = true;
-                    LoadingShow = Visibility.Hidden;
-                    ShowMessage("服务器异常");
-                    return;
-                }
-
-            }
             if (this.SelectData.Code == -1)
             {
-                this.SelectData.Code = Convert.ToInt32(getRealMessage.Other);
+                this.SelectData.Code = Convert.ToInt32((getResult.Backs as MessageModel).Other);
             }
 
             ShowMessage("配置保存至云端成功，正在输出YML至本地");
@@ -912,7 +850,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 Thread.Sleep(2000);
             });
 
-            var result = await saveBase.InputToYaml(FileService.JsonToProp<YamlSaver>(getRealMessage.Message),MainFilePath);
+            var result = await saveBase.InputToYaml(FileService.JsonToProp<YamlSaver>((getResult.Backs as MessageModel).Message),MainFilePath);
             window.IsEnabled = true;
             LoadingShow = Visibility.Hidden;
             ShowMessage(result.Text);
@@ -1256,36 +1194,16 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 Path = "PayPoints"
             };
 
-            var jsonMessage = FileService.SaveToJson(message);
+            var getResult = await SocketViewModel.EazySendRESMessage(message);
 
-            var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessage,
-                SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), SocketModel.token, true);
-
-            if (getMessage == null || !getMessage.Succese)
+            if (!getResult.Succese)
             {
-                result.SetError("请求失败");
+                result.SetError($"支付请求失败:{getResult.Text}");
 
                 return result;
             }
 
-            var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
-
-            if (getModel.Token != SocketModel.token)
-            {
-                result.SetError("请求失败");
-
-                return result;
-            }
-
-            var getRealMessage = FileService.JsonToProp<MessageModel>(Encoding.UTF8.GetString(getModel.Message));
-
-            if (getRealMessage == null || getRealMessage.JsonInfo != JsonInfo.UsePath || getRealMessage.Path != "PayPoints" || !getRealMessage.IsLogin)
-            {
-                result.SetError("请求失败");
-
-                return result;
-            }
-            result.SetSuccese(getRealMessage.Message);
+            result.SetSuccese((getResult.Backs as MessageModel).Message);
 
             return result;
         }
@@ -1508,34 +1426,14 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 Other = SelectData.Code.ToString()
             };
 
-            var jsonMessage = FileService.SaveToJson(message);
+            var getResult = await SocketViewModel.EazySendRESMessage(message);
 
-            var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessage,
-                SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), SocketModel.token, true);
-
-            if (getMessage == null || !getMessage.Succese)
+            if (!getResult.Succese)
             {
-                result.SetError();
-                return result;
+                return getResult;
             }
 
-            var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
-
-            if (getModel.Token != SocketModel.token)
-            {
-                result.SetError();
-                return result;
-            }
-
-            var getRealMessage = FileService.JsonToProp<MessageModel>(Encoding.UTF8.GetString(getModel.Message));
-
-            if (getRealMessage == null || getRealMessage.JsonInfo != JsonInfo.GetSaveData || !getRealMessage.IsLogin)
-            {
-                result.SetError();
-                return result;
-            }
-
-            var getData = FileService.JsonToProp<savedatum>(getRealMessage.Message);
+            var getData = FileService.JsonToProp<savedatum>((getResult.Backs as MessageModel).Message);
 
             if (getData == null)
             {

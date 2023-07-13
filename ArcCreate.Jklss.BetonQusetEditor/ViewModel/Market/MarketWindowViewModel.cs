@@ -325,36 +325,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Market
                 Path = "GetUserInfo"
             };
 
-            var jsonMessage = FileService.SaveToJson(message);
+            var getResult = await SocketViewModel.EazySendRESMessage(message);
 
-            var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessage,
-                SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), SocketModel.token, true);
-
-            if (getMessage == null || !getMessage.Succese)
+            if (!getResult.Succese)
             {
-                result.SetError("获取信息失败");
-                return result;
-            }
-
-            var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
-
-            if (getModel.Token != SocketModel.token)
-            {
-                result.SetError("获取信息失败");
-                return result;
-            }
-
-            var getRealMessage = FileService.JsonToProp<MessageModel>(Encoding.UTF8.GetString(getModel.Message));
-
-            if (getRealMessage == null || getRealMessage.Path != message.Path || !getRealMessage.IsLogin)
-            {
-                result.SetError("获取信息失败");
+                result.SetError(getResult.Text);
                 return result;
             }
 
             try
             {
-                result.SetSuccese("获取信息成功",FileService.JsonToProp<UserInfo>(getRealMessage.Message));
+                result.SetSuccese("获取信息成功",FileService.JsonToProp<UserInfo>((getResult.Backs as MessageModel).Message));
                 return result;
             }
             catch
@@ -379,36 +360,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.Market
                 Other = type.ToString(),
             };
 
-            var jsonMessage = FileService.SaveToJson(message);
+            var getResult = await SocketViewModel.EazySendRESMessage(message);
 
-            var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessage,
-                SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), SocketModel.token, true);
-
-            if (getMessage == null || !getMessage.Succese)
+            if (!getResult.Succese)
             {
-                result.SetError("获取信息失败");
-                return result;
-            }
-
-            var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
-
-            if (getModel.Token != SocketModel.token)
-            {
-                result.SetError("获取信息失败");
-                return result;
-            }
-
-            var getRealMessage = FileService.JsonToProp<MessageModel>(Encoding.UTF8.GetString(getModel.Message));
-
-            if (getRealMessage == null || getRealMessage.Path != message.Path || !getRealMessage.IsLogin)
-            {
-                result.SetError("获取信息失败");
+                result.SetError(getResult.Text);
                 return result;
             }
 
             try
             {
-                result.SetSuccese("获取信息成功", getRealMessage.Message);
+                result.SetSuccese("获取信息成功", (getResult.Backs as MessageModel).Message);
                 return result;
             }
             catch

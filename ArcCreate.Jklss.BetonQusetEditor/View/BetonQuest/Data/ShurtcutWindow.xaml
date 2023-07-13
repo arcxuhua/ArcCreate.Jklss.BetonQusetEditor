@@ -77,7 +77,7 @@
             </ScrollViewer>
         </Grid>
 
-        <Grid Grid.Column="2" Grid.Row="1" Background="#FFC1C1C1">
+        <Grid Grid.Column="2" Grid.Row="1" Background="#FFC1C1C1" ClipToBounds="True">
             <StackPanel Margin="10" TextBlock.Foreground="White" TextBlock.FontWeight="Bold" TextBlock.FontSize="15">
 
                 <TextBox FontSize="14" Text="{Binding RichText}" Foreground="Black" Block.LineHeight="2" materialDesign:HintAssist.Hint="文案编辑框" Style="{StaticResource MaterialDesignOutlinedTextBox}"  Height="370" Background="#7FFFFFFF" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" AcceptsTab="True" CaretBrush="Black" SelectionBrush="White" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">

@@ -100,31 +100,14 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest.Data
                             Message = "",
                         };
 
-                        var jsonMessage = FileService.SaveToJson(message);
+                        var getResult = await SocketViewModel.EazySendRESMessage(message);
 
-                        var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessage,
-                            SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), token, true);
-
-                        if (getMessage == null || !getMessage.Succese)
+                        if (!getResult.Succese)
                         {
                             return;
                         }
 
-                        var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
-
-                        if (getModel.Token != token)
-                        {
-                            return;
-                        }
-
-                        var getRealMessage = FileService.JsonToProp<MessageModel>(Encoding.UTF8.GetString(getModel.Message));
-
-                        if (getRealMessage == null || getRealMessage.JsonInfo != JsonInfo.GetSaveData || !getRealMessage.IsLogin)
-                        {
-                            return;
-                        }
-
-                        var getData = FileService.JsonToProp<List<GridData>>(getRealMessage.Message);
+                        var getData = FileService.JsonToProp<List<GridData>>((getResult.Backs as MessageModel).Message);
 
                         if (getData == null)
                         {
@@ -169,36 +152,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest.Data
                     Message = dataItem.Code.ToString(),
                 };
 
-                var jsonMessage = FileService.SaveToJson(message);
+                var getResult = await SocketViewModel.EazySendRESMessage(message);
 
-                var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessage,
-                    SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), token, true);
-
-                if (getMessage == null || !getMessage.Succese)
+                if (!getResult.Succese)
                 {
-                    MessageBox.Show("请求错误请尝试重新请求");
+                    MessageBox.Show($"请求错误请重启客户端，或重新执行。\n错误信息:{getResult.Text}");
                     return;
                 }
 
-                var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
-
-                if (getModel.Token != token)
-                {
-                    return;
-                }
-
-                var getRealMessage = FileService.JsonToProp<MessageModel>(Encoding.UTF8.GetString(getModel.Message));
-
-                if (getRealMessage == null || getRealMessage.JsonInfo != JsonInfo.DeleteSaveData || !getRealMessage.IsLogin)
-                {
-                    if (getRealMessage != null)
-                    {
-                        MessageBox.Show(getRealMessage.Message);
-                    }
-
-                    return;
-                }
-                MessageBox.Show(getRealMessage.Message);
+                MessageBox.Show((getResult.Backs as MessageModel).Message);
                 Data.Remove(dataItem);
                 dg.ItemsSource = null;
                 dg.ItemsSource = Data;

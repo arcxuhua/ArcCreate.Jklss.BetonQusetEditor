@@ -49,36 +49,24 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.ClientWindow
                 Path = "Code"
             };
 
-            var jsonMessage = FileService.SaveToJson(message);
-
-            var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessage,
-                SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(),waitBack:true);
-
-            if (getMessage == null || !getMessage.Succese)
+            var getResult = await SocketViewModel.EazySendRESMessage(message);
+            
+            if (getResult.Succese)
             {
-                MessageBox.Show(getMessage.Text);
+                MessageBox.Show((getResult.Backs as MessageModel).Message);
+
+                LoginWindow window = new LoginWindow();
+
+                window.Show();
+
+                this.window.Close();
                 return;
             }
-
-            var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
-
-
-            var getRealMessage = FileService.JsonToProp<MessageModel>(Encoding.UTF8.GetString(getModel.Message));
-
-            if (getRealMessage == null || getRealMessage.Path!="Code" || !getRealMessage.IsLogin)
+            else
             {
-                MessageBox.Show(getRealMessage.Message);
+                MessageBox.Show(getResult.Text);
                 return;
             }
-
-            MessageBox.Show(getRealMessage.Message);
-
-            LoginWindow window = new LoginWindow();
-
-            window.Show();
-
-            this.window.Close();
-
         }
     }
 }

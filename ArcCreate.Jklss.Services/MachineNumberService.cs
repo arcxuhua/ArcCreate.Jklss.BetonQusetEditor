@@ -25,7 +25,15 @@ namespace ArcCreate.Jklss.Services
 
             foreach (ManagementObject mo in moc)
             {
-                cpuID.Add(mo.Properties["ProcessorId"].Value.ToString());
+                try
+                {
+                    cpuID.Add(mo.Properties["ProcessorId"].Value.ToString());
+                }
+                catch
+                {
+
+                }
+                
             }
 
             ManagementClass mcs = new ManagementClass("Win32_BaseBoard");
@@ -33,7 +41,15 @@ namespace ArcCreate.Jklss.Services
             
             foreach (ManagementObject mo in mocs)
             {
-                zbID.Add(mo.Properties["SerialNumber"].Value.ToString());
+                try
+                {
+                    zbID.Add(mo.Properties["SerialNumber"].Value.ToString());
+                }
+                catch
+                {
+
+                }
+                
             }
 
             ManagementClass mcss = new ManagementClass("Win32_PhysicalMedia");
@@ -41,7 +57,14 @@ namespace ArcCreate.Jklss.Services
             
             foreach (ManagementObject mo in mocss)
             {
-                ypID.Add(mo.Properties["SerialNumber"].Value.ToString());
+                try
+                {
+                    ypID.Add(mo.Properties["SerialNumber"].Value.ToString());
+                }
+                catch
+                {
+
+                }
             }
 
             ManagementClass mcsss = new ManagementClass("Win32_BIOS");
@@ -49,7 +72,16 @@ namespace ArcCreate.Jklss.Services
             
             foreach (ManagementObject mo in mocsss)
             {
-                biosID.Add(mo.Properties["SerialNumber"].Value.ToString());
+                try
+                {
+                    biosID.Add(mo.Properties["SerialNumber"].Value.ToString());
+                }
+                catch
+                {
+
+                }
+
+                
             }
 
             var list = new List<MachineModel>()

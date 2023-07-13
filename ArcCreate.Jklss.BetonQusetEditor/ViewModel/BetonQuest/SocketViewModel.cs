@@ -22,7 +22,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest
 
         public static ScoketService socketService = new ScoketService();
 
-        public static string version = "4.0.3.1";
+        public static string version = "4.0.3.2";
 
         /// <summary>
         /// 开启Socket通讯
@@ -338,9 +338,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest
             {
                 var waitTimes = 0;
 
-                while (waitTimes<5)
+                while (waitTimes<10)
                 {
-                    Thread.Sleep(200);//延迟50毫秒
+                    Thread.Sleep(300);//延迟50毫秒
                     if (!string.IsNullOrEmpty(SocketModel.waitBackDic[messageClass][id]))
                     {
                         break;
@@ -361,6 +361,69 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest
 
 
             return result;
+        }
+
+        /// <summary>
+        /// 发送消息的二次封装（建议使用）返回值
+        /// </summary>
+        /// <param name="messageClass">消息类型</param>
+        /// <param name="message">消息内容</param>
+        /// <param name="times">失败后再次发送次数默认5次</param>
+        /// <returns></returns>
+        public static async Task<ReturnModel> EazySendRESMessage(MessageModel message,int times = 5, MessageClass messageClass = MessageClass.Json)
+        {
+            var result = new ReturnModel();
+
+            var jsonMessage = FileService.SaveToJson(message);
+
+            var getMessage = await SocketViewModel.SendRESMessage(messageClass, jsonMessage,
+                SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), SocketModel.token, true);//取返回值
+
+            var sendTimes = 0;
+
+            while ((getMessage == null || !getMessage.Succese)&& (sendTimes < times))
+            {
+                getMessage = await SocketViewModel.SendRESMessage(messageClass, jsonMessage,
+                SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), SocketModel.token, true);//取返回值
+
+                sendTimes++;
+            }
+
+            if (getMessage == null || !getMessage.Succese)
+            {
+                return getMessage;
+            }
+
+            var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
+
+            if (getModel.Token != SocketModel.token)
+            {
+                result.SetError("您的Token异常，请重新登录客户端！");
+
+                return result;
+            }
+
+            var getRealMessage = FileService.JsonToProp<MessageModel>(Encoding.UTF8.GetString(getModel.Message));
+
+            if (getRealMessage == null || getRealMessage.JsonInfo != message.JsonInfo || !getRealMessage.IsLogin)
+            {
+                result.SetError("解析服务端返回值错误，请尝试重新请求");
+
+                return result;
+            }
+
+            try
+            {
+                result.SetSuccese("ok", getRealMessage);
+
+                return result;
+            }
+            catch
+            {
+                result.SetError("出乎意料的报错！");
+
+                return result;
+            }
         }
     }
 }

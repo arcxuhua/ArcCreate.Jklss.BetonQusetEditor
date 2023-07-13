@@ -465,39 +465,18 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
                 Message = txt,
             };
 
-            var jsonMessage = FileService.SaveToJson(message);
+            var getResult = await SocketViewModel.EazySendRESMessage(message);
 
-            var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessage,
-                SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), SocketModel.token, true);
-
-            if (getMessage == null || !getMessage.Succese)
+            if (getResult.Succese)
             {
-                result.SetError(getMessage.Backs.ToString());
+                result.SetSuccese("", FileService.JsonToProp<Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>>((getResult.Backs as MessageModel).Message));
 
                 return result;
             }
-
-            var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
-
-            if (getModel.Token != SocketModel.token)
+            else
             {
-                result.SetError("");
-
-                return result;
+                return getResult;
             }
-
-            var getRealMessage = FileService.JsonToProp<MessageModel>(Encoding.UTF8.GetString(getModel.Message));
-
-            if (getRealMessage == null || getRealMessage.JsonInfo != JsonInfo.ConditionAnalysis || !getRealMessage.IsLogin)
-            {
-                result.SetError("");
-
-                return result;
-            }
-
-            result.SetSuccese("", FileService.JsonToProp<Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>>(getRealMessage.Message));
-
-            return result;
         }
 
         /// <summary>
@@ -522,39 +501,18 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
                 Message = txt,
             };
 
-            var jsonMessage = FileService.SaveToJson(message);
+            var getResult = await SocketViewModel.EazySendRESMessage(message);
 
-            var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessage,
-                SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), SocketModel.token, true);
-
-            if (getMessage == null || !getMessage.Succese)
+            if (getResult.Succese)
             {
-                result.SetError("");
+                result.SetSuccese("", FileService.JsonToProp<Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>>((getResult.Backs as MessageModel).Message));
 
                 return result;
             }
-
-            var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
-
-            if (getModel.Token != SocketModel.token)
+            else
             {
-                result.SetError("");
-
-                return result;
+                return getResult;
             }
-
-            var getRealMessage = FileService.JsonToProp<MessageModel>(Encoding.UTF8.GetString(getModel.Message));
-
-            if (getRealMessage == null || getRealMessage.JsonInfo != JsonInfo.EventAnalysis || !getRealMessage.IsLogin)
-            {
-                result.SetError("");
-
-                return result;
-            }
-
-            result.SetSuccese("", FileService.JsonToProp<Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>>(getRealMessage.Message));
-
-            return result;
         }
 
         /// <summary>
@@ -579,39 +537,18 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
                 Message = txt,
             };
 
-            var jsonMessage = FileService.SaveToJson(message);
+            var getResult = await SocketViewModel.EazySendRESMessage(message);
 
-            var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessage,
-                SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), SocketModel.token, true);
-
-            if (getMessage == null || !getMessage.Succese)
+            if (getResult.Succese)
             {
-                result.SetError("");
+                result.SetSuccese("", FileService.JsonToProp<Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>>((getResult.Backs as MessageModel).Message));
 
                 return result;
             }
-
-            var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
-
-            if (getModel.Token != SocketModel.token)
+            else
             {
-                result.SetError("");
-
-                return result;
+                return getResult;
             }
-
-            var getRealMessage = FileService.JsonToProp<MessageModel>(Encoding.UTF8.GetString(getModel.Message));
-
-            if (getRealMessage == null || getRealMessage.JsonInfo != JsonInfo.ObjectiveAnalysis || !getRealMessage.IsLogin)
-            {
-                result.SetError("");
-
-                return result;
-            }
-
-            result.SetSuccese("", FileService.JsonToProp<Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>>(getRealMessage.Message));
-
-            return result;
         }
 
         /// <summary>
@@ -636,39 +573,18 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
                 Message = txt,
             };
 
-            var jsonMessage = FileService.SaveToJson(message);
+            var getResult = await SocketViewModel.EazySendRESMessage(message);
 
-            var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessage,
-                SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), SocketModel.token, true);
-
-            if (getMessage == null || !getMessage.Succese)
+            if (getResult.Succese)
             {
-                result.SetError("");
+                result.SetSuccese("", FileService.JsonToProp<Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>>((getResult.Backs as MessageModel).Message));
 
                 return result;
             }
-
-            var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
-
-            if (getModel.Token != SocketModel.token)
+            else
             {
-                result.SetError("");
-
-                return result;
+                return getResult;
             }
-
-            var getRealMessage = FileService.JsonToProp<MessageModel>(Encoding.UTF8.GetString(getModel.Message));
-
-            if (getRealMessage == null || getRealMessage.JsonInfo != JsonInfo.PlayerAndNpcAnalysis || !getRealMessage.IsLogin)
-            {
-                result.SetError("");
-
-                return result;
-            }
-
-            result.SetSuccese("", FileService.JsonToProp<Dictionary<string, Dictionary<string, string>>>(getRealMessage.Message));
-
-            return result;
         }
 
         /// <summary>

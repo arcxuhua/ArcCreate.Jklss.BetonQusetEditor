@@ -194,36 +194,18 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         Message = ModelSelect,
                         Other = "1"
                     };
-                    var jsonMessage = FileService.SaveToJson(message);
 
-                    var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessage,
-                        SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), SocketModel.token, true);
+                    var getResult = await SocketViewModel.EazySendRESMessage(message);
 
-                    if (getMessage == null || !getMessage.Succese)
+                    if (!getResult.Succese)
                     {
-                        MessageBox.Show($"请求云端失败 {getMessage.Text}");
-                        return;
-                    }
-
-                    var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
-
-                    if (getModel.Token != SocketModel.token)
-                    {
-                        MessageBox.Show($"请求云端失败 {getMessage.Text}");
-                        return;
-                    }
-
-                    var getRealMessage = FileService.JsonToProp<MessageModel>(Encoding.UTF8.GetString(getModel.Message));
-
-                    if (getRealMessage == null || getRealMessage.JsonInfo != JsonInfo.RemoveGrammerModel || !getRealMessage.IsLogin)
-                    {
-                        MessageBox.Show($"请求云端失败 {getRealMessage.Message}");
+                        MessageBox.Show($"请求云端失败 {getResult.Text}");
                         return;
                     }
 
                     try
                     {
-                        MessageBox.Show($"请求云端成功：{getRealMessage.Message}");
+                        MessageBox.Show($"请求云端成功：{(getResult.Backs as MessageModel).Message}");
                     }
                     catch
                     {
@@ -254,36 +236,18 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         Message = ModelSelect,
                         Other = "2"
                     };
-                    var jsonMessage = FileService.SaveToJson(message);
+                    
+                    var getResult = await SocketViewModel.EazySendRESMessage(message);
 
-                    var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessage,
-                        SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), SocketModel.token, true);
-
-                    if (getMessage == null || !getMessage.Succese)
+                    if (!getResult.Succese)
                     {
-                        MessageBox.Show($"请求云端失败 {getMessage.Text}");
-                        return;
-                    }
-
-                    var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
-
-                    if (getModel.Token != SocketModel.token)
-                    {
-                        MessageBox.Show($"请求云端失败 {getMessage.Text}");
-                        return;
-                    }
-
-                    var getRealMessage = FileService.JsonToProp<MessageModel>(Encoding.UTF8.GetString(getModel.Message));
-
-                    if (getRealMessage == null || getRealMessage.JsonInfo != JsonInfo.RemoveGrammerModel || !getRealMessage.IsLogin)
-                    {
-                        MessageBox.Show($"请求云端失败 {getRealMessage.Message}");
+                        MessageBox.Show($"请求云端失败 {getResult.Text}");
                         return;
                     }
 
                     try
                     {
-                        MessageBox.Show($"请求云端成功：{getRealMessage.Message}");
+                        MessageBox.Show($"请求云端成功：{(getResult.Backs as MessageModel).Message}");
                     }
                     catch
                     {
@@ -314,36 +278,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         Message = ModelSelect,
                         Other = "3"
                     };
-                    var jsonMessage = FileService.SaveToJson(message);
+                    var getResult = await SocketViewModel.EazySendRESMessage(message);
 
-                    var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessage,
-                        SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), SocketModel.token, true);
-
-                    if (getMessage == null || !getMessage.Succese)
+                    if (!getResult.Succese)
                     {
-                        MessageBox.Show($"请求云端失败 {getMessage.Text}");
-                        return;
-                    }
-
-                    var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
-
-                    if (getModel.Token != SocketModel.token)
-                    {
-                        MessageBox.Show($"请求云端失败 {getMessage.Text}");
-                        return;
-                    }
-
-                    var getRealMessage = FileService.JsonToProp<MessageModel>(Encoding.UTF8.GetString(getModel.Message));
-
-                    if (getRealMessage == null || getRealMessage.JsonInfo != JsonInfo.RemoveGrammerModel || !getRealMessage.IsLogin)
-                    {
-                        MessageBox.Show($"请求云端失败 {getRealMessage.Message}");
+                        MessageBox.Show($"请求云端失败 {getResult.Text}");
                         return;
                     }
 
                     try
                     {
-                        MessageBox.Show($"请求云端成功：{getRealMessage.Message}");
+                        MessageBox.Show($"请求云端成功：{(getResult.Backs as MessageModel).Message}");
                     }
                     catch
                     {
@@ -1715,36 +1660,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         Message = FileService.SaveToJson(val),
                         Other = "1"
                     };
-                    var jsonMessage = FileService.SaveToJson(message);
+                    var getResult = await SocketViewModel.EazySendRESMessage(message);
 
-                    var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessage,
-                        SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), SocketModel.token, true);
-
-                    if (getMessage == null || !getMessage.Succese)
+                    if (!getResult.Succese)
                     {
-                        result.SetError($"请求云端失败 {getMessage.Text}");
-                        return result;
-                    }
-
-                    var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
-
-                    if (getModel.Token != SocketModel.token)
-                    {
-                        result.SetError($"请求云端失败 {getMessage.Text}");
-                        return result;
-                    }
-
-                    var getRealMessage = FileService.JsonToProp<MessageModel>(Encoding.UTF8.GetString(getModel.Message));
-
-                    if (getRealMessage == null || getRealMessage.JsonInfo != JsonInfo.AddGrammerModel || !getRealMessage.IsLogin)
-                    {
-                        result.SetError($"请求云端失败 {getRealMessage.Message}");
+                        result.SetError($"请求云端失败 {getResult.Text}");
                         return result;
                     }
 
                     try
                     {
-                        result.SetSuccese($"请求云端成功：{getRealMessage.Message}");
+                        result.SetSuccese($"请求云端成功：{(getResult.Backs as MessageModel).Message}");
                         return result;
                     }
                     catch
@@ -1779,36 +1705,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         Message = FileService.SaveToJson(val),
                         Other = "2"
                     };
-                    var jsonMessage = FileService.SaveToJson(message);
+                    var getResult = await SocketViewModel.EazySendRESMessage(message);
 
-                    var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessage,
-                        SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), SocketModel.token, true);
-
-                    if (getMessage == null || !getMessage.Succese)
+                    if (!getResult.Succese)
                     {
-                        result.SetError($"请求云端失败 {getMessage.Text}");
-                        return result;
-                    }
-
-                    var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
-
-                    if (getModel.Token != SocketModel.token)
-                    {
-                        result.SetError($"请求云端失败 {getMessage.Text}");
-                        return result;
-                    }
-
-                    var getRealMessage = FileService.JsonToProp<MessageModel>(Encoding.UTF8.GetString(getModel.Message));
-
-                    if (getRealMessage == null || getRealMessage.JsonInfo != JsonInfo.AddGrammerModel || !getRealMessage.IsLogin)
-                    {
-                        result.SetError($"请求云端失败 {getRealMessage.Message}");
+                        result.SetError($"请求云端失败 {getResult.Text}");
                         return result;
                     }
 
                     try
                     {
-                        result.SetSuccese($"请求云端成功：{getRealMessage.Message}");
+                        result.SetSuccese($"请求云端成功：{(getResult.Backs as MessageModel).Message}");
                         return result;
                     }
                     catch
@@ -1842,36 +1749,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel
                         Message = FileService.SaveToJson(val),
                         Other = "3"
                     };
-                    var jsonMessage = FileService.SaveToJson(message);
+                    var getResult = await SocketViewModel.EazySendRESMessage(message);
 
-                    var getMessage = await SocketViewModel.SendRESMessage(MessageClass.Json, jsonMessage,
-                        SocketViewModel.socket.LocalEndPoint.ToString(), SocketViewModel.socket.RemoteEndPoint.ToString(), SocketModel.token, true);
-
-                    if (getMessage == null || !getMessage.Succese)
+                    if (!getResult.Succese)
                     {
-                        result.SetError($"请求云端失败 {getMessage.Text}");
-                        return result;
-                    }
-
-                    var getModel = FileService.JsonToProp<MessageMode>(getMessage.Backs as string);
-
-                    if (getModel.Token != SocketModel.token)
-                    {
-                        result.SetError($"请求云端失败 {getMessage.Text}");
-                        return result;
-                    }
-
-                    var getRealMessage = FileService.JsonToProp<MessageModel>(Encoding.UTF8.GetString(getModel.Message));
-
-                    if (getRealMessage == null || getRealMessage.JsonInfo != JsonInfo.AddGrammerModel || !getRealMessage.IsLogin)
-                    {
-                        result.SetError($"请求云端失败 {getRealMessage.Message}");
+                        result.SetError($"请求云端失败 {getResult.Text}");
                         return result;
                     }
 
                     try
                     {
-                        result.SetSuccese($"请求云端成功：{getRealMessage.Message}");
+                        result.SetSuccese($"请求云端成功：{(getResult.Backs as MessageModel).Message}");
                         return result;
                     }
                     catch
