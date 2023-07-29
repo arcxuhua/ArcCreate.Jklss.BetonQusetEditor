@@ -26,8 +26,6 @@ namespace ArcCreate.Jklss.BetonQusetEditor
             this.DataContext = new ClientWindowViewModel(this);//由于架构问题将ViewModel绑定到后台   4代
 
             MessageBar.Visibility = Visibility.Hidden;
-            ScalerTBlock.Text = Math.Round(1.00 * 100, 2).ToString() + "%";
-            
         }
 
         private void Move_MouseMove(object sender, MouseEventArgs e)

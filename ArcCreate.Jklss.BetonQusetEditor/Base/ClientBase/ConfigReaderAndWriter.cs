@@ -213,15 +213,24 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
                 {
                     var getMainThumb = allCard.Where(t => t.Type == ThumbClass.Subject&&!t.IsLine&&!t.IsDraw).ToList();
 
+                    if(getMainThumb.Count<=0)
+                    {
+                        result.SetError("对话主体卡片最少需要一个");
+
+                        return result;
+                    }
+
                     await Task.Run(() =>
                     {
                         foreach (var item in getMainThumb)
                         {
                             var getRealCard = item as SubjectCardViewModel;
 
-                            if (string.IsNullOrEmpty(getRealCard.ConfigName)|| string.IsNullOrEmpty(getRealCard.NPC_ID) || string.IsNullOrEmpty(getRealCard.ItemContent))
+                            if (string.IsNullOrEmpty(getRealCard.ConfigName.Replace(' ','_'))|| string.IsNullOrEmpty(getRealCard.NPC_ID.Replace(' ', '_')) || string.IsNullOrEmpty(getRealCard.ItemContent.Replace(' ', '_')))
                             {
                                 result.SetError("请将对话主体卡片填写完整！");
+
+                                return;
                             }
 
                             saveMainInfo.Add(new ThumbsModels(getRealCard.ConfigName, getRealCard.NPC_ID,getRealCard.ItemContent));
@@ -246,6 +255,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
                             }
                             saveAllChildInfo.Add(childInfo);
                         }
+                        result.SetSuccese();
                     });
 
                     if (!result.Succese)

@@ -22,7 +22,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest
 
         public static ScoketService socketService = new ScoketService();
 
-        public static string version = "4.0.3.2";
+        public static string version = "4.0.3.4";
 
         /// <summary>
         /// 开启Socket通讯
@@ -407,6 +407,13 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest
 
             if (getRealMessage == null || getRealMessage.JsonInfo != message.JsonInfo || !getRealMessage.IsLogin)
             {
+                if(getRealMessage != null)
+                {
+                    result.SetError(getRealMessage.Message);
+
+                    return result;
+                }
+
                 result.SetError("解析服务端返回值错误，请尝试重新请求");
 
                 return result;

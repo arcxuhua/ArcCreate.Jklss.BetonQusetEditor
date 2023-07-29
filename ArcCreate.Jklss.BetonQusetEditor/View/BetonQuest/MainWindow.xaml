@@ -14,6 +14,11 @@
             <Border Background="Transparent"></Border>
         </ControlTemplate>
 
+        <local:StringFormatOrganizationConverter x:Key="StringFormatConverter"/>
+        
+        <local:StringFormatIntConverter x:Key="StringFormatIntConverter"/>
+
+        <local:StringAddConverter x:Key="StringAddConverter"/>
     </Window.Resources>
     <binding:Interaction.Triggers>
         <binding:EventTrigger EventName="LocationChanged">
@@ -86,73 +91,99 @@
                         <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 10 1 0">
                             <Button Command="{Binding CreateNewTalkCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="#FF5307B3" BorderBrush="#FF5307B3" MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" Cursor="Hand">
                                 <Button.Content>
-                                    <materialDesign:PackIcon Kind="Book" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" />
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="Book" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,20,0" />
+
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="White" Margin="0 0 0 0">新建对话主体</TextBlock>
+                                    </StackPanel>
                                 </Button.Content>
                             </Button>
-                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="White" Margin="60 0 0 0">新建对话主体</TextBlock>
+                            
                         </Grid>
 
                         <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 120 1 0">
                             <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" Command="{Binding CreateNpcTalkCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" BorderBrush="#FF5307B3" Background="#FF5307B3">
                                 <Button.Content>
-                                    <materialDesign:PackIcon Kind="BookEdit" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" />
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="BookEdit" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,20,0" />
+
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="White" Margin="0 0 0 0">新建NPC对话</TextBlock>
+                                    </StackPanel>
                                 </Button.Content>
                             </Button>
-                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="White" Margin="60 0 0 0">新建NPC对话</TextBlock>
+                            
                         </Grid>
 
                         <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 230 1 0">
                             <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" Command="{Binding CreatePlayerTalkCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="#FF5307B3" BorderBrush="#FF5307B3">
                                 <Button.Content>
-                                    <materialDesign:PackIcon Kind="BookEducation" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" />
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="BookEducation" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,20,0" />
+
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="White" Margin="0 0 0 0">新建玩家对话</TextBlock>
+                                    </StackPanel>
                                 </Button.Content>
                             </Button>
-                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="White" Margin="60 0 0 0">新建玩家对话</TextBlock>
                         </Grid>
 
                         <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 340 1 0">
                             <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" Command="{Binding CreateConditionsCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="Black" BorderBrush="Black">
                                 <Button.Content>
-                                    <materialDesign:PackIcon Kind="BookmarkMultiple" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" />
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="BookmarkMultiple" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,40,0" />
+
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="White" Margin="0 0 0 0">新建条件</TextBlock>
+                                    </StackPanel>
                                 </Button.Content>
                             </Button>
-                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="White" Margin="60 0 0 0">新建条件</TextBlock>
                         </Grid>
 
                         <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 450 1 0">
                             <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" Command="{Binding CreateEventsCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="Black" BorderBrush="Black">
                                 <Button.Content>
-                                    <materialDesign:PackIcon Kind="BookmarkPlus" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" />
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="BookmarkPlus" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,40,0" />
+
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="White" Margin="0 0 0 0">新建事件</TextBlock>
+                                    </StackPanel>
                                 </Button.Content>
                             </Button>
-                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="White" Margin="60 0 0 0">新建事件</TextBlock>
                         </Grid>
 
                         <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 560 1 0">
                             <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" Command="{Binding CreateObjectivesCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="Black" BorderBrush="Black">
                                 <Button.Content>
-                                    <materialDesign:PackIcon Kind="BookmarkCheck" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" />
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="BookmarkCheck" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,40,0" />
+
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="White" Margin="0 0 0 0">新建目标</TextBlock>
+                                    </StackPanel>
                                 </Button.Content>
                             </Button>
-                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="White" Margin="60 0 0 0">新建目标</TextBlock>
                         </Grid>
 
                         <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 670 1 0">
                             <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" Command="{Binding CreateJournalCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="White" BorderBrush="White">
                                 <Button.Content>
-                                    <materialDesign:PackIcon Kind="BookmarkBoxMultipleOutline" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" Foreground="#DD000000" />
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="BookmarkBoxMultipleOutline" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,20,0" Foreground="#DD000000"/>
+
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="Black" Margin="0 0 0 0">新建任务笔记</TextBlock>
+                                    </StackPanel>
                                 </Button.Content>
                             </Button>
-                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="Black" Margin="60 0 0 0">新建任务笔记</TextBlock>
                         </Grid>
 
                         <Grid Height="100" Width="210" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 780 1 0">
-                            <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" Command="{Binding CreateItemsCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="White" BorderBrush="White" Margin="0,0,0,0">
+                            <Button MouseMove="Btn_MouseMove" MouseLeave="Btn_MouseLeave" Command="{Binding CreateItemsCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="100" Width="210" Background="White" BorderBrush="White" ToolTip="建议您使用BQ导入">
                                 <Button.Content>
-                                    <materialDesign:PackIcon Kind="Boombox" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,130,0" Foreground="#DD000000" />
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="Boombox" Height="50" Width="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,20,0" Foreground="#DD000000"/>
+
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="Black" Margin="0 0 0 0">新建BQ物品</TextBlock>
+                                    </StackPanel>
                                 </Button.Content>
                             </Button>
-                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Foreground="Black" Margin="60 0 0 0">新建物品</TextBlock>
                         </Grid>
                     </Grid>
                 </ScrollViewer>
@@ -164,7 +195,7 @@
 
             <Grid Grid.Row="3" Grid.Column="1" Background="#FF4C4C4C">
                 <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="White">缩放比例(%)：</TextBlock>
-                <TextBlock x:Name="ScalerTBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Margin="100 0 0 0" Foreground="White"></TextBlock>
+                <TextBlock x:Name="ScalerTBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Margin="80 0 0 0" Foreground="White" Text="{Binding ScalerProp,Converter={StaticResource StringAddConverter}}"></TextBlock>
                 <TextBlock HorizontalAlignment="Center" Margin="0,0,0,0" TextWrapping="Wrap" Text="删除任意对话请直接左键选中对话然后按DELETE" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Foreground="White" FontStyle="Italic" TextDecorations="Underline"/>
                 <Button Command="{Binding OpenInfoWindowCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0 0 15 0" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Background="{x:Null}" BorderBrush="{x:Null}">
                     <materialDesign:PackIcon Kind="Cog" />
@@ -190,7 +221,7 @@
                                 </Border.Effect>
                                 <Grid>
                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="15" Foreground="White" Margin="30 0 0 0">搜索:</TextBlock>
-                                    <TextBox Text="{Binding SearchText}" materialDesign:TextFieldAssist.UnderlineBrush="White" materialDesign:HintAssist.Hint="请输入想要查找的卡片名称" Margin="70 0 0 0" VerticalAlignment="Center" HorizontalAlignment="Left" Height="25" Width="200" FontSize="12" Foreground="White"></TextBox>
+                                    <TextBox Text="{Binding Path=SearchText,Converter={StaticResource StringFormatConverter},Mode=TwoWay}"  materialDesign:TextFieldAssist.UnderlineBrush="White" materialDesign:HintAssist.Hint="请输入想要查找的卡片名称" Margin="70 0 0 0" VerticalAlignment="Center" HorizontalAlignment="Left" Height="25" Width="200" FontSize="12" Foreground="White"></TextBox>
                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="15" Foreground="White" Margin="280 0 0 0">类型:</TextBlock>
                                     <ComboBox Foreground="Black" SelectedItem="{Binding SearchType}" ItemsSource="{Binding SearchListType}" materialDesign:TextFieldAssist.UnderlineBrush="White" Width="90" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="320 0 0 0"></ComboBox>
                                     <Button Command="{Binding SelectSearchCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" materialDesign:ButtonAssist.CornerRadius="0" materialDesign:ButtonProgressAssist.IndicatorForeground="White" Style="{StaticResource MaterialDesignPaperSecondaryButton}" Background="{x:Null}" Foreground="White" BorderBrush="White" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="420 0 0 1" Width="60" Height="25">搜索</Button>
@@ -314,7 +345,7 @@
                                                                                         <TextBlock HorizontalAlignment="Center" Margin="0 5 0 0" FontSize="18" FontWeight="Bold" Text="对话主体" />
                                                                                         <Grid >
                                                                                             <TextBlock Grid.Row="1" Text="配置名称："  Margin="10 5 0 0" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                                                                            <TextBox Text="{Binding Path=ConfigName}" Grid.Row="1" Width="130" Height="25" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" />
+                                                                                            <TextBox Text="{Binding Path=ConfigName,Converter={StaticResource StringFormatConverter}}" Grid.Row="1" Width="130" Height="25" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" />
                                                                                         </Grid>
                                                                                         <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
                                                                                     </StackPanel>
@@ -358,9 +389,9 @@
                                                                                             <RowDefinition Height="*" />
                                                                                         </Grid.RowDefinitions>
                                                                                         <TextBlock Text="绑定NPC：" Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                                                                        <TextBox x:Name="NpcName_TBox" Text="{Binding Path=NPC_ID}" Width="300" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                                                                                        <TextBox x:Name="NpcName_TBox" Text="{Binding Path=NPC_ID,Converter={StaticResource StringFormatIntConverter}}" Width="300" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                                                                                         <TextBlock Text="显示名称：" Grid.Row="1" Margin="10 10 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                                                                        <TextBox x:Name="ShowNpcName_TBox" Text="{Binding Path=ItemContent}" Grid.Row="1" Width="300" Height="30" Margin="70 10 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                                                                                        <TextBox x:Name="ShowNpcName_TBox" Text="{Binding Path=ItemContent,Converter={StaticResource StringFormatConverter}}" Grid.Row="1" Width="300" Height="30" Margin="70 10 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                                                                                     </Grid>
                                                                                 </Grid>
                                                                             </materialDesign:Flipper.BackContent>
@@ -403,7 +434,7 @@
                                                                                         <TextBlock HorizontalAlignment="Center" Margin="0 5 0 0" FontSize="18" FontWeight="Bold" Text="NPC对话" />
                                                                                         <Grid>
                                                                                             <TextBlock Text="配置名称："  Margin="10 5 0 0" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                                                                            <TextBox x:Name="ConditionsConfig_TBox" Text="{Binding Path=ConfigName}" Width="150" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="{Binding Path=IsProtectName}"/>
+                                                                                            <TextBox x:Name="ConditionsConfig_TBox" Text="{Binding Path=ConfigName,Converter={StaticResource StringFormatConverter}}" Width="150" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="{Binding Path=IsProtectName}"/>
                                                                                         </Grid>
                                                                                         <Button x:Name="BackBtn" Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑">
 
@@ -602,7 +633,7 @@
                                                                                         <TextBlock HorizontalAlignment="Center" Margin="0 5 0 0" FontSize="18" FontWeight="Bold" Text="玩家对话" />
                                                                                         <Grid>
                                                                                             <TextBlock Text="配置名称："  Margin="10 5 0 0" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                                                                            <TextBox x:Name="ConditionsConfig_TBox" Text="{Binding Path=ConfigName}" Width="150" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="{Binding Path=IsProtectName}"/>
+                                                                                            <TextBox x:Name="ConditionsConfig_TBox" Text="{Binding Path=ConfigName,Converter={StaticResource StringFormatConverter}}" Width="150" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="{Binding Path=IsProtectName}"/>
                                                                                         </Grid>
                                                                                         <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
                                                                                     </StackPanel>
@@ -799,7 +830,7 @@
                                                                                         <TextBlock HorizontalAlignment="Center" Margin="0 5 0 0" FontSize="22" FontWeight="Bold" Text="条件" />
                                                                                         <Grid>
                                                                                             <TextBlock Text="配置名称："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                                                                            <TextBox x:Name="ConditionsConfig_TBox" Text="{Binding Path=ConfigName}" Width="100" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="{Binding Path=IsProtectName}"/>
+                                                                                            <TextBox x:Name="ConditionsConfig_TBox" Text="{Binding Path=ConfigName,Converter={StaticResource StringFormatConverter}}" Width="100" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="{Binding Path=IsProtectName}"/>
 
                                                                                             <TextBlock Grid.Row="0" Text="条件类型："  Margin="210 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                                                                             <ComboBox SelectedItem="{Binding Path=SelectType}" ItemsSource="{Binding Path=AllType}" ToolTip="{Binding Path= TypeHelp}" x:Name="Conditions_CBox"  Width="110" Height="30" Grid.Row="0" materialDesign:HintAssist.Hint="请选择" HorizontalAlignment="Left" Margin="270,0,0,0">
@@ -982,7 +1013,7 @@
                                                                                         <TextBlock HorizontalAlignment="Center" Margin="0 5 0 0" FontSize="22" FontWeight="Bold" Text="事件" />
                                                                                         <Grid>
                                                                                             <TextBlock Text="配置名称："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                                                                            <TextBox x:Name="ConditionsConfig_TBox" Text="{Binding Path=ConfigName}" Width="100" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="{Binding Path=IsProtectName}"/>
+                                                                                            <TextBox x:Name="ConditionsConfig_TBox" Text="{Binding Path=ConfigName,Converter={StaticResource StringFormatConverter}}" Width="100" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="{Binding Path=IsProtectName}"/>
 
                                                                                             <TextBlock Grid.Row="0" Text="事件类型："  Margin="210 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                                                                             <ComboBox SelectedItem="{Binding Path=SelectType}" ItemsSource="{Binding Path=AllType}" ToolTip="{Binding Path= TypeHelp}" x:Name="Conditions_CBox"  Width="110" Height="30" Grid.Row="0" materialDesign:HintAssist.Hint="请选择" HorizontalAlignment="Left" Margin="270,0,0,0">
@@ -1164,7 +1195,7 @@
                                                                                         <TextBlock HorizontalAlignment="Center" Margin="0 5 0 0" FontSize="22" FontWeight="Bold" Text="目标" />
                                                                                         <Grid>
                                                                                             <TextBlock Text="配置名称："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                                                                            <TextBox x:Name="ConditionsConfig_TBox" Text="{Binding Path=ConfigName}" Width="100" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="{Binding Path=IsProtectName}"/>
+                                                                                            <TextBox x:Name="ConditionsConfig_TBox" Text="{Binding Path=ConfigName,Converter={StaticResource StringFormatConverter}}" Width="100" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="{Binding Path=IsProtectName}"/>
 
                                                                                             <TextBlock Grid.Row="0" Text="目标类型："  Margin="210 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                                                                             <ComboBox SelectedItem="{Binding Path=SelectType}" ItemsSource="{Binding Path=AllType}" ToolTip="{Binding Path= TypeHelp}" x:Name="Conditions_CBox"  Width="110" Height="30" Grid.Row="0" materialDesign:HintAssist.Hint="请选择" HorizontalAlignment="Left" Margin="270,0,0,0">
@@ -1346,7 +1377,7 @@
                                                                                         <TextBlock HorizontalAlignment="Center" Margin="0 0 0 0" FontSize="22" FontWeight="Bold" Text="任务笔记" />
                                                                                         <Grid>
                                                                                             <TextBlock Text="配置名称："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                                                                            <TextBox Text="{Binding Path=ConfigName}" x:Name="JournalConfig_TBox" Width="130" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="{Binding Path=IsProtectName}"/>
+                                                                                            <TextBox Text="{Binding Path=ConfigName,Converter={StaticResource StringFormatConverter}}" x:Name="JournalConfig_TBox" Width="130" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="{Binding Path=IsProtectName}"/>
                                                                                         </Grid>
                                                                                         <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
                                                                                     </StackPanel>
@@ -1413,7 +1444,7 @@
                                                                                         <TextBlock HorizontalAlignment="Center" Margin="0 0 0 0" FontSize="22" FontWeight="Bold" Text="任务物品" />
                                                                                         <Grid>
                                                                                             <TextBlock Text="配置名称："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                                                                            <TextBox Text="{Binding Path=ConfigName}" x:Name="ItemsConfig_TBox" Width="130" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="{Binding Path=IsProtectName}"/>
+                                                                                            <TextBox Text="{Binding Path=ConfigName,Converter={StaticResource StringFormatConverter}}" x:Name="ItemsConfig_TBox" Width="130" Height="30" Margin="70 0 0 0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="{Binding Path=IsProtectName}"/>
                                                                                         </Grid>
                                                                                         <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:Flipper.FlipCommand}" FontWeight="Bold" Margin="0 0 0 0" Content="编辑" />
                                                                                     </StackPanel>
@@ -1499,9 +1530,9 @@
                         </Grid>
                     </Grid>
                 </materialDesign:DrawerHost>
-                <Border x:Name="MessageBar" BorderThickness="1" HorizontalAlignment="Center" Height="43" VerticalAlignment="Bottom" Width="848" Background="#FF4C4C4C" Margin="0 0 0 10" CornerRadius="10">
+                <Border x:Name="MessageBar" BorderThickness="1" HorizontalAlignment="Center" MinHeight="43" VerticalAlignment="Bottom" Width="848" Background="#FF4C4C4C" Margin="0 0 0 10" CornerRadius="10">
                     <Grid>
-                        <TextBlock Text="{Binding Message}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" Height="25" Foreground="White" FontWeight="Bold" TextDecorations="Underline"/>
+                        <TextBlock Text="{Binding Message}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" Foreground="White" FontWeight="Bold" TextDecorations="Underline" TextWrapping="Wrap"/>
                     </Grid>
                 </Border>
             </Grid>

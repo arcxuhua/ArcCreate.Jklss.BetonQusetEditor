@@ -32,7 +32,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest.ClientWindow
             }
             catch
             {
-                computerInfo = string.Empty;
+                try
+                {
+                    computerInfo = MachineNumberService.Value();
+                }
+                catch
+                {
+                    MessageBox.Show("您的电脑系统版本过低，暂时无法得到兼容支持，请等待兼容！");
+                }
+                
             }
             
         }

@@ -21,6 +21,7 @@ using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -47,7 +48,7 @@ using ThumbInfoModel = ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase.ThumbInf
 
 namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 {
-    public partial class ClientWindowViewModel : ObservableObject
+    public partial class ClientWindowViewModel : ObservableObject, INotifyPropertyChanged
     {
         #region 构造函数
         /// <summary>
@@ -122,10 +123,11 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 LoadWindow();
             });
         }
-
         #endregion
 
         #region 字段与属性
+
+        protected bool isSendNow = false;
 
         public ReturnModel returnModel = new ReturnModel(); 
 
@@ -148,6 +150,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         private BordCardViewModel bordCardViewModel = new BordCardViewModel() { CvZIndex = 2,IsDraw=true};
 
         public MainWindow window = null;
+
+        [ObservableProperty]
+        private string _ScalerProp = "100";
 
         [ObservableProperty]
         private bool _IsProtectName = false;
@@ -740,7 +745,17 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
             if (getResult.Succese)
             {
-                ShowMessage("配置保存至云端成功");
+                try
+                {
+                    SelectData.Code = Convert.ToInt32((getResult.Backs as MessageModel).Other);
+
+                    ShowMessage("配置保存至云端成功");
+                }
+                catch
+                {
+                    ShowMessage("配置保存成功，但获取保存ID错误，请重新登录客户端以解决该问题");
+                }
+                
             }
             else
             {
@@ -1000,7 +1015,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
                 if (sx <= 3 && sx >= 0.05)
                 {
-                    Scale = sx;
+                    ScalerProp = Math.Round(sx*100,0).ToString();
                     this.ScaleTransform_ScaleXProp += s;
 
                     this.ScaleTransform_ScaleYProp += s;
@@ -1214,8 +1229,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         /// <param name="txt"></param>
         public async void ShowMessage(string txt)
         {
+            while (isSendNow)
+            {
+                await Task.Delay(1000);
+            }
+
             await Task.Run(() =>
             {
+                isSendNow = true;
+
                 window.Dispatcher.Invoke(new Action(() =>
                 {
                     window.MessageBar.Visibility = Visibility.Visible;
@@ -1223,13 +1245,14 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                     AnimationBase.Appear(window.MessageBar);
                 }));
 
-                Thread.Sleep(3000);
-
+                Thread.Sleep(1000);
 
                 window.Dispatcher.Invoke(new Action(() =>
                 {
                     AnimationBase.Disappear(window.MessageBar);
                 }));
+
+                isSendNow = false;
             });
         }
 
@@ -3904,6 +3927,27 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
             #endregion
 
+            if (isPay)
+            {
+                try
+                {
+                    var success = await PayPoint(1);
+
+                    ShowMessage("付费请求:"+success.Text);
+
+                    if (!success.Succese)
+                    {
+                        return null;
+                    }
+                }
+                catch
+                {
+                    ShowMessage("付费请求发送失败，请重新登录客户端以解决该问题");
+
+                    return null;
+                }
+            }
+
             switch (thumbClass)
             {
                 case ThumbClass.Subject:
@@ -3927,30 +3971,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                         }
                     };
 
-                    if (!isPay)
-                    {
-                        CardItems.Add(cardView);
-                        break;
-                    }
-
-                    try
-                    {
-                        var success = await PayPoint(1);
-
-                        ShowMessage(success.Text);
-
-                        if (!success.Succese)
-                        {
-                            break;
-                        }
-
-                        CardItems.Add(cardView);
-                    }
-                    catch
-                    {
-                        ShowMessage("创建卡片失败！");
-                    }
-
+                    CardItems.Add(cardView);
                     break;
 
                 case ThumbClass.NPC:
@@ -4009,29 +4030,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                         }
                     };
 
-                    if (!isPay)
-                    {
-                        CardItems.Add(cardView);
-                        break;
-                    }
-
-                    try
-                    {
-                        var success = await PayPoint(1);
-
-                        ShowMessage(success.Text);
-
-                        if (!success.Succese)
-                        {
-                            break;
-                        }
-
-                        CardItems.Add(cardView);
-                    }
-                    catch
-                    {
-                        ShowMessage("创建卡片失败！");
-                    }
+                    CardItems.Add(cardView);
 
                     break;
 
@@ -4089,31 +4088,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                             },
 
                         }
-                    }; 
-                    
-                    if (!isPay)
-                    {
-                        CardItems.Add(cardView);
-                        break;
-                    }
+                    };
 
-                    try
-                    {
-                        var success = await PayPoint(1);
-
-                        ShowMessage(success.Text);
-
-                        if (!success.Succese)
-                        {
-                            break;
-                        }
-
-                        CardItems.Add(cardView);
-                    }
-                    catch
-                    {
-                        ShowMessage("创建卡片失败！");
-                    }
+                    CardItems.Add(cardView);
 
                     break;
 
@@ -4184,29 +4161,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                         }
                     };
 
-                    if (!isPay)
-                    {
-                        CardItems.Add(cardView);
-                        break;
-                    }
-
-                    try
-                    {
-                        var success = await PayPoint(1);
-
-                        ShowMessage(success.Text);
-
-                        if (!success.Succese)
-                        {
-                            break;
-                        }
-
-                        CardItems.Add(cardView);
-                    }
-                    catch
-                    {
-                        ShowMessage("创建卡片失败！");
-                    }
+                    CardItems.Add(cardView);
 
                     break;
 
@@ -4278,29 +4233,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                         }
                     };
 
-                    if (!isPay)
-                    {
-                        CardItems.Add(cardView);
-                        break;
-                    }
-
-                    try
-                    {
-                        var success = await PayPoint(1);
-
-                        ShowMessage(success.Text);
-
-                        if (!success.Succese)
-                        {
-                            break;
-                        }
-
-                        CardItems.Add(cardView);
-                    }
-                    catch
-                    {
-                        ShowMessage("创建卡片失败！");
-                    }
+                    CardItems.Add(cardView);
 
                     break;
 
@@ -4357,29 +4290,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                         }
                     };
 
-                    if (!isPay)
-                    {
-                        CardItems.Add(cardView);
-                        break;
-                    }
-
-                    try
-                    {
-                        var success = await PayPoint(1);
-
-                        ShowMessage(success.Text);
-
-                        if (!success.Succese)
-                        {
-                            break;
-                        }
-
-                        CardItems.Add(cardView);
-                    }
-                    catch
-                    {
-                        ShowMessage("创建卡片失败！");
-                    }
+                    CardItems.Add(cardView);
 
                     break;
 
@@ -4412,29 +4323,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                         ThumbHeight = 148.00,
                     };
 
-                    if (!isPay)
-                    {
-                        CardItems.Add(cardView);
-                        break;
-                    }
-
-                    try
-                    {
-                        var success = await PayPoint(1);
-
-                        ShowMessage(success.Text);
-
-                        if (!success.Succese)
-                        {
-                            break;
-                        }
-
-                        CardItems.Add(cardView);
-                    }
-                    catch
-                    {
-                        ShowMessage("创建卡片失败！");
-                    }
+                    CardItems.Add(cardView);
 
                     break;
 
@@ -4467,29 +4356,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                         ThumbHeight = 148.00,
                     };
 
-                    if (!isPay)
-                    {
-                        CardItems.Add(cardView);
-                        break;
-                    }
-
-                    try
-                    {
-                        var success = await PayPoint(1);
-
-                        ShowMessage(success.Text);
-
-                        if (!success.Succese)
-                        {
-                            break;
-                        }
-
-                        CardItems.Add(cardView);
-                    }
-                    catch
-                    {
-                        ShowMessage("创建卡片失败！");
-                    }
+                    CardItems.Add(cardView);
 
                     break;
             }
@@ -4509,7 +4376,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
     /// <summary>
     /// 所有卡片的基类
     /// </summary>
-    public partial class CardViewModel : ObservableObject
+    public partial class CardViewModel : ObservableObject, INotifyPropertyChanged
     {
         [ObservableProperty]
         private ObservableCollection<ShurtcutIdeaBtnViewModel> _ShurtcutIdea = new ObservableCollection<ShurtcutIdeaBtnViewModel>();

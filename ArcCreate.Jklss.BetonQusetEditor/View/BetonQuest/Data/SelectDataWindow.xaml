@@ -61,6 +61,7 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
+            
             <Grid x:Name="CreatePage" Grid.Column="2" Background="#FFC1C1C1" Visibility="Hidden">
                 <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30 30 0 0" FontSize="20" FontWeight="Bold" Foreground="White">创建新的项目</TextBlock>
                 <TextBox Text="{Binding CreateName}" materialDesign:TextFieldAssist.UnderlineBrush="White" Foreground="White" CaretBrush="White" SelectionBrush="White" Cursor="Arrow" HorizontalAlignment="Center" VerticalAlignment="Top" Width="300" Margin="0,167,0,0"></TextBox>
@@ -74,6 +75,7 @@
                     <materialDesign:PackIcon Width="30" Height="30" Kind="CardSearch" />
                 </Button>
             </Grid>
+            
             <Grid x:Name="CreateNewPage" Grid.Column="2" Background="#FFC1C1C1" Visibility="Hidden">
                 <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30 30 0 0" FontSize="20" FontWeight="Bold" Foreground="White">创建新的项目</TextBlock>
                 <TextBox Text="{Binding CreateName}" materialDesign:TextFieldAssist.UnderlineBrush="White" Foreground="White" CaretBrush="White" SelectionBrush="White" Cursor="Arrow" HorizontalAlignment="Center" VerticalAlignment="Top" Width="300" Margin="0,167,0,0"></TextBox>

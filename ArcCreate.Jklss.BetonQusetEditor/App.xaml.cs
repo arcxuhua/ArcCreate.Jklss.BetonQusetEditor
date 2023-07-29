@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest;
+using System;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -16,11 +17,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor
         /// </summary>
         public App()
         {
-
+            
         }
 
-        protected override void OnStartup(StartupEventArgs e)
+        protected override async void OnStartup(StartupEventArgs e)
         {
+            var socketViewModel = new SocketViewModel();
+
+            await socketViewModel.StarSocketTCP();
+
             base.OnStartup(e);
             DispatcherUnhandledException += App_DispatcherUnhandledException;
         }
@@ -28,6 +33,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             MessageBox.Show("报错啦！请将报错截图发送给苦逼程序员！\n"+e.Exception.ToString(), "异常");
+
             e.Handled = true;
         }
     }
