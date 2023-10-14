@@ -525,7 +525,7 @@
                                                                                             <ComboBox x:Name="Conditions_CBox" SelectedItem="{Binding Path=SelectType}" ItemsSource="{Binding Path=AllType}" Width="300" ToolTip="除了文案外其他选项不建议您以手动输入的方式添加！" Height="25" Grid.Row="0" materialDesign:HintAssist.Hint="请选择需要编辑的类型" HorizontalAlignment="Left" Margin="70,0,0,0">
 
                                                                                                 <binding:Interaction.Triggers>
-                                                                                                    <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:EventTrigger EventName="SelectionChanged">
                                                                                                         <binding:InvokeCommandAction Command="{Binding Path=TypeLoadedCommand}" CommandParameter="{Binding ElementName=Conditions_CBox}">
                                                                                                         </binding:InvokeCommandAction>
                                                                                                     </binding:EventTrigger>
@@ -538,7 +538,7 @@
 
                                                                                             <ComboBox SelectedItem="{Binding Path=SelectCmd}" ItemsSource="{Binding Path=AllCmd}" x:Name="ConditionsCmdEdit_CBox" materialDesign:HintAssist.Hint="请选择需要编辑的命令" Width="300" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Left">
                                                                                                 <binding:Interaction.Triggers>
-                                                                                                    <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:EventTrigger EventName="SelectionChanged">
                                                                                                         <binding:InvokeCommandAction Command="{Binding Path=CmdLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdEdit_CBox}">
                                                                                                         </binding:InvokeCommandAction>
                                                                                                     </binding:EventTrigger>
@@ -551,7 +551,7 @@
 
                                                                                             <ComboBox SelectedItem="{Binding Path=SelectParameter}" ItemsSource="{Binding Path=AllParameter}" x:Name="ConditionsCmdparameterEdit_CBox" materialDesign:HintAssist.Hint="请选择需要编辑的参数" Width="300" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Left">
                                                                                                 <binding:Interaction.Triggers>
-                                                                                                    <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:EventTrigger EventName="SelectionChanged">
                                                                                                         <binding:InvokeCommandAction Command="{Binding Path=ParameterLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdparameterEdit_CBox}">
                                                                                                         </binding:InvokeCommandAction>
                                                                                                     </binding:EventTrigger>
@@ -564,7 +564,7 @@
 
                                                                                             <ComboBox x:Name="ConditionsCmdProjectEdit_CBox" SelectedItem="{Binding Path=SelectItem}" ItemsSource="{Binding Path=AllItem}" materialDesign:HintAssist.Hint="请选择需要编辑的项" Width="235" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Left">
                                                                                                 <binding:Interaction.Triggers>
-                                                                                                    <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:EventTrigger EventName="SelectionChanged">
                                                                                                         <binding:InvokeCommandAction Command="{Binding Path=ItemLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdProjectEdit_CBox}">
                                                                                                         </binding:InvokeCommandAction>
                                                                                                     </binding:EventTrigger>
@@ -722,7 +722,7 @@
                                                                                             <ComboBox x:Name="Conditions_CBox" SelectedItem="{Binding Path=SelectType}" ItemsSource="{Binding Path=AllType}" Width="300" ToolTip="除了文案外其他选项不建议您以手动输入的方式添加！" Height="25" Grid.Row="0" materialDesign:HintAssist.Hint="请选择需要编辑的类型" HorizontalAlignment="Left" Margin="70,0,0,0">
 
                                                                                                 <binding:Interaction.Triggers>
-                                                                                                    <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:EventTrigger EventName="SelectionChanged">
                                                                                                         <binding:InvokeCommandAction Command="{Binding Path=TypeLoadedCommand}" CommandParameter="{Binding ElementName=Conditions_CBox}">
                                                                                                         </binding:InvokeCommandAction>
                                                                                                     </binding:EventTrigger>
@@ -735,7 +735,7 @@
 
                                                                                             <ComboBox SelectedItem="{Binding Path=SelectCmd}" ItemsSource="{Binding Path=AllCmd}" x:Name="ConditionsCmdEdit_CBox" materialDesign:HintAssist.Hint="请选择需要编辑的命令" Width="300" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Left">
                                                                                                 <binding:Interaction.Triggers>
-                                                                                                    <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:EventTrigger EventName="SelectionChanged">
                                                                                                         <binding:InvokeCommandAction Command="{Binding Path=CmdLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdEdit_CBox}">
                                                                                                         </binding:InvokeCommandAction>
                                                                                                     </binding:EventTrigger>
@@ -748,7 +748,7 @@
 
                                                                                             <ComboBox SelectedItem="{Binding Path=SelectParameter}" ItemsSource="{Binding Path=AllParameter}" x:Name="ConditionsCmdparameterEdit_CBox" materialDesign:HintAssist.Hint="请选择需要编辑的参数" Width="300" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Left">
                                                                                                 <binding:Interaction.Triggers>
-                                                                                                    <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:EventTrigger EventName="SelectionChanged">
                                                                                                         <binding:InvokeCommandAction Command="{Binding Path=ParameterLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdparameterEdit_CBox}">
                                                                                                         </binding:InvokeCommandAction>
                                                                                                     </binding:EventTrigger>
@@ -761,7 +761,7 @@
 
                                                                                             <ComboBox x:Name="ConditionsCmdProjectEdit_CBox" SelectedItem="{Binding Path=SelectItem}" ItemsSource="{Binding Path=AllItem}" materialDesign:HintAssist.Hint="请选择需要编辑的项" Width="235" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Left">
                                                                                                 <binding:Interaction.Triggers>
-                                                                                                    <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:EventTrigger EventName="SelectionChanged">
                                                                                                         <binding:InvokeCommandAction Command="{Binding Path=ItemLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdProjectEdit_CBox}">
                                                                                                         </binding:InvokeCommandAction>
                                                                                                     </binding:EventTrigger>
@@ -836,7 +836,7 @@
                                                                                             <ComboBox SelectedItem="{Binding Path=SelectType}" ItemsSource="{Binding Path=AllType}" ToolTip="{Binding Path= TypeHelp}" x:Name="Conditions_CBox"  Width="110" Height="30" Grid.Row="0" materialDesign:HintAssist.Hint="请选择" HorizontalAlignment="Left" Margin="270,0,0,0">
 
                                                                                                 <binding:Interaction.Triggers>
-                                                                                                    <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:EventTrigger EventName="SelectionChanged">
                                                                                                         <binding:InvokeCommandAction Command="{Binding Path=TypeLoadedCommand}" CommandParameter="{Binding ElementName=Conditions_CBox}">
                                                                                                         </binding:InvokeCommandAction>
                                                                                                     </binding:EventTrigger>
@@ -919,9 +919,9 @@
 
                                                                                         <Grid Grid.Row="1">
                                                                                             <TextBlock Text="编辑命令："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                                                                                            <ComboBox SelectedItem="{Binding Path=SelectCmd}" ItemsSource="{Binding Path=AllCmd}" ToolTip="{Binding Path= HelpCmd}" x:Name="ConditionsCmdEdit_CBox" Width="300" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left">
+                                                                                            <ComboBox SelectedItem="{Binding Path=SelectCmd}" ItemsSource="{Binding Path=AllCmd}" ToolTip="{Binding Path= CmdHelp}" x:Name="ConditionsCmdEdit_CBox" Width="300" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left">
                                                                                                 <binding:Interaction.Triggers>
-                                                                                                    <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:EventTrigger EventName="SelectionChanged">
                                                                                                         <binding:InvokeCommandAction Command="{Binding Path=CmdLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdEdit_CBox}">
                                                                                                         </binding:InvokeCommandAction>
                                                                                                     </binding:EventTrigger>
@@ -933,7 +933,7 @@
                                                                                             <TextBlock Text="参数："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                                                                             <ComboBox SelectedItem="{Binding Path=SelectParameter}" ItemsSource="{Binding Path=AllParameter}" ToolTip="{Binding Path= ParameterHelp}" x:Name="ConditionsCmdparameterEdit_CBox" Width="300" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left">
                                                                                                 <binding:Interaction.Triggers>
-                                                                                                    <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:EventTrigger EventName="SelectionChanged">
                                                                                                         <binding:InvokeCommandAction Command="{Binding Path=ParameterLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdparameterEdit_CBox}">
                                                                                                         </binding:InvokeCommandAction>
                                                                                                     </binding:EventTrigger>
@@ -945,7 +945,7 @@
                                                                                             <TextBlock Text="项："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                                                                             <ComboBox SelectedItem="{Binding Path=SelectItem}" ItemsSource="{Binding Path=AllItem}" ToolTip="{Binding Path= ItemHelp}" x:Name="ConditionsCmdProjectEdit_CBox" Width="235" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left">
                                                                                                 <binding:Interaction.Triggers>
-                                                                                                    <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:EventTrigger EventName="SelectionChanged">
                                                                                                         <binding:InvokeCommandAction Command="{Binding Path=ItemLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdProjectEdit_CBox}">
                                                                                                         </binding:InvokeCommandAction>
                                                                                                     </binding:EventTrigger>
@@ -1019,7 +1019,7 @@
                                                                                             <ComboBox SelectedItem="{Binding Path=SelectType}" ItemsSource="{Binding Path=AllType}" ToolTip="{Binding Path= TypeHelp}" x:Name="Conditions_CBox"  Width="110" Height="30" Grid.Row="0" materialDesign:HintAssist.Hint="请选择" HorizontalAlignment="Left" Margin="270,0,0,0">
 
                                                                                                 <binding:Interaction.Triggers>
-                                                                                                    <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:EventTrigger EventName="SelectionChanged">
                                                                                                         <binding:InvokeCommandAction Command="{Binding Path=TypeLoadedCommand}" CommandParameter="{Binding ElementName=Conditions_CBox}">
                                                                                                         </binding:InvokeCommandAction>
                                                                                                     </binding:EventTrigger>
@@ -1104,7 +1104,7 @@
                                                                                             <TextBlock Text="编辑命令："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                                                                             <ComboBox SelectedItem="{Binding Path=SelectCmd}" ItemsSource="{Binding Path=AllCmd}" ToolTip="{Binding Path= CmdHelp}" x:Name="ConditionsCmdEdit_CBox" Width="300" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left">
                                                                                                 <binding:Interaction.Triggers>
-                                                                                                    <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:EventTrigger EventName="SelectionChanged">
                                                                                                         <binding:InvokeCommandAction Command="{Binding Path=CmdLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdEdit_CBox}">
                                                                                                         </binding:InvokeCommandAction>
                                                                                                     </binding:EventTrigger>
@@ -1116,7 +1116,7 @@
                                                                                             <TextBlock Text="参数："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                                                                             <ComboBox SelectedItem="{Binding Path=SelectParameter}" ItemsSource="{Binding Path=AllParameter}" ToolTip="{Binding Path= ParameterHelp}" x:Name="ConditionsCmdparameterEdit_CBox" Width="300" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left">
                                                                                                 <binding:Interaction.Triggers>
-                                                                                                    <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:EventTrigger EventName="SelectionChanged">
                                                                                                         <binding:InvokeCommandAction Command="{Binding Path=ParameterLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdparameterEdit_CBox}">
                                                                                                         </binding:InvokeCommandAction>
                                                                                                     </binding:EventTrigger>
@@ -1128,7 +1128,7 @@
                                                                                             <TextBlock Text="项："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                                                                             <ComboBox SelectedItem="{Binding Path=SelectItem}" ItemsSource="{Binding Path=AllItem}" ToolTip="{Binding Path= ItemHelp}" x:Name="ConditionsCmdProjectEdit_CBox" Width="235" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left">
                                                                                                 <binding:Interaction.Triggers>
-                                                                                                    <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:EventTrigger EventName="SelectionChanged">
                                                                                                         <binding:InvokeCommandAction Command="{Binding Path=ItemLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdProjectEdit_CBox}">
                                                                                                         </binding:InvokeCommandAction>
                                                                                                     </binding:EventTrigger>
@@ -1201,7 +1201,7 @@
                                                                                             <ComboBox SelectedItem="{Binding Path=SelectType}" ItemsSource="{Binding Path=AllType}" ToolTip="{Binding Path= TypeHelp}" x:Name="Conditions_CBox"  Width="110" Height="30" Grid.Row="0" materialDesign:HintAssist.Hint="请选择" HorizontalAlignment="Left" Margin="270,0,0,0">
 
                                                                                                 <binding:Interaction.Triggers>
-                                                                                                    <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:EventTrigger EventName="SelectionChanged">
                                                                                                         <binding:InvokeCommandAction Command="{Binding Path=TypeLoadedCommand}" CommandParameter="{Binding ElementName=Conditions_CBox}">
                                                                                                         </binding:InvokeCommandAction>
                                                                                                     </binding:EventTrigger>
@@ -1286,7 +1286,7 @@
                                                                                             <TextBlock Text="编辑命令："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                                                                             <ComboBox SelectedItem="{Binding Path=SelectCmd}" ItemsSource="{Binding Path=AllCmd}" ToolTip="{Binding Path= CmdHelp}" x:Name="ConditionsCmdEdit_CBox" Width="300" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left">
                                                                                                 <binding:Interaction.Triggers>
-                                                                                                    <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:EventTrigger EventName="SelectionChanged">
                                                                                                         <binding:InvokeCommandAction Command="{Binding Path=CmdLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdEdit_CBox}">
                                                                                                         </binding:InvokeCommandAction>
                                                                                                     </binding:EventTrigger>
@@ -1298,7 +1298,7 @@
                                                                                             <TextBlock Text="参数："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                                                                             <ComboBox SelectedItem="{Binding Path=SelectParameter}" ItemsSource="{Binding Path=AllParameter}" ToolTip="{Binding Path= ParameterHelp}" x:Name="ConditionsCmdparameterEdit_CBox" Width="300" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left">
                                                                                                 <binding:Interaction.Triggers>
-                                                                                                    <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:EventTrigger EventName="SelectionChanged">
                                                                                                         <binding:InvokeCommandAction Command="{Binding Path=ParameterLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdparameterEdit_CBox}">
                                                                                                         </binding:InvokeCommandAction>
                                                                                                     </binding:EventTrigger>
@@ -1310,7 +1310,7 @@
                                                                                             <TextBlock Text="项："  Margin="10 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                                                                                             <ComboBox SelectedItem="{Binding Path=SelectItem}" ItemsSource="{Binding Path=AllItem}" ToolTip="{Binding Path= ItemHelp}" x:Name="ConditionsCmdProjectEdit_CBox" Width="235" Height="25" Margin="70 0 0 0" Text="" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left">
                                                                                                 <binding:Interaction.Triggers>
-                                                                                                    <binding:EventTrigger EventName="Loaded">
+                                                                                                    <binding:EventTrigger EventName="SelectionChanged">
                                                                                                         <binding:InvokeCommandAction Command="{Binding Path=ItemLoadedCommand}" CommandParameter="{Binding ElementName=ConditionsCmdProjectEdit_CBox}">
                                                                                                         </binding:InvokeCommandAction>
                                                                                                     </binding:EventTrigger>

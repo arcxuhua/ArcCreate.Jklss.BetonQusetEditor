@@ -587,7 +587,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
 
             if (getResult.Succese)
             {
-                result.SetSuccese("", FileService.JsonToProp<Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, string>>>>>((getResult.Backs as MessageModel).Message));
+                result.SetSuccese("", FileService.JsonToProp<Dictionary<string, Dictionary<string, string>>>((getResult.Backs as MessageModel).Message));
 
                 return result;
             }

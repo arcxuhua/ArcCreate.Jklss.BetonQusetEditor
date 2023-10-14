@@ -21,11 +21,11 @@ namespace ArcCreate.Jklss.Model
             Backs = obj;
         }
 
-        public void SetError(string txt = "")
+        public void SetError(string txt = "",object obj = null)
         {
             Succese = false;
             Text = txt;
-            Backs = null;
+            Backs = obj;
         }
     }
     public class MachineModel

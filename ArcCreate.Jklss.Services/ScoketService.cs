@@ -288,7 +288,6 @@ namespace ArcCreate.Jklss.Services
             {
                 while (true)
                 {
-                    Console.Write("心跳包");
                     AsyncSend(socket, toJson);
                     Thread.Sleep(1000);
                 }

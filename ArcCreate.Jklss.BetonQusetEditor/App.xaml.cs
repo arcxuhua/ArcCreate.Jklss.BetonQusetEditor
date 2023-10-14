@@ -20,12 +20,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor
             
         }
 
-        protected override async void OnStartup(StartupEventArgs e)
+        protected override void OnStartup(StartupEventArgs e)
         {
-            var socketViewModel = new SocketViewModel();
-
-            await socketViewModel.StarSocketTCP();
-
             base.OnStartup(e);
             DispatcherUnhandledException += App_DispatcherUnhandledException;
         }

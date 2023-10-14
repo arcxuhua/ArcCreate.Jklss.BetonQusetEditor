@@ -1,0 +1,47 @@
+﻿<Window x:Class="ArcCreate.Jklss.BetonQusetEditor.View.BetonQuest.Data.DataCheckWorryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ArcCreate.Jklss.BetonQusetEditor.View.BetonQuest.Data"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:binding="http://schemas.microsoft.com/xaml/behaviors"
+        mc:Ignorable="d"
+        Title="错误列表" Topmost="True" Height="260" Width="900" ResizeMode="NoResize" WindowStyle="None" Background="{x:Null}" AllowsTransparency="True" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Background="#FF4C4C4C" Grid.ColumnSpan="2" MouseMove="MouseMove">
+            <StackPanel Margin="5 0" Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Foreground="White">错误列表</TextBlock>
+            </StackPanel>
+            <Button Command="{Binding CloseCommand}" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryDarkButton}" ToolTip="关闭" Width="35" Height="25" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#DDFFFFFF" Cursor="Hand">
+                <materialDesign:PackIcon Kind="WindowClose" Height="20" Width="20" Foreground="#DDFFFFFF" />
+            </Button>
+        </Grid>
+
+        <Grid Grid.Row="1" Background="#FF757575">
+            <StackPanel Orientation="Horizontal" Margin="5 5">
+                <DataGrid Margin="0 0" x:Name="data" ItemsSource="{Binding Data,Mode=TwoWay}" SelectionMode="Extended" IsReadOnly="True" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" CanUserAddRows="False" AutoGenerateColumns="False" HeadersVisibility="All" Background="#FFADADAD" Foreground="Black" BorderBrush="White" Width="891">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding CardName}" Header="卡片名称" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False" Width="100" />
+                        <DataGridTextColumn Binding="{Binding CardClass}" Header="卡片类型" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False" Width="100" />
+                        <DataGridTextColumn Binding="{Binding CheckInfoLevel}" Header="错误等级" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False" Width="100" />
+                        <DataGridTextColumn Binding="{Binding Message}" Header="错误信息" ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" CanUserResize="False" Width="591"/>
+                        
+                    </DataGrid.Columns>
+                    <binding:Interaction.Triggers>
+                        <binding:EventTrigger EventName="MouseDoubleClick">
+                            <binding:InvokeCommandAction Command="{Binding Path= SelectedWorryCommand}" CommandParameter="{Binding ElementName=data}">
+                            </binding:InvokeCommandAction>
+                        </binding:EventTrigger>
+                    </binding:Interaction.Triggers>
+                </DataGrid>
+            </StackPanel>
+            
+        </Grid>
+    </Grid>
+</Window>

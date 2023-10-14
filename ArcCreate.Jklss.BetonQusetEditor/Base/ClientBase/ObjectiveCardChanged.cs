@@ -138,7 +138,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
                     saveAllValue[cardInfo][cardInfo.SelectType].Add(getModel.ChildTags[i], new Dictionary<string, Dictionary<string, string>>());
                     switch (getModel.ChildTags[i])
                     {
-                        case "condition":
+                        case "conditions":
                             saveAllValue[cardInfo]
                             [cardInfo.SelectType]
                             [getModel.ChildTags[i]]
@@ -462,7 +462,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
                     {
                         switch (cardInfo.SelectCmd)
                         {
-                            case "condition":
+                            case "conditions":
                                 return true;
                             case "events":
                                 return true;
@@ -822,7 +822,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
             {
                 switch (cmd)
                 {
-                    case "condition":
+                    case "conditions":
                         var getnowNum = saveAllValue[cardInfo][type][cmd][par];
 
                         var nowNum = 0;
@@ -1101,7 +1101,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase
             {
                 switch (cmd)
                 {
-                    case "condition":
+                    case "conditions":
                         if (saveAllValue[cardInfo][type][cmd][par].Count < 2)
                         {
                             result.SetError("仅剩一个项不允许被删除！");

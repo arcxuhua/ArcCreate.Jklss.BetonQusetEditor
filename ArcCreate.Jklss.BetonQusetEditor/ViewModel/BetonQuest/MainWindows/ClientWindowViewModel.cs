@@ -1,5 +1,6 @@
 ﻿using ArcCreate.Jklss.BetonQusetEditor.Base;
 using ArcCreate.Jklss.BetonQusetEditor.Base.ClientBase;
+using ArcCreate.Jklss.BetonQusetEditor.Base.DataBase;
 using ArcCreate.Jklss.BetonQusetEditor.Base.FileLoader;
 using ArcCreate.Jklss.BetonQusetEditor.View.BetonQuest.Data;
 using ArcCreate.Jklss.BetonQusetEditor.ViewModel.BetonQuest;
@@ -51,14 +52,6 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
     public partial class ClientWindowViewModel : ObservableObject, INotifyPropertyChanged
     {
         #region 构造函数
-        /// <summary>
-        /// 禁止零参数构造函数，使用即报错
-        /// </summary>
-        /// <exception cref="NotImplementedException"></exception>
-        public ClientWindowViewModel()
-        {
-            throw new NotImplementedException();
-        }
 
         /// <summary>
         /// 基础构造方法用于正常打开该窗体
@@ -83,6 +76,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
             SetSelectCardInfoDel = new _SetSelectCardInfoDel(SetSelectCardInfo);
 
             GetClienteViewModelDel = new _GetClienteViewModelDel(GetClienteViewModel);
+
+            FindCardDel = new _FindCardDel(FindCard);
 
             ThumbInfoWindow window = new ThumbInfoWindow();
 
@@ -126,6 +121,116 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         #endregion
 
         #region 字段与属性
+
+        public ObservableCollection<string> conditionsType = new ObservableCollection<string>
+        {
+            "背包中的物品: item",
+            "手持物品: hand",
+            "或门: or",
+            "与门: and",
+            "地点: location",
+            "生命值: health",
+            "经验: experience",
+            "权限: permission",
+            "点数: point",
+            "标签: tag",
+            "防具: armor",
+            "药水效果: effect",
+            "时间: time",
+            "天气: weather",
+            "高度: height",
+            "护甲值: rating",
+            "随机: random",
+            "潜行: sneak",
+            "日记条目: journal",
+            "方块状态检测: testforblock",
+            "空余背包格: empty",
+            "队伍: party",
+            "区域内怪物: monsters",
+            "目标: objective",
+            "检查条件: check",
+            "箱子物品: chestitem",
+            "计分板: score",
+            "资金(Vault): money",
+            "McMMO等级: mcmmolevel",
+            "WorldGuard区域: score",
+            "PlayerPoints点券: playerpoints",
+            "Heroes阶等: heroesclass",
+            "Heroes技能: heroesskill",
+            "魔杖（Magic）: wand",
+            "类别|职业(SkillApi): skillapiclass",
+            "等级(SkillApi): skillapilevel",
+            "任务(Quest): quest",
+        };
+
+        public ObservableCollection<string> eventsType = new ObservableCollection<string> 
+        {
+            "消息: message",
+            "命令: command",
+            "传送: teleport",
+            "点数: point",
+            "标签: tag",
+            "目标: objective",
+            "日记: journal",
+            "闪电: lightning",
+            "爆炸: explosion",
+            "给予物品: give",
+            "移除物品: take",
+            "药水效果: effect",
+            "对话: conversation",
+            "杀死玩家: kill",
+            "召唤怪物: spawn",
+            "时间: time",
+            "天气: weather",
+            "多事件组: folder",
+            "放置方块: setblock",
+            "伤害玩家: damage",
+            "组队: party",
+            "清除怪物: clear",
+            "运行事件: run",
+            "给予日记: givejournal",
+            "代发指令: sudo",
+            "箱中放置: chestgive",
+            "箱中移除: chesttake",
+            "清理箱子: chestclear",
+            "目标点: compass",
+            "删除任务: cancel",
+            "计分板: score",
+            "权限(Vault): permission",
+            "资金(Vault): money",
+            "生成神话生物(MythicMobs): mspawnmob",
+            "McMMO经验值: mcmmoexp",
+            "PlayerPoints点券: playerpoints",
+            "Heroes经验值: heroesexp",
+            "任务（Quest）: quest",
+        };
+
+        public ObservableCollection<string> objectivesType = new ObservableCollection<string>
+        {
+            "位置: location",
+            "方块: block",
+            "击杀生物: mobkill",
+            "动作: action",
+            "死亡: die",
+            "合成: craft",
+            "熔炼: smelt",
+            "驯服: tame",
+            "等待: delay",
+            "射箭: arrow",
+            "经验值: experience",
+            "踩上压力板: step",
+            "注销: logout",
+            "输入密码: password",
+            "垂钓: fish",
+            "剪羊毛: shear",
+            "附魔: enchant",
+            "装箱: chestput",
+            "炼药: potion",
+            "击杀NPC（Citizens）: npckill",
+            "与NPC互动（Citizens）: npcInteract",
+            "击杀神话生物(MythicMobs): mmobkill",
+            "WorldGuard区域: region",
+        };
 
         protected bool isSendNow = false;
 
@@ -263,6 +368,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
         public delegate ClientWindowViewModel _GetClienteViewModelDel();
         public static _GetClienteViewModelDel GetClienteViewModelDel;
+
+        public delegate ReturnModel _FindCardDel(string cardName, ThumbClass thumbClass);
+        public static _FindCardDel FindCardDel;
 
         #endregion
 
@@ -721,6 +829,61 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 return;
             }
 
+            var getListCard = CardItems.Where(t=>!t.IsLine&&!t.IsDraw).ToList();
+
+            var checkBase = new DataCheckBase(getListCard);
+
+            var getInfo = await checkBase.CheckCard();//卡片检测
+
+            if (!getInfo.Succese)
+            {
+                var getWorryInfo = getInfo.Backs as List<DataCheckInfoModel>;
+
+                //自动修复Main归类问题
+                var getMainWorry = getWorryInfo.Where(t => t.Message == "子卡片总附属发生错误").ToList();
+
+                foreach (var item in getMainWorry)
+                {
+                    var getCard =  CardItems.Where(t => t.ConfigName == item.CardName && t.Type == item.CardClass).FirstOrDefault();
+
+                    if(getCard == null)
+                    {
+                        continue;
+                    }
+
+                    getCard.MainCard = item.Backs as CardViewModel;
+
+                    getWorryInfo.Remove(item);
+                }
+
+                if (getWorryInfo.Count > 0)
+                {
+                    //string txt = string.Empty;
+
+                    //foreach (var item in getWorryInfo)
+                    //{
+                    //    txt += $"卡片名称：{item.CardName}|卡片类型:{item.CardClass}|错误等级:{item.CheckInfoLevel}|错误信息：{item.Message}" + "\r\n";
+                    //}
+
+                    //MessageBox.Show(txt, "数据检测器[出现了一些错误],请修复后重新保存");
+
+                    var worryWindow = new DataCheckWorryWindow();
+
+                    var worryWindowViewModel = new DataCheckWorryViewModel();
+
+                    worryWindow.Show();
+
+                    worryWindow.DataContext = worryWindowViewModel;
+
+                    worryWindowViewModel.ChangeWorryDataDo(getWorryInfo);
+
+                    window.IsEnabled = true;
+                    LoadingShow = Visibility.Hidden;
+                    return;
+                }
+                
+            }
+
             var saveBase = new ConfigReaderAndWriter(ConditionsCardChanged.saveAllValue,EventCardChanged.saveAllValue,ObjectiveCardChanged.saveAllValue,ConversationCardChanged.saveAllValue, CardItems);
 
             var back = await saveBase.SaveToJson(MainFilePath,SelectData.Name, SelectData.Code);
@@ -823,6 +986,51 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                 return;
             }
 
+            var getListCard = CardItems.Where(t => !t.IsLine && !t.IsDraw).ToList();
+
+            var checkBase = new DataCheckBase(getListCard);
+
+            var getInfo = await checkBase.CheckCard();//卡片检测
+
+            if (!getInfo.Succese)
+            {
+                var getWorryInfo = getInfo.Backs as List<DataCheckInfoModel>;
+
+                //自动修复Main归类问题
+                var getMainWorry = getWorryInfo.Where(t => t.Message == "子卡片总附属发生错误").ToList();
+
+                foreach (var item in getMainWorry)
+                {
+                    var getCard = CardItems.Where(t => t.ConfigName == item.CardName && t.Type == item.CardClass).FirstOrDefault();
+
+                    if (getCard == null)
+                    {
+                        continue;
+                    }
+
+                    getCard.MainCard = item.Backs as CardViewModel;
+
+                    getWorryInfo.Remove(item);
+                }
+
+                if (getWorryInfo.Count > 0)
+                {
+                    string txt = string.Empty;
+
+                    foreach (var item in getWorryInfo)
+                    {
+                        txt += $"卡片名称：{item.CardName}|卡片类型:{item.CardClass}|错误等级:{item.CheckInfoLevel}|错误信息：{item.Message}" + "\r\n";
+                    }
+
+                    MessageBox.Show(txt, "数据检测器[出现了一些错误],请修复后重新保存");
+
+                    window.IsEnabled = true;
+                    LoadingShow = Visibility.Hidden;
+
+                    return;
+                }
+            }
+
             var saveBase = new ConfigReaderAndWriter(ConditionsCardChanged.saveAllValue, EventCardChanged.saveAllValue, ObjectiveCardChanged.saveAllValue, ConversationCardChanged.saveAllValue, CardItems);
 
             var back = await saveBase.SaveToJson(MainFilePath,SelectData.Name, SelectData.Code, true);
@@ -908,19 +1116,9 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         [RelayCommand()]
         private async Task SelectSearch(Window window)
         {
-            if (!CardItems.Where(t => t.Type == SearchType && t.ConfigName.Contains(SearchText)).Any())
-            {
-                ShowMessage("未找到该卡片");
-                return;
-            }
+            var back = FindCard(SearchText, SearchType);
 
-            var getCard = CardItems.Where(t=>t.Type == SearchType&&t.ConfigName.Contains(SearchText)).FirstOrDefault();
-
-            var y = -getCard.CvTop + ((window as MainWindow).outsaid.ActualHeight / 2) - ((double)getCard.ThumbHeight / 2);
-            var x = -getCard.CvLeft + ((window as MainWindow).outsaid.ActualWidth / 2) - ((double)getCard.ThumbWidth / 2);
-
-            TranslateXProp = x;
-            TranslateYProp = y;
+            ShowMessage(back.Text);
         }
 
         [RelayCommand()]
@@ -1153,6 +1351,29 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
         #endregion
 
+        public ReturnModel FindCard(string cardName,ThumbClass thumbClass)
+        {
+            var result = new ReturnModel();
+
+            if (!CardItems.Where(t => t.Type == thumbClass && t.ConfigName.Contains(cardName)).Any())
+            {
+                result.SetError("未找到该卡片");
+                return result;
+            }
+
+            var getCard = CardItems.Where(t => t.Type == thumbClass && t.ConfigName.Contains(cardName) &&!t.IsDraw&&!t.IsLine).FirstOrDefault();
+
+            var y = -getCard.CvTop + ((window as MainWindow).outsaid.ActualHeight / 2) - ((double)getCard.ThumbHeight / 2);
+            var x = -getCard.CvLeft + ((window as MainWindow).outsaid.ActualWidth / 2) - ((double)getCard.ThumbWidth / 2);
+
+            TranslateXProp = x;
+            TranslateYProp = y;
+
+            result.SetSuccese("成功找到卡片");
+
+            return result;
+        }
+
         private static async Task<ReturnModel> SelectFilePath()
         {
             var result = new ReturnModel();
@@ -1295,6 +1516,46 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
             contisionProp = await contisionLoader.Loader();
 
+            var needDeleteConditionsType = new List<string>();
+
+            //删除没有的
+            foreach (var item in conditionsType)
+            {
+                var fg = item.Split(": ", StringSplitOptions.RemoveEmptyEntries);
+
+                if(!contisionProp.Where(t=>t.MainClass == fg[fg.Length-1]).Any())
+                {
+                    needDeleteConditionsType.Add(item);
+                }
+            }
+
+            for (int i = 0; i < needDeleteConditionsType.Count; i++)
+            {
+                conditionsType.Remove(needDeleteConditionsType[i]);
+            }
+
+            foreach (var item in contisionProp)
+            {
+                var isHave = false;
+
+                foreach (var i in conditionsType)
+                {
+                    var fg = i.Split(": ", StringSplitOptions.RemoveEmptyEntries);
+
+                    if(item.MainClass == fg[fg.Length - 1])
+                    {
+                        isHave = true;
+
+                        break;
+                    }
+                }
+
+                if (!isHave)
+                {
+                    conditionsType.Add(item.MainToolTip+": "+item.MainClass);
+                }
+            }
+
             LoadingMessage = "正在加载事件模型~";
 
             var eventLoader = new EventLoaderBase();
@@ -1310,6 +1571,46 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
             eventProp = await eventLoader.Loader();
 
+            var needDeleteEventType = new List<string>();
+
+            //删除没有的
+            foreach (var item in eventsType)
+            {
+                var fg = item.Split(": ", StringSplitOptions.RemoveEmptyEntries);
+
+                if (!eventProp.Where(t => t.MainClass == fg[fg.Length - 1]).Any())
+                {
+                    needDeleteEventType.Add(item);
+                }
+            }
+
+            for (int i = 0; i < needDeleteEventType.Count; i++)
+            {
+                eventsType.Remove(needDeleteEventType[i]);
+            }
+
+            foreach (var item in eventProp)
+            {
+                var isHave = false;
+
+                foreach (var i in eventsType)
+                {
+                    var fg = i.Split(": ", StringSplitOptions.RemoveEmptyEntries);
+
+                    if (item.MainClass == fg[fg.Length - 1])
+                    {
+                        isHave = true;
+
+                        break;
+                    }
+                }
+
+                if (!isHave)
+                {
+                    eventsType.Add(item.MainToolTip + ": " + item.MainClass);
+                }
+            }
+
             LoadingMessage = "正在加载目标模型~";
 
             var objectiveLoader = new ObjectiveLoaderBase();
@@ -1324,6 +1625,46 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
             }
 
             objectiveProp = await objectiveLoader.Loader();
+
+            var needDeleteObjectiveType = new List<string>();
+
+            //删除没有的
+            foreach (var item in objectivesType)
+            {
+                var fg = item.Split(": ", StringSplitOptions.RemoveEmptyEntries);
+
+                if (!objectiveProp.Where(t => t.MainClass == fg[fg.Length - 1]).Any())
+                {
+                    needDeleteObjectiveType.Add(item);
+                }
+            }
+
+            for (int i = 0; i < needDeleteObjectiveType.Count; i++)
+            {
+                objectivesType.Remove(needDeleteObjectiveType[i]);
+            }
+
+            foreach (var item in objectiveProp)
+            {
+                var isHave = false;
+
+                foreach (var i in objectivesType)
+                {
+                    var fg = i.Split(": ", StringSplitOptions.RemoveEmptyEntries);
+
+                    if (item.MainClass == fg[fg.Length - 1])
+                    {
+                        isHave = true;
+
+                        break;
+                    }
+                }
+
+                if (!isHave)
+                {
+                    objectivesType.Add(item.MainToolTip + ": " + item.MainClass);
+                }
+            }
 
             LoadingMessage = "加载完毕，ArcCreate欢迎您~";
 
@@ -1392,7 +1733,8 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                             }
                             catch (Exception ex)
                             {
-                                MessageBox.Show("解析错误,配置文件中请不要使用多语言结构，\n如果您在更改后还出现此错误请联系\njk@jklss.cn");
+                                MessageBox.Show("解析错误,配置文件中请不要使用多语言结构，\n如果您在更改后还出现此错误请联系\njk@jklss.cn"+$"\n {ex.Message}");
+                                CardItems.Clear();
                                 continue;
                             }
                         }
@@ -3869,6 +4211,10 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
                 CardItems.Remove(selectCardInfo);//卡片删除
 
+                selectCardInfo = null;//清除掉选择的被删除卡片
+
+                GC.Collect();
+
                 ShowMessage("删除成功！");
             }
         }
@@ -4119,46 +4465,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                         CvTop = reCvTop,
                         Type = ThumbClass.Conditions,
                         IsProtectName = IsProtectName,
-                        AllType = new ObservableCollection<string>
-                        {
-                            "背包中的物品: item",
-                            "手持物品: hand",
-                            "或门: or",
-                            "与门: and",
-                            "地点: location",
-                            "生命值: health",
-                            "经验: experience",
-                            "权限: permission",
-                            "点数: point",
-                            "标签: tag",
-                            "防具: armor",
-                            "药水效果: effect",
-                            "时间: time",
-                            "天气: weather",
-                            "高度: height",
-                            "护甲值: rating",
-                            "随机: random",
-                            "潜行: sneak",
-                            "日记条目: journal",
-                            "方块状态检测: testforblock",
-                            "空余背包格: empty",
-                            "队伍: party",
-                            "区域内怪物: monsters",
-                            "目标: objective",
-                            "检查条件: check",
-                            "箱子物品: chestitem",
-                            "计分板: score",
-                            "资金(Vault): money",
-                            "McMMO等级: mcmmolevel",
-                            "WorldGuard区域: score",
-                            "PlayerPoints点券: playerpoints",
-                            "Heroes阶等: heroesclass",
-                            "Heroes技能: heroesskill",
-                            "魔杖（Magic）: wand",
-                            "类别|职业(SkillApi): skillapiclass",
-                            "等级(SkillApi): skillapilevel",
-                            "任务(Quest): quest",
-                        }
+                        AllType = conditionsType
                     };
 
                     CardItems.Add(cardView);
@@ -4190,47 +4497,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                         CvTop = reCvTop,
                         Type = ThumbClass.Events,
                         IsProtectName = IsProtectName,
-                        AllType = new ObservableCollection<string>
-                        {
-                            "消息: message",
-                            "命令: command",
-                            "传送: teleport",
-                            "点数: point",
-                            "标签: tag",
-                            "目标: objective",
-                            "日记: journal",
-                            "闪电: lightning",
-                            "爆炸: explosion",
-                            "给予物品: give",
-                            "移除物品: take",
-                            "药水效果: effect",
-                            "对话: conversation",
-                            "杀死玩家: kill",
-                            "召唤怪物: spawn",
-                            "时间: time",
-                            "天气: weather",
-                            "多事件组: folder",
-                            "放置方块: setblock",
-                            "伤害玩家: damage",
-                            "组队: party",
-                            "清除怪物: clear",
-                            "运行事件: run",
-                            "给予日记: givejournal",
-                            "代发指令: sudo",
-                            "箱中放置: chestgive",
-                            "箱中移除: chesttake",
-                            "清理箱子: chestclear",
-                            "目标点: compass",
-                            "删除任务: cancel",
-                            "计分板: score",
-                            "权限(Vault): permission",
-                            "资金(Vault): money",
-                            "生成神话生物(MythicMobs): mspawnmob",
-                            "McMMO经验值: mcmmoexp",
-                            "PlayerPoints点券: playerpoints",
-                            "Heroes经验值: heroesexp",
-                            "任务（Quest）: quest",
-                        }
+                        AllType = eventsType
                     };
 
                     CardItems.Add(cardView);
@@ -4262,32 +4529,7 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                         CvTop = reCvTop,
                         Type = ThumbClass.Objectives,
                         IsProtectName = IsProtectName,
-                        AllType = new ObservableCollection<string>
-                        {
-                            "位置: location",
-                            "方块: block",
-                            "击杀生物: mobkill",
-                            "动作: action",
-                            "死亡: die",
-                            "合成: craft",
-                            "熔炼: smelt",
-                            "驯服: tame",
-                            "等待: delay",
-                            "射箭: arrow",
-                            "经验值: experience",
-                            "踩上压力板: step",
-                            "注销: logout",
-                            "输入密码: password",
-                            "垂钓: fish",
-                            "剪羊毛: shear",
-                            "附魔: enchant",
-                            "装箱: chestput",
-                            "炼药: potion",
-                            "击杀NPC（Citizens）: npckill",
-                            "与NPC互动（Citizens）: npcInteract",
-                            "击杀神话生物(MythicMobs): mmobkill",
-                            "WorldGuard区域: region",
-                        }
+                        AllType = objectivesType
                     };
 
                     CardItems.Add(cardView);
@@ -7046,6 +7288,15 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                     case ThumbClass.Subject://特殊
                         if (child.Type == ThumbClass.NPC)
                         {
+                            var getFather = child.Left.Where(t => t.Type == ThumbClass.Subject).ToList();
+
+                            if (getFather.Count > 0)
+                            {
+                                result.SetError("禁止两条对话语句合并");
+
+                                return result;
+                            }
+
                             result.SetSuccese("", ThumbClass.NPC);
                             return result;
                         }
@@ -7053,6 +7304,24 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                     case ThumbClass.NPC://特殊
                         if (child.Type == ThumbClass.Player || child.Type == ThumbClass.Conditions || child.Type == ThumbClass.Events)
                         {
+                            if(child.Type == ThumbClass.Player)
+                            {
+                                if(child.Left.Where(t=>t.Type == ThumbClass.NPC).Any())
+                                {
+                                    var getsomeFather = child.Left.Where(t => t.Type == ThumbClass.NPC).ToList();
+
+                                    foreach (var item in getsomeFather)
+                                    {
+                                        if(item.MainCard != father.MainCard)
+                                        {
+                                            result.SetError("禁止两条对话语句合并");
+
+                                            return result;
+                                        }
+                                    }
+                                }
+                            }
+
                             result.SetSuccese("", child.Type);
                             return result;
                         }
@@ -7060,6 +7329,24 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                     case ThumbClass.Player://特殊
                         if (child.Type == ThumbClass.NPC || child.Type == ThumbClass.Conditions || child.Type == ThumbClass.Events)
                         {
+                            if (child.Type == ThumbClass.NPC)
+                            {
+                                if (child.Left.Where(t => t.Type == ThumbClass.Player).Any())
+                                {
+                                    var getsomeFather = child.Left.Where(t => t.Type == ThumbClass.Player).ToList();
+
+                                    foreach (var item in getsomeFather)
+                                    {
+                                        if (item.MainCard != father.MainCard)
+                                        {
+                                            result.SetError("禁止两条对话语句合并");
+
+                                            return result;
+                                        }
+                                    }
+                                }
+                            }
+
                             result.SetSuccese("", child.Type);
                             return result;
                         }
@@ -7072,6 +7359,12 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                             var getRealType = TxtSplit(realCardInfo.SelectType, ": ")[1];
 
                             var getGrammar = ClientWindowViewModel.contisionProp.Where(t => t.MainClass == getRealType).FirstOrDefault();
+
+                            if(getGrammar.NeedTpye == null)
+                            {
+                                result.SetError();
+                                return result;
+                            }
 
                             foreach (var item in getGrammar.NeedTpye)
                             {
@@ -7102,6 +7395,12 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
 
                             var getGrammar = ClientWindowViewModel.eventProp.Where(t => t.MainClass == getRealType).FirstOrDefault();
 
+                            if (getGrammar.NeedTpye == null)
+                            {
+                                result.SetError();
+                                return result;
+                            }
+
                             foreach (var item in getGrammar.NeedTpye)
                             {
                                 foreach (var t in item.Value)
@@ -7130,6 +7429,12 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
                             var getRealType = TxtSplit(realCardInfo.SelectType, ": ")[1];
 
                             var getGrammar = ClientWindowViewModel.objectiveProp.Where(t => t.MainClass == getRealType).FirstOrDefault();
+
+                            if (getGrammar.NeedTpye == null)
+                            {
+                                result.SetError();
+                                return result;
+                            }
 
                             foreach (var item in getGrammar.NeedTpye)
                             {
@@ -7386,25 +7691,121 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         [RelayCommand()]
         private async Task TypeLoaded(ComboBox coBox)
         {
-            coBox.SelectionChanged += TypeCoBox_SelectChanged;
+            if (Type == ThumbClass.Conditions)
+            {
+                if (conditionsCardChanged != null)
+                {
+                    await conditionsCardChanged.TypeChanged();
+                }
+            }
+            else if (Type == ThumbClass.Events)
+            {
+                if (eventCardChanged != null)
+                {
+                    await eventCardChanged.TypeChanged();
+                }
+            }
+            else if (Type == ThumbClass.Objectives)
+            {
+                if (objectiveCardChanged != null)
+                {
+                    await objectiveCardChanged.TypeChanged();
+                }
+            }
+            else if (Type == ThumbClass.NPC || Type == ThumbClass.Player)
+            {
+                await conversationCardChanged.TypeChanged();
+            }
         }
 
         [RelayCommand()]
         private async Task CmdLoaded(ComboBox coBox)
         {
-            coBox.SelectionChanged += CmdCoBox_SelectChanged;
+            if (Type == ThumbClass.Conditions)
+            {
+                if (conditionsCardChanged != null)
+                {
+                    await conditionsCardChanged.CmdChanged();
+                }
+            }
+            else if (Type == ThumbClass.Events)
+            {
+                if (eventCardChanged != null)
+                {
+                    await eventCardChanged.CmdChanged();
+                }
+            }
+            else if (Type == ThumbClass.Objectives)
+            {
+                if (objectiveCardChanged != null)
+                {
+                    await objectiveCardChanged.CmdChanged();
+                }
+            }
+            else if (Type == ThumbClass.NPC || Type == ThumbClass.Player)
+            {
+                await conversationCardChanged.CmdChanged();
+            }
         }
 
         [RelayCommand()]
         private async Task ParameterLoaded(ComboBox coBox)
         {
-            coBox.SelectionChanged += ParmeterCoBox_SelectChanged;
+            if (Type == ThumbClass.Conditions)
+            {
+                if (conditionsCardChanged != null)
+                {
+                    await conditionsCardChanged.ParameterChanged();
+                }
+            }
+            else if (Type == ThumbClass.Events)
+            {
+                if (eventCardChanged != null)
+                {
+                    await eventCardChanged.ParameterChanged();
+                }
+            }
+            else if (Type == ThumbClass.Objectives)
+            {
+                if (objectiveCardChanged != null)
+                {
+                    await objectiveCardChanged.ParameterChanged();
+                }
+            }
+            else if (Type == ThumbClass.NPC || Type == ThumbClass.Player)
+            {
+                await conversationCardChanged.ParameterChanged();
+            }
         }
 
         [RelayCommand()]
         private async Task ItemLoaded(ComboBox coBox)
         {
-            coBox.SelectionChanged += ItemCoBox_SelectChanged;
+            if (Type == ThumbClass.Conditions)
+            {
+                if (conditionsCardChanged != null)
+                {
+                    await conditionsCardChanged.ItemChanged();
+                }
+            }
+            else if (Type == ThumbClass.Events)
+            {
+                if (eventCardChanged != null)
+                {
+                    await eventCardChanged.ItemChanged();
+                }
+            }
+            else if (Type == ThumbClass.Objectives)
+            {
+                if (objectiveCardChanged != null)
+                {
+                    await objectiveCardChanged.ItemChanged();
+                }
+            }
+            else if (Type == ThumbClass.NPC || Type == ThumbClass.Player)
+            {
+                await conversationCardChanged.ItemChanged();
+            }
         }
 
         [RelayCommand()]
@@ -7598,122 +7999,6 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         #endregion
 
         #region Combox事件
-
-        private async void TypeCoBox_SelectChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (Type == ThumbClass.Conditions)
-            {
-                if (conditionsCardChanged != null)
-                {
-                    await conditionsCardChanged.TypeChanged();
-                }
-            }
-            else if(Type == ThumbClass.Events)
-            {
-                if (eventCardChanged != null)
-                {
-                    await eventCardChanged.TypeChanged();
-                }
-            }
-            else if(Type == ThumbClass.Objectives)
-            {
-                if (objectiveCardChanged != null)
-                {
-                    await objectiveCardChanged.TypeChanged();
-                }
-            }
-            else if (Type == ThumbClass.NPC||Type == ThumbClass.Player)
-            {
-                await conversationCardChanged.TypeChanged();
-            }
-        }
-
-        private async void CmdCoBox_SelectChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (Type == ThumbClass.Conditions)
-            {
-                if (conditionsCardChanged != null)
-                {
-                    await conditionsCardChanged.CmdChanged();
-                }
-            }
-            else if (Type == ThumbClass.Events)
-            {
-                if (eventCardChanged != null)
-                {
-                    await eventCardChanged.CmdChanged();
-                }
-            }
-            else if (Type == ThumbClass.Objectives)
-            {
-                if (objectiveCardChanged != null)
-                {
-                    await objectiveCardChanged.CmdChanged();
-                }
-            }
-            else if (Type == ThumbClass.NPC || Type == ThumbClass.Player)
-            {
-                await conversationCardChanged.CmdChanged();
-            }
-        }
-
-        private async void ParmeterCoBox_SelectChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (Type == ThumbClass.Conditions)
-            {
-                if (conditionsCardChanged != null)
-                {
-                    await conditionsCardChanged.ParameterChanged();
-                }
-            }
-            else if (Type == ThumbClass.Events)
-            {
-                if (eventCardChanged != null)
-                {
-                    await eventCardChanged.ParameterChanged();
-                }
-            }
-            else if (Type == ThumbClass.Objectives)
-            {
-                if (objectiveCardChanged != null)
-                {
-                    await objectiveCardChanged.ParameterChanged();
-                }
-            }
-            else if (Type == ThumbClass.NPC || Type == ThumbClass.Player)
-            {
-                await conversationCardChanged.ParameterChanged();
-            }
-        }
-
-        private async void ItemCoBox_SelectChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (Type == ThumbClass.Conditions)
-            {
-                if (conditionsCardChanged != null)
-                {
-                    await conditionsCardChanged.ItemChanged();
-                }
-            }
-            else if (Type == ThumbClass.Events)
-            {
-                if (eventCardChanged != null)
-                {
-                    await eventCardChanged.ItemChanged();
-                }
-            }
-            else if (Type == ThumbClass.Objectives)
-            {
-                if (objectiveCardChanged != null)
-                {
-                    await objectiveCardChanged.ItemChanged();
-                }
-            }
-            else if (Type == ThumbClass.NPC || Type == ThumbClass.Player)
-            {
-                await conversationCardChanged.ItemChanged();
-            }
-        }
 
         #endregion
     }
