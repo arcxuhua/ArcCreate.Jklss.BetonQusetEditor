@@ -38,9 +38,9 @@ namespace ArcCreate.Jklss.Services
         {
             var host = Dns.GetHostAddresses("jklss.cn");
             //端口及IP  
-            IPEndPoint ipe = new IPEndPoint(host[0], 6012);
+            //IPEndPoint ipe = new IPEndPoint(host[0], 6012);
 
-            //IPEndPoint ipe = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 6012);
+            IPEndPoint ipe = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 6012);
 
             //创建套接字  
             Socket client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);

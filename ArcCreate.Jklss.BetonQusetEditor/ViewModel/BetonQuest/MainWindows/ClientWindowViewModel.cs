@@ -789,14 +789,14 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         }
 
         [RelayCommand()]
-        private async Task CvMenuLoaded(Canvas canvas)
+        private void CvMenuLoaded(Canvas canvas)
         {
             canvas.MouseLeftButtonDown += Canvas_MouseLeftButtonDown;
             canvas.MouseLeftButtonUp += Canvas_MouseLeftButtonUp;
         }
 
         [RelayCommand()]
-        private async Task BordOutSideLoaded(Border outside)
+        private void BordOutSideLoaded(Border outside)
         {
             outside.PreviewMouseWheel += Outside_PreviewMouseWheel;
             outside.PreviewMouseDown += Outside_PreviewMouseDown;
@@ -930,19 +930,19 @@ namespace ArcCreate.Jklss.BetonQusetEditor.ViewModel.MainWindows
         }
 
         [RelayCommand()]
-        private async Task Close(Window window)
+        private void Close(Window window)
         {
             Environment.Exit(0);
         }
 
         [RelayCommand()]
-        private async Task Narrow(Window window)
+        private void Narrow(Window window)
         {
             window.WindowState = WindowState.Minimized;
         }
 
         [RelayCommand()]
-        private async Task Minimize(Window window)
+        private void Minimize(Window window)
         {
             if (window.WindowState == WindowState.Maximized)
             {
